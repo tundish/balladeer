@@ -12,13 +12,13 @@ __doc__ = open(
 
 try:
     # For setup.py install
-    from proclets import __version__ as version
+    from balladeer import __version__ as version
 except ImportError:
     # For pip installations
     version = str(ast.literal_eval(
         open(os.path.join(
             os.path.dirname(__file__),
-            "proclets",
+            "balladeer",
             "__init__.py"),
             "r"
         ).read().split("=")[-1].strip()
