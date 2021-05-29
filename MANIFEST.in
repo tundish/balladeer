@@ -1,0 +1,3 @@
+include LICENSE
+recursive-include . *.rst
+recursive-include balladeer *.cfg *.css *.html *.jpg *.js *.png *.rst *.txt
