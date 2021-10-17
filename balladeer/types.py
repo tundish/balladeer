@@ -18,7 +18,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from collections import defaultdict
+import random
+
 from turberfield.dialogue.types import DataObject
+from turberfield.utils.misc import group_by_type
+
+from balladeer.speech import Name
 
 
 class Grouping(defaultdict):
@@ -50,6 +55,10 @@ class World:
         self.lookup = Grouping(list)
         for item in self.build():
             self.add(item)
+
+    @staticmethod
+    def arrange(items):
+        return group_by_type(items)
 
     def add(self, item):
         for name in str(item).splitlines():
