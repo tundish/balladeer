@@ -57,11 +57,13 @@ setup(
             "doc/html/_static/*.png",
         ],
     },
-    install_requires=[],
+    install_requires=[
+        "turberfield-catchphrase>=0.21.0"
+    ],
     extras_require={
         "dev": [
-            "flake8>=3.9.0",
-            "wheel>=0.36.2",
+            "flake8",
+            "wheel",
         ],
     },
     entry_points={},
