@@ -58,18 +58,6 @@ class Verb(Tensed):
 Phrase = namedtuple("Phrase", ("verb", "name"))
 
 
-class Named(DataObject):
-
-    @property
-    def name(self):
-        name = random.choice(getattr(self, "names", [Name()]))
-        article = name.article.definite and f"{name.article.definite} "
-        return f"{article}{name.noun}"
-
-    def __str__(self):
-        return "\n".join(i.noun for i in self.names)
-
-
 class Gesture(DataObject, Stateful):
 
     def __str__(self):

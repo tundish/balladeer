@@ -21,7 +21,7 @@ except ImportError:
             "balladeer",
             "__init__.py"),
             "r"
-        ).read().split("=")[-1].strip()
+        ).readlines()[0].split("=")[-1].strip()
     ))
 
 setup(

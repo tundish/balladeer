@@ -18,6 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from collections import defaultdict
+from turberfield.dialogue.types import DataObject
 
 
 class Grouping(defaultdict):
@@ -29,6 +30,18 @@ class Grouping(defaultdict):
     @property
     def each(self):
         return list(set(self.all))
+
+
+class Named(DataObject):
+
+    @property
+    def name(self):
+        name = random.choice(getattr(self, "names", [Name()]))
+        article = name.article.definite and f"{name.article.definite} "
+        return f"{article}{name.noun}"
+
+    def __str__(self):
+        return "\n".join(i.noun for i in self.names)
 
 
 class World:
