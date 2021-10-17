@@ -19,11 +19,11 @@
 
 import unittest
 
-from balladeer.speech import Gesture
-from balladeer.speech import Phrase
-from balladeer.speech import Name
-from balladeer.speech import Named
-from balladeer.speech import Verb
+from balladeer import Gesture
+from balladeer import Phrase
+from balladeer import Name
+from balladeer import Named
+from balladeer import Verb
 
 
 class NamedTests(unittest.TestCase):
