@@ -1,4 +1,4 @@
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 from balladeer.drama import Drama
 from balladeer.speech import Article
