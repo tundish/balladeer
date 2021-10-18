@@ -18,12 +18,26 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from collections import defaultdict
+import enum
 import random
 
 from turberfield.dialogue.types import DataObject
+from turberfield.dialogue.types import EnumFactory
 from turberfield.utils.misc import group_by_type
 
 from balladeer.speech import Name
+
+
+class Fruition(EnumFactory, enum.Enum):
+    inception = 1
+    elaboration = 2
+    construction = 3
+    transition = 4
+    completion = 5
+    discussion = 6
+    defaulted = 7
+    withdrawn = 8
+    cancelled = 9
 
 
 class Grouping(defaultdict):

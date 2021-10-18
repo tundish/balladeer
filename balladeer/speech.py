@@ -18,7 +18,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from collections import namedtuple
-import random
 
 from turberfield.dialogue.types import DataObject
 from turberfield.dialogue.types import Stateful
