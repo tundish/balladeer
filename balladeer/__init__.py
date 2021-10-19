@@ -1,4 +1,4 @@
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 
 from balladeer.drama import Drama
 from balladeer.speech import Article
@@ -8,6 +8,7 @@ from balladeer.speech import Phrase
 from balladeer.speech import Pronoun
 from balladeer.speech import Verb
 from balladeer.story import Story
+from balladeer.types import Fruition
 from balladeer.types import Grouping
 from balladeer.types import Named
 from balladeer.types import World
