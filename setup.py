@@ -62,7 +62,9 @@ setup(
     ],
     extras_require={
         "dev": [
-            "flake8",
+            "build",
+            "flake8"
+            "twine",,
             "wheel",
         ],
     },
