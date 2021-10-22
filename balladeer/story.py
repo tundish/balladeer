@@ -46,7 +46,7 @@ class Story(Renderer, DataObject):
     def actions(self):
         yield Action(
             "cmd", None, "/{0.id.hex}/cmd/", [self], "post",
-            [Parameter("cmd", True, self.context.validator, [self.context.prompt], ">")],
+            [Parameter("cmd", False, self.context.validator, [self.context.prompt], ">")],
             "Enter"
         )
 
