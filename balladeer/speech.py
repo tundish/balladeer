@@ -56,9 +56,13 @@ class Verb(Tensed):
 
 Phrase = namedtuple("Phrase", ("verb", "name"))
 
-
+# TODO: Init and Exit?
+# request, counter, decline, deliver, abandon
 class Gesture(DataObject, Stateful):
 
+    # def __init__(
+    #     self, request=None, counter=None, promise=None, deliver=None, abandon=None, message=None, **kwargs
+    # ):
     def __str__(self):
         return "\n".join("{0.verb.imperative} {0.name.noun}".format(i) for i in self.phrases)
 
