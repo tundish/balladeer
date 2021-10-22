@@ -45,6 +45,7 @@ class Drama(Stateful, Mediator):
 
     def __call__(self, fn, *args, **kwargs):
         text, presenter, *_ = args
+        # FIXME: Bring in Operation and test for paused.
         if presenter and (presenter.dwell or presenter.pause):
             self.valid_states = self.find_valid_states(presenter)
 
