@@ -95,3 +95,8 @@ if __name__ == "__main__":
         mugs.state = state
         if event == mugs.hand.counter:
             mugs.b = mugs.a   # Mugs-specific, not brew
+        #TODO: gesture, event, state = brew(policy=random.choice)
+        # if gesture.complete:
+        #     self.lookup[gesture.label].discard(gesture)
+        # else:
+        #     self.lookup[gesture.label].add(gesture)
