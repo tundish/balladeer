@@ -20,6 +20,8 @@
 import unittest
 
 from balladeer import Gesture
+from balladeer import Hand
+from balladeer import Head
 from balladeer import Phrase
 from balladeer import Name
 from balladeer import Verb
@@ -28,10 +30,10 @@ from balladeer import Verb
 class GestureTests(unittest.TestCase):
 
     def test_simple(self):
-        g = Gesture(phrases=[
+        g = Gesture("simple", head=Head([
             Phrase(Verb("make"), Name("tea")),
             Phrase(Verb("make"), Name("brew")),
-        ])
+        ]))
         self.assertIn("make tea", str(g))
         self.assertIn("\n", str(g))
         self.assertIn("make brew", str(g))

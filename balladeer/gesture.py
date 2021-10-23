@@ -25,16 +25,22 @@ from turberfield.dialogue.types import Stateful
 
 Head = namedtuple(
     "Head",
-    ("request", "indefinite"),
-    defaults=([], [])
+    ("request", "confirm", "counter", "abandon", "decline", "declare"),
+    defaults=([], [], [], [], [], [])
+)
+
+
+Hand = namedtuple(
+    "Hand",
+    ("decline", "promise", "counter", "deliver"),
+    defaults=([], [], [], [])
 )
 
 
 class Gesture(DataObject, Stateful):
 
-    # def __init__(
-    #     self, request=None, counter=None, promise=None, deliver=None, abandon=None, message=None, **kwargs
-    # ):
-    def __str__(self):
-        return "\n".join("{0.verb.imperative} {0.name.noun}".format(i) for i in self.phrases)
-
+    def __init__(self, label, head=None, hand=None, **kwargs):
+        super().__init__(**kwargs)
+        self.label = label
+        self.head = head or Head()
+        self.hand = hand or Hand()

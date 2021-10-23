@@ -2,6 +2,8 @@ __version__ = "0.7.0"
 
 from balladeer.drama import Drama
 from balladeer.gesture import Gesture
+from balladeer.gesture import Hand
+from balladeer.gesture import Head
 from balladeer.speech import Article
 from balladeer.speech import Name
 from balladeer.speech import Phrase
