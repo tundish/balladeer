@@ -59,12 +59,21 @@ def transitions(gesture):
             (gesture.hand.decline, Fruition.withdrawn),
             (gesture.head.abandon, Fruition.withdrawn),
         ]
+    elif gesture.get_state(Fruition) == Fruition.construction:
+        return [
+            (gesture.head.abandon, Fruition.cancelled),
+            (gesture.hand.deliver, Fruition.transition),
+            (gesture.hand.decline, Fruition.defaulted),
+        ]
     else:
         return []
 
 if __name__ == "__main__":
+    a = "Louise"
+    b = "Sophie"
     mugs = Gesture(
         "mugs",
+        a=a, b=b,
         head=Head(
             propose=["Can you get the mugs for me?"],
             confirm=["OK, fine."],
@@ -89,8 +98,9 @@ if __name__ == "__main__":
         ),
     ).set_state(Fruition.inception)
 
-    state = None
-    while state not in (Fruition.cancelled,):
+    state = mugs.get_state(Fruition)
+    while state.value < 5:
         event, state = random.choice(transitions(mugs))
-        print(random.choice(event))
+        actor = mugs.a if event in mugs.head else mugs.b
+        print(actor, ":", random.choice(event))
         mugs.state = state
