@@ -72,8 +72,18 @@ if __name__ == "__main__":
     brew = Gesture(
         "brew",
         head=Head(
+            propose=["Stick the kettle on, would you?"],
+            confirm=["OK, fine."],
+            counter=["I'll have tea, please."],
+            abandon=["Actually, don't worry; I've got to go."],
+            decline=["You've left the bag in."],
+            declare=["Thanks."],
         ),
         hand=Hand(
+            decline=["Sorry, not right now."],
+            promise=["OK."],
+            counter=["Tea or coffee?"],
+            deliver=["There you go."],
         ),
     ).set_state(Fruition.inception)
 
@@ -84,4 +94,4 @@ if __name__ == "__main__":
         print(actor, ":", random.choice(event))
         mugs.state = state
         if event == mugs.hand.counter:
-            mugs.b = mugs.a
+            mugs.b = mugs.a   # Mugs-specific, not brew
