@@ -25,15 +25,15 @@ from turberfield.dialogue.types import Stateful
 
 Head = namedtuple(
     "Head",
-    ("request", "confirm", "counter", "abandon", "decline", "declare"),
-    defaults=([], [], [], [], [], [])
+    ("propose", "confirm", "counter", "abandon", "decline", "declare"),
+    defaults=(tuple(), tuple(), tuple(), tuple(), tuple(), tuple())
 )
 
 
 Hand = namedtuple(
     "Hand",
     ("decline", "promise", "counter", "deliver"),
-    defaults=([], [], [], [])
+    defaults=(tuple(), tuple(), tuple(), tuple())
 )
 
 

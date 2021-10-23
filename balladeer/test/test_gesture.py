@@ -29,6 +29,13 @@ from balladeer import Verb
 
 class GestureTests(unittest.TestCase):
 
+    def test_head(self):
+        a = Head()
+        b = Head()
+        self.assertFalse(a.propose)
+        self.assertFalse(b.propose)
+        self.assertIs(a.propose, b.propose)  # Lest we forget
+
     def test_simple(self):
         g = Gesture("simple", head=Head([
             Phrase(Verb("make"), Name("tea")),
@@ -37,3 +44,13 @@ class GestureTests(unittest.TestCase):
         self.assertIn("make tea", str(g))
         self.assertIn("\n", str(g))
         self.assertIn("make brew", str(g))
+
+if __name__ == "__main__":
+    brew = Gesture(
+        "brew",
+        head=Head(
+        ),
+        hand=Hand(
+        ),
+    )
+    print(brew)
