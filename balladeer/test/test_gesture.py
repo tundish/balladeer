@@ -47,27 +47,6 @@ class GestureTests(unittest.TestCase):
         self.assertIn("\n", str(g))
         self.assertIn("make brew", str(g))
 
-def transitions(gesture):
-    if gesture.get_state(Fruition) == Fruition.inception:
-        return [
-            (gesture.head.propose, Fruition.elaboration)
-        ]
-    elif gesture.get_state(Fruition) == Fruition.elaboration:
-        return [
-            (gesture.hand.promise, Fruition.construction),
-            (gesture.hand.counter, Fruition.discussion),
-            (gesture.hand.decline, Fruition.withdrawn),
-            (gesture.head.abandon, Fruition.withdrawn),
-        ]
-    elif gesture.get_state(Fruition) == Fruition.construction:
-        return [
-            (gesture.head.abandon, Fruition.cancelled),
-            (gesture.hand.deliver, Fruition.transition),
-            (gesture.hand.decline, Fruition.defaulted),
-        ]
-    else:
-        return []
-
 if __name__ == "__main__":
     a = "Louise"
     b = "Sophie"
@@ -99,8 +78,10 @@ if __name__ == "__main__":
     ).set_state(Fruition.inception)
 
     state = mugs.get_state(Fruition)
-    while state.value < 5:
-        event, state = random.choice(transitions(mugs))
+    while state.value not in (5, 7, 8, 9):
+        event, state = random.choice(mugs.transitions)
         actor = mugs.a if event in mugs.head else mugs.b
         print(actor, ":", random.choice(event))
         mugs.state = state
+        if event == mugs.hand.counter:
+            mugs.b = mugs.a

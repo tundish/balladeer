@@ -22,6 +22,8 @@ from collections import namedtuple
 from turberfield.dialogue.types import DataObject
 from turberfield.dialogue.types import Stateful
 
+from balladeer.types import Fruition
+
 
 Head = namedtuple(
     "Head",
@@ -44,3 +46,39 @@ class Gesture(DataObject, Stateful):
         self.label = label
         self.head = head or Head()
         self.hand = hand or Hand()
+
+    @property
+    def transitions(self):
+        if self.get_state(Fruition) == Fruition.inception:
+            return [
+                (self.head.propose, Fruition.elaboration)
+            ]
+        elif self.get_state(Fruition) == Fruition.elaboration:
+            return [
+                (self.hand.promise, Fruition.construction),
+                (self.hand.counter, Fruition.discussion),
+                (self.hand.decline, Fruition.withdrawn),
+                (self.head.abandon, Fruition.withdrawn),
+            ]
+        elif self.get_state(Fruition) == Fruition.construction:
+            return [
+                (self.head.abandon, Fruition.cancelled),
+                (self.hand.deliver, Fruition.transition),
+                (self.hand.decline, Fruition.defaulted),
+            ]
+        elif self.get_state(Fruition) == Fruition.transition:
+            return [
+                (self.head.abandon, Fruition.cancelled),
+                (self.head.decline, Fruition.construction),
+                (self.head.declare, Fruition.completion),
+            ]
+        elif self.get_state(Fruition) == Fruition.discussion:
+            return [
+                (self.hand.promise, Fruition.construction),
+                (self.head.confirm, Fruition.construction),
+                (self.head.counter, Fruition.elaboration),
+                (self.head.abandon, Fruition.withdrawn),
+                (self.hand.decline, Fruition.withdrawn),
+            ]
+        else:
+            return []
