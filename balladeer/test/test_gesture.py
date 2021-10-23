@@ -19,26 +19,19 @@
 
 import unittest
 
+from balladeer import Gesture
 from balladeer import Phrase
 from balladeer import Name
-from balladeer import Named
 from balladeer import Verb
 
 
-class NamedTests(unittest.TestCase):
+class GestureTests(unittest.TestCase):
 
     def test_simple(self):
-        mug = Named(names=[Name("Cup"), Name("Mug")])
-        self.assertIn("Cup", str(mug))
-        self.assertIn("\n", str(mug))
-        self.assertIn("Mug", str(mug))
-
-
-class VerbTests(unittest.TestCase):
-
-    def test_simple(self):
-        v = Verb("show")
-        self.assertEqual("shows", v.simple)
-        self.assertEqual("is showing", v.progressive)
-        self.assertEqual("showed", v.perfect)
-        self.assertEqual("show", v.imperative)
+        g = Gesture(phrases=[
+            Phrase(Verb("make"), Name("tea")),
+            Phrase(Verb("make"), Name("brew")),
+        ])
+        self.assertIn("make tea", str(g))
+        self.assertIn("\n", str(g))
+        self.assertIn("make brew", str(g))

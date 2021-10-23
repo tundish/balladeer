@@ -17,28 +17,20 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import unittest
+from collections import namedtuple
 
-from balladeer import Phrase
-from balladeer import Name
-from balladeer import Named
-from balladeer import Verb
+from turberfield.dialogue.types import DataObject
+from turberfield.dialogue.types import Stateful
 
 
-class NamedTests(unittest.TestCase):
-
-    def test_simple(self):
-        mug = Named(names=[Name("Cup"), Name("Mug")])
-        self.assertIn("Cup", str(mug))
-        self.assertIn("\n", str(mug))
-        self.assertIn("Mug", str(mug))
+Head = namedtuple(
+    "Head",
+    ("definite", "indefinite"),
+    defaults=([], [])
 
 
-class VerbTests(unittest.TestCase):
+class Gesture(DataObject, Stateful):
 
-    def test_simple(self):
-        v = Verb("show")
-        self.assertEqual("shows", v.simple)
-        self.assertEqual("is showing", v.progressive)
-        self.assertEqual("showed", v.perfect)
-        self.assertEqual("show", v.imperative)
+    def __str__(self):
+        return "\n".join("{0.verb.imperative} {0.name.noun}".format(i) for i in self.phrases)
+

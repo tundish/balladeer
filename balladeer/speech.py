@@ -55,10 +55,3 @@ class Verb(Tensed):
 
 
 Phrase = namedtuple("Phrase", ("verb", "name"))
-
-
-class Gesture(DataObject, Stateful):
-
-    def __str__(self):
-        return "\n".join("{0.verb.imperative} {0.name.noun}".format(i) for i in self.phrases)
-

@@ -63,6 +63,16 @@ class Named(DataObject):
         return "\n".join(i.noun for i in self.names)
 
 
+class Operation(enum.Enum):
+
+    begins = enum.auto()
+    frames = enum.auto()
+    paused = enum.auto()
+    prompt = enum.auto()
+    ending = enum.auto()
+    finish = enum.auto()
+
+
 class World:
 
     def __init__(self, *args, **kwargs):
