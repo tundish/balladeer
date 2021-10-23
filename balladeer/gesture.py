@@ -25,12 +25,16 @@ from turberfield.dialogue.types import Stateful
 
 Head = namedtuple(
     "Head",
-    ("definite", "indefinite"),
+    ("request", "indefinite"),
     defaults=([], [])
+)
 
 
 class Gesture(DataObject, Stateful):
 
+    # def __init__(
+    #     self, request=None, counter=None, promise=None, deliver=None, abandon=None, message=None, **kwargs
+    # ):
     def __str__(self):
         return "\n".join("{0.verb.imperative} {0.name.noun}".format(i) for i in self.phrases)
 
