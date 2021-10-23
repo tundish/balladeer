@@ -17,8 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import random
 import unittest
 
+from balladeer import Fruition
 from balladeer import Gesture
 from balladeer import Hand
 from balladeer import Head
@@ -45,12 +47,50 @@ class GestureTests(unittest.TestCase):
         self.assertIn("\n", str(g))
         self.assertIn("make brew", str(g))
 
+def transitions(gesture):
+    if gesture.get_state(Fruition) == Fruition.inception:
+        return [
+            (gesture.head.propose, Fruition.elaboration)
+        ]
+    elif gesture.get_state(Fruition) == Fruition.elaboration:
+        return [
+            (gesture.hand.promise, Fruition.construction),
+            (gesture.hand.counter, Fruition.discussion),
+            (gesture.hand.decline, Fruition.withdrawn),
+            (gesture.head.abandon, Fruition.withdrawn),
+        ]
+    else:
+        return []
+
 if __name__ == "__main__":
+    mugs = Gesture(
+        "mugs",
+        head=Head(
+            propose=["Can you get the mugs for me?"],
+            confirm=["OK, fine."],
+            counter=["Don't worry, I'll do it."],
+            abandon=["Oh, there are some right here."],
+            decline=["There's a crack in that one."],
+            declare=["Ta."],
+        ),
+        hand=Hand(
+            decline=["I can't right now."],
+            promise=["Sure."],
+            counter=["I will in a minute."],
+            deliver=["There they are."],
+        ),
+    ).set_state(Fruition.inception)
+
     brew = Gesture(
         "brew",
         head=Head(
         ),
         hand=Hand(
         ),
-    )
-    print(brew)
+    ).set_state(Fruition.inception)
+
+    state = None
+    while state not in (Fruition.cancelled,):
+        event, state = random.choice(transitions(mugs))
+        print(random.choice(event))
+        mugs.state = state
