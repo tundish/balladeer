@@ -92,7 +92,7 @@ class Gesture(DataObject, Stateful):
         else:
             return []
 
-    def __call__(self, selector=None, **kwargs):
-        selector = selector or random.choice
-        event, state = selector(self.transitions)
+    def __call__(self, strategy=None, **kwargs):
+        strategy = strategy or random.choice
+        event, state = strategy(self.transitions)
         return self, event, state

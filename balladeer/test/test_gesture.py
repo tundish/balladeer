@@ -41,7 +41,7 @@ class Brew(Gesture):
                 confirm=["OK, fine."],
                 counter=["Don't worry, I'll do it."],
                 abandon=["Oh, there are some right here."],
-                decline=["There's a crack in that one."],
+                decline=["There's a crack in that one.", "That needs a wash."],
                 declare=["Right then."],
             ),
             hand=Hand(
@@ -53,7 +53,7 @@ class Brew(Gesture):
         ).set_state(Fruition.inception)
 
     @staticmethod
-    def no_refuse(options):
+    def strategy(options):
         return random.choice(
             [(e, s) for e, s in options
             if s not in (Fruition.cancelled, Fruition.defaulted, Fruition.withdrawn)]
@@ -63,17 +63,17 @@ class Brew(Gesture):
         super().__init__(*args, **kwargs)
         self.mugs = mugs or self.create_mugs(a=getattr(self, "b", None), b=getattr(self, "a", None))
 
-    def __call__(self, selector=None, **kwargs):
+    def __call__(self, strategy=None, **kwargs):
         if self.mugs.failed:
             self.mugs = self.create_mugs(a=getattr(self, "b", None), b=getattr(self, "a", None))
 
         if self.get_state(Fruition) == Fruition.construction and not self.mugs.passed:
-            g, e, s = self.mugs(selector=self.no_refuse)
+            g, e, s = self.mugs(strategy=self.strategy)
             if e == self.mugs.hand.counter:
                 self.mugs.b = self.mugs.a
             return g, e, s
 
-        return super().__call__(selector, **kwargs)
+        return super().__call__(strategy, **kwargs)
 
 
 class GestureTests(unittest.TestCase):
@@ -132,7 +132,7 @@ if __name__ == "__main__":
     Louise : There they are.
     Sophie : There's a crack in that one.
     Louise : There they are.
-    Sophie : There's a crack in that one.
+    Sophie : That needs a wash.
     Louise : There they are.
     Sophie : Right then.
     Sophie : There you go.
