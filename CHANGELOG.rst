@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.8.0
+=====
+
+* Use Brew class in unit tests for `Gesture`.
+
 0.7.0
 =====
 
