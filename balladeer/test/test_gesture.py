@@ -111,9 +111,9 @@ class GestureTests(unittest.TestCase):
             Phrase(Verb("make"), Name("tea")),
             Phrase(Verb("make"), Name("brew")),
         ]))
-        self.assertIn("make tea", str(g))
-        self.assertIn("\n", str(g))
-        self.assertIn("make brew", str(g))
+        self.assertEqual("simple", str(g))
+        self.assertEqual("make", g.head.propose[0].verb.imperative)
+        self.assertEqual("tea", g.head.propose[0].name.noun)
 
     def test_brew(self):
         brew = self.create_brew()

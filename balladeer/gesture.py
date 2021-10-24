@@ -96,3 +96,7 @@ class Gesture(DataObject, Stateful):
         strategy = strategy or random.choice
         event, state = strategy(self.transitions)
         return self, event, state
+
+    def __str__(self):
+        return self.label
+
