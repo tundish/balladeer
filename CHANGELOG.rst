@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.9.0
+=====
+
+* Add __str__ method for `Gesture`.
+
 0.8.0
 =====
 
