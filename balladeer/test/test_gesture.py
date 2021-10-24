@@ -29,7 +29,75 @@ from balladeer import Name
 from balladeer import Verb
 
 
+class Brew(Gesture):
+
+    @staticmethod
+    def create_mugs(a, b):
+        return Gesture(
+            "mugs",
+            a=a, b=b,
+            head=Head(
+                propose=["Can you get the mugs for me?"],
+                confirm=["OK, fine."],
+                counter=["Don't worry, I'll do it."],
+                abandon=["Oh, there are some right here."],
+                decline=["There's a crack in that one."],
+                declare=["Right then."],
+            ),
+            hand=Hand(
+                decline=["I can't right now."],
+                promise=["Sure."],
+                counter=["I will in a minute."],
+                deliver=["There they are."],
+            ),
+        ).set_state(Fruition.inception)
+
+    @staticmethod
+    def no_refuse(options):
+        return random.choice(
+            [(e, s) for e, s in options
+            if s not in (Fruition.cancelled, Fruition.defaulted, Fruition.withdrawn)]
+        )
+
+    def __init__(self, *args, mugs=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.mugs = mugs or self.create_mugs(a=getattr(self, "b", None), b=getattr(self, "a", None))
+
+    def __call__(self, selector=None, **kwargs):
+        if self.mugs.failed:
+            self.mugs = self.create_mugs(a=getattr(self, "b", None), b=getattr(self, "a", None))
+
+        if self.get_state(Fruition) == Fruition.construction and not self.mugs.passed:
+            g, e, s = self.mugs(selector=self.no_refuse)
+            if e == self.mugs.hand.counter:
+                self.mugs.b = self.mugs.a
+            return g, e, s
+
+        return super().__call__(selector, **kwargs)
+
+
 class GestureTests(unittest.TestCase):
+
+    @staticmethod
+    def create_brew():
+        return Brew(
+            "brew",
+            a="Louise", b="Sophie",
+            head=Head(
+                propose=["Stick the kettle on, would you?"],
+                confirm=["Whatever, fine."],
+                counter=["I'll have tea, please."],
+                abandon=["Actually, don't worry; I've got to go."],
+                decline=["You've left the bag in."],
+                declare=["Thanks."],
+            ),
+            hand=Hand(
+                decline=["No time now, sorry."],
+                promise=["OK."],
+                counter=["Tea or coffee?"],
+                deliver=["There you go."],
+            ),
+        ).set_state(Fruition.inception)
 
     def test_head(self):
         a = Head()
@@ -47,56 +115,43 @@ class GestureTests(unittest.TestCase):
         self.assertIn("\n", str(g))
         self.assertIn("make brew", str(g))
 
+    def test_brew(self):
+        brew = self.create_brew()
+        while not (brew.passed or brew.failed):
+            gesture, event, state = brew()
+            gesture.state = state
+
+
 if __name__ == "__main__":
-    a = "Louise"
-    b = "Sophie"
-    mugs = Gesture(
-        "mugs",
-        a=a, b=b,
-        head=Head(
-            propose=["Can you get the mugs for me?"],
-            confirm=["OK, fine."],
-            counter=["Don't worry, I'll do it."],
-            abandon=["Oh, there are some right here."],
-            decline=["There's a crack in that one."],
-            declare=["Ta."],
-        ),
-        hand=Hand(
-            decline=["I can't right now."],
-            promise=["Sure."],
-            counter=["I will in a minute."],
-            deliver=["There they are."],
-        ),
-    ).set_state(Fruition.inception)
+    """
+    Louise : Stick the kettle on, would you?
+    Sophie : Tea or coffee?
+    Sophie : OK.
+    Sophie : Can you get the mugs for me?
+    Louise : Sure.
+    Louise : There they are.
+    Sophie : There's a crack in that one.
+    Louise : There they are.
+    Sophie : There's a crack in that one.
+    Louise : There they are.
+    Sophie : Right then.
+    Sophie : There you go.
+    Louise : You've left the bag in.
+    Louise : Actually, don't worry; I've got to go.
+    """
+    brew = GestureTests.create_brew()
 
-    brew = Gesture(
-        "brew",
-        head=Head(
-            propose=["Stick the kettle on, would you?"],
-            confirm=["OK, fine."],
-            counter=["I'll have tea, please."],
-            abandon=["Actually, don't worry; I've got to go."],
-            decline=["You've left the bag in."],
-            declare=["Thanks."],
-        ),
-        hand=Hand(
-            decline=["Sorry, not right now."],
-            promise=["OK."],
-            counter=["Tea or coffee?"],
-            deliver=["There you go."],
-        ),
-    ).set_state(Fruition.inception)
+    while not (brew.passed or brew.failed):
+        gesture, event, state = brew()
+        gesture.state = state
 
-    state = mugs.get_state(Fruition)
-    while state.value not in (5, 7, 8, 9):
-        event, state = random.choice(mugs.transitions)
-        actor = mugs.a if event in mugs.head else mugs.b
+        if event in brew.head:
+            actor = brew.a
+        elif event in brew.hand:
+            actor = brew.b
+        elif event in brew.mugs.head:
+            actor = brew.mugs.a
+        elif event in brew.mugs.hand:
+            actor = brew.mugs.b
+
         print(actor, ":", random.choice(event))
-        mugs.state = state
-        if event == mugs.hand.counter:
-            mugs.b = mugs.a   # Mugs-specific, not brew
-        #TODO: gesture, event, state = brew(policy=random.choice)
-        # if gesture.complete:
-        #     self.lookup[gesture.label].discard(gesture)
-        # else:
-        #     self.lookup[gesture.label].add(gesture)

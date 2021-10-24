@@ -18,6 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from collections import namedtuple
+import random
 
 from turberfield.dialogue.types import DataObject
 from turberfield.dialogue.types import Stateful
@@ -46,6 +47,14 @@ class Gesture(DataObject, Stateful):
         self.label = label
         self.head = head or Head()
         self.hand = hand or Hand()
+
+    @property
+    def failed(self):
+        return self.get_state(Fruition).value in (7, 8, 9)
+
+    @property
+    def passed(self):
+        return self.get_state(Fruition) == Fruition.completion
 
     @property
     def transitions(self):
@@ -82,3 +91,8 @@ class Gesture(DataObject, Stateful):
             ]
         else:
             return []
+
+    def __call__(self, selector=None, **kwargs):
+        selector = selector or random.choice
+        event, state = selector(self.transitions)
+        return self, event, state
