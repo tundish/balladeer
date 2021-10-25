@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.10.0
+======
+
+* Gesture property names are now unique across Head and Hand.
+
 0.9.0
 =====
 

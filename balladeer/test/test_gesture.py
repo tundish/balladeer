@@ -40,14 +40,16 @@ class Brew(Gesture):
                 propose=["Can you get the mugs for me?"],
                 confirm=["OK, fine."],
                 counter=["Don't worry, I'll do it."],
-                abandon=["Oh, there are some right here."],
-                decline=["There's a crack in that one.", "That needs a wash."],
+                abandon=["Oh, never mind."],
+                condemn=["There's a crack in that one.", "That needs a wash."],
                 declare=["Right then."],
             ),
+            # TODO: Add abandon
             hand=Hand(
                 decline=["I can't right now."],
+                suggest=["I will in a minute."],
                 promise=["Sure."],
-                counter=["I will in a minute."],
+                disavow=["I though you were doing it."],
                 deliver=["There they are."],
             ),
         ).set_state(Fruition.inception)
@@ -69,7 +71,7 @@ class Brew(Gesture):
 
         if self.get_state(Fruition) == Fruition.construction and not self.mugs.passed:
             g, e, s = self.mugs(strategy=self.strategy)
-            if e == self.mugs.hand.counter:
+            if e == self.mugs.hand.suggest:
                 self.mugs.b = self.mugs.a
             return g, e, s
 
@@ -88,13 +90,14 @@ class GestureTests(unittest.TestCase):
                 confirm=["Whatever, fine."],
                 counter=["I'll have tea, please."],
                 abandon=["Actually, don't worry; I've got to go."],
-                decline=["You've left the bag in."],
+                condemn=["You've left the bag in."],
                 declare=["Thanks."],
             ),
             hand=Hand(
                 decline=["No time now, sorry."],
-                promise=["OK."],
-                counter=["Tea or coffee?"],
+                suggest=["Coffee?"],
+                promise=["OK then."],
+                disavow=["I'll be back in a minute. Carry on without me."],
                 deliver=["There you go."],
             ),
         ).set_state(Fruition.inception)
@@ -125,19 +128,17 @@ class GestureTests(unittest.TestCase):
 if __name__ == "__main__":
     """
     Louise : Stick the kettle on, would you?
-    Sophie : Tea or coffee?
-    Sophie : OK.
+    Sophie : Coffee?
+    Sophie : OK then.
     Sophie : Can you get the mugs for me?
     Louise : Sure.
     Louise : There they are.
     Sophie : There's a crack in that one.
     Louise : There they are.
-    Sophie : That needs a wash.
-    Louise : There they are.
     Sophie : Right then.
     Sophie : There you go.
     Louise : You've left the bag in.
-    Louise : Actually, don't worry; I've got to go.
+    Sophie : I'll be back in a minute. Carry on without me.
     """
     brew = GestureTests.create_brew()
 

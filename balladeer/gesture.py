@@ -28,15 +28,15 @@ from balladeer.types import Fruition
 
 Head = namedtuple(
     "Head",
-    ("propose", "confirm", "counter", "abandon", "decline", "declare"),
+    ("propose", "confirm", "counter", "abandon", "condemn", "declare"),
     defaults=(tuple(), tuple(), tuple(), tuple(), tuple(), tuple())
 )
 
 
 Hand = namedtuple(
     "Hand",
-    ("decline", "promise", "counter", "deliver"),
-    defaults=(tuple(), tuple(), tuple(), tuple())
+    ("decline", "suggest", "promise", "disavow", "deliver"),
+    defaults=(tuple(), tuple(), tuple(), tuple(), tuple())
 )
 
 
@@ -65,7 +65,7 @@ class Gesture(DataObject, Stateful):
         elif self.get_state(Fruition) == Fruition.elaboration:
             return [
                 (self.hand.promise, Fruition.construction),
-                (self.hand.counter, Fruition.discussion),
+                (self.hand.suggest, Fruition.discussion),
                 (self.hand.decline, Fruition.withdrawn),
                 (self.head.abandon, Fruition.withdrawn),
             ]
@@ -73,12 +73,12 @@ class Gesture(DataObject, Stateful):
             return [
                 (self.head.abandon, Fruition.cancelled),
                 (self.hand.deliver, Fruition.transition),
-                (self.hand.decline, Fruition.defaulted),
+                (self.hand.disavow, Fruition.defaulted),
             ]
         elif self.get_state(Fruition) == Fruition.transition:
             return [
                 (self.head.abandon, Fruition.cancelled),
-                (self.head.decline, Fruition.construction),
+                (self.head.condemn, Fruition.construction),
                 (self.head.declare, Fruition.completion),
             ]
         elif self.get_state(Fruition) == Fruition.discussion:
