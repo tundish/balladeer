@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from collections import ChainMap
 from collections import namedtuple
 import random
 
@@ -40,13 +41,39 @@ Hand = namedtuple(
 )
 
 
-class Gesture(DataObject, Stateful):
+class ChainStore:
+
+    def __init__(self, *args, **kwargs):
+        object.__setattr__(self, "_chain", ChainMap(kwargs, *args))
+
+    def __getattr__(self, name):
+        try:
+            return self._chain[name]
+        except KeyError:
+            raise AttributeError(f"No mapping in chain has key '{name}'")
+
+    def __setattr__(self, name, value):
+        if name in set(Head._fields).union(set(Hand._fields)):
+            self._chain[name] = value
+        else:
+            object.__setattr__(self, name, value)
+
+
+class Gesture(Stateful, ChainStore):
 
     def __init__(self, label, head=None, hand=None, **kwargs):
-        super().__init__(**kwargs)
+        head = head or Head()
+        hand = hand or Hand()
+        super().__init__(head._asdict(), hand._asdict(), **kwargs)
         self.label = label
-        self.head = head or Head()
-        self.hand = hand or Hand()
+
+    @property
+    def hand(self):
+        return Hand(**self._chain.maps[2])
+
+    @property
+    def head(self):
+        return Head(**self._chain.maps[1])
 
     @property
     def failed(self):
@@ -60,34 +87,34 @@ class Gesture(DataObject, Stateful):
     def transitions(self):
         if self.get_state(Fruition) == Fruition.inception:
             return [
-                (self.head.propose, Fruition.elaboration)
+                (self.propose, Fruition.elaboration)
             ]
         elif self.get_state(Fruition) == Fruition.elaboration:
             return [
-                (self.hand.promise, Fruition.construction),
-                (self.hand.suggest, Fruition.discussion),
-                (self.hand.decline, Fruition.withdrawn),
-                (self.head.abandon, Fruition.withdrawn),
+                (self.promise, Fruition.construction),
+                (self.suggest, Fruition.discussion),
+                (self.decline, Fruition.withdrawn),
+                (self.abandon, Fruition.withdrawn),
             ]
         elif self.get_state(Fruition) == Fruition.construction:
             return [
-                (self.head.abandon, Fruition.cancelled),
-                (self.hand.deliver, Fruition.transition),
-                (self.hand.disavow, Fruition.defaulted),
+                (self.abandon, Fruition.cancelled),
+                (self.deliver, Fruition.transition),
+                (self.disavow, Fruition.defaulted),
             ]
         elif self.get_state(Fruition) == Fruition.transition:
             return [
-                (self.head.abandon, Fruition.cancelled),
-                (self.head.condemn, Fruition.construction),
-                (self.head.declare, Fruition.completion),
+                (self.abandon, Fruition.cancelled),
+                (self.condemn, Fruition.construction),
+                (self.declare, Fruition.completion),
             ]
         elif self.get_state(Fruition) == Fruition.discussion:
             return [
-                (self.hand.promise, Fruition.construction),
-                (self.head.confirm, Fruition.construction),
-                (self.head.counter, Fruition.elaboration),
-                (self.head.abandon, Fruition.withdrawn),
-                (self.hand.decline, Fruition.withdrawn),
+                (self.promise, Fruition.construction),
+                (self.confirm, Fruition.construction),
+                (self.counter, Fruition.elaboration),
+                (self.abandon, Fruition.withdrawn),
+                (self.decline, Fruition.withdrawn),
             ]
         else:
             return []

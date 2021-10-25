@@ -89,7 +89,7 @@ class GestureTests(unittest.TestCase):
                 propose=["Stick the kettle on, would you?"],
                 confirm=["Whatever, fine."],
                 counter=["I'll have tea, please."],
-                abandon=["Actually, don't worry; I've got to go."],
+                abandon=["Actually, forget it; I've got to go."],
                 condemn=["You've left the bag in."],
                 declare=["Thanks."],
             ),
@@ -117,6 +117,28 @@ class GestureTests(unittest.TestCase):
         self.assertEqual("simple", str(g))
         self.assertEqual("make", g.head.propose[0].verb.imperative)
         self.assertEqual("tea", g.head.propose[0].name.noun)
+
+    def test_simple(self):
+        g = Gesture("simple", head=Head([
+            Phrase(Verb("make"), Name("tea")),
+            Phrase(Verb("make"), Name("brew")),
+        ]))
+        g.propose = "Fancy a brew?"
+        self.assertEqual("Fancy a brew?", g.propose)
+        self.assertEqual("make", g.head.propose[0].verb.imperative)
+        self.assertEqual("tea", g.head.propose[0].name.noun)
+        g.decline = "I've just had one, thanks"
+        self.assertEqual("I've just had one, thanks", g.decline)
+        self.assertFalse(g.hand.decline)
+
+    def test_attribute_access(self):
+        g = Gesture("blank")
+        self.assertRaises(AttributeError, getattr, g, "new_attribute")
+
+        self.assertFalse(g.propose)
+        self.assertFalse(g.decline)
+        g.new_attribute = True
+        self.assertTrue(g.new_attribute)
 
     def test_brew(self):
         brew = self.create_brew()

@@ -9,7 +9,8 @@ Change Log
 0.10.0
 ======
 
-* Gesture property names are now unique across Head and Hand.
+* `Gesture` property names are now unique across Head and Hand.
+* `Gesture` attribute access implemented via ChainMap.
 
 0.9.0
 =====
