@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.11.0
+======
+
+* Adopt absolute pinning for dependencies.
+
 0.10.0
 ======
 

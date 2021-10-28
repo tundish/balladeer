@@ -58,7 +58,10 @@ setup(
         ],
     },
     install_requires=[
-        "turberfield-catchphrase>=0.21.0"
+        "docutils==0.17.1",
+        "turberfield-catchphrase==0.22.0",
+        "turberfield-dialogue==0.35.0",
+        "turberfield-utils==0.38.0",
     ],
     extras_require={
         "dev": [
