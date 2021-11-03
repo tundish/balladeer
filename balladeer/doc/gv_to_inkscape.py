@@ -56,24 +56,35 @@ def convert():
     print("done")
 
 def transitions():
-    head = Head(*Head._fields)
-    hand = Hand(*Hand._fields)
+    head = Head(*("head.{0}".format(i) for i in Head._fields))
+    hand = Hand(*("hand.{0}".format(i) for i in Hand._fields))
     g = Gesture("witness", head, hand)
     for s in Fruition:
         g.set_state(s)
         for e, t in g.transitions:
             yield s, e, t
 
+def arcs(transitions):
+    yield from [i.name.capitalize() for i in Fruition]
+    for s, e, t in transitions:
+        s = s.name.capitalize()
+        t = t.name.capitalize()
+        c = "darkorange4" if e.startswith("head") else "darkcyan"
+        e = e.split(".")[-1]
+        yield f'{s} -> {t} [arrowhead=empty label="{e}" fontcolor={c} fontname="Cabin Sketch"]'
+
 def template(graph):
     return textwrap.dedent("""
     digraph {{
+        graph [ratio=1]
+        node [fontname="Ubuntu Condensed" shape=rectangle]
         {0}
     }}
     """).format("\n".join(graph))
 
 if __name__ == "__main__":
     """
-    dot -Tsvg > output.svg
+    dot -K neato -Tsvg > output.svg
     """
-    graph = ['{0.name} -> {2.name} [label="{1}"]'.format(*i) for i in transitions()]
+    graph = arcs(transitions())
     print(template(graph))
