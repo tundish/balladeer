@@ -2,6 +2,8 @@
 # encoding: UTF-8
 
 import random
+import subprocess
+import sys
 import textwrap
 from xml.dom import minidom
 
@@ -10,10 +12,10 @@ from balladeer import Gesture
 from balladeer import Hand
 from balladeer import Head
 
-def convert():
+def convert(text):
     # 2 May 2015, John F. Raffensperger
     # 1. Read Graphviz.svg. This is output from Graphviz.
-    graphvizSVGFile= minidom.parse("graphviz_output.svg")
+    graphvizSVGFile= minidom.parseString(text)
 
     # 2. For each node, get id and title.
     nodeTitles = {}
@@ -45,16 +47,14 @@ def convert():
                 if thing.nodeType == s.ELEMENT_NODE and thing.tagName == "path": 
                     thing.setAttribute("inkscape:connector-type", "polyline")
                     thing.setAttribute("inkscape:connector-curvature", "3")
-                    nodeID = nodeTitles[edgeTitles[s.attributes['id'].value][0]]
+                    nodeID = nodeTitles[edgeTitles[s.attributes['id'].value][0].split(":")[0]]
                     thing.setAttribute("inkscape:connection-start", "#" + nodeID)
-                    nodeID = nodeTitles[edgeTitles[s.attributes['id'].value][1]]
+                    nodeID = nodeTitles[edgeTitles[s.attributes['id'].value][1].split(":")[0]]
                     thing.setAttribute("inkscape:connection-end", "#" + nodeID)
 
     # 6. Output should have draggable nodes in Inkscape, after ungrouping as needed.
-    SVGtextFile = open("inkscape_input.svg", "wb")
-    graphvizSVGFile.writexml(SVGtextFile)
-    SVGtextFile.close()
-    print("done")
+    return graphvizSVGFile.toxml(encoding="utf-8", standalone=True)
+
 
 def transitions():
     head = Head(*("head.{0}".format(i) for i in Head._fields))
@@ -65,6 +65,7 @@ def transitions():
         for e, t in g.transitions:
             yield s, e, t
 
+
 def arcs(transitions):
     yield from [i.name.capitalize() for i in Fruition]
     for s, e, t in transitions:
@@ -74,13 +75,15 @@ def arcs(transitions):
         e = e.split(".")[-1]
         hp = "c"
         tp = "c"
-        yield f'{s} -> {t} [arrowhead=vee arrowsize=0.6 headport={hp} tailport={tp} xlabel="{e}" fontcolor={c} fontname="Cabin Sketch"]'
+        yield f"""
+        {s} -> {t} [arrowhead=vee arrowsize=0.6 headport={hp} tailport={tp} xlabel="{e}"
+        fontcolor={c} fontname="Ubuntu Condensed"]"""
 
 def template(graph):
     return textwrap.dedent("""
     digraph {{
         graph [center=true nodesep=2 ratio=1 splines=ortho]
-        node [fontname="Ubuntu Condensed" fontsize=16 height=1.0 shape=rectangle]
+        node [fontname="Cabin Sketch" fontsize=16 height=1.0 shape=rectangle]
         {0}
     }}
     """).format("\n".join(graph))
@@ -90,4 +93,11 @@ if __name__ == "__main__":
     dot -K neato -Tsvg > output.svg
     """
     graph = arcs(transitions())
-    print(template(graph))
+    dot = subprocess.run(
+        ["dot", "-Tsvg"],
+        input=template(graph).encode("utf-8"),
+        capture_output=True
+    )
+    print(dot.stdout.decode("utf-8"))
+    svg = convert(dot.stdout.decode("utf-8"))
+    #print(svg.decode("utf-8"))
