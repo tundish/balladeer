@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# encoding: UTF-8
+
+import textwrap
 from xml.dom import minidom
 
 from balladeer import Fruition
@@ -51,10 +55,25 @@ def convert():
     SVGtextFile.close()
     print("done")
 
-if __name__ == "__main__":
+def transitions():
     head = Head(*Head._fields)
     hand = Hand(*Hand._fields)
     g = Gesture("witness", head, hand)
     for s in Fruition:
         g.set_state(s)
-        print(g.transitions)
+        for e, t in g.transitions:
+            yield s, e, t
+
+def template(graph):
+    return textwrap.dedent("""
+    digraph {{
+        {0}
+    }}
+    """).format("\n".join(graph))
+
+if __name__ == "__main__":
+    """
+    dot -Tsvg > output.svg
+    """
+    graph = ['{0.name} -> {2.name} [label="{1}"]'.format(*i) for i in transitions()]
+    print(template(graph))
