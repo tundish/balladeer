@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: UTF-8
 
+import random
 import textwrap
 from xml.dom import minidom
 
@@ -69,15 +70,17 @@ def arcs(transitions):
     for s, e, t in transitions:
         s = s.name.capitalize()
         t = t.name.capitalize()
-        c = "darkorange4" if e.startswith("head") else "darkcyan"
+        c = "orangered4" if e.startswith("head") else "royalblue4"
         e = e.split(".")[-1]
-        yield f'{s} -> {t} [arrowhead=empty xlabel="{e}" fontcolor={c} fontname="Cabin Sketch"]'
+        hp = "c"
+        tp = "c"
+        yield f'{s} -> {t} [arrowhead=vee arrowsize=0.6 headport={hp} tailport={tp} xlabel="{e}" fontcolor={c} fontname="Cabin Sketch"]'
 
 def template(graph):
     return textwrap.dedent("""
     digraph {{
-        graph [ratio=1 splines=ortho]
-        node [fontname="Ubuntu Condensed" shape=rectangle]
+        graph [center=true nodesep=2 ratio=1 splines=ortho]
+        node [fontname="Ubuntu Condensed" fontsize=16 height=1.0 shape=rectangle]
         {0}
     }}
     """).format("\n".join(graph))
