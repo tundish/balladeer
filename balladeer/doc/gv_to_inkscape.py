@@ -71,12 +71,12 @@ def arcs(transitions):
         t = t.name.capitalize()
         c = "darkorange4" if e.startswith("head") else "darkcyan"
         e = e.split(".")[-1]
-        yield f'{s} -> {t} [arrowhead=empty label="{e}" fontcolor={c} fontname="Cabin Sketch"]'
+        yield f'{s} -> {t} [arrowhead=empty xlabel="{e}" fontcolor={c} fontname="Cabin Sketch"]'
 
 def template(graph):
     return textwrap.dedent("""
     digraph {{
-        graph [ratio=1]
+        graph [ratio=1 splines=ortho]
         node [fontname="Ubuntu Condensed" shape=rectangle]
         {0}
     }}
