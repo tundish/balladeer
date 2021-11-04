@@ -6,6 +6,12 @@
 Change Log
 ::::::::::
 
+0.13.0
+======
+
+* Allow easier setting of `Story` context.
+* Repin to turberfield-catchphrase.
+
 0.11.0
 ======
 

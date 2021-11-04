@@ -59,7 +59,7 @@ setup(
     },
     install_requires=[
         "docutils==0.17.1",
-        "turberfield-catchphrase==0.22.0",
+        "turberfield-catchphrase==0.23.0",
         "turberfield-dialogue==0.35.0",
         "turberfield-utils==0.38.0",
     ],
