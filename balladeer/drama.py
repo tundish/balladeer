@@ -37,7 +37,7 @@ class Drama(Stateful, Mediator):
 
     @property
     def ensemble(self):
-        raise NotImplementedError
+        return []
 
     @property
     def turns(self):

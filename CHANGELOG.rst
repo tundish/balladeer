@@ -10,6 +10,7 @@ Change Log
 ======
 
 * Allow easier setting of `Story` context.
+* Provide default empty ensemble.
 * Repin to turberfield-catchphrase.
 
 0.11.0

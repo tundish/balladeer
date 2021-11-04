@@ -40,7 +40,7 @@ class Story(Renderer, DataObject):
             "catchphrase-reveal-extends": "both",
         }
         self.settings = Settings(**self.definitions)
-        self.context = None
+        self.context = kwargs.get("context", None)
 
     @property
     def actions(self):
