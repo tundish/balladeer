@@ -1,0 +1,124 @@
+html, button, input, select, textarea,
+.pure-g [class *= "pure-u"] {
+color: #333;
+/* Set content font stack here: */
+font-family: Georgia, Times, "Times New Roman", serif;
+}
+
+body {
+background-color: #f5f5f5;
+background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='152' height='152' viewBox='0 0 152 152'%3E%3Cg fill-rule='evenodd'%3E%3Cg id='temple' fill='%23e5e5e5' fill-opacity='0.4'%3E%3Cpath d='M152 150v2H0v-2h28v-8H8v-20H0v-2h8V80h42v20h20v42H30v8h90v-8H80v-42h20V80h42v40h8V30h-8v40h-42V50H80V8h40V0h2v8h20v20h8V0h2v150zm-2 0v-28h-8v20h-20v8h28zM82 30v18h18V30H82zm20 18h20v20h18V30h-20V10H82v18h20v20zm0 2v18h18V50h-18zm20-22h18V10h-18v18zm-54 92v-18H50v18h18zm-20-18H28V82H10v38h20v20h38v-18H48v-20zm0-2V82H30v18h18zm-20 22H10v18h18v-18zm54 0v18h38v-20h20V82h-18v20h-20v20H82zm18-20H82v18h18v-18zm2-2h18V82h-18v18zm20 40v-18h18v18h-18zM30 0h-2v8H8v20H0v2h8v40h42V50h20V8H30V0zm20 48h18V30H50v18zm18-20H48v20H28v20H10V30h20V10h38v18zM30 50h18v18H30V50zm-2-40H10v18h18V10z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+.pure-menu .pure-menu-selected a {
+}
+
+header, footer, nav {
+text-align: center;
+font-weight: lighter;
+}
+
+h1, h2, a.feedlink {
+color:  #363636;
+font-family: "Ubuntu Condensed", "Helvetica Neue", arial, sans-serif;
+}
+
+a {
+color: #221e59;
+}
+
+nav.pure-menu {
+background: #e5e5e5;
+}
+
+nav.pure-menu .pure-menu-disabled > a {
+background: #e5e5e5;
+}
+
+nav.pure-menu.pure-menu-open,
+nav.pure-menu.pure-menu-horizontal li .pure-menu-children {
+background: #f5f5f5;
+}
+
+nav.pure-menu ul li a {
+color: #221e59;
+font-family: "WenQuanYi Micro Hei", "Helvetica Neue", arial, sans-serif;
+font-weight: bold;
+}
+
+nav.pure-menu li a:hover,
+nav.pure-menu li a:focus {
+background: #fff;
+}
+
+blockquote {
+font-family: "WenQuanYi Micro Hei", "Helvetica Neue", arial, sans-serif;
+font-style: italic;
+}
+
+pre, table {
+margin: 1em 0.5em 2em 4em;
+}
+
+.biblio {
+box-sizing: border-box;
+background-color: #ddd;
+border: 1px black dashed;
+margin: 1em;
+padding: 1em;
+}
+
+dl.adr dt {
+display: none;
+}
+
+a.feedlink:before {
+content: url("/theme/img/rss.png");
+margin-right: 0.5em;
+vertical-align: -0.1em;
+}
+
+a.muted {
+text-decoration: none;
+}
+
+.red {
+color: #990033;
+}
+
+.blue {
+color: #1f8dd6;
+}
+
+.deepgreen {
+color: #002c2b;
+}
+
+.green {
+color: #a4aa04;
+color: #869651;
+}
+
+.orange {
+color: #fd8603;
+}
+
+.yellow {
+color: #f4f328;
+}
+
+.floatright {
+float: right;
+}
+
+.shiftright-1 {
+margin-left: 1em;
+}
+
+.pad-1 {
+padding: 1em;
+}
+
+.pad-2 {
+padding: 2em;
+}

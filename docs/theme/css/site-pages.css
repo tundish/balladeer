@@ -1,0 +1,36 @@
+p, div.section ul {
+letter-spacing: 0.030em;
+padding: 0.5em 2em 0.8em 2em;
+font-size: 1.3em;
+}
+
+header, footer, nav {
+text-align: center;
+}
+
+header h1 a {
+color: #444;
+}
+
+h2, h3 {
+color: #444;
+font-family: "WenQuanYi Micro Hei", "Helvetica Neue", arial, sans-serif;
+}
+
+h2 {
+padding-left: -1.8em;
+}
+
+aside {
+background: #1f8dd6;
+padding: 0 1em 0 1em;
+margin: 0 1em 0 1em;
+border-radius: 6px;
+color: #fff;
+}
+
+aside a, aside a:visited {
+color: #f4f328;
+}
+
+

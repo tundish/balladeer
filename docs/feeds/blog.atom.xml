@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Balladeer - Blog</title><link href="https://tundish.github.io/balladeer/" rel="alternate"></link><link href="https://tundish.github.io/balladeer/feeds/blog.atom.xml" rel="self"></link><id>https://tundish.github.io/balladeer/</id><updated>2021-11-11T14:00:00+00:00</updated><entry><title>Balladeer components</title><link href="https://tundish.github.io/balladeer/balladeer-components.html" rel="alternate"></link><published>2021-11-11T14:00:00+00:00</published><updated>2021-11-11T14:00:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-11:/balladeer/balladeer-components.html</id><summary type="html">&lt;p class="first last"&gt;This article presents a diagram of the main components of Balladeer.&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="interactions"&gt;
+&lt;h2&gt;Interactions&lt;/h2&gt;
+&lt;p&gt;The top-level object in Balladeer is the Story. And whether game, prose or poetry, a Story always has one
+active Drama object. That object specifies where to find the corresponding Dialogue files.&lt;/p&gt;
+&lt;p&gt;What's shared between Drama and Dialogue is the Ensemble.
+That's simply a container for all characters and objects currently in context.
+Both Drama and Dialogue can modify the state of objects in the Ensemble.&lt;/p&gt;
+&lt;img alt="A diagram of the components of the Balladeer framework" class="pure-img align-center" src="https://tundish.github.io/balladeer/images/balladeer-interaction.png" /&gt;
+&lt;/div&gt;
+&lt;div class="section" id="operation"&gt;
+&lt;h2&gt;Operation&lt;/h2&gt;
+&lt;p&gt;Your Drama may define an &lt;em&gt;interlude&lt;/em&gt; function. That is called every time Balladeer generates output to display.
+In that function you can put any logic which is invariant to user action.&lt;/p&gt;
+&lt;p&gt;Then comes the process of &lt;em&gt;casting&lt;/em&gt;.
+The Ensemble is offered to the Dialogue scripts. They specify which objects and characters they use,
+and which states those must have.&lt;/p&gt;
+&lt;p&gt;When suitable Dialogue is found, a Presenter object is created. The Presenter &lt;em&gt;animates&lt;/em&gt; the dialogue, calculating
+how long the text will take to read, and when it must appear.&lt;/p&gt;
+&lt;p&gt;The Presenter also carries out any instructions in the Dialogue which change state of Ensemble objects while the
+scene is played out. This is &lt;em&gt;reaction&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Control now passes to the Story, which renders the scene. Out of the box, Balladeer can render to a character
+terminal, or in HTML5 for the browser experience.
+The Dialogue format supports showing images and playing audio and video.
+You have complete freedom to restyle the display using CSS3.&lt;/p&gt;
+&lt;p&gt;User &lt;em&gt;input&lt;/em&gt; can come in the form of free text, or web GUI forms and buttons.
+That input is passed to the Drama to interpret and act upon.&lt;/p&gt;
+&lt;p&gt;Balladeer's text parser system is innovative and very flexible.
+Drama objects can recognize &lt;em&gt;commands&lt;/em&gt; of any complexity.
+You can enable or disable those commands on the fly as required.&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Blog"></category><category term="basics"></category><category term="architecture"></category></entry><entry><title>Balladeer in brief</title><link href="https://tundish.github.io/balladeer/balladeer-in-brief.html" rel="alternate"></link><published>2021-11-11T10:30:00+00:00</published><updated>2021-11-11T10:30:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-11:/balladeer/balladeer-in-brief.html</id><summary type="html">&lt;p class="first last"&gt;This is an introductory article. Start here if you know nothing about Balladeer&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="tell-me-a-story"&gt;
+&lt;h2&gt;Tell me a Story&lt;/h2&gt;
+&lt;p&gt;Story-telling is at the heart of human culture. We all have the right to tell our stories.&lt;/p&gt;
+&lt;p&gt;In an internet-enabled world, with an open and semantic web, you might think that poetry and literature
+would proliferate. I have to say I don't see that myself. There are places to find new writing online, but
+not many. And where they exist, they are not always operated by the authors themselves.&lt;/p&gt;
+&lt;p&gt;Is it possible for one individual to tell a story to the world, outside of corporate social media?
+Yes, that is possible. And it has been possible for a number of years.
+But there is now a free and modern option for those who want to do that.&lt;/p&gt;
+&lt;p&gt;It is unique in its web-native architecture; it is designed to serve on the Web.
+It is written in the world's most popular programming language. That's Python, the one they teach in schools.&lt;/p&gt;
+&lt;p&gt;Its name is Balladeer.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="drama-and-dialogue"&gt;
+&lt;h2&gt;Drama and Dialogue&lt;/h2&gt;
+&lt;p&gt;As an author in a Balladeer project, you supply two types of content; &lt;em&gt;Drama&lt;/em&gt; and &lt;em&gt;Dialogue&lt;/em&gt;.
+Drama is code written in Python. It contains all the functionality of your piece.
+Dialogue goes into text files, which have a structure and syntax akin to that of a traditional screenplay.&lt;/p&gt;
+&lt;p&gt;If you are writing poetry, there may be no code at all. If your art is a game, there could be many
+Drama modules for you to develop, along with unit tests to check they work correctly.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="where-next"&gt;
+&lt;h2&gt;Where Next?&lt;/h2&gt;
+&lt;p&gt;The &lt;a class="reference external" href="https://tundish.github.io/balladeer/category/blog.html"&gt;Balladeer blog&lt;/a&gt; hosts regular articles on how to use the framework.
+There is a demo game you can download and run too; it's called &lt;a class="reference external" href="https://github.com/tundish/tea_and_sympathy"&gt;Tea and Sympathy&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Balladeer relies heavily on other libraries, known as the &lt;cite&gt;Turberfield&lt;/cite&gt; packages.
+Each of those has its own &lt;a class="reference external" href="https://turberfield-dialogue.readthedocs.io/en/latest/"&gt;online documentation&lt;/a&gt;. You may also wish to read about &lt;a class="reference external" href="https://www.writethedocs.org/guide/writing/reStructuredText/"&gt;reStructuredText&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Don't forget you can post comments under the blog articles, or raise issues at the &lt;a class="reference external" href="https://github.com/tundish/balladeer"&gt;code repository&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Have fun telling your Story!&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Blog"></category><category term="IF"></category><category term="basics"></category></entry></feed>

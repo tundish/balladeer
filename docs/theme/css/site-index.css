@@ -1,0 +1,22 @@
+p, div.section ul {
+letter-spacing: 0.055em;
+padding: 1em 2em 1em 2em;
+font-size: 1.3em;
+}
+
+aside {
+background-color: #221e59;
+padding: 0 1em 0 1em;
+margin: 7.5em 1em 0 1em;
+border-radius: 6px;
+color: #f7faec;
+}
+
+aside a, aside a:visited {
+color: #f4f328;
+}
+
+a {
+font-family: "WenQuanYi Micro Hei", "Helvetica Neue", arial, sans-serif;
+text-decoration: none;
+}

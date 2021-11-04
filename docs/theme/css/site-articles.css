@@ -1,0 +1,89 @@
+@media print {
+    h2 {page-break-before: auto;}
+}
+
+p, div.section ul {
+letter-spacing: 0.055em;
+margin: 1em 0.5em 2em 0.5em;
+font-size: 1.3em;
+}
+
+pre {
+font-size: 0.9em;
+}
+
+header h1 a {
+color: #444;
+}
+
+h2, h3 {
+color: #444;
+font-family: "WenQuanYi Micro Hei", "Helvetica Neue", arial, sans-serif;
+}
+
+h2 {
+padding-left: -1.8em;
+}
+
+ul.tagcloud {
+background: #eee;
+border-radius: 6px;
+font-family: "WenQuanYi Micro Hei", "Helvetica Neue", arial, sans-serif;
+list-style-type: square;
+margin: 1em;
+opacity: 0.5;
+}
+
+ul.tagcloud li {
+display: inline-block;
+padding: 0.5em;
+}
+
+ul.tagcloud li a {
+color: blue;
+text-decoration: none;
+}
+
+ul.tagcloud li a:hover, ul.tagcloud li a:active {
+text-decoration: underline;
+}
+
+ul.tagcloud li.familytag a {
+color: #990033;
+}
+
+li.tag-0 a {
+font-size: 1.6em;
+}
+
+li.tag-1 a {
+font-size: 1.5em;
+}
+
+li.tag-2 a {
+font-size: 1.3em;
+}
+
+li.tag-3 a {
+font-size: 1.0em;
+}
+
+li.tag-4 a {
+font-size: 0.8em;
+}
+
+li.tag-5 a {
+font-size: 0.6em;
+}
+
+li.tag-6 a {
+font-size: 0.5em;
+}
+
+li.tag-7 a {
+font-size: 0.4em;
+}
+
+li.tag-8 a {
+font-size: 0.3em;
+}

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Balladeer - architecture</title><link href="https://tundish.github.io/balladeer/" rel="alternate"></link><link href="https://tundish.github.io/balladeer/feeds/architecture.atom.xml" rel="self"></link><id>https://tundish.github.io/balladeer/</id><updated>2021-11-11T14:00:00+00:00</updated><entry><title>Balladeer components</title><link href="https://tundish.github.io/balladeer/balladeer-components.html" rel="alternate"></link><published>2021-11-11T14:00:00+00:00</published><updated>2021-11-11T14:00:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-11:/balladeer/balladeer-components.html</id><summary type="html">&lt;p class="first last"&gt;This article presents a diagram of the main components of Balladeer.&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="interactions"&gt;
+&lt;h2&gt;Interactions&lt;/h2&gt;
+&lt;p&gt;The top-level object in Balladeer is the Story. And whether game, prose or poetry, a Story always has one
+active Drama object. That object specifies where to find the corresponding Dialogue files.&lt;/p&gt;
+&lt;p&gt;What's shared between Drama and Dialogue is the Ensemble.
+That's simply a container for all characters and objects currently in context.
+Both Drama and Dialogue can modify the state of objects in the Ensemble.&lt;/p&gt;
+&lt;img alt="A diagram of the components of the Balladeer framework" class="pure-img align-center" src="https://tundish.github.io/balladeer/images/balladeer-interaction.png" /&gt;
+&lt;/div&gt;
+&lt;div class="section" id="operation"&gt;
+&lt;h2&gt;Operation&lt;/h2&gt;
+&lt;p&gt;Your Drama may define an &lt;em&gt;interlude&lt;/em&gt; function. That is called every time Balladeer generates output to display.
+In that function you can put any logic which is invariant to user action.&lt;/p&gt;
+&lt;p&gt;Then comes the process of &lt;em&gt;casting&lt;/em&gt;.
+The Ensemble is offered to the Dialogue scripts. They specify which objects and characters they use,
+and which states those must have.&lt;/p&gt;
+&lt;p&gt;When suitable Dialogue is found, a Presenter object is created. The Presenter &lt;em&gt;animates&lt;/em&gt; the dialogue, calculating
+how long the text will take to read, and when it must appear.&lt;/p&gt;
+&lt;p&gt;The Presenter also carries out any instructions in the Dialogue which change state of Ensemble objects while the
+scene is played out. This is &lt;em&gt;reaction&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Control now passes to the Story, which renders the scene. Out of the box, Balladeer can render to a character
+terminal, or in HTML5 for the browser experience.
+The Dialogue format supports showing images and playing audio and video.
+You have complete freedom to restyle the display using CSS3.&lt;/p&gt;
+&lt;p&gt;User &lt;em&gt;input&lt;/em&gt; can come in the form of free text, or web GUI forms and buttons.
+That input is passed to the Drama to interpret and act upon.&lt;/p&gt;
+&lt;p&gt;Balladeer's text parser system is innovative and very flexible.
+Drama objects can recognize &lt;em&gt;commands&lt;/em&gt; of any complexity.
+You can enable or disable those commands on the fly as required.&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Blog"></category><category term="basics"></category><category term="architecture"></category></entry></feed>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Services</title>
+<link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/base-min.css" />
+<link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css"
+integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous" />
+<link rel="stylesheet" href="/theme/css/common.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+<section>
+<div class="pure-g">
+    <div class="pure-u-1-1">
+        <nav class="pure-menu pure-menu-horizontal">
+    <ul class="pure-menu-list">
+    <li class="pure-menu-item">
+    <a class="pure-menu-heading pure-menu-link" href="/">Balladeer</a>
+    </li>
+    <li class="pure-menu-item">
+        <a class="pure-menu-link" href="/category/blog.html">Blog</a>
+    </li>
+    </ul>
+</nav>
+    </div>
+    <div class="pure-u-1-1 pure-u-lg-1-2">
+        <a href="http://thuswise.co.uk" class="muted"><h1 class="shiftright-1">Thuswise <span class="green">Ltd</span></h1></a>
+
+        <blockquote>
+<p>We <span class="green" style="font-weight: bolder">know</span>
+because we do. We
+<span class="green" style="font-weight: bolder">do</span> because we can.</p>
+</blockquote>
+    </div>
+</div>
+<div class="pure-g">
+    <div class="pure-u-lg-1-12">
+    </div>
+    <div class="pure-u-1 pure-u-lg-5-6">
+        <p>We supply <a class="reference internal" href="#software-development">software development</a> and occasional <a class="reference internal" href="#electronic-design-services">electronic design services</a>.</p>
+<p>We have products in the niche areas of <a class="reference internal" href="#workflow-modelling">workflow modelling</a> and
+<a class="reference internal" href="#cloud-tooling">cloud tooling</a>  which we can make available to you on a negotiated
+basis.</p>
+<div class="section" id="software-development">
+<h2>Software development</h2>
+<p>Thuswise has been programming with Python for many years. This excellent
+language allows deployment across platforms and has low cost of maintenance.
+We work with a 'full stack' of technologies.</p>
+<p>We've made GUIs in <cite>PyQt4</cite> and <cite>wxWidgets</cite>. Large web applications in <cite>Pyramid</cite>
+and small ones in <cite>bottle</cite>. Database schema design and access with
+<cite>SQLAlchemy</cite>. Data processing pipelines with <cite>luigi</cite>.</p>
+<p>Asynchronous agent-based programming with <cite>asyncio</cite>. Remote invocation tooling
+with <cite>execnet</cite>. Web API interfacing via <cite>aiohttp</cite>.</p>
+<p>We've used <cite>pyglet</cite> OpenGL bindings for 3D visualisation, and created wrappers
+to 3rd-party libraries with <cite>pybindgen</cite>.</p>
+<p>We have history in application development in C++.
+This includes use of STL and Boost libraries.
+We have worked with <cite>boost::asio</cite> and can help you negotiate the learning
+curve associated with that and other technologies.</p>
+<p>We can also code in C. We typically create small object-oriented (PIMPL)
+libraries which can be loaded as shared objects using Python's <cite>ctypes</cite> module.</p>
+<p>Our strong instinct is for iterative, agile development using open source
+toolchains. Our projects are fully documented (usually with <cite>Sphinx</cite>) and
+professionally packaged for deployment into production.</p>
+</div>
+<div class="section" id="workflow-modelling">
+<h2>Workflow Modelling</h2>
+<p>In seeking to model business processes, or more abstract social simulations,
+we've educated ourselves in the use of Workflow Nets (a type of Petri Net).</p>
+<p>These Workflows can be implemented as code objects called <cite>Proclets</cite>.
+We publish and maintain the only <cite>proclets</cite> library to be written in Python.</p>
+<p>We are keen to work with consultants and early adopters to deploy Proclets wherever
+they are appropriate. <a class="reference external" href="https://tundish.github.io/balladeer/pages/contact.html">Contact</a> Thuswise to discover how it could start working for
+your organisation.</p>
+</div>
+<div class="section" id="cloud-tooling">
+<h2>Cloud tooling</h2>
+<p>Thuswise has experienced <cite>Openstack</cite> from the perspective of a public cloud
+provider. We understand the challenges associated with such a deployment.
+We have created tooling to monitor data quality in the Nova database, which we
+can supply with guidance if you're running such an installation.</p>
+<p>More recently, we've been coding against the <cite>VMware vCloud Director</cite> API to
+create a web portal for a government client's internal cloud. This project is
+open source and might provide a springboard for your own VMware front end.</p>
+<p>In addition, we're well used to creating Python scripts for devops use. We've
+worked with each of <cite>Chef</cite>, <cite>Puppet</cite>, <cite>Ansible</cite> and <cite>Fabric</cite> over the last
+year or two. We are pleased to have made some modest code contributions to
+the <cite>execnet</cite> library. Our favourite tool in this space now however is <cite>mitogen</cite>.</p>
+</div>
+<div class="section" id="electronic-design-services">
+<h2>Electronic design services</h2>
+<p>Do you have a large scale chip design or an embedded system to deliver?
+Thuswise can take part at various stages in your design flow. Here's where we
+think we can add particular value:</p>
+<div class="section" id="system-architecture">
+<h3>System architecture</h3>
+<p>We can help you partition your design by producing for you a behavioural
+simulation of your proposed system. This cross-platform program forms an
+executable definition. It enables understanding in multi-disciplinary teams and
+helps inform key design decisions.</p>
+<p>Once partitioned, we can formalise your design in Unified Modelling Language
+(UML) or by producing Interface Control Documents (ICDs).</p>
+</div>
+<div class="section" id="design-validation">
+<h3>Design validation</h3>
+<p>We can create a simulation in Python or behavioural VHDL to generate test
+vectors and patterns. This can give you independent validation of your design
+decisions. We can also undertake code reviews.</p>
+</div>
+<div class="section" id="prototyping">
+<h3>Prototyping</h3>
+<p>We have experience in rapid prototyping of systems using development and
+evaluation boards. We have targeted Actel, Altera and Xilinx FPGAs.</p>
+</div>
+</div>
+
+    </div>
+    <div class="pure-u-lg-1-12">
+    </div>
+</div>
+</section>
+<footer>
+Copyright 2021 D E Haynes
+</footer>
+</body>
+</html>
