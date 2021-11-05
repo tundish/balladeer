@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Hello, World!</title>
+<link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/base-min.css" />
+<link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css"
+integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/grids-responsive-min.css" />
+<link rel="stylesheet" href="https://tundish.github.io/balladeer/theme/css/common.css" />
+<link rel="stylesheet" href="https://tundish.github.io/balladeer/theme/css/pygment.css" />
+<link rel="stylesheet" href="https://tundish.github.io/balladeer/theme/css/site-articles.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+<article>
+<div class="pure-g">
+    <div class="pure-u-1-1">
+        <nav class="pure-menu pure-menu-horizontal">
+    <ul class="pure-menu-list">
+    <li class="pure-menu-selected pure-menu-item">
+    <a class="pure-menu-heading pure-menu-link" href="https://tundish.github.io/balladeer">Balladeer</a>
+    </li>
+    <li class="pure-menu-item">
+        <a class="pure-menu-link" href="https://tundish.github.io/balladeer/category/blog.html">Blog</a>
+    </li>
+    </ul>
+</nav>
+    </div>
+</div>
+<header>
+<div class="pure-g">
+    <div class="pure-u-1-1 pure-u-lg-1-2">
+        <h1><a class="muted" href="hello-world.html" rel="bookmark"
+        title="Permalink to Hello, World!">Hello, World!</a></h1>
+    </div>
+</div>
+<div class="pure-g">
+    <div class="pure-u-lg-1-12">
+    </div>
+    <div class="pure-u-1-1 pure-u-lg-5-12">
+    <dl>
+<dt style="display: inline;">by</dt>
+<dd style="display: inline; margin-left: 0em;">tundish</dd>
+<dt hidden="hidden">date</dt>
+<dd>2021 November 05</dd>
+<dd>Friday morning</dd>
+</dl>
+    </div>
+    <div class="pure-u-1-1 pure-u-lg-5-12">
+        <ul class="tagcloud">
+ 
+ 
+<li class="tag-1 familytag">
+    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/basics.html">basics</a>
+</li>
+<li class="tag-4">
+    <a class="pure-button" href="https://tundish.github.io/balladeer/tag/architecture.html">architecture</a>
+</li>
+<li class="tag-4 familytag">
+    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/turorial.html">turorial</a>
+</li>
+<li class="tag-4">
+    <a class="pure-button" href="https://tundish.github.io/balladeer/tag/if.html">IF</a>
+</li>
+</ul>
+    </div>
+    <div class="pure-u-lg-1-12">
+    </div>
+</div>
+</header>
+<div class="pure-g">
+    <div class="pure-u-lg-1-5">
+    </div>
+    <div class="pure-u-1-1 pure-u-lg-3-5">
+        <div class="section" id="a-tradition">
+<h2>A tradition</h2>
+<p>People have been writing 'Hello, World!' programs since about 1972.
+The object was to get a potentially complicated setup to do something simple.</p>
+<p>When you see 'Hello, World!' on the screen, you can be reassured that you've
+figured out the correct compiler flags and now you can go and have some lunch.</p>
+<p>Fast forward to 2021, when in Python the equivalent is literally <tt class="docutils literal"><span class="pre">print(&quot;Hello,</span> <span class="pre">World!&quot;)</span></tt>.
+I doubted the benefit of showing one here for Balladeer.</p>
+<p>It turns out well that I did. In writing this I came across a few inconveniences which
+we could have done without. Those are all fixed now in <a class="reference external" href="https://pypi.org/project/balladeer/0.12.0/">version 0.12.0</a>.</p>
+<p>A design feature of Balladeer is the way it separates screen dialogue from functional code.
+To follow along, you'll need to create two new files; <tt class="docutils literal">hello.rst</tt> for dialogue and <tt class="docutils literal">hello.py</tt> for code.</p>
+</div>
+<div class="section" id="hello-rst">
+<h2>hello.rst</h2>
+<p>Dialogue files are a <a class="reference external" href="https://www.writethedocs.org/guide/writing/reStructuredText/">reStructuredText</a> markup format. They consist of a top level heading
+for the <em>scene</em>, and below that one or more <em>shots</em>. The titles for them can be whatever you like.</p>
+<p>Here's everything that goes in this file:</p>
+<div class="highlight"><pre><span></span><span class="gh">Scene 1</span>
+<span class="gh">=======</span>
+
+<span class="gh">Shot 1</span>
+<span class="gh">------</span>
+
+Hello, World!
+</pre></div>
+</div>
+<div class="section" id="hello-py">
+<h2>hello.py</h2>
+<p>In this file goes the code we need to create the simplest possible Balladeer Story, then to
+animate and render it.</p>
+<p>First we import a couple of classes:</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">balladeer</span> <span class="kn">import</span> <span class="n">Drama</span>
+<span class="kn">from</span> <span class="nn">balladeer</span> <span class="kn">import</span> <span class="n">Story</span>
+</pre></div>
+<p>We'll need a Drama object, whose dialogue folder will reference the previous <em>.rst</em> file:</p>
+<div class="highlight"><pre><span></span><span class="n">drama</span> <span class="o">=</span> <span class="n">Drama</span><span class="p">()</span>
+<span class="n">drama</span><span class="o">.</span><span class="n">folder</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;hello.rst&quot;</span><span class="p">]</span>
+</pre></div>
+<p>Now our Story object, whose context is that drama:</p>
+<div class="highlight"><pre><span></span><span class="n">story</span> <span class="o">=</span> <span class="n">Story</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="n">drama</span><span class="p">)</span>
+</pre></div>
+<p>Whenever we animate and render, we create a new Presenter object:</p>
+<div class="highlight"><pre><span></span><span class="n">presenter</span> <span class="o">=</span> <span class="n">story</span><span class="o">.</span><span class="n">represent</span><span class="p">()</span>
+</pre></div>
+<p>Under the hood, the Presenter here parses each Dialogue file (there is only one), checks its Entity constraints
+(there are none) against the Ensemble (which we left empty). It then parses each Shot into a frame.</p>
+<p>We'll now iterate over the (one) frame, and animate it. Then iterate over each rendered line (only one again)
+and print it:</p>
+<div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">presenter</span><span class="o">.</span><span class="n">frames</span><span class="p">:</span>
+    <span class="n">animation</span> <span class="o">=</span> <span class="n">presenter</span><span class="o">.</span><span class="n">animate</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">line</span><span class="p">,</span> <span class="n">duration</span> <span class="ow">in</span> <span class="n">story</span><span class="o">.</span><span class="n">render_frame_to_terminal</span><span class="p">(</span><span class="n">animation</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+</pre></div>
+<p>Now the command <tt class="docutils literal">python hello.py</tt> should show you:</p>
+<pre class="literal-block">
+Hello, World!
+</pre>
+</div>
+<div class="section" id="and-after-lunch">
+<h2>And after Lunch</h2>
+<p>From here, you can play at adding extra dialogue. Also check out <a class="reference external" href="https://github.com/tundish/tea_and_sympathy">Tea and Sympathy</a>.
+The module <tt class="docutils literal">story.py</tt> shows how to accept text input and feed it as a command to the Drama.
+There'll be more on that here soon.</p>
+</div>
+
+    </div>
+    <div class="pure-u-lg-1-5">
+    </div>
+</div>
+</article>
+<section>
+<div class="pure-g">
+<div class="pure-u-lg-1-5">
+</div>
+<div class="pure-u-1-1 pure-u-lg-3-5">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * *
+ * */
+    var disqus_shortname = 'balladeer'; // Required - Replace example with your forum shortname
+    var disqus_title = 'Hello, World!';
+    var disqus_url = 'https://tundish.github.io/balladeer/hello-world.html';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type =
+'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] ||
+document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments hosted at Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">Comments hosted at <span class="logo-disqus">Disqus</span></a>
+</div>
+<div class="pure-u-lg-1-5">
+</div>
+</div>
+</section>
+<section>
+<footer>
+Copyright 2021 D E Haynes
+</footer>
+</section>
+</body>
+</html>
