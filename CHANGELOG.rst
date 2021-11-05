@@ -6,12 +6,13 @@
 Change Log
 ::::::::::
 
-0.13.0
+0.12.0
 ======
 
 * Allow easier setting of `Story` context.
 * Provide default empty ensemble.
 * Repin to turberfield-catchphrase.
+* Repin to docutils.
 
 0.11.0
 ======
