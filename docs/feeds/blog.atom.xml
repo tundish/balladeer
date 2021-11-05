@@ -1,5 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Balladeer - Blog</title><link href="https://tundish.github.io/balladeer/" rel="alternate"></link><link href="https://tundish.github.io/balladeer/feeds/blog.atom.xml" rel="self"></link><id>https://tundish.github.io/balladeer/</id><updated>2021-11-11T14:00:00+00:00</updated><entry><title>Balladeer components</title><link href="https://tundish.github.io/balladeer/balladeer-components.html" rel="alternate"></link><published>2021-11-11T14:00:00+00:00</published><updated>2021-11-11T14:00:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-11:/balladeer/balladeer-components.html</id><summary type="html">&lt;p class="first last"&gt;This article presents a diagram of the main components of Balladeer.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Balladeer - Blog</title><link href="https://tundish.github.io/balladeer/" rel="alternate"></link><link href="https://tundish.github.io/balladeer/feeds/blog.atom.xml" rel="self"></link><id>https://tundish.github.io/balladeer/</id><updated>2021-11-05T08:30:00+00:00</updated><entry><title>Hello, World!</title><link href="https://tundish.github.io/balladeer/hello-world.html" rel="alternate"></link><published>2021-11-05T08:30:00+00:00</published><updated>2021-11-05T08:30:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-05:/balladeer/hello-world.html</id><summary type="html">&lt;p class="first last"&gt;On why you should always do a 'Hello World'.&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="a-tradition"&gt;
+&lt;h2&gt;A tradition&lt;/h2&gt;
+&lt;p&gt;People have been writing 'Hello, World!' programs since about 1972.
+The object was to get a potentially complicated setup to do something simple.&lt;/p&gt;
+&lt;p&gt;When you see 'Hello, World!' on the screen, you can be reassured that you've
+figured out the correct compiler flags and now you can go and have some lunch.&lt;/p&gt;
+&lt;p&gt;Fast forward to 2021, when in Python the equivalent is literally &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;print(&amp;quot;Hello,&lt;/span&gt; &lt;span class="pre"&gt;World!&amp;quot;)&lt;/span&gt;&lt;/tt&gt;.
+I doubted the benefit of showing one here for Balladeer.&lt;/p&gt;
+&lt;p&gt;It turns out well that I did. In writing this I came across a few inconveniences which
+we could have done without. Those are all fixed now in &lt;a class="reference external" href="https://pypi.org/project/balladeer/0.12.0/"&gt;version 0.12.0&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;A design feature of Balladeer is the way it separates screen dialogue from functional code.
+To follow along, you'll need to create two new files; &lt;tt class="docutils literal"&gt;hello.rst&lt;/tt&gt; for dialogue and &lt;tt class="docutils literal"&gt;hello.py&lt;/tt&gt; for code.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="hello-rst"&gt;
+&lt;h2&gt;hello.rst&lt;/h2&gt;
+&lt;p&gt;Dialogue files are a &lt;a class="reference external" href="https://www.writethedocs.org/guide/writing/reStructuredText/"&gt;reStructuredText&lt;/a&gt; markup format. They consist of a top level heading
+for the &lt;em&gt;scene&lt;/em&gt;, and below that one or more &lt;em&gt;shots&lt;/em&gt;. The titles for them can be whatever you like.&lt;/p&gt;
+&lt;p&gt;Here's everything that goes in this file:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gh"&gt;Scene 1&lt;/span&gt;
+&lt;span class="gh"&gt;=======&lt;/span&gt;
+
+&lt;span class="gh"&gt;Shot 1&lt;/span&gt;
+&lt;span class="gh"&gt;------&lt;/span&gt;
+
+Hello, World!
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="hello-py"&gt;
+&lt;h2&gt;hello.py&lt;/h2&gt;
+&lt;p&gt;In this file goes the code we need to create the simplest possible Balladeer Story, then to
+animate and render it.&lt;/p&gt;
+&lt;p&gt;First we import a couple of classes:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;balladeer&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Drama&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;balladeer&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Story&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We'll need a Drama object, whose dialogue folder will reference the previous &lt;em&gt;.rst&lt;/em&gt; file:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;drama&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Drama&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;drama&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;folder&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;hello.rst&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now our Story object, whose context is that drama:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Story&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;drama&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Whenever we animate and render, we create a new Presenter object:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;represent&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Under the hood, the Presenter here parses each Dialogue file (there is only one), checks its Entity constraints
+(there are none) against the Ensemble (which we left empty). It then parses each Shot into a frame.&lt;/p&gt;
+&lt;p&gt;We'll now iterate over the (one) frame, and animate it. Then iterate over each rendered line (only one again)
+and print it:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;frame&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;frames&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;animation&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;animate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;frame&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;duration&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;render_frame_to_terminal&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;animation&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;line&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Now the command &lt;tt class="docutils literal"&gt;python hello.py&lt;/tt&gt; should show you:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+Hello, World!
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="and-after-lunch"&gt;
+&lt;h2&gt;And after Lunch&lt;/h2&gt;
+&lt;p&gt;From here, you can play at adding extra dialogue. Also check out &lt;a class="reference external" href="https://github.com/tundish/tea_and_sympathy"&gt;Tea and Sympathy&lt;/a&gt;.
+The module &lt;tt class="docutils literal"&gt;story.py&lt;/tt&gt; shows how to accept text input and feed it as a command to the Drama.
+There'll be more on that here soon.&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Blog"></category><category term="basics"></category><category term="turorial"></category></entry><entry><title>Balladeer components</title><link href="https://tundish.github.io/balladeer/balladeer-components.html" rel="alternate"></link><published>2021-11-04T14:00:00+00:00</published><updated>2021-11-04T14:00:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-04:/balladeer/balladeer-components.html</id><summary type="html">&lt;p class="first last"&gt;This article presents a diagram of the main components of Balladeer.&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="interactions"&gt;
 &lt;h2&gt;Interactions&lt;/h2&gt;
 &lt;p&gt;The top-level object in Balladeer is the Story. And whether game, prose or poetry, a Story always has one
@@ -30,7 +97,7 @@ That input is passed to the Drama to interpret and act upon.&lt;/p&gt;
 Drama objects can recognize &lt;em&gt;commands&lt;/em&gt; of any complexity.
 You can enable or disable those commands on the fly as required.&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="Blog"></category><category term="basics"></category><category term="architecture"></category></entry><entry><title>Balladeer in brief</title><link href="https://tundish.github.io/balladeer/balladeer-in-brief.html" rel="alternate"></link><published>2021-11-11T10:30:00+00:00</published><updated>2021-11-11T10:30:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-11:/balladeer/balladeer-in-brief.html</id><summary type="html">&lt;p class="first last"&gt;This is an introductory article. Start here if you know nothing about Balladeer&lt;/p&gt;
+</content><category term="Blog"></category><category term="basics"></category><category term="architecture"></category></entry><entry><title>Balladeer in brief</title><link href="https://tundish.github.io/balladeer/balladeer-in-brief.html" rel="alternate"></link><published>2021-11-03T10:30:00+00:00</published><updated>2021-11-03T10:30:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-03:/balladeer/balladeer-in-brief.html</id><summary type="html">&lt;p class="first last"&gt;This is an introductory article. Start here if you know nothing about Balladeer.&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="tell-me-a-story"&gt;
 &lt;h2&gt;Tell me a Story&lt;/h2&gt;
 &lt;p&gt;Story-telling is at the heart of human culture. We all have the right to tell our stories.&lt;/p&gt;
@@ -40,8 +107,6 @@ not many. And where they exist, they are not always operated by the authors them
 &lt;p&gt;Is it possible for one individual to tell a story to the world, outside of corporate social media?
 Yes, that is possible. And it has been possible for a number of years.
 But there is now a free and modern option for those who want to do that.&lt;/p&gt;
-&lt;p&gt;It is unique in its web-native architecture; it is designed to serve on the Web.
-It is written in the world's most popular programming language. That's Python, the one they teach in schools.&lt;/p&gt;
 &lt;p&gt;Its name is Balladeer.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="drama-and-dialogue"&gt;
