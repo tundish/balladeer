@@ -6,6 +6,12 @@
 Change Log
 ::::::::::
 
+0.13.0
+======
+
+* Add examples directory.
+* Repin to turberfield-dialogue.
+
 0.12.0
 ======
 
