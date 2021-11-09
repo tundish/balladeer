@@ -1,5 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Balladeer - basics</title><link href="https://tundish.github.io/balladeer/" rel="alternate"></link><link href="https://tundish.github.io/balladeer/feeds/basics.atom.xml" rel="self"></link><id>https://tundish.github.io/balladeer/</id><updated>2021-11-05T08:30:00+00:00</updated><entry><title>Hello, World!</title><link href="https://tundish.github.io/balladeer/hello-world.html" rel="alternate"></link><published>2021-11-05T08:30:00+00:00</published><updated>2021-11-05T08:30:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-05:/balladeer/hello-world.html</id><summary type="html">&lt;p class="first last"&gt;On why you should always do a 'Hello World'.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Balladeer - basics</title><link href="https://tundish.github.io/balladeer/" rel="alternate"></link><link href="https://tundish.github.io/balladeer/feeds/basics.atom.xml" rel="self"></link><id>https://tundish.github.io/balladeer/</id><updated>2021-11-08T16:45:00+00:00</updated><entry><title>Property and the State</title><link href="https://tundish.github.io/balladeer/property-and-the-state.html" rel="alternate"></link><published>2021-11-08T16:45:00+00:00</published><updated>2021-11-08T16:45:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-08:/balladeer/property-and-the-state.html</id><summary type="html">&lt;p class="first last"&gt;How Drama and Dialogue communicate by modifying state.&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="properties"&gt;
+&lt;h2&gt;Properties&lt;/h2&gt;
+&lt;p&gt;If you've done any Python programming, you may know what a property is.
+It's a way of giving an object a &lt;em&gt;getter&lt;/em&gt; and a &lt;em&gt;setter&lt;/em&gt; for an internal attribute.&lt;/p&gt;
+&lt;p&gt;It is intrinsic to Balladeer that a Drama and its Dialogue interact with each other.
+The main way they do this is via a property called &lt;cite&gt;state&lt;/cite&gt;.&lt;/p&gt;
+&lt;p&gt;For this first example we'll treat that state as an integer value.
+In a future article though, we'll discover that it's much more flexible than that.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="green-bottles"&gt;
+&lt;h2&gt;Green Bottles&lt;/h2&gt;
+&lt;p&gt;We are going to create a version of the song &lt;cite&gt;10 Green Bottles&lt;/cite&gt;.
+You can find the full &lt;a class="reference external" href="https://github.com/tundish/balladeer/tree/master/examples/01_drama_integer_state"&gt;code example&lt;/a&gt; in the Balladeer repository.&lt;/p&gt;
+&lt;div class="section" id="drama-py"&gt;
+&lt;h3&gt;drama.py&lt;/h3&gt;
+&lt;p&gt;Here's a Drama class which on every turn reduces its integer state value by one:&lt;/p&gt;
+&lt;pre class="code python literal-block"&gt;
+&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Bottles&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Drama&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;interlude&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;folder&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;max&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;facts&lt;/span&gt;
+&lt;/pre&gt;
+&lt;p&gt;Interlude methods are expected to return a dictionary.
+Drama objects have a dictionary attribute called &lt;em&gt;facts&lt;/em&gt;. So for simplicity that can be our return value here.&lt;/p&gt;
+&lt;p&gt;The state needs initially setting to 10, which we can do like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;drama&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Bottles&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_state&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="song-rst"&gt;
+&lt;h3&gt;song.rst&lt;/h3&gt;
+&lt;p&gt;The dialogue needs access to the number of bottles, so we'll use a &lt;a class="reference external" href="https://www.writethedocs.org/guide/writing/reStructuredText/"&gt;reStructuredText&lt;/a&gt; substitution to reference
+the drama state property:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="nt"&gt;|BOTTLES|&lt;/span&gt; &lt;span class="ow"&gt;property&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.state
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The main challenge to generating the lyrics correctly, is the way they change according to the number of
+bottles.&lt;/p&gt;
+&lt;p&gt;We use a &lt;a class="reference external" href="https://turberfield-dialogue.readthedocs.io/en/latest/syntax.html#condition-directive"&gt;condition&lt;/a&gt; directive to decide which form of words to use. Though state is an integer, in dialogue
+files everything is treated as a string.&lt;/p&gt;
+&lt;p&gt;Our conditional might look for an explicit string representation of the state integer, or we can define
+a regular expression instead. Regexes must be supplied inside parentheses, just as you see here:&lt;/p&gt;
+&lt;pre class="code rst literal-block"&gt;
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;entity&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA
+    &lt;span class="nc"&gt;:types:&lt;/span&gt; balladeer.Drama
+
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="nt"&gt;|BOTTLES|&lt;/span&gt; &lt;span class="ow"&gt;property&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.state
+
+&lt;span class="gh"&gt;Song&lt;/span&gt;
+&lt;span class="gh"&gt;====&lt;/span&gt;
+
+&lt;span class="gh"&gt;Many&lt;/span&gt;
+&lt;span class="gh"&gt;----&lt;/span&gt;
+
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;condition&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.state ([^01]+)
+
+|BOTTLES| green bottles, hanging on the wall.
+
+And if one green bottle should accidentally fall,
+There'll be...
+
+&lt;span class="gh"&gt;One&lt;/span&gt;
+&lt;span class="gh"&gt;---&lt;/span&gt;
+
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;condition&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.state 1
+
+|BOTTLES| green bottle, hanging on the wall.
+
+And if one green bottle should accidentally fall,
+There'll be...
+
+&lt;span class="gh"&gt;None&lt;/span&gt;
+&lt;span class="gh"&gt;----&lt;/span&gt;
+
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;condition&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.state 0
+
+No green bottles hanging on the wall.
+&lt;/pre&gt;
+&lt;p&gt;Please take a moment to download the example and run this yourself.&lt;/p&gt;
+&lt;p&gt;This has been a simple case with which to start.
+In the next article we will complicate things slightly in order to learn more features of Balladeer.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</content><category term="Blog"></category><category term="basics"></category><category term="tutorial"></category></entry><entry><title>Hello, World!</title><link href="https://tundish.github.io/balladeer/hello-world.html" rel="alternate"></link><published>2021-11-05T08:30:00+00:00</published><updated>2021-11-05T08:30:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-05:/balladeer/hello-world.html</id><summary type="html">&lt;p class="first last"&gt;On why you should always do a 'Hello World'.&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="a-tradition"&gt;
 &lt;h2&gt;A tradition&lt;/h2&gt;
 &lt;p&gt;People have been writing 'Hello, World!' programs since about 1972.
@@ -66,7 +149,7 @@ Hello, World!
 The module &lt;tt class="docutils literal"&gt;story.py&lt;/tt&gt; shows how to accept text input and feed it as a command to the Drama.
 There'll be more on that here soon.&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="Blog"></category><category term="basics"></category><category term="turorial"></category></entry><entry><title>Balladeer components</title><link href="https://tundish.github.io/balladeer/balladeer-components.html" rel="alternate"></link><published>2021-11-04T14:00:00+00:00</published><updated>2021-11-04T14:00:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-04:/balladeer/balladeer-components.html</id><summary type="html">&lt;p class="first last"&gt;This article presents a diagram of the main components of Balladeer.&lt;/p&gt;
+</content><category term="Blog"></category><category term="basics"></category><category term="tutorial"></category></entry><entry><title>Balladeer components</title><link href="https://tundish.github.io/balladeer/balladeer-components.html" rel="alternate"></link><published>2021-11-04T14:00:00+00:00</published><updated>2021-11-04T14:00:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-04:/balladeer/balladeer-components.html</id><summary type="html">&lt;p class="first last"&gt;This article presents a diagram of the main components of Balladeer.&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="interactions"&gt;
 &lt;h2&gt;Interactions&lt;/h2&gt;
 &lt;p&gt;The top-level object in Balladeer is the Story. And whether game, prose or poetry, a Story always has one

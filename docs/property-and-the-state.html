@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Property and the State</title>
+<link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/base-min.css" />
+<link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css"
+integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/grids-responsive-min.css" />
+<link rel="stylesheet" href="https://tundish.github.io/balladeer/theme/css/common.css" />
+<link rel="stylesheet" href="https://tundish.github.io/balladeer/theme/css/pygment.css" />
+<link rel="stylesheet" href="https://tundish.github.io/balladeer/theme/css/site-articles.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+<article>
+<div class="pure-g">
+    <div class="pure-u-1-1">
+        <nav class="pure-menu pure-menu-horizontal">
+    <ul class="pure-menu-list">
+    <li class="pure-menu-selected pure-menu-item">
+    <a class="pure-menu-heading pure-menu-link" href="https://tundish.github.io/balladeer">Balladeer</a>
+    </li>
+    <li class="pure-menu-item">
+        <a class="pure-menu-link" href="https://tundish.github.io/balladeer/category/blog.html">Blog</a>
+    </li>
+    </ul>
+</nav>
+    </div>
+</div>
+<header>
+<div class="pure-g">
+    <div class="pure-u-1-1 pure-u-lg-1-2">
+        <h1><a class="muted" href="property-and-the-state.html" rel="bookmark"
+        title="Permalink to Property and the State">Property and the State</a></h1>
+    </div>
+</div>
+<div class="pure-g">
+    <div class="pure-u-lg-1-12">
+    </div>
+    <div class="pure-u-1-1 pure-u-lg-5-12">
+    <dl>
+<dt style="display: inline;">by</dt>
+<dd style="display: inline; margin-left: 0em;">tundish</dd>
+<dt hidden="hidden">date</dt>
+<dd>2021 November 08</dd>
+<dd>Monday afternoon</dd>
+</dl>
+    </div>
+    <div class="pure-u-1-1 pure-u-lg-5-12">
+        <ul class="tagcloud">
+ 
+ 
+<li class="tag-2 familytag">
+    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/tutorial.html">tutorial</a>
+</li>
+<li class="tag-4">
+    <a class="pure-button" href="https://tundish.github.io/balladeer/tag/if.html">IF</a>
+</li>
+<li class="tag-1 familytag">
+    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/basics.html">basics</a>
+</li>
+<li class="tag-4">
+    <a class="pure-button" href="https://tundish.github.io/balladeer/tag/architecture.html">architecture</a>
+</li>
+</ul>
+    </div>
+    <div class="pure-u-lg-1-12">
+    </div>
+</div>
+</header>
+<div class="pure-g">
+    <div class="pure-u-lg-1-5">
+    </div>
+    <div class="pure-u-1-1 pure-u-lg-3-5">
+        <div class="section" id="properties">
+<h2>Properties</h2>
+<p>If you've done any Python programming, you may know what a property is.
+It's a way of giving an object a <em>getter</em> and a <em>setter</em> for an internal attribute.</p>
+<p>It is intrinsic to Balladeer that a Drama and its Dialogue interact with each other.
+The main way they do this is via a property called <cite>state</cite>.</p>
+<p>For this first example we'll treat that state as an integer value.
+In a future article though, we'll discover that it's much more flexible than that.</p>
+</div>
+<div class="section" id="green-bottles">
+<h2>Green Bottles</h2>
+<p>We are going to create a version of the song <cite>10 Green Bottles</cite>.
+You can find the full <a class="reference external" href="https://github.com/tundish/balladeer/tree/master/examples/01_drama_integer_state">code example</a> in the Balladeer repository.</p>
+<div class="section" id="drama-py">
+<h3>drama.py</h3>
+<p>Here's a Drama class which on every turn reduces its integer state value by one:</p>
+<pre class="code python literal-block">
+<span class="k">class</span> <span class="nc">Bottles</span><span class="p">(</span><span class="n">Drama</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">interlude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">facts</span>
+</pre>
+<p>Interlude methods are expected to return a dictionary.
+Drama objects have a dictionary attribute called <em>facts</em>. So for simplicity that can be our return value here.</p>
+<p>The state needs initially setting to 10, which we can do like this:</p>
+<div class="highlight"><pre><span></span><span class="n">drama</span> <span class="o">=</span> <span class="n">Bottles</span><span class="p">()</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="song-rst">
+<h3>song.rst</h3>
+<p>The dialogue needs access to the number of bottles, so we'll use a <a class="reference external" href="https://www.writethedocs.org/guide/writing/reStructuredText/">reStructuredText</a> substitution to reference
+the drama state property:</p>
+<div class="highlight"><pre><span></span><span class="p">..</span> <span class="nt">|BOTTLES|</span> <span class="ow">property</span><span class="p">::</span> DRAMA.state
+</pre></div>
+<p>The main challenge to generating the lyrics correctly, is the way they change according to the number of
+bottles.</p>
+<p>We use a <a class="reference external" href="https://turberfield-dialogue.readthedocs.io/en/latest/syntax.html#condition-directive">condition</a> directive to decide which form of words to use. Though state is an integer, in dialogue
+files everything is treated as a string.</p>
+<p>Our conditional might look for an explicit string representation of the state integer, or we can define
+a regular expression instead. Regexes must be supplied inside parentheses, just as you see here:</p>
+<pre class="code rst literal-block">
+<span class="p">..</span> <span class="ow">entity</span><span class="p">::</span> DRAMA
+    <span class="nc">:types:</span> balladeer.Drama
+
+<span class="p">..</span> <span class="nt">|BOTTLES|</span> <span class="ow">property</span><span class="p">::</span> DRAMA.state
+
+<span class="gh">Song</span>
+<span class="gh">====</span>
+
+<span class="gh">Many</span>
+<span class="gh">----</span>
+
+<span class="p">..</span> <span class="ow">condition</span><span class="p">::</span> DRAMA.state ([^01]+)
+
+|BOTTLES| green bottles, hanging on the wall.
+
+And if one green bottle should accidentally fall,
+There'll be...
+
+<span class="gh">One</span>
+<span class="gh">---</span>
+
+<span class="p">..</span> <span class="ow">condition</span><span class="p">::</span> DRAMA.state 1
+
+|BOTTLES| green bottle, hanging on the wall.
+
+And if one green bottle should accidentally fall,
+There'll be...
+
+<span class="gh">None</span>
+<span class="gh">----</span>
+
+<span class="p">..</span> <span class="ow">condition</span><span class="p">::</span> DRAMA.state 0
+
+No green bottles hanging on the wall.
+</pre>
+<p>Please take a moment to download the example and run this yourself.</p>
+<p>This has been a simple case with which to start.
+In the next article we will complicate things slightly in order to learn more features of Balladeer.</p>
+</div>
+</div>
+
+    </div>
+    <div class="pure-u-lg-1-5">
+    </div>
+</div>
+</article>
+<section>
+<div class="pure-g">
+<div class="pure-u-lg-1-5">
+</div>
+<div class="pure-u-1-1 pure-u-lg-3-5">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * *
+ * */
+    var disqus_shortname = 'balladeer'; // Required - Replace example with your forum shortname
+    var disqus_title = 'Property and the State';
+    var disqus_url = 'https://tundish.github.io/balladeer/property-and-the-state.html';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type =
+'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] ||
+document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments hosted at Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">Comments hosted at <span class="logo-disqus">Disqus</span></a>
+</div>
+<div class="pure-u-lg-1-5">
+</div>
+</div>
+</section>
+<section>
+<footer>
+Copyright 2021 D E Haynes
+</footer>
+</section>
+</body>
+</html>
