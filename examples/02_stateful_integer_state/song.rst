@@ -9,6 +9,8 @@
     :types:     balladeer.Stateful
     :states:    1
 
+.. |BOTTLES| property:: DRAMA.unbroken
+
 Song
 ====
 
@@ -43,4 +45,3 @@ None
 
 No green bottles hanging on the wall.
 
-.. |BOTTLES| property:: DRAMA.unbroken

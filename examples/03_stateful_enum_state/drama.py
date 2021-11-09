@@ -31,15 +31,16 @@ drama = Bottles()
 drama.folder = ["song.rst"]
 story = Story(context=drama)
 
+presenter = None
 while drama.unbroken:
-    presenter = story.represent()
-    for frame in filter(None, presenter.frames):
+    presenter = story.represent(previous=presenter)
+    frame = next(filter(None, presenter.frames))
 
-        animation = presenter.animate(
-            frame, dwell=presenter.dwell, pause=presenter.pause
-        )
-        if not animation: continue
+    animation = presenter.animate(
+        frame, dwell=presenter.dwell, pause=presenter.pause
+    )
+    if not animation: continue
 
-        for line, duration in story.render_frame_to_terminal(animation):
-            print(line, "\n")
-            time.sleep(duration)
+    for line, duration in story.render_frame_to_terminal(animation):
+        print(line, "\n")
+        time.sleep(duration)
