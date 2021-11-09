@@ -59,7 +59,7 @@ class Story(Renderer, DataObject):
         else:
             return refresh_state
 
-    def represent(self, *args, facts=None, previous=None):
+    def represent(self, *args, facts=None, previous=None, **kwargs):
         self.context.interlude(
             self.context.folder,
             previous and previous.index,
@@ -67,7 +67,8 @@ class Story(Renderer, DataObject):
         )
         presenter = Presenter.build_presenter(
             self.context.folder, *args, facts=facts,
-            ensemble=self.context.ensemble + [self.context, self.settings]
+            ensemble=self.context.ensemble + [self.context, self.settings],
+            **kwargs
         )
         if presenter and not(presenter.dwell or presenter.pause):
             setattr(self.settings, "catchphrase-reveal-extends", "none")

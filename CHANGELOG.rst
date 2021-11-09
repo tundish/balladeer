@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.14.0
+======
+
+* Allow keyword arguments in `represent`.
+
 0.13.0
 ======
 
