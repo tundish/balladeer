@@ -5,6 +5,8 @@
 .. entity:: DRAMA
     :types: balladeer.Drama
 
+.. |BOTTLES| property:: DRAMA.state
+
 Song
 ====
 
@@ -35,4 +37,3 @@ None
 
 No green bottles hanging on the wall.
 
-.. |BOTTLES| property:: DRAMA.state
