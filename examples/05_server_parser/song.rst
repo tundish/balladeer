@@ -1,6 +1,6 @@
 :project:   Balladeer Web Server example
-:pause:     0.5
-:dwell:     0
+:pause:     0.7
+:dwell:     0.2
 
 .. entity:: DRAMA
     :types: balladeer.Drama
