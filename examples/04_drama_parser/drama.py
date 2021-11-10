@@ -31,10 +31,11 @@ drama = Bottles()
 drama.folder = ["song.rst", "end.rst"]
 story = Story(context=drama)
 
+text = ""
 presenter = None
 while True:
     stop = not drama.unbroken
-    presenter = story.represent(previous=presenter)
+    presenter = story.represent(text, previous=presenter)
 
     for animation in filter(None, (presenter.animate(
         frame, dwell=presenter.dwell, pause=presenter.pause
@@ -46,3 +47,6 @@ while True:
 
     if stop:
         break
+
+    cmd = input("{0} ".format(story.context.prompt))
+    text = story.context.deliver(cmd, presenter=presenter)
