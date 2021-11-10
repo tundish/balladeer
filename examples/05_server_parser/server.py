@@ -1,4 +1,7 @@
-import time
+import argparse
+import re
+
+from aiohttp import web
 
 from balladeer import Drama
 from balladeer import Fruition
@@ -50,10 +53,44 @@ class Bottles(Drama):
         return
 
 
-drama = Bottles()
-drama.folder = ["song.rst", "end.rst"]
-story = Story(context=drama)
+VALIDATION = {
+    "session": re.compile("[0-9a-f]{32}"),
+}
 
+
+async def get_root(request):
+    drama = Bottles()
+    drama.folder = ["song.rst", "end.rst"]
+    story = Story(context=drama)
+    story.presenter = story.represent("", facts=story.context.facts)
+    request.app["sessions"][story.id] = story
+    raise web.HTTPFound("/{0.id.hex}".format(story))
+
+
+async def get_session(request):
+    uid = uuid.UUID(hex=request.match_info["session"])
+    story = request.app["sessions"][uid]
+
+    animation = next(filter(None, (presenter.animate(
+        frame, dwell=presenter.dwell, pause=presenter.pause
+    ) for frame in presenter.frames)))
+
+    title = next(iter(story.presenter.metadata.get("project", ["Balladeer Example"])), "Balladeer Example")
+    controls = [
+        "\n".join(story.render_action_form(action, autofocus=not n))
+        for n, action in enumerate(story.actions)
+        if story.context.count
+    ]
+    rv = story.render_body_html(title=title).format(
+        "<!-- Extra head links go here -->",
+        story.render_dict_to_css(vars(story.settings)),
+        story.render_animated_frame_to_html(story.animation, controls)
+    )
+
+    return web.Response(text=rv, content_type="text/html")
+
+
+"""
 text = ""
 presenter = None
 while True:
@@ -73,3 +110,60 @@ while True:
 
     cmd = input("{0} ".format(story.context.prompt))
     text = story.context.deliver(cmd, presenter=presenter)
+"""
+
+async def post_command(request):
+    uid = uuid.UUID(hex=request.match_info["session"])
+    story = request.app["sessions"][uid]
+    data = await request.post()
+    cmd = data["cmd"]
+    if cmd and not story.context.validator.match(cmd):
+        raise web.HTTPUnauthorized(reason="User sent invalid command.")
+    else:
+        text = story.context.deliver(cmd, presenter=story.presenter)
+        story.presenter = story.represent(text, facts=story.context.facts, previous=story.presenter)
+    raise web.HTTPFound("/{0.hex}".format(uid))
+
+
+def build_app(args):
+    app = web.Application()
+    app.add_routes([
+        web.get("/", get_root),
+        web.get("/{{session:{0}}}".format(VALIDATION["session"].pattern), get_session),
+        web.post("/{{session:{0}}}/cmd/".format(VALIDATION["session"].pattern), post_command),
+    ])
+    app.router.add_static(
+        "/css/base/",
+        pkg_resources.resource_filename("turberfield.catchphrase", "css")
+    )
+    app["sessions"] = {}
+    return app
+
+
+def main(args):
+    app = build_app(args)
+    return web.run_app(app, host=args.host, port=args.port)
+
+
+def parser(description=__doc__):
+    rv = argparse.ArgumentParser(description)
+    rv.add_argument(
+        "--host", default="127.0.0.1",
+        help="Set an interface on which to serve."
+    )
+    rv.add_argument(
+        "--port", default=8080, type=int,
+        help="Set a port on which to serve."
+    )
+    return rv
+
+
+def run():
+    p = parser()
+    args = p.parse_args()
+    rv = main(args)
+    sys.exit(rv)
+
+
+if __name__ == "__main__":
+    run()
