@@ -1,4 +1,4 @@
-:project:   Examples
+:project:   Balladeer Web Server example
 :pause:     0.5
 :dwell:     0
 
@@ -39,4 +39,4 @@ All
 And if one green bottle should accidentally fall,
 There'll be...
 
-.. property:: DRAMA.prompt Type 'look' to check the damage >
+.. property:: DRAMA.prompt Type 'look' to check

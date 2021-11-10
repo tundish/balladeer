@@ -1,4 +1,4 @@
-:project:   Examples
+:project:   Balladeer Web Server example
 :pause:     0
 :dwell:     0.4
 

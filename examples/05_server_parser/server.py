@@ -1,7 +1,10 @@
 import argparse
 import re
+import sys
+import uuid
 
 from aiohttp import web
+import pkg_resources
 
 from balladeer import Drama
 from balladeer import Fruition
@@ -49,7 +52,7 @@ class Bottles(Drama):
         look
 
         """
-        self.prompt = ">"
+        self.prompt = "?"
         return
 
 
@@ -62,7 +65,8 @@ async def get_root(request):
     drama = Bottles()
     drama.folder = ["song.rst", "end.rst"]
     story = Story(context=drama)
-    story.presenter = story.represent("", facts=story.context.facts)
+    text = story.context.deliver("look", presenter=None)
+    story.presenter = story.represent(text, facts=story.context.facts)
     request.app["sessions"][story.id] = story
     raise web.HTTPFound("/{0.id.hex}".format(story))
 
@@ -71,11 +75,11 @@ async def get_session(request):
     uid = uuid.UUID(hex=request.match_info["session"])
     story = request.app["sessions"][uid]
 
-    animation = next(filter(None, (presenter.animate(
-        frame, dwell=presenter.dwell, pause=presenter.pause
-    ) for frame in presenter.frames)))
+    animation = next(filter(None, (story.presenter.animate(
+        frame, dwell=story.presenter.dwell, pause=story.presenter.pause
+    ) for frame in story.presenter.frames)))
 
-    title = next(iter(story.presenter.metadata.get("project", ["Balladeer Example"])), "Balladeer Example")
+    title = story.presenter.metadata.get("project")[0]
     controls = [
         "\n".join(story.render_action_form(action, autofocus=not n))
         for n, action in enumerate(story.actions)
@@ -84,33 +88,11 @@ async def get_session(request):
     rv = story.render_body_html(title=title).format(
         "<!-- Extra head links go here -->",
         story.render_dict_to_css(vars(story.settings)),
-        story.render_animated_frame_to_html(story.animation, controls)
+        story.render_animated_frame_to_html(animation, controls)
     )
 
     return web.Response(text=rv, content_type="text/html")
 
-
-"""
-text = ""
-presenter = None
-while True:
-    stop = not drama.count
-    presenter = story.represent(text, previous=presenter)
-
-    for animation in filter(None, (presenter.animate(
-        frame, dwell=presenter.dwell, pause=presenter.pause
-    ) for frame in presenter.frames)):
-
-        for line, duration in story.render_frame_to_terminal(animation):
-            print(line, "\n")
-            time.sleep(duration)
-
-    if stop:
-        break
-
-    cmd = input("{0} ".format(story.context.prompt))
-    text = story.context.deliver(cmd, presenter=presenter)
-"""
 
 async def post_command(request):
     uid = uuid.UUID(hex=request.match_info["session"])
