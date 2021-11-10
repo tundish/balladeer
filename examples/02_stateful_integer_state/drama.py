@@ -9,7 +9,7 @@ class Bottles(Drama):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.bottles = [
+        self.population = [
             Stateful().set_state(1),
             Stateful().set_state(1),
             Stateful().set_state(1),
@@ -17,11 +17,11 @@ class Bottles(Drama):
 
     @property
     def ensemble(self):
-        return self.bottles
+        return self.population
 
     @property
     def unbroken(self):
-        return len([i for i in self.bottles if i.state])
+        return len([i for i in self.population if i.state])
 
 
 drama = Bottles()

@@ -18,30 +18,30 @@ Many
 ----
 
 .. condition:: DRAMA.unbroken ([^01]+)
+.. condition:: DRAMA.state 0
 
 |BOTTLES| green bottles, hanging on the wall.
 
-And if one green bottle should accidentally fall,
-There'll be...
-
 .. property:: BOTTLE.state balladeer.Fruition.completion
+.. property:: DRAMA.state 1
 
 One
 ---
 
 .. condition:: DRAMA.unbroken 1
+.. condition:: DRAMA.state 0
 
 |BOTTLES| green bottle, hanging on the wall.
+
+.. property:: BOTTLE.state balladeer.Fruition.completion
+.. property:: DRAMA.state 1
+
+All
+---
+
+.. condition:: DRAMA.state 1
 
 And if one green bottle should accidentally fall,
 There'll be...
 
-.. property:: BOTTLE.state balladeer.Fruition.completion
-
-None
-----
-
-.. condition:: DRAMA.unbroken 0
-
-No green bottles hanging on the wall.
-
+.. property:: DRAMA.state 0
