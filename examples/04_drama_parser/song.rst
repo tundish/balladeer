@@ -39,3 +39,4 @@ All
 And if one green bottle should accidentally fall,
 There'll be...
 
+.. property:: DRAMA.prompt Type 'look' to check the damage >
