@@ -20,7 +20,9 @@ Many
 .. condition:: DRAMA.count ([^01]+)
 .. condition:: DRAMA.history[0].name do_look
 
-|BOTTLES| green bottles, hanging on the wall.
+[DRAMA]_
+
+    |BOTTLES| green bottles, hanging on the wall.
 
 One
 ---
@@ -28,7 +30,9 @@ One
 .. condition:: DRAMA.count 1
 .. condition:: DRAMA.history[0].name do_look
 
-|BOTTLES| `green bottle <https://www.onegreenbottle.com/>`_, hanging on the wall.
+[DRAMA]_
+
+    |BOTTLES| `green bottle <https://www.onegreenbottle.com/>`_, hanging on the wall.
 
 
 All
@@ -36,7 +40,9 @@ All
 
 .. condition:: DRAMA.history[0].name do_bottle
 
-And if one green bottle should *accidentally* fall,
-There'll be...
+[DRAMA]_
+
+    And if one green bottle should *accidentally* fall,
+    There'll be...
 
 .. property:: DRAMA.prompt Type 'look' to check
