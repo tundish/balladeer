@@ -1,3 +1,7 @@
+"""
+This is a complete example of a Balladeer story which accepts text commands over the web.
+
+"""
 import argparse
 import re
 import sys
