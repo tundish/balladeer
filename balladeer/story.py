@@ -60,13 +60,13 @@ class Story(Renderer, DataObject):
             return refresh_state
 
     def represent(self, *args, facts=None, previous=None, **kwargs):
-        self.context.interlude(
+        rv = self.context.interlude(
             self.context.folder,
             previous and previous.index,
             previous and previous.ensemble
         )
         presenter = Presenter.build_presenter(
-            self.context.folder, *args, facts=facts,
+            self.context.folder, *args, facts=facts or rv,
             ensemble=self.context.ensemble + [self.context, self.settings],
             **kwargs
         )

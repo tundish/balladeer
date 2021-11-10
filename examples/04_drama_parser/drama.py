@@ -15,16 +15,37 @@ class Bottles(Drama):
             Stateful().set_state(Fruition.inception),
             Stateful().set_state(Fruition.inception),
         ]
+        self.active.add(self.do_bottle)
+        self.active.add(self.do_look)
 
     @property
     def ensemble(self):
         return self.population
 
     @property
+    def count(self):
+        return len(self.unbroken)
+
+    @property
     def unbroken(self):
-        return len(
-            [i for i in self.population if i.get_state(Fruition) == Fruition.inception]
-        )
+        return [i for i in self.population if i.get_state(Fruition) == Fruition.inception]
+
+    def do_bottle(self, this, text, presenter, *args, **kwargs):
+        """
+        bottle
+
+        """
+        try:
+            self.unbroken[0].state = Fruition.completion
+        except IndexError:
+            pass
+
+    def do_look(self, this, text, presenter, *args, **kwargs):
+        """
+        look
+
+        """
+        return
 
 
 drama = Bottles()
@@ -34,7 +55,7 @@ story = Story(context=drama)
 text = ""
 presenter = None
 while True:
-    stop = not drama.unbroken
+    stop = not drama.count
     presenter = story.represent(text, previous=presenter)
 
     for animation in filter(None, (presenter.animate(

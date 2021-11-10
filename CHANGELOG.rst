@@ -6,6 +6,12 @@
 Change Log
 ::::::::::
 
+0.15.0
+======
+
+* Added an example on basic use of parser.
+* Now using output of interlude as fact keywords.
+
 0.14.0
 ======
 

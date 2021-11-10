@@ -21,7 +21,7 @@ class Bottles(Drama):
         return self.population
 
     @property
-    def unbroken(self):
+    def count(self):
         return len(
             [i for i in self.population if i.get_state(Fruition) == Fruition.inception]
         )
@@ -33,7 +33,7 @@ story = Story(context=drama)
 
 presenter = None
 while True:
-    stop = not drama.unbroken
+    stop = not drama.count
     presenter = story.represent(previous=presenter)
 
     for animation in filter(None, (presenter.animate(

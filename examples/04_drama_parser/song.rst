@@ -1,6 +1,6 @@
 :project:   Examples
-:pause:     0
-:dwell:     0.4
+:pause:     0.5
+:dwell:     0
 
 .. entity:: DRAMA
     :types: balladeer.Drama
@@ -9,7 +9,7 @@
     :types:     balladeer.Stateful
     :states:    balladeer.Fruition.inception
 
-.. |BOTTLES| property:: DRAMA.unbroken
+.. |BOTTLES| property:: DRAMA.count
 
 Song
 ====
@@ -17,31 +17,25 @@ Song
 Many
 ----
 
-.. condition:: DRAMA.unbroken ([^01]+)
-.. condition:: DRAMA.state 0
+.. condition:: DRAMA.count ([^01]+)
+.. condition:: DRAMA.history[0].name do_look
 
 |BOTTLES| green bottles, hanging on the wall.
-
-.. property:: BOTTLE.state balladeer.Fruition.completion
-.. property:: DRAMA.state 1
 
 One
 ---
 
-.. condition:: DRAMA.unbroken 1
-.. condition:: DRAMA.state 0
+.. condition:: DRAMA.count 1
+.. condition:: DRAMA.history[0].name do_look
 
 |BOTTLES| green bottle, hanging on the wall.
 
-.. property:: BOTTLE.state balladeer.Fruition.completion
-.. property:: DRAMA.state 1
 
 All
 ---
 
-.. condition:: DRAMA.state 1
+.. condition:: DRAMA.history[0].name do_bottle
 
 And if one green bottle should accidentally fall,
 There'll be...
 
-.. property:: DRAMA.state 0

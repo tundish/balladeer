@@ -11,7 +11,7 @@ End
 None
 ----
 
-.. condition:: DRAMA.unbroken 0
+.. condition:: DRAMA.count 0
 
 No green bottles hanging on the wall.
 

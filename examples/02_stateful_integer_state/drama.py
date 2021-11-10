@@ -20,7 +20,7 @@ class Bottles(Drama):
         return self.population
 
     @property
-    def unbroken(self):
+    def count(self):
         return len([i for i in self.population if i.state])
 
 
@@ -29,7 +29,7 @@ drama.folder = ["song.rst"]
 story = Story(context=drama)
 
 while True:
-    stop = not drama.unbroken
+    stop = not drama.count
     presenter = story.represent(strict=False)
 
     animation = next(filter(None, (presenter.animate(

@@ -9,7 +9,7 @@
     :types:     balladeer.Stateful
     :states:    balladeer.Fruition.inception
 
-.. |BOTTLES| property:: DRAMA.unbroken
+.. |BOTTLES| property:: DRAMA.count
 
 Song
 ====
@@ -17,7 +17,7 @@ Song
 Many
 ----
 
-.. condition:: DRAMA.unbroken ([^01]+)
+.. condition:: DRAMA.count ([^01]+)
 .. condition:: DRAMA.state 0
 
 |BOTTLES| green bottles, hanging on the wall.
@@ -28,7 +28,7 @@ Many
 One
 ---
 
-.. condition:: DRAMA.unbroken 1
+.. condition:: DRAMA.count 1
 .. condition:: DRAMA.state 0
 
 |BOTTLES| green bottle, hanging on the wall.
