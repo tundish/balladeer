@@ -27,7 +27,7 @@ class Bottles(Drama):
         ]
         self.active.add(self.do_bottle)
         self.active.add(self.do_look)
-        self.prompt = ">"
+        self.prompt = "?"
 
     @property
     def ensemble(self):
