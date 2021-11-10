@@ -57,7 +57,6 @@ class Bottles(Drama):
 
         """
         self.prompt = "?"
-        return
 
 
 VALIDATION = {
