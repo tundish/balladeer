@@ -13,5 +13,5 @@ None
 
 .. condition:: DRAMA.count 0
 
-No green bottles hanging on the wall.
+**No** green bottles hanging on the wall!
 
