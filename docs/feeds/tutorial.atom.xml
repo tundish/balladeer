@@ -1,5 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Balladeer - tutorial</title><link href="https://tundish.github.io/balladeer/" rel="alternate"></link><link href="https://tundish.github.io/balladeer/feeds/tutorial.atom.xml" rel="self"></link><id>https://tundish.github.io/balladeer/</id><updated>2021-11-08T16:45:00+00:00</updated><entry><title>Property and the State</title><link href="https://tundish.github.io/balladeer/property-and-the-state.html" rel="alternate"></link><published>2021-11-08T16:45:00+00:00</published><updated>2021-11-08T16:45:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-08:/balladeer/property-and-the-state.html</id><summary type="html">&lt;p class="first last"&gt;How Drama and Dialogue communicate by modifying state.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Balladeer - tutorial</title><link href="https://tundish.github.io/balladeer/" rel="alternate"></link><link href="https://tundish.github.io/balladeer/feeds/tutorial.atom.xml" rel="self"></link><id>https://tundish.github.io/balladeer/</id><updated>2021-11-10T10:15:00+00:00</updated><entry><title>Message in a Bottle</title><link href="https://tundish.github.io/balladeer/message-in-a-bottle.html" rel="alternate"></link><published>2021-11-10T10:15:00+00:00</published><updated>2021-11-10T10:15:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-10:/balladeer/message-in-a-bottle.html</id><summary type="html">&lt;p class="first last"&gt;Modifying State in ensemble objects.&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="pour-implementation"&gt;
+&lt;h2&gt;Pour implementation&lt;/h2&gt;
+&lt;p&gt;In the &lt;a class="reference external" href="https://tundish.github.io/balladeer/property-and-the-state.html"&gt;last article&lt;/a&gt; we
+took a very simple approach to &lt;em&gt;10 Green Bottles&lt;/em&gt;. Those bottles were just a number to us.&lt;/p&gt;
+&lt;p&gt;Balladeer wants you to create  a complex world of believable characters.
+So from now on, I think we should all start to care a bit more about the bottles.&lt;/p&gt;
+&lt;p&gt;In this tutorial we are going to promote those bottles into the &lt;em&gt;Ensemble&lt;/em&gt;, as if they were characters in our play.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="model-behaviour"&gt;
+&lt;h2&gt;Model behaviour&lt;/h2&gt;
+&lt;p&gt;Once you begin to take a fantasy world that grew in your head, and implement it Python code, you have some
+problems to solve. How do you fit the one into the other?&lt;/p&gt;
+&lt;p&gt;Which idiom of Python best delivers the behaviour you need in your narrative? When I first went down
+this path, I was beguiled by Python's powerful multiple-inheritance system. Imagine all the ways you can mix in
+classes to simulate human behaviour:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Player&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Saxon&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Warrior&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;One very important detail defeats this approach. Python objects cannot change their type at runtime.
+The Frog in Act One cannot become the Prince in Act Three. There are some tricks you can play, but if you go down
+that route you will forever feel the friction of fighting the language.&lt;/p&gt;
+&lt;p&gt;In Balladeer, behaviour is governed by &lt;em&gt;state&lt;/em&gt;. You can create any number of state types and store them on stateful
+objects:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Actor&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;DataObject&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Stateful&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="o"&gt;...&lt;/span&gt;
+
+&lt;span class="n"&gt;player&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Actor&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;name&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Hengist&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_state&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Ethnicity&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;saxon&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;Caste&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;warrior&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;States are implemented as Python &lt;a class="reference external" href="https://docs.python.org/3/library/enum.html#module-enum"&gt;enumerations&lt;/a&gt;.
+Access to &lt;em&gt;state&lt;/em&gt; is overloaded by type. The default type is &lt;em&gt;integer&lt;/em&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;player&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;state&lt;/span&gt;
+&lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;player&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;player&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Caste&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;warrior&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;player&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_state&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;int&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="mi"&gt;3&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Because enums can have methods, you can delegate functional behaviour to an object's state, rather
+than its type.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;caste&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;player&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_state&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Caste&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;caste&lt;/span&gt;
+&lt;span class="o"&gt;&amp;lt;&lt;/span&gt;&lt;span class="n"&gt;Caste&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;warrior&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt; &lt;span class="n"&gt;Build&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;luck&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;magic&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;5&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;8&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="n"&gt;skill&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;7&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;10&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;&lt;span class="o"&gt;&amp;gt;&lt;/span&gt;
+
+&lt;span class="o"&gt;&amp;gt;&amp;gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;caste&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;roll&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
+&lt;span class="n"&gt;Build&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;luck&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;4&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;magic&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;6&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;skill&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="mi"&gt;9&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="the-glass-ensemble"&gt;
+&lt;h2&gt;The Glass Ensemble&lt;/h2&gt;
+&lt;p&gt;Back to our bottles, then (you can see this entire &lt;a class="reference external" href="https://github.com/tundish/balladeer/tree/master/examples/03_stateful_enum__state"&gt;code example&lt;/a&gt; online).&lt;/p&gt;
+&lt;div class="section" id="drama-py"&gt;
+&lt;h3&gt;drama.py&lt;/h3&gt;
+&lt;p&gt;We are going to throw away our interlude function. Instead we'll populate the Ensemble with some stateful objects
+to represent the bottles. Our Drama class looks like this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Bottles&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Drama&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="nb"&gt;super&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;population&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+            &lt;span class="n"&gt;Stateful&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_state&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Fruition&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;inception&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+            &lt;span class="n"&gt;Stateful&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_state&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Fruition&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;inception&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+            &lt;span class="n"&gt;Stateful&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;set_state&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Fruition&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;inception&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+        &lt;span class="p"&gt;]&lt;/span&gt;
+
+    &lt;span class="nd"&gt;@property&lt;/span&gt;
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;ensemble&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;population&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The &lt;cite&gt;Fruition&lt;/cite&gt; type is built in to Balladeer. It comes into its own when used with the &lt;cite&gt;Gesture&lt;/cite&gt; state machine,
+to which it's closely related. Gestures are an advanced topic. Your first screenplay almost certainly ought not
+to use them. For now, all we need to know is that &lt;cite&gt;Fruition.inception&lt;/cite&gt; is an initial state, and
+&lt;cite&gt;Fruition.completion&lt;/cite&gt; a terminal state.&lt;/p&gt;
+&lt;p&gt;We now need a method of counting the unbroken bottles, which we can implement as a property:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="nd"&gt;@property&lt;/span&gt;
+&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;count&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nb"&gt;len&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;population&lt;/span&gt; &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;i&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get_state&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Fruition&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="n"&gt;Fruition&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;inception&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="song-rst"&gt;
+&lt;h3&gt;song.rst&lt;/h3&gt;
+&lt;p&gt;The entity declarations need to change to match one unbroken bottle from the Ensemble.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;entity&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA
+    &lt;span class="nc"&gt;:types:&lt;/span&gt; balladeer.Drama
+
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;entity&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; BOTTLE
+    &lt;span class="nc"&gt;:types:&lt;/span&gt;     balladeer.Stateful
+    &lt;span class="nc"&gt;:states:&lt;/span&gt;    balladeer.Fruition.inception
+
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="nt"&gt;|BOTTLES|&lt;/span&gt; &lt;span class="ow"&gt;property&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.count
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;The breaking of the bottle can now be achieved in the dialogue, by setting its &lt;cite&gt;Fruition&lt;/cite&gt; state to &lt;cite&gt;completion&lt;/cite&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gh"&gt;Song&lt;/span&gt;
+&lt;span class="gh"&gt;====&lt;/span&gt;
+
+&lt;span class="gh"&gt;Many&lt;/span&gt;
+&lt;span class="gh"&gt;----&lt;/span&gt;
+
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;condition&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.count ([^01]+)
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;condition&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.state 0
+
+|BOTTLES| green bottles, hanging on the wall.
+
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;property&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; BOTTLE.state balladeer.Fruition.completion
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;property&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.state 1
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;In addition, this frees up the drama integer state for use by the dialogue as well. In fact, this is its most
+common application; to sequence a loop of varied dialogue until a more meaningful transition takes us elsewhere:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gh"&gt;One&lt;/span&gt;
+&lt;span class="gh"&gt;---&lt;/span&gt;
+
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;condition&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.count 1
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;condition&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.state 0
+
+|BOTTLES| green bottle, hanging on the wall.
+
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;property&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; BOTTLE.state balladeer.Fruition.completion
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;property&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.state 1
+
+&lt;span class="gh"&gt;All&lt;/span&gt;
+&lt;span class="gh"&gt;---&lt;/span&gt;
+
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;condition&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.state 1
+
+And if one green bottle should accidentally fall,
+There&amp;#39;ll be...
+
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;property&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.state 0
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="end-rst"&gt;
+&lt;h3&gt;end.rst&lt;/h3&gt;
+&lt;p&gt;We hit a slight snag at the end of the song. When there are no unbroken bottles left, this dialogue won't match
+the ensemble. We'll add a second scene of dialogue for that case.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;entity&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA
+    &lt;span class="nc"&gt;:types:&lt;/span&gt; balladeer.Drama
+
+&lt;span class="gh"&gt;End&lt;/span&gt;
+&lt;span class="gh"&gt;===&lt;/span&gt;
+
+&lt;span class="gh"&gt;None&lt;/span&gt;
+&lt;span class="gh"&gt;----&lt;/span&gt;
+
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;condition&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.count 0
+
+No green bottles hanging on the wall.
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;We don't need specific criteria in the entity declaration. It's sufficient to define the folder in this order:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+drama.folder = [&amp;quot;song.rst&amp;quot;, &amp;quot;end.rst&amp;quot;]
+&lt;/pre&gt;
+&lt;p&gt;Then when the first scene is unmatched, we fall back to the second.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="bin-ends"&gt;
+&lt;h2&gt;Bin Ends&lt;/h2&gt;
+&lt;p&gt;In just a couple of tutorials, we've built a scalable structure for our Interactive Screenplay.
+We can add more dialogue to our folder, and more Python modules (and unit tests) as we normally
+would do in a coding project.&lt;/p&gt;
+&lt;p&gt;There's just one element we haven't mentioned yet, and it's an important one.&lt;/p&gt;
+&lt;p&gt;It's the parser. We'll talk about that next time.&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Blog"></category><category term="basics"></category><category term="tutorial"></category></entry><entry><title>Property and the State</title><link href="https://tundish.github.io/balladeer/property-and-the-state.html" rel="alternate"></link><published>2021-11-08T16:45:00+00:00</published><updated>2021-11-08T16:45:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-08:/balladeer/property-and-the-state.html</id><summary type="html">&lt;p class="first last"&gt;How Drama and Dialogue communicate by modifying state.&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="properties"&gt;
 &lt;h2&gt;Properties&lt;/h2&gt;
 &lt;p&gt;If you've done any Python programming, you may know what a property is.

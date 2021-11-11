@@ -22,7 +22,7 @@ how long the text will take to read, and when it must appear.&lt;/p&gt;
 scene is played out. This is &lt;em&gt;reaction&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;Control now passes to the Story, which renders the scene. Out of the box, Balladeer can render to a character
 terminal, or in HTML5 for the browser experience.
-The Dialogue format supports showing images and playing audio and video.
+The Dialogue format supports images, and playing audio and video.
 You have complete freedom to restyle the display using CSS3.&lt;/p&gt;
 &lt;p&gt;User &lt;em&gt;input&lt;/em&gt; can come in the form of free text, or web GUI forms and buttons.
 That input is passed to the Drama to interpret and act upon.&lt;/p&gt;

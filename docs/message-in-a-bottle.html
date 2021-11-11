@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Message in a Bottle</title>
+<link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/base-min.css" />
+<link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css"
+integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/grids-responsive-min.css" />
+<link rel="stylesheet" href="https://tundish.github.io/balladeer/theme/css/common.css" />
+<link rel="stylesheet" href="https://tundish.github.io/balladeer/theme/css/pygment.css" />
+<link rel="stylesheet" href="https://tundish.github.io/balladeer/theme/css/site-articles.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+<article>
+<div class="pure-g">
+    <div class="pure-u-1-1">
+        <nav class="pure-menu pure-menu-horizontal">
+    <ul class="pure-menu-list">
+    <li class="pure-menu-selected pure-menu-item">
+    <a class="pure-menu-heading pure-menu-link" href="https://tundish.github.io/balladeer">Balladeer</a>
+    </li>
+    <li class="pure-menu-item">
+        <a class="pure-menu-link" href="https://tundish.github.io/balladeer/category/blog.html">Blog</a>
+    </li>
+    </ul>
+</nav>
+    </div>
+</div>
+<header>
+<div class="pure-g">
+    <div class="pure-u-1-1 pure-u-lg-1-2">
+        <h1><a class="muted" href="message-in-a-bottle.html" rel="bookmark"
+        title="Permalink to Message in a Bottle">Message in a Bottle</a></h1>
+    </div>
+</div>
+<div class="pure-g">
+    <div class="pure-u-lg-1-12">
+    </div>
+    <div class="pure-u-1-1 pure-u-lg-5-12">
+    <dl>
+<dt style="display: inline;">by</dt>
+<dd style="display: inline; margin-left: 0em;">tundish</dd>
+<dt hidden="hidden">date</dt>
+<dd>2021 November 10</dd>
+<dd>Wednesday morning</dd>
+</dl>
+    </div>
+    <div class="pure-u-1-1 pure-u-lg-5-12">
+        <ul class="tagcloud">
+ 
+ 
+<li class="tag-4">
+    <a class="pure-button" href="https://tundish.github.io/balladeer/tag/architecture.html">architecture</a>
+</li>
+<li class="tag-4">
+    <a class="pure-button" href="https://tundish.github.io/balladeer/tag/if.html">IF</a>
+</li>
+<li class="tag-1 familytag">
+    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/tutorial.html">tutorial</a>
+</li>
+<li class="tag-1 familytag">
+    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/basics.html">basics</a>
+</li>
+</ul>
+    </div>
+    <div class="pure-u-lg-1-12">
+    </div>
+</div>
+</header>
+<div class="pure-g">
+    <div class="pure-u-lg-1-5">
+    </div>
+    <div class="pure-u-1-1 pure-u-lg-3-5">
+        <div class="section" id="pour-implementation">
+<h2>Pour implementation</h2>
+<p>In the <a class="reference external" href="https://tundish.github.io/balladeer/property-and-the-state.html">last article</a> we
+took a very simple approach to <em>10 Green Bottles</em>. Those bottles were just a number to us.</p>
+<p>Balladeer wants you to create  a complex world of believable characters.
+So from now on, I think we should all start to care a bit more about the bottles.</p>
+<p>In this tutorial we are going to promote those bottles into the <em>Ensemble</em>, as if they were characters in our play.</p>
+</div>
+<div class="section" id="model-behaviour">
+<h2>Model behaviour</h2>
+<p>Once you begin to take a fantasy world that grew in your head, and implement it Python code, you have some
+problems to solve. How do you fit the one into the other?</p>
+<p>Which idiom of Python best delivers the behaviour you need in your narrative? When I first went down
+this path, I was beguiled by Python's powerful multiple-inheritance system. Imagine all the ways you can mix in
+classes to simulate human behaviour:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Player</span><span class="p">(</span><span class="n">Saxon</span><span class="p">,</span> <span class="n">Warrior</span><span class="p">):</span>
+    <span class="o">...</span>
+</pre></div>
+<p>One very important detail defeats this approach. Python objects cannot change their type at runtime.
+The Frog in Act One cannot become the Prince in Act Three. There are some tricks you can play, but if you go down
+that route you will forever feel the friction of fighting the language.</p>
+<p>In Balladeer, behaviour is governed by <em>state</em>. You can create any number of state types and store them on stateful
+objects:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Actor</span><span class="p">(</span><span class="n">DataObject</span><span class="p">,</span> <span class="n">Stateful</span><span class="p">):</span>
+    <span class="o">...</span>
+
+<span class="n">player</span> <span class="o">=</span> <span class="n">Actor</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Hengist&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">Ethnicity</span><span class="o">.</span><span class="n">saxon</span><span class="p">,</span> <span class="n">Caste</span><span class="o">.</span><span class="n">warrior</span><span class="p">)</span>
+</pre></div>
+<p>States are implemented as Python <a class="reference external" href="https://docs.python.org/3/library/enum.html#module-enum">enumerations</a>.
+Access to <em>state</em> is overloaded by type. The default type is <em>integer</em>:</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">player</span><span class="o">.</span><span class="n">state</span>
+<span class="mi">0</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">player</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">player</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">Caste</span><span class="o">.</span><span class="n">warrior</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">player</span><span class="o">.</span><span class="n">get_state</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="mi">3</span>
+</pre></div>
+<p>Because enums can have methods, you can delegate functional behaviour to an object's state, rather
+than its type.</p>
+<div class="highlight"><pre><span></span><span class="o">&gt;&gt;&gt;</span> <span class="n">caste</span> <span class="o">=</span> <span class="n">player</span><span class="o">.</span><span class="n">get_state</span><span class="p">(</span><span class="n">Caste</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">caste</span>
+<span class="o">&lt;</span><span class="n">Caste</span><span class="o">.</span><span class="n">warrior</span><span class="p">:</span> <span class="n">Build</span><span class="p">(</span><span class="n">luck</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">magic</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="n">skill</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span><span class="o">&gt;</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">caste</span><span class="o">.</span><span class="n">roll</span><span class="p">()</span>
+<span class="n">Build</span><span class="p">(</span><span class="n">luck</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">magic</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">skill</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="the-glass-ensemble">
+<h2>The Glass Ensemble</h2>
+<p>Back to our bottles, then (you can see this entire <a class="reference external" href="https://github.com/tundish/balladeer/tree/master/examples/03_stateful_enum__state">code example</a> online).</p>
+<div class="section" id="drama-py">
+<h3>drama.py</h3>
+<p>We are going to throw away our interlude function. Instead we'll populate the Ensemble with some stateful objects
+to represent the bottles. Our Drama class looks like this:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Bottles</span><span class="p">(</span><span class="n">Drama</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">Stateful</span><span class="p">()</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">Fruition</span><span class="o">.</span><span class="n">inception</span><span class="p">),</span>
+            <span class="n">Stateful</span><span class="p">()</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">Fruition</span><span class="o">.</span><span class="n">inception</span><span class="p">),</span>
+            <span class="n">Stateful</span><span class="p">()</span><span class="o">.</span><span class="n">set_state</span><span class="p">(</span><span class="n">Fruition</span><span class="o">.</span><span class="n">inception</span><span class="p">),</span>
+        <span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ensemble</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span>
+</pre></div>
+<p>The <cite>Fruition</cite> type is built in to Balladeer. It comes into its own when used with the <cite>Gesture</cite> state machine,
+to which it's closely related. Gestures are an advanced topic. Your first screenplay almost certainly ought not
+to use them. For now, all we need to know is that <cite>Fruition.inception</cite> is an initial state, and
+<cite>Fruition.completion</cite> a terminal state.</p>
+<p>We now need a method of counting the unbroken bottles, which we can implement as a property:</p>
+<div class="highlight"><pre><span></span><span class="nd">@property</span>
+<span class="k">def</span> <span class="nf">count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span>
+        <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">population</span> <span class="k">if</span> <span class="n">i</span><span class="o">.</span><span class="n">get_state</span><span class="p">(</span><span class="n">Fruition</span><span class="p">)</span> <span class="o">==</span> <span class="n">Fruition</span><span class="o">.</span><span class="n">inception</span><span class="p">]</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="song-rst">
+<h3>song.rst</h3>
+<p>The entity declarations need to change to match one unbroken bottle from the Ensemble.</p>
+<div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">entity</span><span class="p">::</span> DRAMA
+    <span class="nc">:types:</span> balladeer.Drama
+
+<span class="p">..</span> <span class="ow">entity</span><span class="p">::</span> BOTTLE
+    <span class="nc">:types:</span>     balladeer.Stateful
+    <span class="nc">:states:</span>    balladeer.Fruition.inception
+
+<span class="p">..</span> <span class="nt">|BOTTLES|</span> <span class="ow">property</span><span class="p">::</span> DRAMA.count
+</pre></div>
+<p>The breaking of the bottle can now be achieved in the dialogue, by setting its <cite>Fruition</cite> state to <cite>completion</cite>.</p>
+<div class="highlight"><pre><span></span><span class="gh">Song</span>
+<span class="gh">====</span>
+
+<span class="gh">Many</span>
+<span class="gh">----</span>
+
+<span class="p">..</span> <span class="ow">condition</span><span class="p">::</span> DRAMA.count ([^01]+)
+<span class="p">..</span> <span class="ow">condition</span><span class="p">::</span> DRAMA.state 0
+
+|BOTTLES| green bottles, hanging on the wall.
+
+<span class="p">..</span> <span class="ow">property</span><span class="p">::</span> BOTTLE.state balladeer.Fruition.completion
+<span class="p">..</span> <span class="ow">property</span><span class="p">::</span> DRAMA.state 1
+</pre></div>
+<p>In addition, this frees up the drama integer state for use by the dialogue as well. In fact, this is its most
+common application; to sequence a loop of varied dialogue until a more meaningful transition takes us elsewhere:</p>
+<div class="highlight"><pre><span></span><span class="gh">One</span>
+<span class="gh">---</span>
+
+<span class="p">..</span> <span class="ow">condition</span><span class="p">::</span> DRAMA.count 1
+<span class="p">..</span> <span class="ow">condition</span><span class="p">::</span> DRAMA.state 0
+
+|BOTTLES| green bottle, hanging on the wall.
+
+<span class="p">..</span> <span class="ow">property</span><span class="p">::</span> BOTTLE.state balladeer.Fruition.completion
+<span class="p">..</span> <span class="ow">property</span><span class="p">::</span> DRAMA.state 1
+
+<span class="gh">All</span>
+<span class="gh">---</span>
+
+<span class="p">..</span> <span class="ow">condition</span><span class="p">::</span> DRAMA.state 1
+
+And if one green bottle should accidentally fall,
+There&#39;ll be...
+
+<span class="p">..</span> <span class="ow">property</span><span class="p">::</span> DRAMA.state 0
+</pre></div>
+</div>
+<div class="section" id="end-rst">
+<h3>end.rst</h3>
+<p>We hit a slight snag at the end of the song. When there are no unbroken bottles left, this dialogue won't match
+the ensemble. We'll add a second scene of dialogue for that case.</p>
+<div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">entity</span><span class="p">::</span> DRAMA
+    <span class="nc">:types:</span> balladeer.Drama
+
+<span class="gh">End</span>
+<span class="gh">===</span>
+
+<span class="gh">None</span>
+<span class="gh">----</span>
+
+<span class="p">..</span> <span class="ow">condition</span><span class="p">::</span> DRAMA.count 0
+
+No green bottles hanging on the wall.
+</pre></div>
+<p>We don't need specific criteria in the entity declaration. It's sufficient to define the folder in this order:</p>
+<pre class="literal-block">
+drama.folder = [&quot;song.rst&quot;, &quot;end.rst&quot;]
+</pre>
+<p>Then when the first scene is unmatched, we fall back to the second.</p>
+</div>
+</div>
+<div class="section" id="bin-ends">
+<h2>Bin Ends</h2>
+<p>In just a couple of tutorials, we've built a scalable structure for our Interactive Screenplay.
+We can add more dialogue to our folder, and more Python modules (and unit tests) as we normally
+would do in a coding project.</p>
+<p>There's just one element we haven't mentioned yet, and it's an important one.</p>
+<p>It's the parser. We'll talk about that next time.</p>
+</div>
+
+    </div>
+    <div class="pure-u-lg-1-5">
+    </div>
+</div>
+</article>
+<section>
+<div class="pure-g">
+<div class="pure-u-lg-1-5">
+</div>
+<div class="pure-u-1-1 pure-u-lg-3-5">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * *
+ * */
+    var disqus_shortname = 'balladeer'; // Required - Replace example with your forum shortname
+    var disqus_title = 'Message in a Bottle';
+    var disqus_url = 'https://tundish.github.io/balladeer/message-in-a-bottle.html';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type =
+'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] ||
+document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments hosted at Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">Comments hosted at <span class="logo-disqus">Disqus</span></a>
+</div>
+<div class="pure-u-lg-1-5">
+</div>
+</div>
+</section>
+<section>
+<footer>
+Copyright 2021 D E Haynes
+</footer>
+</section>
+</body>
+</html>
