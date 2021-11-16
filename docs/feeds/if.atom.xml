@@ -9,7 +9,6 @@ not many. And where they exist, they are not always operated by the authors them
 &lt;p&gt;Is it possible for one individual to tell a story to the world, outside of corporate social media?&lt;/p&gt;
 &lt;p&gt;Yes, it has always been possible. And now there is a free and modern option for those who want to do that in 2021.&lt;/p&gt;
 &lt;p&gt;Its name is Balladeer.&lt;/p&gt;
-&lt;img alt="A screenshot of the game Tower of Rapunzel" class="pure-img align-center" src="https://tundish.github.io/balladeer/images/tor-screen.png" /&gt;
 &lt;/div&gt;
 &lt;div class="section" id="drama-and-dialogue"&gt;
 &lt;h2&gt;Drama and Dialogue&lt;/h2&gt;
@@ -18,6 +17,10 @@ Drama is code written in Python. It contains all the functionality of your piece
 Dialogue goes into text files, which have a structure and syntax akin to that of a traditional screenplay.&lt;/p&gt;
 &lt;p&gt;If you are writing poetry, there may be no code at all. If your art is a game, there could be many
 Drama modules for you to develop, along with unit tests to check they work correctly.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="designed-with-the-web-in-mind"&gt;
+&lt;h2&gt;Designed with the Web in mind&lt;/h2&gt;
+&lt;img alt="A screenshot of the game Tower of Rapunzel" class="pure-img see-thru" src="https://tundish.github.io/balladeer/images/tor-screen.png" style="height: 480px;" /&gt;
 &lt;/div&gt;
 &lt;div class="section" id="where-next"&gt;
 &lt;h2&gt;Where Next?&lt;/h2&gt;

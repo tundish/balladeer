@@ -60,6 +60,10 @@ pre, table {
 margin: 1em 0.5em 2em 4em;
 }
 
+.see-thru {
+filter: opacity(60%) saturate(60%);
+}
+
 .biblio {
 box-sizing: border-box;
 background-color: #ddd;
