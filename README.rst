@@ -17,6 +17,9 @@ Virtual Environment
 
     python3 -m venv ~/balladeer-app
 
+Packages
+--------
+
 #. Update the package manager within it::
 
     ~/balladeer-app/bin/pip install -U pip wheel
@@ -26,7 +29,10 @@ Virtual Environment
     ~/balladeer-app/bin/pip install -U balladeer
 
 Examples
---------
+========
+
+Downloads and Dependencies
+--------------------------
 
 #. Install dependencies::
 
@@ -35,6 +41,9 @@ Examples
 #. Download the `repository as a zip file <https://github.com/tundish/balladeer/archive/master.zip>`_.
    Unzip it to a local directory.
 
+Operation
+---------
+
 #. `cd` to one of the directories under `examples`::
 
     cd examples/00_hello_world
@@ -42,4 +51,6 @@ Examples
 #. Run the example like this::
 
     ~/balladeer-app/bin/python hello.py
+
+    Hello, World!
 
