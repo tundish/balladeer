@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Easy Interactions</title>
+<link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/base-min.css" />
+<link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/pure-min.css"
+integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aehk5" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://unpkg.com/purecss@2.0.6/build/grids-responsive-min.css" />
+<link rel="stylesheet" href="https://tundish.github.io/balladeer/theme/css/common.css" />
+<link rel="stylesheet" href="https://tundish.github.io/balladeer/theme/css/pygment.css" />
+<link rel="stylesheet" href="https://tundish.github.io/balladeer/theme/css/site-articles.css" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+<article>
+<div class="pure-g">
+    <div class="pure-u-1-1">
+        <nav class="pure-menu pure-menu-horizontal">
+    <ul class="pure-menu-list">
+    <li class="pure-menu-selected pure-menu-item">
+    <a class="pure-menu-heading pure-menu-link" href="https://tundish.github.io/balladeer">Balladeer</a>
+    </li>
+    <li class="pure-menu-item">
+        <a class="pure-menu-link" href="https://tundish.github.io/balladeer/category/blog.html">Blog</a>
+    </li>
+    </ul>
+</nav>
+    </div>
+</div>
+<header>
+<div class="pure-g">
+    <div class="pure-u-1-1 pure-u-lg-1-2">
+        <h1><a class="muted" href="easy-interactions.html" rel="bookmark"
+        title="Permalink to Easy Interactions">Easy Interactions</a></h1>
+    </div>
+</div>
+<div class="pure-g">
+    <div class="pure-u-lg-1-12">
+    </div>
+    <div class="pure-u-1-1 pure-u-lg-5-12">
+    <dl>
+<dt style="display: inline;">by</dt>
+<dd style="display: inline; margin-left: 0em;">tundish</dd>
+<dt hidden="hidden">date</dt>
+<dd>2021 November 16</dd>
+<dd>Tuesday morning</dd>
+</dl>
+    </div>
+    <div class="pure-u-1-1 pure-u-lg-5-12">
+        <ul class="tagcloud">
+ 
+ 
+ 
+<li class="tag-4">
+    <a class="pure-button" href="https://tundish.github.io/balladeer/tag/if.html">IF</a>
+</li>
+<li class="tag-1 familytag">
+    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/tutorial.html">tutorial</a>
+</li>
+<li class="tag-4">
+    <a class="pure-button" href="https://tundish.github.io/balladeer/tag/architecture.html">architecture</a>
+</li>
+<li class="tag-0 familytag">
+    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/basics.html">basics</a>
+</li>
+<li class="tag-4 familytag">
+    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/parser.html">parser</a>
+</li>
+</ul>
+    </div>
+    <div class="pure-u-lg-1-12">
+    </div>
+</div>
+</header>
+<div class="pure-g">
+    <div class="pure-u-lg-1-5">
+    </div>
+    <div class="pure-u-1-1 pure-u-lg-3-5">
+        <div class="section" id="recap">
+<h2>Recap</h2>
+<p><a class="reference external" href="https://tundish.github.io/balladeer/message-in-a-bottle.html">Last time</a> we built <cite>10 Green Bottles</cite>
+in the form of a Balladeer screenplay. The structure we used is scalable to much larger projects.</p>
+<p>It wasn't interactive, though. And that's what we will implement today. We will put control in the
+hands of the reader. It is they who get to control the action.</p>
+</div>
+<div class="section" id="drama-faces-both-ways">
+<h2>Drama faces both ways</h2>
+<p>Up until now, our Drama class has served a supporting role. It has generated the Ensemble for
+the screenplay, and it has defined properties which can be used in the Dialogue.</p>
+<p>Now it has another partner to play with; the User. The real job of a drama is to <em>mediate</em> between
+user and dialogue.</p>
+<p>The change is actually fairly simple. We will remove from the dialogue the responsibility of
+modifying ensemble state. We will add two interactive commands by which the user can achieve that instead.</p>
+</div>
+<div class="section" id="methods-of-control">
+<h2>Methods of control</h2>
+<p>The first thing to do is add a <cite>look</cite> command. That will be a way for the user to find out how many bottles
+are left. That command is implemented by this method on the Bottles class:</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">do_look</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">this</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">presenter</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    look</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;&gt;&quot;</span>
+</pre></div>
+<p><em>What?</em> This is a method whose only action is to set an attribute. It doesn't even return anything. So how by that
+is <em>look</em> achieved?</p>
+<p>It happens in the dialogue. The criteria for singing the number of bottles have changed to this:</p>
+<div class="highlight"><pre><span></span><span class="gh">Song</span>
+<span class="gh">====</span>
+
+<span class="gh">Many</span>
+<span class="gh">----</span>
+
+<span class="p">..</span> <span class="ow">condition</span><span class="p">::</span> DRAMA.count ([^01]+)
+<span class="p">..</span> <span class="ow">condition</span><span class="p">::</span> DRAMA.history[0].name do_look
+
+|BOTTLES| green bottles, hanging on the wall.
+
+<span class="gh">One</span>
+<span class="gh">---</span>
+
+<span class="p">..</span> <span class="ow">condition</span><span class="p">::</span> DRAMA.count 1
+<span class="p">..</span> <span class="ow">condition</span><span class="p">::</span> DRAMA.history[0].name do_look
+
+|BOTTLES| green bottle, hanging on the wall.
+</pre></div>
+<p>Drama objects maintain a history of user commands. They are stored most recent first. The condition
+<tt class="docutils literal"><span class="pre">DRAMA.history[0].name</span> do_look</tt> means 'was my most recent command called <em>do_look</em>?' If so, the dialogue
+tells you how many bottles there are.</p>
+</div>
+<div class="section" id="chains-of-command">
+<h2>Chains of command</h2>
+<p>But how is the method <em>do_look</em> associated with the command <em>look</em>? That occurs by placing the string 'look'
+in the <em>docstring</em> of the <em>do_look</em> method.</p>
+<p><a class="reference external" href="https://www.python.org/dev/peps/pep-0257/#what-is-a-docstring">Docstrings</a> are a Python mechanism for explaining the purpose of a piece of code. Balladeer extends this approach
+to define the syntax of user commands.</p>
+<p>This system is enormously powerful. You will be able to parse highly complex phrases and interpret them reliably
+every time. That's an advanced topic for a later date though. We are going to keep it simple today.</p>
+</div>
+<div class="section" id="breaking-changes">
+<h2>Breaking changes</h2>
+<p>Here's the second method to add. This one breaks a bottle when the user enters 'bottle' or 'break'.</p>
+<div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">do_bottle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">this</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">presenter</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    bottle</span>
+<span class="sd">    break</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unbroken</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">Fruition</span><span class="o">.</span><span class="n">completion</span>
+    <span class="k">except</span> <span class="ne">IndexError</span><span class="p">:</span>
+        <span class="k">pass</span>
+</pre></div>
+<p>And here's the scrap of dialogue which reacts to that:</p>
+<div class="highlight"><pre><span></span><span class="gh">All</span>
+<span class="gh">---</span>
+
+<span class="p">..</span> <span class="ow">condition</span><span class="p">::</span> DRAMA.history[0].name do_bottle
+
+And if one green bottle should accidentally fall,
+There&#39;ll be...
+
+<span class="p">..</span> <span class="ow">property</span><span class="p">::</span> DRAMA.prompt Type &#39;look&#39; to check the damage &gt;
+</pre></div>
+<p>Notice how the dialogue can modify the user prompt. It's also possible to change the descriptions
+of ensemble objects this way too.</p>
+</div>
+<div class="section" id="keeping-active">
+<h2>Keeping active</h2>
+<p>You can control which commands are available to the user at any time. One command can activate or deactivate
+another. This is achieved by populating the <em>active</em> set of the drama object with the methods allowed.</p>
+<p>So we have two or three more lines to initialize our drama object now:</p>
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Bottles</span><span class="p">(</span><span class="n">Drama</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="o">...</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">do_bottle</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">do_look</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prompt</span> <span class="o">=</span> <span class="s2">&quot;&gt;&quot;</span>
+</pre></div>
+<p>All that's required to process user commands is a couple of lines to prompt for input, and then to take the
+appropriate action. And that's all handled for you by the <cite>deliver</cite> method of the Drama class.</p>
+<div class="highlight"><pre><span></span><span class="n">cmd</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{0}</span><span class="s2"> &quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">story</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">prompt</span><span class="p">))</span>
+<span class="n">text</span> <span class="o">=</span> <span class="n">story</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">deliver</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">presenter</span><span class="o">=</span><span class="n">presenter</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="summary">
+<h2>Summary</h2>
+<p>In Balladeer, the Drama and the Dialogue each have an important role. The design goal is to keep
+logical functionality within Python code, and maintain character dialogue as screenplay markup.</p>
+<p>At this point you should study the <a class="reference external" href="https://github.com/tundish/balladeer/tree/master/examples/04_drama_parser">example directory</a> so that this approach becomes familiar to you.</p>
+<p>Try running the example:</p>
+<pre class="literal-block">
+cd examples/04_drama_parser
+~/balladeer-app/bin/python drama.py
+</pre>
+<p>Here's the output from a typical session:</p>
+<pre class="literal-block">
+&gt; look
+3 green bottles, hanging on the wall.
+
+&gt; break
+And if one green bottle should accidentally fall,
+There'll be...
+
+Type 'look' to check the damage &gt; look
+2 green bottles, hanging on the wall.
+
+&gt; bottle
+And if one green bottle should accidentally fall,
+There'll be...
+
+Type 'look' to check the damage &gt; look
+1 green bottle, hanging on the wall.
+
+&gt; break
+No green bottles hanging on the wall.
+</pre>
+<p>In the next article, we'll take this interactive sing-song, and perform it over the Web.</p>
+</div>
+
+    </div>
+    <div class="pure-u-lg-1-5">
+    </div>
+</div>
+</article>
+<section>
+<div class="pure-g">
+<div class="pure-u-lg-1-5">
+</div>
+<div class="pure-u-1-1 pure-u-lg-3-5">
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * *
+ * */
+    var disqus_shortname = 'balladeer'; // Required - Replace example with your forum shortname
+    var disqus_title = 'Easy Interactions';
+    var disqus_url = 'https://tundish.github.io/balladeer/easy-interactions.html';
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type =
+'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] ||
+document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments hosted at Disqus.</a></noscript>
+<a href="http://disqus.com" class="dsq-brlink">Comments hosted at <span class="logo-disqus">Disqus</span></a>
+</div>
+<div class="pure-u-lg-1-5">
+</div>
+</div>
+</section>
+<section>
+<footer>
+Copyright 2021 D E Haynes
+</footer>
+</section>
+</body>
+</html>

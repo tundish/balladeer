@@ -1,5 +1,151 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Balladeer - Blog</title><link href="https://tundish.github.io/balladeer/" rel="alternate"></link><link href="https://tundish.github.io/balladeer/feeds/blog.atom.xml" rel="self"></link><id>https://tundish.github.io/balladeer/</id><updated>2021-11-10T10:15:00+00:00</updated><entry><title>Message in a Bottle</title><link href="https://tundish.github.io/balladeer/message-in-a-bottle.html" rel="alternate"></link><published>2021-11-10T10:15:00+00:00</published><updated>2021-11-10T10:15:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-10:/balladeer/message-in-a-bottle.html</id><summary type="html">&lt;p class="first last"&gt;Modifying State in ensemble objects.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Balladeer - Blog</title><link href="https://tundish.github.io/balladeer/" rel="alternate"></link><link href="https://tundish.github.io/balladeer/feeds/blog.atom.xml" rel="self"></link><id>https://tundish.github.io/balladeer/</id><updated>2021-11-16T07:45:00+00:00</updated><entry><title>Easy Interactions</title><link href="https://tundish.github.io/balladeer/easy-interactions.html" rel="alternate"></link><published>2021-11-16T07:45:00+00:00</published><updated>2021-11-16T07:45:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-16:/balladeer/easy-interactions.html</id><summary type="html">&lt;p class="first last"&gt;How to begin making your screenplay interactive.&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="recap"&gt;
+&lt;h2&gt;Recap&lt;/h2&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://tundish.github.io/balladeer/message-in-a-bottle.html"&gt;Last time&lt;/a&gt; we built &lt;cite&gt;10 Green Bottles&lt;/cite&gt;
+in the form of a Balladeer screenplay. The structure we used is scalable to much larger projects.&lt;/p&gt;
+&lt;p&gt;It wasn't interactive, though. And that's what we will implement today. We will put control in the
+hands of the reader. It is they who get to control the action.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="drama-faces-both-ways"&gt;
+&lt;h2&gt;Drama faces both ways&lt;/h2&gt;
+&lt;p&gt;Up until now, our Drama class has served a supporting role. It has generated the Ensemble for
+the screenplay, and it has defined properties which can be used in the Dialogue.&lt;/p&gt;
+&lt;p&gt;Now it has another partner to play with; the User. The real job of a drama is to &lt;em&gt;mediate&lt;/em&gt; between
+user and dialogue.&lt;/p&gt;
+&lt;p&gt;The change is actually fairly simple. We will remove from the dialogue the responsibility of
+modifying ensemble state. We will add two interactive commands by which the user can achieve that instead.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="methods-of-control"&gt;
+&lt;h2&gt;Methods of control&lt;/h2&gt;
+&lt;p&gt;The first thing to do is add a &lt;cite&gt;look&lt;/cite&gt; command. That will be a way for the user to find out how many bottles
+are left. That command is implemented by this method on the Bottles class:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;do_look&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;this&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="sd"&gt;    look&lt;/span&gt;
+
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;prompt&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;gt;&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;&lt;em&gt;What?&lt;/em&gt; This is a method whose only action is to set an attribute. It doesn't even return anything. So how by that
+is &lt;em&gt;look&lt;/em&gt; achieved?&lt;/p&gt;
+&lt;p&gt;It happens in the dialogue. The criteria for singing the number of bottles have changed to this:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gh"&gt;Song&lt;/span&gt;
+&lt;span class="gh"&gt;====&lt;/span&gt;
+
+&lt;span class="gh"&gt;Many&lt;/span&gt;
+&lt;span class="gh"&gt;----&lt;/span&gt;
+
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;condition&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.count ([^01]+)
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;condition&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.history[0].name do_look
+
+|BOTTLES| green bottles, hanging on the wall.
+
+&lt;span class="gh"&gt;One&lt;/span&gt;
+&lt;span class="gh"&gt;---&lt;/span&gt;
+
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;condition&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.count 1
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;condition&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.history[0].name do_look
+
+|BOTTLES| green bottle, hanging on the wall.
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Drama objects maintain a history of user commands. They are stored most recent first. The condition
+&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;DRAMA.history[0].name&lt;/span&gt; do_look&lt;/tt&gt; means 'was my most recent command called &lt;em&gt;do_look&lt;/em&gt;?' If so, the dialogue
+tells you how many bottles there are.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="chains-of-command"&gt;
+&lt;h2&gt;Chains of command&lt;/h2&gt;
+&lt;p&gt;But how is the method &lt;em&gt;do_look&lt;/em&gt; associated with the command &lt;em&gt;look&lt;/em&gt;? That occurs by placing the string 'look'
+in the &lt;em&gt;docstring&lt;/em&gt; of the &lt;em&gt;do_look&lt;/em&gt; method.&lt;/p&gt;
+&lt;p&gt;&lt;a class="reference external" href="https://www.python.org/dev/peps/pep-0257/#what-is-a-docstring"&gt;Docstrings&lt;/a&gt; are a Python mechanism for explaining the purpose of a piece of code. Balladeer extends this approach
+to define the syntax of user commands.&lt;/p&gt;
+&lt;p&gt;This system is enormously powerful. You will be able to parse highly complex phrases and interpret them reliably
+every time. That's an advanced topic for a later date though. We are going to keep it simple today.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="breaking-changes"&gt;
+&lt;h2&gt;Breaking changes&lt;/h2&gt;
+&lt;p&gt;Here's the second method to add. This one breaks a bottle when the user enters 'bottle' or 'break'.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;do_bottle&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;this&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="sd"&gt;    bottle&lt;/span&gt;
+&lt;span class="sd"&gt;    break&lt;/span&gt;
+
+&lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+    &lt;span class="k"&gt;try&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;unbroken&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Fruition&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;completion&lt;/span&gt;
+    &lt;span class="k"&gt;except&lt;/span&gt; &lt;span class="ne"&gt;IndexError&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;pass&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;And here's the scrap of dialogue which reacts to that:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="gh"&gt;All&lt;/span&gt;
+&lt;span class="gh"&gt;---&lt;/span&gt;
+
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;condition&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.history[0].name do_bottle
+
+And if one green bottle should accidentally fall,
+There&amp;#39;ll be...
+
+&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;property&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.prompt Type &amp;#39;look&amp;#39; to check the damage &amp;gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Notice how the dialogue can modify the user prompt. It's also possible to change the descriptions
+of ensemble objects this way too.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="keeping-active"&gt;
+&lt;h2&gt;Keeping active&lt;/h2&gt;
+&lt;p&gt;You can control which commands are available to the user at any time. One command can activate or deactivate
+another. This is achieved by populating the &lt;em&gt;active&lt;/em&gt; set of the drama object with the methods allowed.&lt;/p&gt;
+&lt;p&gt;So we have two or three more lines to initialize our drama object now:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Bottles&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Drama&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+
+    &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+        &lt;span class="nb"&gt;super&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="fm"&gt;__init__&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="o"&gt;...&lt;/span&gt;
+
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;active&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;do_bottle&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;active&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;do_look&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;prompt&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;&amp;gt;&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;All that's required to process user commands is a couple of lines to prompt for input, and then to take the
+appropriate action. And that's all handled for you by the &lt;cite&gt;deliver&lt;/cite&gt; method of the Drama class.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;cmd&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;input&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="si"&gt;{0}&lt;/span&gt;&lt;span class="s2"&gt; &amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;prompt&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+&lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;deliver&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cmd&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="summary"&gt;
+&lt;h2&gt;Summary&lt;/h2&gt;
+&lt;p&gt;In Balladeer, the Drama and the Dialogue each have an important role. The design goal is to keep
+logical functionality within Python code, and maintain character dialogue as screenplay markup.&lt;/p&gt;
+&lt;p&gt;At this point you should study the &lt;a class="reference external" href="https://github.com/tundish/balladeer/tree/master/examples/04_drama_parser"&gt;example directory&lt;/a&gt; so that this approach becomes familiar to you.&lt;/p&gt;
+&lt;p&gt;Try running the example:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+cd examples/04_drama_parser
+~/balladeer-app/bin/python drama.py
+&lt;/pre&gt;
+&lt;p&gt;Here's the output from a typical session:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+&amp;gt; look
+3 green bottles, hanging on the wall.
+
+&amp;gt; break
+And if one green bottle should accidentally fall,
+There'll be...
+
+Type 'look' to check the damage &amp;gt; look
+2 green bottles, hanging on the wall.
+
+&amp;gt; bottle
+And if one green bottle should accidentally fall,
+There'll be...
+
+Type 'look' to check the damage &amp;gt; look
+1 green bottle, hanging on the wall.
+
+&amp;gt; break
+No green bottles hanging on the wall.
+&lt;/pre&gt;
+&lt;p&gt;In the next article, we'll take this interactive sing-song, and perform it over the Web.&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Blog"></category><category term="basics"></category><category term="tutorial"></category><category term="parser"></category></entry><entry><title>Message in a Bottle</title><link href="https://tundish.github.io/balladeer/message-in-a-bottle.html" rel="alternate"></link><published>2021-11-10T10:15:00+00:00</published><updated>2021-11-10T10:15:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-10:/balladeer/message-in-a-bottle.html</id><summary type="html">&lt;p class="first last"&gt;Modifying State in ensemble objects.&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="pour-implementation"&gt;
 &lt;h2&gt;Pour implementation&lt;/h2&gt;
 &lt;p&gt;In the &lt;a class="reference external" href="https://tundish.github.io/balladeer/property-and-the-state.html"&gt;last article&lt;/a&gt; we
@@ -347,13 +493,12 @@ You can enable or disable those commands on the fly as required.&lt;/p&gt;
 </content><category term="Blog"></category><category term="basics"></category><category term="architecture"></category></entry><entry><title>Balladeer in brief</title><link href="https://tundish.github.io/balladeer/balladeer-in-brief.html" rel="alternate"></link><published>2021-11-03T10:30:00+00:00</published><updated>2021-11-03T10:30:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-03:/balladeer/balladeer-in-brief.html</id><summary type="html">&lt;p class="first last"&gt;This is an introductory article. Start here if you know nothing about Balladeer.&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="tell-me-a-story"&gt;
 &lt;h2&gt;Tell me a Story&lt;/h2&gt;
-&lt;p&gt;Story-telling is at the heart of human culture. We all have the right to tell our stories.&lt;/p&gt;
+&lt;p&gt;Story-telling is at the heart of human culture. We all have a right to tell our stories.&lt;/p&gt;
 &lt;p&gt;In an internet-enabled world, with an open and semantic web, you might think that poetry and literature
 would proliferate. I have to say I don't see that myself. There are places to find new writing online, but
 not many. And where they exist, they are not always operated by the authors themselves.&lt;/p&gt;
-&lt;p&gt;Is it possible for one individual to tell a story to the world, outside of corporate social media?
-Yes, that is possible. And it has been possible for a number of years.
-But there is now a free and modern option for those who want to do that.&lt;/p&gt;
+&lt;p&gt;Is it possible for one individual to tell a story to the world, outside of corporate social media?&lt;/p&gt;
+&lt;p&gt;Yes, it has always been possible. And now there is a free and modern option for those who want to do that in 2021.&lt;/p&gt;
 &lt;p&gt;Its name is Balladeer.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="drama-and-dialogue"&gt;
