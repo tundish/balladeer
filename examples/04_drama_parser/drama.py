@@ -34,6 +34,7 @@ class Bottles(Drama):
     def do_bottle(self, this, text, presenter, *args, **kwargs):
         """
         bottle
+        break
 
         """
         try:
@@ -47,7 +48,6 @@ class Bottles(Drama):
 
         """
         self.prompt = ">"
-        return
 
 
 drama = Bottles()
