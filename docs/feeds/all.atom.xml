@@ -491,34 +491,57 @@ Drama objects can recognize &lt;em&gt;commands&lt;/em&gt; of any complexity.
 You can enable or disable those commands on the fly as required.&lt;/p&gt;
 &lt;/div&gt;
 </content><category term="Blog"></category><category term="basics"></category><category term="architecture"></category></entry><entry><title>Balladeer in brief</title><link href="https://tundish.github.io/balladeer/balladeer-in-brief.html" rel="alternate"></link><published>2021-11-03T10:30:00+00:00</published><updated>2021-11-03T10:30:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-03:/balladeer/balladeer-in-brief.html</id><summary type="html">&lt;p class="first last"&gt;This is an introductory article. Start here if you know nothing about Balladeer.&lt;/p&gt;
-</summary><content type="html">&lt;div class="section" id="tell-me-a-story"&gt;
-&lt;h2&gt;Tell me a Story&lt;/h2&gt;
-&lt;p&gt;Story-telling is at the heart of human culture. We all have a right to tell our stories.&lt;/p&gt;
-&lt;p&gt;In an internet-enabled world, with an open and semantic web, you might think that poetry and literature
-would proliferate. I have to say I don't see that myself. There are places to find new writing online, but
-not many. And where they exist, they are not always operated by the authors themselves.&lt;/p&gt;
-&lt;p&gt;Is it possible for one individual to tell a story to the world, outside of corporate social media?&lt;/p&gt;
-&lt;p&gt;Yes, it has always been possible. And now there is a free and modern option for those who want to do that in 2021.&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="culture"&gt;
+&lt;h2&gt;Culture&lt;/h2&gt;
+&lt;p&gt;You are reading a book. You are playing a video game. Culturally, what lies between?&lt;/p&gt;
+&lt;p&gt;In that space sits the Web and all its related technologies. We've had it for decades and it has served
+us in different ways. It was a source of information. It was a platform for commerce.
+It was a nexus for social and cultural messages. It was a surface for state and corporate surveillance.&lt;/p&gt;
+&lt;p&gt;The Web is a mature technology now. It is better than it was at the beginning. And just as it better serves
+large corporations than it used to, so too might it better serve the individual.&lt;/p&gt;
+&lt;p&gt;What has been lacking is a common understanding of why an individual would run his own web server these days.
+The answer is as old as humanity itself.&lt;/p&gt;
+&lt;p&gt;In order to tell a Story.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="story"&gt;
+&lt;h2&gt;Story&lt;/h2&gt;
+&lt;p&gt;Story-telling is at the heart of human culture. We all have an instinct to tell our stories.
+And now there is a free and modern option for those who want to do that in 2021.&lt;/p&gt;
 &lt;p&gt;Its name is Balladeer.&lt;/p&gt;
 &lt;/div&gt;
-&lt;div class="section" id="drama-and-dialogue"&gt;
-&lt;h2&gt;Drama and Dialogue&lt;/h2&gt;
-&lt;p&gt;As an author in a Balladeer project, you supply two types of content; &lt;em&gt;Drama&lt;/em&gt; and &lt;em&gt;Dialogue&lt;/em&gt;.
-Drama is code written in Python. It contains all the functionality of your piece.
-Dialogue goes into text files, which have a structure and syntax akin to that of a traditional screenplay.&lt;/p&gt;
-&lt;p&gt;If you are writing poetry, there may be no code at all. If your art is a game, there could be many
-Drama modules for you to develop, along with unit tests to check they work correctly.&lt;/p&gt;
+&lt;div class="section" id="principles"&gt;
+&lt;h2&gt;Principles&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Balladeer is 100% Free software.&lt;/li&gt;
+&lt;li&gt;Game logic is Python code.&lt;/li&gt;
+&lt;li&gt;Dialogue lives in separate screenplay files.&lt;/li&gt;
+&lt;li&gt;Rich syntax for text markup.&lt;/li&gt;
+&lt;li&gt;Story renders in pure HTML5 and CSS3. Javascript is optional.&lt;/li&gt;
+&lt;li&gt;Serve web-mode for the browser experience or run old-school in a terminal.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Balladeer helps you build web-native applications for a decentralized world.&lt;/p&gt;
 &lt;/div&gt;
-&lt;div class="section" id="designed-with-the-web-in-mind"&gt;
-&lt;h2&gt;Designed with the Web in mind&lt;/h2&gt;
-&lt;img alt="A screenshot of the game Tower of Rapunzel" class="pure-img see-thru" src="https://tundish.github.io/balladeer/images/tor-screen.png" style="height: 480px;" /&gt;
+&lt;div class="section" id="provenance"&gt;
+&lt;h2&gt;Provenance&lt;/h2&gt;
+&lt;p&gt;Balladeer sprang from a project of mine from a couple of years ago.
+I made a little puzzle game for a competition called NarraScope.&lt;/p&gt;
+&lt;p&gt;Over two fortnights, in the evenings after work, I wrote the whole thing in Python because I didn't fancy tangling
+with Javascript.&lt;/p&gt;
+&lt;img alt="A screenshot of the game Tower of Rapunzel" class="pure-img low-key" src="https://tundish.github.io/balladeer/images/tor-screen.png" style="height: 480px;" /&gt;
+&lt;p&gt;That's why, from the beginning, Balladeer supported multimedia; images, audio, and video.&lt;/p&gt;
+&lt;p&gt;Since then, my interest has shifted towards parser-based interactive screenplays.
+Working on Balladeer has helped me explore some novel ideas on computational narrative technique.
+If you have research to do in this area, you'll find Balladeer well suited for that purpose.&lt;/p&gt;
+&lt;p&gt;This is where the power of the Python language really shines. I'm going to make a bold claim:
+&lt;strong&gt;Balladeer has the simplest, most flexible, most dynamic command parser in any game framework&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;If you disagree, please post a link to a better one in the &lt;a class="reference external" href="https://disqus.com/home/forums/balladeer/"&gt;comments section&lt;/a&gt;.&lt;/p&gt;
 &lt;/div&gt;
-&lt;div class="section" id="where-next"&gt;
-&lt;h2&gt;Where Next?&lt;/h2&gt;
+&lt;div class="section" id="what-next"&gt;
+&lt;h2&gt;What Next?&lt;/h2&gt;
 &lt;p&gt;The &lt;a class="reference external" href="https://tundish.github.io/balladeer/category/blog.html"&gt;Balladeer blog&lt;/a&gt; hosts regular articles on how to use the framework.
 There is a demo game you can download and run too; it's called &lt;a class="reference external" href="https://github.com/tundish/tea_and_sympathy"&gt;Tea and Sympathy&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Balladeer relies heavily on other libraries, known as the &lt;cite&gt;Turberfield&lt;/cite&gt; packages.
-Each of those has its own &lt;a class="reference external" href="https://turberfield-dialogue.readthedocs.io/en/latest/"&gt;online documentation&lt;/a&gt;. You may also wish to read about &lt;a class="reference external" href="https://www.writethedocs.org/guide/writing/reStructuredText/"&gt;reStructuredText&lt;/a&gt;.&lt;/p&gt;
+Each of those has its own &lt;a class="reference external" href="https://turberfield-dialogue.readthedocs.io/en/latest/"&gt;online documentation&lt;/a&gt;. You may also wish to learn some &lt;a class="reference external" href="https://www.writethedocs.org/guide/writing/reStructuredText/"&gt;reStructuredText&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Don't forget you can post comments under the blog articles, or raise issues at the &lt;a class="reference external" href="https://github.com/tundish/balladeer"&gt;code repository&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Have fun telling your Story!&lt;/p&gt;
 &lt;/div&gt;

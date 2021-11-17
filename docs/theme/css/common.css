@@ -61,7 +61,11 @@ margin: 1em 0.5em 2em 4em;
 }
 
 .see-thru {
-filter: opacity(60%) saturate(60%);
+filter: opacity(50%) saturate(70%);
+}
+
+.low-key {
+filter: opacity(70%) saturate(50%);
 }
 
 .biblio {
