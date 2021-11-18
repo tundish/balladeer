@@ -6,6 +6,12 @@
 Change Log
 ::::::::::
 
+0.16.0
+======
+
+* Various fixes to examples.
+* Various updates to development blog.
+
 0.15.0
 ======
 
