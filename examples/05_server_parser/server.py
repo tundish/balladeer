@@ -44,6 +44,7 @@ class Bottles(Drama):
     def do_bottle(self, this, text, presenter, *args, **kwargs):
         """
         bottle
+        break
 
         """
         try:
@@ -69,7 +70,7 @@ async def get_root(request):
     drama.folder = ["song.rst", "end.rst"]
     story = Story(context=drama)
     text = story.context.deliver("look", presenter=None)
-    story.presenter = story.represent(text, facts=story.context.facts)
+    story.presenter = story.represent(text)
     request.app["sessions"][story.id] = story
     raise web.HTTPFound("/{0.id.hex}".format(story))
 
