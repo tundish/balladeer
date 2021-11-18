@@ -25,18 +25,18 @@ of &lt;em&gt;10 Green Bottles&lt;/em&gt;, parser-style, as a web service.&lt;/p&
 &lt;tr&gt;&lt;td&gt;Web routes and views&lt;/td&gt;
 &lt;td&gt;60&lt;/td&gt;
 &lt;/tr&gt;
-&lt;tr&gt;&lt;td&gt;Program setup/CLI&lt;/td&gt;
+&lt;tr&gt;&lt;td&gt;Program CLI&lt;/td&gt;
 &lt;td&gt;30&lt;/td&gt;
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;The Drama code is exactly the same as we saw in the &lt;a class="reference external" href="https://tundish.github.io/balladeer/easy-interactions.html"&gt;previous article&lt;/a&gt;.
-Equally, the command line boilerplate is typical of any Python program, so we won't dwell on that today.&lt;/p&gt;
-&lt;p&gt;That leaves us about 60 lines of web code to go through. And when we're done, you'll have all you need
-to deliver your Story to the world.&lt;/p&gt;
+The command line boilerplate is typical of any Python program, so we won't dwell on that today.&lt;/p&gt;
+&lt;p&gt;That leaves about 60 lines of web code to explain. When we're done, you'll understand fully
+how your Story is delivered to the world.&lt;/p&gt;
 &lt;/div&gt;
-&lt;div class="section" id="frameworks"&gt;
-&lt;h2&gt;Frameworks&lt;/h2&gt;
+&lt;div class="section" id="framework"&gt;
+&lt;h2&gt;Framework&lt;/h2&gt;
 &lt;p&gt;Python has many good web frameworks. This example uses &lt;a class="reference external" href="https://docs.aiohttp.org/en/stable/"&gt;aiohttp&lt;/a&gt;, which is lightweight and asynchronous.
 I can also recommend &lt;a class="reference external" href="https://bottlepy.org"&gt;bottle&lt;/a&gt;, equally lightweight, but a synchronous system.&lt;/p&gt;
 &lt;/div&gt;
@@ -50,11 +50,11 @@ It creates a new Story, then redirects to the next, which is...&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="session-endpoint"&gt;
 &lt;h3&gt;2. Session endpoint&lt;/h3&gt;
-&lt;p&gt;A GET request to a URL on this endpoint returns the next page of the Story.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;GET&lt;/em&gt; requests to a URL on this endpoint return the next page of the Story.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="command-endpoint"&gt;
 &lt;h3&gt;3. Command endpoint&lt;/h3&gt;
-&lt;p&gt;A POST request to a URL on this endpoint submits a command to the Story.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;POST&lt;/em&gt; requests to a URL on this endpoint submit a command to the Story.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="css-endpoint"&gt;
 &lt;h3&gt;4. CSS endpoint&lt;/h3&gt;
@@ -68,8 +68,8 @@ Similarly, you'd need endpoints for images, audio files, and custom fonts should
 &lt;h3&gt;1. Root view&lt;/h3&gt;
 &lt;p&gt;This code starts off exactly as did our previous command-line program.
 We create the Drama with its folders. Then from that the Story.&lt;/p&gt;
-&lt;p&gt;What's new is that we ourselves send a &amp;quot;look&amp;quot; command and create a presenter to animate the result.&lt;/p&gt;
-&lt;p&gt;We store those objects on an &lt;cite&gt;app&lt;/cite&gt; mapping which the web framework provides for such a purpose.
+&lt;p&gt;What's new is that we ourselves send a &lt;em&gt;look&lt;/em&gt; command and create a presenter to animate the result.&lt;/p&gt;
+&lt;p&gt;We keep the Story in an &lt;cite&gt;app&lt;/cite&gt; object which the web framework provides for such a purpose.
 Story objects have a unique ID, and this is used in subsequent URLs to identify and retrieve them.&lt;/p&gt;
 &lt;pre class="code python literal-block"&gt;
 &lt;span class="k"&gt;async&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_root&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
@@ -77,29 +77,29 @@ Story objects have a unique ID, and this is used in subsequent URLs to identify 
     &lt;span class="n"&gt;drama&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;folder&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;song.rst&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;end.rst&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
     &lt;span class="n"&gt;story&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Story&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;drama&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;deliver&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;look&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;represent&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;facts&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;facts&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;represent&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sessions&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;
     &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="n"&gt;web&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;HTTPFound&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/&lt;/span&gt;&lt;span class="si"&gt;{0.id.hex}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/pre&gt;
 &lt;/div&gt;
 &lt;div class="section" id="session-view"&gt;
 &lt;h3&gt;2. Session view&lt;/h3&gt;
-&lt;p&gt;The first job of the session view is to retrieve the story object via its unique ID.&lt;/p&gt;
+&lt;p&gt;The first job of the session view is to retrieve the Story object via its unique ID.&lt;/p&gt;
 &lt;pre class="code python literal-block"&gt;
 &lt;span class="k"&gt;async&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_session&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="n"&gt;uid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;uuid&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;UUID&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;hex&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;match_info&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;session&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
     &lt;span class="n"&gt;story&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sessions&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="n"&gt;uid&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;
-&lt;p&gt;Then we animate a frame. The following code says,
-&lt;em&gt;'take the next allowed dialogue shot, and animate it with the timing specified in the dialogue file'&lt;/em&gt;:&lt;/p&gt;
+&lt;p&gt;Then we animate a frame. The following code chooses the next dialogue shot, animating
+it with the timing specified in the dialogue file:&lt;/p&gt;
 &lt;pre class="code python literal-block"&gt;
     &lt;span class="n"&gt;animation&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;next&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;animate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
         &lt;span class="n"&gt;frame&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dwell&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dwell&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pause&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pause&lt;/span&gt;
     &lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;frame&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;frames&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
 &lt;/pre&gt;
-&lt;p&gt;Some web-specific stuff here. We decide a title for the page and prepare any web controls we need.
-It's the responsibility of a Story object to declare valid user actions.
-By default, Balladeer gives us a single text box for command input.&lt;/p&gt;
+&lt;p&gt;Some web-specific stuff here. We decide a title for the page and prepare the web user interface.
+A Story object can choose to supply extra user controls. Our Story doesn't do that,
+so by default Balladeer gives us a single text box for command input.&lt;/p&gt;
 &lt;pre class="code python literal-block"&gt;
     &lt;span class="n"&gt;title&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;metadata&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;project&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
     &lt;span class="n"&gt;controls&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
@@ -108,8 +108,8 @@ By default, Balladeer gives us a single text box for command input.&lt;/p&gt;
         &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;
     &lt;span class="p"&gt;]&lt;/span&gt;
 &lt;/pre&gt;
-&lt;p&gt;Instead of the usual &lt;tt class="docutils literal"&gt;story.render_frame_to_terminal(animation)&lt;/tt&gt;, in the case of a web service we use
-&lt;tt class="docutils literal"&gt;story.render_animated_frame_to_html(animation, controls)&lt;/tt&gt;.&lt;/p&gt;
+&lt;p&gt;We have seen &lt;tt class="docutils literal"&gt;story.render_frame_to_terminal&lt;/tt&gt; in previous examples.
+Since this is a web service we use &lt;tt class="docutils literal"&gt;story.render_animated_frame_to_html&lt;/tt&gt; to generate the dialogue in HTML.&lt;/p&gt;
 &lt;p&gt;The web page has a couple of optional elements too:&lt;/p&gt;
 &lt;ul class="simple"&gt;
 &lt;li&gt;Links to the CSS files we're using.&lt;/li&gt;
@@ -124,9 +124,13 @@ By default, Balladeer gives us a single text box for command input.&lt;/p&gt;
 
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;web&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Response&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;rv&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;content_type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;text/html&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
 &lt;/pre&gt;
+&lt;p&gt;These three elements are combined to create an HTML page.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="command-input"&gt;
 &lt;h3&gt;3. Command input&lt;/h3&gt;
+&lt;p&gt;When a user enters a command, the browser sends it to our &lt;em&gt;cmd&lt;/em&gt; endpoint.&lt;/p&gt;
+&lt;p&gt;We retrieve the Story object as we did before. Then most of the code
+is validation and error checking.&lt;/p&gt;
 &lt;pre class="code python literal-block"&gt;
 &lt;span class="k"&gt;async&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;post_command&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="n"&gt;uid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;uuid&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;UUID&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;hex&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;match_info&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;session&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
@@ -140,29 +144,88 @@ By default, Balladeer gives us a single text box for command input.&lt;/p&gt;
         &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;represent&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;facts&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;facts&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;previous&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="n"&gt;web&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;HTTPFound&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/&lt;/span&gt;&lt;span class="si"&gt;{0.hex}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;uid&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
 &lt;/pre&gt;
+&lt;p&gt;The two lines invoking the Story work the same as we've seen in previous examples. Every time we create a new
+presenter, we need to store it on the Story object so it's available in the session view.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="css-styling"&gt;
+&lt;h3&gt;4. CSS styling&lt;/h3&gt;
+&lt;p&gt;A powerful feature of Balladeer is the way it integrates its rendering of dialogue with web-standard CSS.
+You can even modify styled properties from within dialogue files, changing colours according to the scene.&lt;/p&gt;
+&lt;p&gt;That means you can design the layout and appearance of your web Story entirely within CSS3. There will be articles
+on how to do that in the future.&lt;/p&gt;
+&lt;p&gt;For now, all we want is some simple styling to suit a demo. One of Balladeer's upstream packages has such a file,
+so we can borrow that for now. It will have been installed along with the library. We just have to tell the web
+framework where to find it:&lt;/p&gt;
+&lt;pre class="code python literal-block"&gt;
+    &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;router&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_static&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="s2"&gt;&amp;quot;/css/base/&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+        &lt;span class="n"&gt;pkg_resources&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;resource_filename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;turberfield.catchphrase&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;css&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-&lt;div class="section" id="styling"&gt;
-&lt;h2&gt;Styling&lt;/h2&gt;
-&lt;p&gt;TBA.&lt;/p&gt;
-&lt;img alt="A screenshot of the 10 Green Bottles parser game, as seen in a Web browser." class="pure-img" src="https://tundish.github.io/balladeer/images/green_bottles-screen.png" style="height: 480px;" /&gt;
+&lt;div class="section" id="running-the-example"&gt;
+&lt;h2&gt;Running the example&lt;/h2&gt;
+&lt;p&gt;In case you haven't installed Balladeer yet, I'll run through the steps again.&lt;/p&gt;
+&lt;div class="section" id="virtual-environment"&gt;
+&lt;h3&gt;Virtual Environment&lt;/h3&gt;
+&lt;ol class="arabic"&gt;
+&lt;li&gt;&lt;p class="first"&gt;First make a fresh Python virtual environment:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+python3 -m venv ~/balladeer-app
+&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
 &lt;/div&gt;
-&lt;div class="section" id="production"&gt;
-&lt;h2&gt;Production&lt;/h2&gt;
-&lt;p&gt;User base size of classrooom or study group.&lt;/p&gt;
-&lt;p&gt;Not instructions, just introduce vocabulary&lt;/p&gt;
-&lt;ul class="simple"&gt;
-&lt;li&gt;Logging&lt;/li&gt;
-&lt;li&gt;Error pages&lt;/li&gt;
-&lt;li&gt;Health-check endpoint&lt;/li&gt;
-&lt;li&gt;Anti DoS&lt;/li&gt;
-&lt;li&gt;DNS&lt;/li&gt;
-&lt;li&gt;Media cache&lt;/li&gt;
-&lt;li&gt;Load balancing&lt;/li&gt;
-&lt;li&gt;Resource scaling&lt;/li&gt;
-&lt;/ul&gt;
+&lt;div class="section" id="packages"&gt;
+&lt;h3&gt;Packages&lt;/h3&gt;
+&lt;ol class="arabic"&gt;
+&lt;li&gt;&lt;p class="first"&gt;Update the package manager within it:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+~/balladeer-app/bin/pip install -U pip wheel
+&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;Install (or update) Balladeer and the web framework:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+~/balladeer-app/bin/pip install -U aiohttp balladeer
+&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
 &lt;/div&gt;
-</content><category term="Blog"></category><category term="IF"></category><category term="basics"></category></entry><entry><title>Easy Interactions</title><link href="https://tundish.github.io/balladeer/easy-interactions.html" rel="alternate"></link><published>2021-11-16T07:45:00+00:00</published><updated>2021-11-16T07:45:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-16:/balladeer/easy-interactions.html</id><summary type="html">&lt;p class="first last"&gt;How to begin making your screenplay interactive.&lt;/p&gt;
+&lt;div class="section" id="download"&gt;
+&lt;h3&gt;Download&lt;/h3&gt;
+&lt;ol class="arabic simple"&gt;
+&lt;li&gt;Download the &lt;a class="reference external" href="https://github.com/tundish/balladeer/archive/master.zip"&gt;repository as a zip file&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Unzip it to a local directory.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class="section" id="operation"&gt;
+&lt;h3&gt;Operation&lt;/h3&gt;
+&lt;ol class="arabic"&gt;
+&lt;li&gt;&lt;p class="first"&gt;&lt;cite&gt;cd&lt;/cite&gt; to the directory under &lt;cite&gt;examples&lt;/cite&gt;:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+cd examples/05_server_parser
+&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;Run the example like this:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+~/balladeer-app/bin/python server.py
+
+======== Running on http://127.0.0.1:8080 ========
+(Press CTRL+C to quit)
+&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p class="first"&gt;Play the demo by pasting &lt;cite&gt;http://127.0.0.1:8080&lt;/cite&gt; into the browser.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="result"&gt;
+&lt;h2&gt;Result&lt;/h2&gt;
+&lt;p&gt;It's not pretty, but it works! The same Story we tested last time in the terminal is now served over the web.&lt;/p&gt;
+&lt;img alt="A screenshot of the 10 Green Bottles parser game, as seen in a Web browser." class="pure-img" src="https://tundish.github.io/balladeer/images/green_bottles-screen.png" /&gt;
+&lt;/div&gt;
+</content><category term="Blog"></category><category term="basics"></category><category term="tutorial"></category><category term="web"></category></entry><entry><title>Easy Interactions</title><link href="https://tundish.github.io/balladeer/easy-interactions.html" rel="alternate"></link><published>2021-11-16T07:45:00+00:00</published><updated>2021-11-16T07:45:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-16:/balladeer/easy-interactions.html</id><summary type="html">&lt;p class="first last"&gt;How to begin making your screenplay interactive.&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="recap"&gt;
 &lt;h2&gt;Recap&lt;/h2&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://tundish.github.io/balladeer/message-in-a-bottle.html"&gt;Last time&lt;/a&gt; we built &lt;cite&gt;10 Green Bottles&lt;/cite&gt;
@@ -306,7 +369,7 @@ Type 'look' to check the damage &amp;gt; look
 &amp;gt; break
 No green bottles hanging on the wall.
 &lt;/pre&gt;
-&lt;p&gt;In the next article, we'll take this interactive sing-song, and perform it over the Web.&lt;/p&gt;
+&lt;p&gt;In the &lt;a class="reference external" href="https://tundish.github.io/balladeer/balladeer-over-the-web.html"&gt;next article&lt;/a&gt;, we'll take this interactive sing-song, and perform it over the Web.&lt;/p&gt;
 &lt;/div&gt;
 </content><category term="Blog"></category><category term="basics"></category><category term="tutorial"></category><category term="parser"></category></entry><entry><title>Message in a Bottle</title><link href="https://tundish.github.io/balladeer/message-in-a-bottle.html" rel="alternate"></link><published>2021-11-10T10:15:00+00:00</published><updated>2021-11-10T10:15:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-10:/balladeer/message-in-a-bottle.html</id><summary type="html">&lt;p class="first last"&gt;Modifying State in ensemble objects.&lt;/p&gt;
 </summary><content type="html">&lt;div class="section" id="pour-implementation"&gt;
@@ -660,8 +723,8 @@ You can enable or disable those commands on the fly as required.&lt;/p&gt;
 &lt;p&gt;In that space sits the Web and all its related technologies. We've had it for decades and it has served
 us in different ways. It was a source of information. It was a platform for commerce.
 It was a nexus for social and cultural messages. It was a surface for state and corporate surveillance.&lt;/p&gt;
-&lt;p&gt;The Web is a mature technology now. It is better than it was at the beginning. And just as it better serves
-large corporations than it used to, so too might it better serve the individual.&lt;/p&gt;
+&lt;p&gt;The Web is a mature technology now. It is better than it was at the beginning.
+Better to suit the big outfits. Better to serve the individual.&lt;/p&gt;
 &lt;p&gt;What has been lacking is a common understanding of why an individual would run his own web server these days.
 The answer is as old as humanity itself.&lt;/p&gt;
 &lt;p&gt;In order to tell a Story.&lt;/p&gt;
@@ -669,7 +732,7 @@ The answer is as old as humanity itself.&lt;/p&gt;
 &lt;div class="section" id="story"&gt;
 &lt;h2&gt;Story&lt;/h2&gt;
 &lt;p&gt;Story-telling is at the heart of human culture.
-Personal stories, family stories, folk stories. We have an instinct to tell them.
+Personal stories, family stories, folk stories. It is a natural instinct to tell them.
 And now there is a free and modern option for those who want to do that in 2021.&lt;/p&gt;
 &lt;p&gt;Its name is Balladeer.&lt;/p&gt;
 &lt;/div&gt;
@@ -687,13 +750,13 @@ And now there is a free and modern option for those who want to do that in 2021.
 &lt;/div&gt;
 &lt;div class="section" id="provenance"&gt;
 &lt;h2&gt;Provenance&lt;/h2&gt;
-&lt;p&gt;Balladeer sprang from a project of mine from a couple of years ago.
+&lt;p&gt;Balladeer sprang from a project I did a couple of years ago.
 I made a little puzzle game for a competition called NarraScope.&lt;/p&gt;
 &lt;p&gt;Over two fortnights, in the evenings after work, I wrote the whole thing in Python because I didn't fancy tangling
 with Javascript.&lt;/p&gt;
 &lt;img alt="A screenshot of the game Tower of Rapunzel" class="pure-img low-key" src="https://tundish.github.io/balladeer/images/tor-screen.png" style="height: 480px;" /&gt;
-&lt;p&gt;That's how, right from the beginning, Balladeer has supported multimedia; images, audio, and video.&lt;/p&gt;
-&lt;p&gt;The future will see more emphasis on computational narrative and parser-based interactive screenplay.
+&lt;p&gt;That's how, right from the beginning, Balladeer has hosted multimedia; images, audio, and video.&lt;/p&gt;
+&lt;p&gt;Added to that is support for computational narrative and parser-based interactive screenplay.
 If you have a research interest in this area, you'll find Balladeer well fitted for that purpose.&lt;/p&gt;
 &lt;p&gt;And this is where the power of the Python language really shines. I'm going to make a wild claim:
 &lt;em&gt;Balladeer has the simplest, most flexible, most dynamic command parser in any game framework&lt;/em&gt;.&lt;/p&gt;

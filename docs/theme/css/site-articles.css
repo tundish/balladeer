@@ -26,9 +26,9 @@ padding-left: -1.8em;
 }
 
 ul.tagcloud {
-background: #eee;
-border-radius: 6px;
-font-family: "WenQuanYi Micro Hei", "Helvetica Neue", arial, sans-serif;
+background-color: #e5e5e5;
+border-radius: 1em 1.8em 1.8em 1em;
+font-family: "Ubuntu Condensed", "Helvetica Neue", Helvetica, arial, sans-serif;
 list-style-type: square;
 margin: 1em;
 opacity: 0.5;
@@ -40,8 +40,12 @@ padding: 0.5em;
 }
 
 ul.tagcloud li a {
-color: blue;
+color: #27408b;
 text-decoration: none;
+}
+
+ul.tagcloud a.pure-button {
+border-radius: 0.5em 1.8em 1.8em 0.5em;
 }
 
 ul.tagcloud li a:hover, ul.tagcloud li a:active {
@@ -49,7 +53,7 @@ text-decoration: underline;
 }
 
 ul.tagcloud li.familytag a {
-color: #990033;
+color: #8b2500;
 }
 
 li.tag-0 a {
