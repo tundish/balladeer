@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.17.0 (unreleased)
+===================
+
+* Repin to turberfield-utils.
+
 0.16.0
 ======
 
