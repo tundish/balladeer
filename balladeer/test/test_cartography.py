@@ -17,10 +17,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import enum
 import unittest
 
 from balladeer.cartography import Compass
 from balladeer.cartography import Map
+from balladeer.cartography import Transit
+from balladeer.cartography import Via
+from balladeer.cartography import Waypoint
 
 
 class CompassTests(unittest.TestCase):
@@ -31,3 +35,34 @@ class CompassTests(unittest.TestCase):
         assert Compass.SW.back == Compass.NE
         assert Compass.N.bearing == 0, Compass.N.bearing 
         assert Compass.N.back.bearing == 180, Compass.N.back.bearing 
+
+class MapTests(unittest.TestCase):
+
+    class SimpleMap(Map):
+
+        spots = {
+            "bedroom":  ["bedroom"],
+            "hall":  ["hall", "hallway"],
+            "kitchen":  ["kitchen"],
+            "stairs":  ["stairs", "stairway", "up", "up stairs", "upstairs"],
+            "inventory":  None
+        }
+
+        Arriving = enum.Enum("Arriving", spots, type=Waypoint)
+        Departed = enum.Enum("Departed", spots, type=Waypoint)
+        Location = enum.Enum("Location", spots, type=Waypoint)
+
+        def __init__(self, exit=None, into=None, **kwargs):
+            super().__init__(exit, into, **kwargs)
+            exit = self.exit
+            into = self.into
+            self.transits = [
+                Transit().set_state(exit.bedroom, into.hall, Via.bidir),
+                Transit().set_state(exit.hall, Compass.N, into.stairs, Via.bidir),
+                Transit().set_state(exit.kitchen, Compass.SW, into.hall, Via.bidir),
+            ]
+
+    def test_simple_route(self):
+        m = MapTests.SimpleMap()
+        print(m.options(m.Location.hall))
+        print(m.route(m.Location.kitchen, m.Location.bedroom))

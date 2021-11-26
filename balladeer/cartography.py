@@ -17,6 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import cmath
+from collections import defaultdict
 import enum
 
 from turberfield.dialogue.types import EnumFactory
@@ -61,3 +63,80 @@ class Compass(EnumFactory, enum.Enum):
             rv = 90 + 360 - phase
         return rv % 360
 
+
+class Waypoint:
+
+    @property
+    def label(self):
+        return self.value[0]
+
+    @property
+    def title(self):
+        return self.label.title()
+
+
+class Via(EnumFactory, enum.Enum):
+    block = 0
+    forwd = 1
+    bckwd = 2
+    bidir = 3
+
+
+class Transit(Stateful): pass
+
+
+class Map:
+
+    def __init__(self, exit:type, into:type, **kwargs):
+        self.exit = exit or getattr(self, "Arriving")
+        self.into = into or getattr(self, "Departed")
+        self.transits = []
+        self.routes = {}
+
+    @property
+    def topology(self):
+        for t in self.transits:
+            d = t.get_state(self.exit)
+            a = t.get_state(self.into)
+            v = t.get_state(Via)
+            c = t.get_state(Compass)
+            b = c and c.back
+            if v in (Via.bidir, Via.forwd):
+                yield d, c, a
+            if v in (Via.bidir, Via.bckwd):
+                yield a, b, d
+
+    def options(self, waypoint):
+        typ = type(waypoint)
+        return {(c or n, typ[a.name]) for n, (d, c, a) in enumerate(self.topology) if d.name == waypoint.name}
+
+    def route(self, locn, dest):
+        if (locn.name, dest.name) in self.routes:
+            return self.routes[(locn.name, dest.name)]
+
+        rvs = set()
+        paths = [[locn.name]]
+
+        graph = defaultdict(set)
+        for d, _,  a in self.topology:
+            graph[d.name].add(a.name)
+
+        n = len(graph)
+        d = 1
+        while n >= 0 or not rvs:
+            nxt = []
+            for p in paths:
+                if p[-1] == dest.name:
+                    rvs.add(tuple(p))
+                else:
+                    nodes = graph[p[-1]]
+                    d = len(nodes)
+                    for i in nodes:
+                        nxt.append(p.copy())
+                        nxt[-1].append(i)
+            paths = nxt
+            n = n - d
+
+        rv = [type(locn)[i] for i in sorted(rvs, key=len)[0]] if rvs else []
+        self.routes[(locn.name, dest.name)] = rv
+        return rv
