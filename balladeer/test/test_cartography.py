@@ -29,12 +29,17 @@ from balladeer.cartography import Waypoint
 
 class CompassTests(unittest.TestCase):
 
-    def test_next_states_single(self):
-        assert Compass.N.value + Compass.E.value == Compass.NE.value
-        assert Compass.NE.back == Compass.SW
-        assert Compass.SW.back == Compass.NE
-        assert Compass.N.bearing == 0, Compass.N.bearing 
-        assert Compass.N.back.bearing == 180, Compass.N.back.bearing 
+    def test_nearing(self):
+        self.assertEqual(0, Compass.N.bearing)
+        self.assertEqual(180, Compass.S.bearing)
+
+    def test_back(self):
+        self.assertEqual(Compass.SW, Compass.NE.back)
+        self.assertEqual(Compass.NE, Compass.SW.back)
+
+    def test_vectors(self):
+        self.assertEqual(Compass.NE.value, Compass.N.value + Compass.E.value)
+
 
 class MapTests(unittest.TestCase):
 
