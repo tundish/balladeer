@@ -62,12 +62,17 @@ class MapTests(unittest.TestCase):
             exit = self.exit
             into = self.into
             self.transits = [
-                Transit().set_state(exit.bedroom, into.hall, Via.bidir),
+                Transit(label="bedroom door").set_state(exit.bedroom, into.hall, Via.bidir),
                 Transit().set_state(exit.hall, Compass.N, into.stairs, Via.bidir),
-                Transit().set_state(exit.kitchen, Compass.SW, into.hall, Via.bidir),
+                Transit(label="kitchen door").set_state(exit.kitchen, Compass.SW, into.hall, Via.bidir),
             ]
+
+    def test_simple_options(self):
+        m = MapTests.SimpleMap()
+        self.assertEqual(3, len(m.options(m.Location.hall)))
 
     def test_simple_route(self):
         m = MapTests.SimpleMap()
-        print(m.options(m.Location.hall))
-        print(m.route(m.Location.kitchen, m.Location.bedroom))
+        r = m.route(m.Location.kitchen, m.Location.bedroom)
+        self.assertEqual(3, len(r))
+        self.assertEqual(3, len(set(r)))

@@ -6,10 +6,11 @@
 Change Log
 ::::::::::
 
-0.17.0 (unreleased)
-===================
+0.17.0
+======
 
 * Repin to turberfield-utils.
+* Add cartography module.
 
 0.16.0
 ======

@@ -21,6 +21,7 @@ import cmath
 from collections import defaultdict
 import enum
 
+from turberfield.dialogue.types import DataObject
 from turberfield.dialogue.types import EnumFactory
 from turberfield.dialogue.types import Stateful
 from turberfield.utils.homogeneous import vector
@@ -82,7 +83,7 @@ class Via(EnumFactory, enum.Enum):
     bidir = 3
 
 
-class Transit(Stateful): pass
+class Transit(DataObject, Stateful): pass
 
 
 class Map:
