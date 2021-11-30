@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.18.0
+======
+
+* Transition is now returned in `Map.options` property.
+
 0.17.0
 ======
 

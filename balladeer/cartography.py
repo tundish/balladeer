@@ -103,13 +103,17 @@ class Map:
             c = t.get_state(Compass)
             b = c and c.back
             if v in (Via.bidir, Via.forwd):
-                yield d, c, a
+                yield d, c, t, a
             if v in (Via.bidir, Via.bckwd):
-                yield a, b, d
+                yield a, b, t, d
 
     def options(self, waypoint):
         typ = type(waypoint)
-        return {(c or n, typ[a.name]) for n, (d, c, a) in enumerate(self.topology) if d.name == waypoint.name}
+        return {
+            (c or n, typ[a.name], t)
+            for n, (d, c, t, a) in enumerate(self.topology)
+            if d.name == waypoint.name
+        }
 
     def route(self, locn, dest):
         if (locn.name, dest.name) in self.routes:
@@ -119,7 +123,7 @@ class Map:
         paths = [[locn.name]]
 
         graph = defaultdict(set)
-        for d, _,  a in self.topology:
+        for d, _, t, a in self.topology:
             graph[d.name].add(a.name)
 
         n = len(graph)
