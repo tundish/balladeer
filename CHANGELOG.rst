@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.19.0
+======
+
+* `Story.context` is now a property; more convenient when subclassing.
+
 0.18.0
 ======
 

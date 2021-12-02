@@ -27,7 +27,7 @@ from turberfield.dialogue.types import DataObject
 
 class Story(Renderer, DataObject):
 
-    def __init__(self, cfg=None, **kwargs):
+    def __init__(self, cfg=None, context=None, **kwargs):
         super().__init__(**kwargs)
 
         self.definitions = {
@@ -40,7 +40,7 @@ class Story(Renderer, DataObject):
             "catchphrase-reveal-extends": "both",
         }
         self.settings = Settings(**self.definitions)
-        self.context = kwargs.get("context", None)
+        self.drama = {} if not context else [context]
 
     @property
     def actions(self):
@@ -49,6 +49,10 @@ class Story(Renderer, DataObject):
             [Parameter("cmd", False, self.context.validator, [self.context.prompt], ">")],
             "Enter"
         )
+
+    @property
+    def context(self):
+        return next(iter(self.drama), None)
 
     def refresh_target(self, url):
         refresh_state = getattr(self.settings, "catchphrase-states-refresh", "inherit").lower()
