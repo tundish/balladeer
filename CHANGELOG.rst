@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.20.0
+======
+
+* Fix cartography types.
+
 0.19.0
 ======
 

@@ -89,8 +89,8 @@ class Transit(DataObject, Stateful): pass
 class Map:
 
     def __init__(self, exit:type, into:type, **kwargs):
-        self.exit = exit or getattr(self, "Arriving")
-        self.into = into or getattr(self, "Departed")
+        self.exit = exit or getattr(self, "Exit")
+        self.into = into or getattr(self, "Into")
         self.transits = []
         self.routes = {}
 

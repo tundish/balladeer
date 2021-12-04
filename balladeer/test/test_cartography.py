@@ -53,9 +53,9 @@ class MapTests(unittest.TestCase):
             "inventory":  None
         }
 
-        Arriving = enum.Enum("Arriving", spots, type=Waypoint)
-        Departed = enum.Enum("Departed", spots, type=Waypoint)
-        Location = enum.Enum("Location", spots, type=Waypoint)
+        Into = enum.Enum("Into", spots, type=Waypoint)
+        Exit = enum.Enum("Exit", spots, type=Waypoint)
+        Spot = enum.Enum("Spot", spots, type=Waypoint)
 
         def __init__(self, exit=None, into=None, **kwargs):
             super().__init__(exit, into, **kwargs)
@@ -69,10 +69,10 @@ class MapTests(unittest.TestCase):
 
     def test_simple_options(self):
         m = MapTests.SimpleMap()
-        self.assertEqual(3, len(m.options(m.Location.hall)))
+        self.assertEqual(3, len(m.options(m.Spot.hall)))
 
     def test_simple_route(self):
         m = MapTests.SimpleMap()
-        r = m.route(m.Location.kitchen, m.Location.bedroom)
+        r = m.route(m.Spot.kitchen, m.Spot.bedroom)
         self.assertEqual(3, len(r))
         self.assertEqual(3, len(set(r)))
