@@ -137,8 +137,9 @@ class Map:
                     nodes = graph[p[-1]]
                     d = len(nodes)
                     for i in nodes:
-                        nxt.append(p.copy())
-                        nxt[-1].append(i)
+                        if i not in p:
+                            nxt.append(p.copy())
+                            nxt[-1].append(i)
             paths = nxt
             n = n - d
 

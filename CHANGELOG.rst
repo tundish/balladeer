@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.23.0
+======
+
+* Improve routing algorithm to avoid loops.
+
 0.22.0
 ======
 
