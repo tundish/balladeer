@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.24.0 TODO
+===========
+
+* Supply optional Presenter class to Story.represent
+
 0.23.0
 ======
 
