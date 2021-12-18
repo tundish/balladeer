@@ -6,10 +6,10 @@
 Change Log
 ::::::::::
 
-0.24.0 TODO
-===========
+0.24.0
+======
 
-* Supply optional Presenter class to Story.represent
+* Added optional Presenter factory parameter to Story.represent.
 * Repin to turberfield-dialogue 0.39.0.
 * Repin to turberfield-catchphrase 0.24.0.
 * Repin to docutils 0.18.1.
