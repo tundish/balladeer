@@ -63,14 +63,13 @@ class Story(Renderer, DataObject):
         else:
             return refresh_state
 
-    def represent(self, *args, facts=None, previous=None, **kwargs):
-        # TODO: Supply optional Presenter class
+    def represent(self, *args, facts=None, previous=None, factory=Presenter, **kwargs):
         rv = self.context.interlude(
             self.context.folder,
             previous and previous.index,
             previous and previous.ensemble
         )
-        presenter = Presenter.build_presenter(
+        presenter = factory.build_presenter(
             self.context.folder, *args, facts=facts or rv,
             ensemble=self.context.ensemble + [self.context, self.settings],
             **kwargs
