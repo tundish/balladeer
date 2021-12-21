@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.25.0
+======
+
+* Repin to turberfield-catchphrase 0.25.0.
+
 0.24.0
 ======
 
