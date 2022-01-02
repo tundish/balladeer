@@ -12,8 +12,8 @@ Better to suit the big outfits. Better to serve the individual.&lt;/p&gt;
 The answer is as old as humanity itself.&lt;/p&gt;
 &lt;p&gt;In order to tell a Story.&lt;/p&gt;
 &lt;/div&gt;
-&lt;div class="section" id="story"&gt;
-&lt;h2&gt;Story&lt;/h2&gt;
+&lt;div class="section" id="store"&gt;
+&lt;h2&gt;Store&lt;/h2&gt;
 &lt;p&gt;Story-telling is at the heart of human culture.
 Personal stories, family stories, folk stories. It is a natural instinct to tell them.
 And now there is a free and modern option for those who want to do that in 2021.&lt;/p&gt;
@@ -48,7 +48,12 @@ If you have a research interest in this area, you'll find Balladeer well fitted 
 &lt;div class="section" id="what-next"&gt;
 &lt;h2&gt;What Next?&lt;/h2&gt;
 &lt;p&gt;The &lt;a class="reference external" href="https://tundish.github.io/balladeer/category/blog.html"&gt;Balladeer blog&lt;/a&gt; hosts regular articles on how to use the framework.
-There is a demo game you can download and run too; it's called &lt;a class="reference external" href="https://github.com/tundish/tea_and_sympathy"&gt;Tea and Sympathy&lt;/a&gt;.&lt;/p&gt;
+They are tagged, so you can begin with the &lt;a class="reference external" href="https://tundish.github.io/balladeer/tag/basics.html"&gt;basics&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;These projects are available to download, run and study:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference external" href="https://github.com/tundish/tea_and_sympathy"&gt;Tea and Sympathy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference external" href="https://github.com/tundish/pity_of_thieves"&gt;Pity of Thieves&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 &lt;p&gt;Balladeer relies heavily on other libraries, known as the &lt;cite&gt;Turberfield&lt;/cite&gt; packages.
 Each of those has its own &lt;a class="reference external" href="https://turberfield-dialogue.readthedocs.io/en/latest/"&gt;online documentation&lt;/a&gt;. And you'll want to learn some &lt;a class="reference external" href="https://www.writethedocs.org/guide/writing/reStructuredText/"&gt;reStructuredText&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Don't forget you can post comments under the blog articles, or raise issues at the &lt;a class="reference external" href="https://github.com/tundish/balladeer"&gt;code repository&lt;/a&gt;.&lt;/p&gt;
