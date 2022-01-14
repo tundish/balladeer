@@ -1,7 +1,6 @@
 const app = Vue.createApp({
     data() {
         return {
-            location: window.location,
             population: []
         }
     },
