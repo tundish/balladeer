@@ -3,6 +3,7 @@ This is a complete example of a Balladeer story which accepts text commands over
 
 """
 import argparse
+import pathlib
 import re
 import sys
 import uuid
@@ -19,7 +20,11 @@ from balladeer import Story as StoryType
 class Story(StoryType):
 
     def render_animated_frame_to_html(self, frame, controls=[], **kwargs):
-        return StoryType.render_animated_frame_to_html(frame, controls, **kwargs)
+        return "\n".join([
+            '<script src="https://unpkg.com/vue@3"></script>',
+            '<script src="/js/bottles.js"></script>',
+            StoryType.render_animated_frame_to_html(frame, controls, **kwargs)
+        ])
 
 
 class Bottles(Drama):
@@ -128,6 +133,7 @@ def build_app(args):
         "/css/base/",
         pkg_resources.resource_filename("turberfield.catchphrase", "css")
     )
+    app.router.add_static("/js/", pathlib.Path(__file__).parent)
     app["sessions"] = {}
     return app
 
