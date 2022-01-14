@@ -4,6 +4,7 @@ This is a complete example of a Balladeer story which accepts text commands over
 """
 import argparse
 import pathlib
+import random
 import re
 import sys
 import uuid
@@ -26,7 +27,12 @@ class Story(StoryType):
 
     def render_animated_frame_to_html(self, frame, controls=[], **kwargs):
         return "\n".join([
-            '<div id="app">{{ population }}</div>',
+            """ <div id="app">
+                {{ population }}
+                <ul>
+                <li v-for="bottle in population">{{ bottle.colour }} {{ bottle._states.Fruition.value }}</li>
+                </ul>
+                </div>""",
             StoryType.render_animated_frame_to_html(frame, controls, **kwargs),
             '<script src="/js/bottles.js"></script>',
         ])
@@ -34,12 +40,17 @@ class Story(StoryType):
 
 class Bottles(Drama):
 
+    colours = ["brown", "clear", "green"]
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.population = [
-            Bottle().set_state(Fruition.inception),
-            Bottle().set_state(Fruition.inception),
-            Bottle().set_state(Fruition.inception),
+            Bottle(colour=random.choice(self.colours)).set_state(Fruition.inception),
+            Bottle(colour=random.choice(self.colours)).set_state(Fruition.inception),
+            Bottle(colour=random.choice(self.colours)).set_state(Fruition.inception),
+            Bottle(colour=random.choice(self.colours)).set_state(Fruition.inception),
+            Bottle(colour=random.choice(self.colours)).set_state(Fruition.inception),
+            Bottle(colour=random.choice(self.colours)).set_state(Fruition.inception),
         ]
         self.active.add(self.do_bottle)
         self.active.add(self.do_look)
