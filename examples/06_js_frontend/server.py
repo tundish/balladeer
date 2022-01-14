@@ -13,7 +13,13 @@ import pkg_resources
 from balladeer import Drama
 from balladeer import Fruition
 from balladeer import Stateful
-from balladeer import Story
+from balladeer import Story as StoryType
+
+
+class Story(StoryType):
+
+    def render_animated_frame_to_html(self, frame, controls=[], **kwargs):
+        return StoryType.render_animated_frame_to_html(frame, controls, **kwargs)
 
 
 class Bottles(Drama):
