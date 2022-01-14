@@ -11,19 +11,25 @@ import uuid
 from aiohttp import web
 import pkg_resources
 
+from balladeer import Assembly
+from balladeer import DataObject
 from balladeer import Drama
 from balladeer import Fruition
 from balladeer import Stateful
 from balladeer import Story as StoryType
 
 
+class Bottle(DataObject, Stateful): pass
+
+
 class Story(StoryType):
 
     def render_animated_frame_to_html(self, frame, controls=[], **kwargs):
         return "\n".join([
+            '<div id="app"></div>',
+            StoryType.render_animated_frame_to_html(frame, controls, **kwargs),
             '<script src="https://unpkg.com/vue@3"></script>',
             '<script src="/js/bottles.js"></script>',
-            StoryType.render_animated_frame_to_html(frame, controls, **kwargs)
         ])
 
 
@@ -32,10 +38,11 @@ class Bottles(Drama):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.population = [
-            Stateful().set_state(Fruition.inception),
-            Stateful().set_state(Fruition.inception),
-            Stateful().set_state(Fruition.inception),
+            Bottle().set_state(Fruition.inception),
+            Bottle().set_state(Fruition.inception),
+            Bottle().set_state(Fruition.inception),
         ]
+        print(Assembly.dumps(self.population))
         self.active.add(self.do_bottle)
         self.active.add(self.do_look)
         self.prompt = "?"
@@ -86,6 +93,15 @@ async def get_root(request):
     raise web.HTTPFound("/{0.id.hex}".format(story))
 
 
+async def get_assembly(request):
+    uid = uuid.UUID(hex=request.match_info["session"])
+    story = request.app["sessions"][uid]
+    return web.Response(
+        text=Assembly.dumps(story.context.population),
+        content_type="application/json"
+    )
+
+
 async def get_session(request):
     uid = uuid.UUID(hex=request.match_info["session"])
     story = request.app["sessions"][uid]
@@ -127,6 +143,7 @@ def build_app(args):
     app.add_routes([
         web.get("/", get_root),
         web.get("/{{session:{0}}}".format(VALIDATION["session"].pattern), get_session),
+        web.get("/{{session:{0}}}/assembly".format(VALIDATION["session"].pattern), get_assembly),
         web.post("/{{session:{0}}}/cmd/".format(VALIDATION["session"].pattern), post_command),
     ])
     app.router.add_static(
@@ -139,6 +156,8 @@ def build_app(args):
 
 
 def main(args):
+    Assembly.register(Bottle, Fruition)
+
     app = build_app(args)
     return web.run_app(app, host=args.host, port=args.port)
 

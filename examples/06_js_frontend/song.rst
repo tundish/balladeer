@@ -1,4 +1,4 @@
-:project:   Balladeer Web Server example
+:project:   Balladeer JS frontend example
 :pause:     0.7
 :dwell:     0.2
 
