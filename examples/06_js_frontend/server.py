@@ -28,9 +28,8 @@ class Story(StoryType):
     def render_animated_frame_to_html(self, frame, controls=[], **kwargs):
         return "\n".join([
             """ <div id="app">
-                {{ population }}
                 <ul>
-                <li v-for="bottle in population">{{ bottle.colour }} {{ bottle._states.Fruition.value }}</li>
+                <li v-for="bottle in unbroken">{{ bottle.colour }} </li>
                 </ul>
                 </div>""",
             StoryType.render_animated_frame_to_html(frame, controls, **kwargs),
@@ -75,7 +74,7 @@ class Bottles(Drama):
 
         """
         try:
-            self.unbroken[0].state = Fruition.completion
+            random.choice(self.unbroken).state = Fruition.completion
         except IndexError:
             pass
 
