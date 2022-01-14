@@ -26,9 +26,8 @@ class Story(StoryType):
 
     def render_animated_frame_to_html(self, frame, controls=[], **kwargs):
         return "\n".join([
-            '<div id="app"></div>',
+            '<div id="app">{{ population }}</div>',
             StoryType.render_animated_frame_to_html(frame, controls, **kwargs),
-            '<script src="https://unpkg.com/vue@3"></script>',
             '<script src="/js/bottles.js"></script>',
         ])
 
@@ -42,7 +41,6 @@ class Bottles(Drama):
             Bottle().set_state(Fruition.inception),
             Bottle().set_state(Fruition.inception),
         ]
-        print(Assembly.dumps(self.population))
         self.active.add(self.do_bottle)
         self.active.add(self.do_look)
         self.prompt = "?"
@@ -117,7 +115,7 @@ async def get_session(request):
         if story.context.count
     ]
     rv = story.render_body_html(title=title).format(
-        "<!-- Extra head links go here -->",
+        '<script src="https://unpkg.com/vue@3"></script>',
         story.render_dict_to_css(vars(story.settings)),
         story.render_animated_frame_to_html(animation, controls)
     )
