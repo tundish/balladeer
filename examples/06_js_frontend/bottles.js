@@ -45,7 +45,7 @@ props: {
     }
 },
 template:  `
-            <div class="bottle">
+            <div class="bottle" v-on:mouseover="on_hover">
                 <img src="/img/bottle.svg" alt="A green bottle" style="width: 3rem;"/>
                 {{ bottle.colour }}
             </div>`,
@@ -54,6 +54,11 @@ data() {
     }
 },
 computed: {
+},
+methods: {
+    on_hover() {
+        console.log(this.bottle.colour)
+    }
 }
 });
 
