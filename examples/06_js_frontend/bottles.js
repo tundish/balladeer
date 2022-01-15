@@ -20,8 +20,13 @@ props: {
     }
 },
 template:  `
-            <ul>
-            <li v-for="bottle in unbroken">{{ bottle.colour }} </li>
+            <ul style="display: flex;">
+            <li v-for="bottle in unbroken" style="flex-direction: row;">
+            <div class="bottle">
+                <img src="/img/bottle.svg" alt="A green bottle" style="width: 3rem;"/>
+                {{ bottle.colour }}
+            </div>
+            </li>
             </ul>`,
 data() {
     return {

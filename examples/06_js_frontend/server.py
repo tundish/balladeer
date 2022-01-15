@@ -154,6 +154,7 @@ def build_app(args):
         "/css/base/",
         pkg_resources.resource_filename("turberfield.catchphrase", "css")
     )
+    app.router.add_static("/img/", pathlib.Path(__file__).parent)
     app.router.add_static("/js/", pathlib.Path(__file__).parent)
     app["sessions"] = {}
     return app
