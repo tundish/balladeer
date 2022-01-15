@@ -27,11 +27,7 @@ class Story(StoryType):
 
     def render_animated_frame_to_html(self, frame, controls=[], **kwargs):
         return "\n".join([
-            """ <div id="app">
-                <ul>
-                <li v-for="bottle in unbroken">{{ bottle.colour }} </li>
-                </ul>
-                </div>""",
+            '<div id="app"><diorama></diorama></div>',
             StoryType.render_animated_frame_to_html(frame, controls, **kwargs),
             '<script src="/js/bottles.js"></script>',
         ])
