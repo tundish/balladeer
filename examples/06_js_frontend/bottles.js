@@ -12,6 +12,7 @@ async created() {
 },
 });
 
+
 app.component("diorama", {
 props: {
     population: {
@@ -22,7 +23,7 @@ props: {
 template:  `
             <ul style="display: flex;">
             <li v-for="bottle in unbroken" style="flex-direction: row;">
-            <avatar v-bind:bottle="bottle"></avatar>
+            <avatar v-bind:bottle="bottle" v-on:change-product="display_product"></avatar>
             </li>
             </ul>`,
 data() {
@@ -32,6 +33,11 @@ data() {
 computed: {
     unbroken() {
         return this.population.filter(bottle => bottle._states.Fruition.value == 1);
+    }
+},
+methods: {
+    display_product(bottle) {
+        console.log(bottle.colour)
     }
 }
 });
@@ -57,7 +63,7 @@ computed: {
 },
 methods: {
     on_hover() {
-        console.log(this.bottle.colour)
+        this.$emit("change-product", this.bottle)
     }
 }
 });
