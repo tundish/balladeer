@@ -35,7 +35,7 @@ class Story(StoryType):
 
 class Bottles(Drama):
 
-    colours = ["#00FF00", "#00EE00", "#00DD00"]
+    colours = ["#00BB00", "#008800", "#005500"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

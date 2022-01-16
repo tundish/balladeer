@@ -39,15 +39,15 @@ data() {
     return {
         selected: null,
         products: {
-            "#00FF00": {
+            "#00BB00": {
                 details: "Soda bottle",
                 image: "https://i.pinimg.com/originals/b4/a9/2c/b4a92c9a015b6e7956f15fad06ad0e7f.jpg"
             },
-            "#00EE00": {
+            "#008800": {
                 details: "Spring Water bottle",
                 image: "https://i.pinimg.com/originals/34/71/81/347181f915bbed4fdea575b189447540.jpg"
             },
-            "#00DD00": {
+            "#005500": {
                 details: "Seltzer bottle",
                 image: "https://i.pinimg.com/originals/65/12/36/6512367421478d0f9f4322cfe9c7ecbb.jpg"
             }
@@ -61,7 +61,7 @@ computed: {
 },
 methods: {
     display_product(bottle) {
-        this.selected = bottle
+        this.selected = bottle;
     }
 }
 });
