@@ -21,12 +21,16 @@ props: {
     }
 },
 template:  `
-            <div id="product" style="height: calc(30vh + 1rem);">
+            <div id="product" style="display: flex; justify-content: flex-start; height: calc(30vh + 1rem);" >
+            <div style="width: 250px;">
             <img v-if="this.selected" v-bind:src="this.products[this.selected.colour].image" alt="A green bottle"
             style="height: 30vh; width: auto;"/>
-            <p v-if="this.selected">{{ this.products[this.selected.colour].details }}</p>
             </div>
-            <ul style="display: flex;">
+            <p v-if="this.selected" style="min-width: 32rem; font-family: sans-serif; margin-top: 1.6rem;">
+            {{ this.products[this.selected.colour].details }}
+            </p>
+            </div>
+            <ul style="display: flex; margin-left: 2rem; margin-top: 1.6rem;">
             <li v-for="bottle in unbroken" style="flex-direction: row;">
             <avatar v-bind:bottle="bottle" v-on:change-product="display_product"></avatar>
             </li>
@@ -40,12 +44,12 @@ data() {
                 image: "https://i.pinimg.com/originals/b4/a9/2c/b4a92c9a015b6e7956f15fad06ad0e7f.jpg"
             },
             "#00EE00": {
-                details: "Seltzer bottle",
-                image: "https://i.pinimg.com/originals/65/12/36/6512367421478d0f9f4322cfe9c7ecbb.jpg"
-            },
-            "#00DD00": {
                 details: "Spring Water bottle",
                 image: "https://i.pinimg.com/originals/34/71/81/347181f915bbed4fdea575b189447540.jpg"
+            },
+            "#00DD00": {
+                details: "Seltzer bottle",
+                image: "https://i.pinimg.com/originals/65/12/36/6512367421478d0f9f4322cfe9c7ecbb.jpg"
             }
         }
     }
