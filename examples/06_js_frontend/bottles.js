@@ -21,7 +21,11 @@ props: {
     }
 },
 template:  `
-            <!-- <img src="/img/bottle.svg" alt="A green bottle" /> -->
+            <div id="product" style="height: calc(30vh + 1rem);">
+            <img v-if="this.selected" v-bind:src="this.products[this.selected.colour].image" alt="A green bottle"
+            style="height: 30vh; width: auto;"/>
+            <p v-if="this.selected">{{ this.products[this.selected.colour].details }}</p>
+            </div>
             <ul style="display: flex;">
             <li v-for="bottle in unbroken" style="flex-direction: row;">
             <avatar v-bind:bottle="bottle" v-on:change-product="display_product"></avatar>
@@ -29,6 +33,21 @@ template:  `
             </ul>`,
 data() {
     return {
+        selected: null,
+        products: {
+            "#00FF00": {
+                details: "Soda bottle",
+                image: "https://i.pinimg.com/originals/b4/a9/2c/b4a92c9a015b6e7956f15fad06ad0e7f.jpg"
+            },
+            "#00EE00": {
+                details: "Seltzer bottle",
+                image: "https://i.pinimg.com/originals/65/12/36/6512367421478d0f9f4322cfe9c7ecbb.jpg"
+            },
+            "#00DD00": {
+                details: "Spring Water bottle",
+                image: "https://i.pinimg.com/originals/34/71/81/347181f915bbed4fdea575b189447540.jpg"
+            }
+        }
     }
 },
 computed: {
@@ -38,7 +57,7 @@ computed: {
 },
 methods: {
     display_product(bottle) {
-        console.log(bottle.colour)
+        this.selected = bottle
     }
 }
 });
