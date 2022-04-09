@@ -20,7 +20,25 @@ from balladeer import Stateful
 from balladeer import Story as StoryType
 
 
-class Bottle(DataObject, Stateful): pass
+class Bottle(DataObject, Stateful):
+
+    products = [
+        {
+            "colour": "#00BB00",
+            "details": "Soda bottle",
+            "image": "https://i.pinimg.com/originals/b4/a9/2c/b4a92c9a015b6e7956f15fad06ad0e7f.jpg"
+        },
+        {
+            "colour": "#008800",
+            "details": "Spring Water bottle",
+            "image": "https://i.pinimg.com/originals/34/71/81/347181f915bbed4fdea575b189447540.jpg"
+        },
+        {
+            "colour": "#005500",
+            "details": "Seltzer bottle",
+            "image": "https://i.pinimg.com/originals/65/12/36/6512367421478d0f9f4322cfe9c7ecbb.jpg"
+        }
+    ]
 
 
 class Story(StoryType):
@@ -35,18 +53,14 @@ class Story(StoryType):
 
 class Bottles(Drama):
 
-    colours = ["#00BB00", "#008800", "#005500"]
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.population = [
-            Bottle(colour=random.choice(self.colours)).set_state(Fruition.inception),
-            Bottle(colour=random.choice(self.colours)).set_state(Fruition.inception),
-            Bottle(colour=random.choice(self.colours)).set_state(Fruition.inception),
-            Bottle(colour=random.choice(self.colours)).set_state(Fruition.inception),
-            Bottle(colour=random.choice(self.colours)).set_state(Fruition.inception),
-            Bottle(colour=random.choice(self.colours)).set_state(Fruition.inception),
-        ]
+        self.population = []
+        for n in range(6):
+            data = random.choice(Bottle.products)
+            self.population.append(
+                Bottle(n=n, **data).set_state(Fruition.inception)
+            )
         self.active.add(self.do_bottle)
         self.active.add(self.do_look)
         self.prompt = "?"

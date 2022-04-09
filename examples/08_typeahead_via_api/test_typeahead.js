@@ -29,13 +29,15 @@ Run unit tests:
 * tape
 * jsdom
 
+Examples: https://github.com/dwyl/learn-tape
 */
-var test = require('tape');
+const test = require("tape");
+const typeahead = require("./typeahead.js");
 
-test('timing test', function (t) {
+test("timing test", function (t) {
     t.plan(2);
 
-    t.equal(typeof Date.now, 'function');
+    t.equal(typeof Date.now, "function");
     var start = Date.now();
 
     setTimeout(function () {
@@ -43,7 +45,7 @@ test('timing test', function (t) {
     }, 100);
 });
 
-test('test using promises', async function (t) {
+test("test using promises", async function (t) {
     const result = await someAsyncThing();
     t.ok(result);
 });
