@@ -17,7 +17,7 @@ Song
 Many
 ----
 
-.. condition:: DRAMA.count ([^01]+)
+.. condition:: DRAMA.count ([^01])
 .. condition:: DRAMA.history[0].name do_look
 
 [DRAMA]_

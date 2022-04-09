@@ -56,7 +56,7 @@ class Bottles(Drama):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.population = []
-        for n in range(6):
+        for n in range(8):
             data = random.choice(Bottle.products)
             self.population.append(
                 Bottle(n=n, **data).set_state(Fruition.inception)
