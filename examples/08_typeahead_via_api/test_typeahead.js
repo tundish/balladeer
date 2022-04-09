@@ -16,6 +16,15 @@ Then install it like this:
 Now install the latest version of node.js:
 
     nvm install node
+    command -v corepack
+
+Install test dependencies:
+
+    npm install tape
+
+Run unit tests:
+
+    npx -y tape test_*.js
 
 * tape
 * jsdom
