@@ -4,14 +4,18 @@ const app = Vue.createApp({
 data() {
     return {
         population: [],
-        commands: new Set(),
+        commands: [],
     }
 },
 async created() {
     const urls = ["assembly", "commands"].map(path => `${window.location}/${path}`);
     let responses = urls.map(url => fetch(url).then(response => response.json()));
     [this.population, this.commands] = await Promise.all(responses);
-    console.log(filter_commands(this.commands));
+},
+mounted() {
+    var input = document.querySelector("input[type=text]");
+    // console.log(filter_commands(this.commands));
+    console.log(input.attributes);
 },
 });
 
