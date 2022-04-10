@@ -3,6 +3,7 @@ This is a complete example of a Balladeer story which accepts text commands over
 
 """
 import argparse
+import json
 import pathlib
 import random
 import re
@@ -13,6 +14,7 @@ from aiohttp import web
 import pkg_resources
 
 from balladeer import Assembly
+from balladeer import CommandParser
 from balladeer import DataObject
 from balladeer import Drama
 from balladeer import Fruition
@@ -77,6 +79,13 @@ class Bottles(Drama):
     def unbroken(self):
         return [i for i in self.population if i.get_state(Fruition) == Fruition.inception]
 
+    @property
+    def _(self):
+        options = {
+            fn.__name__: list(CommandParser.expand_commands(fn, self.ensemble, parent=self))
+            for fn in self.active
+        }
+
     def do_bottle(self, this, text, presenter, *args, **kwargs):
         """
         bottle
@@ -116,6 +125,19 @@ async def get_assembly(request):
     story = request.app["sessions"][uid]
     return web.Response(
         text=Assembly.dumps(story.context.population),
+        content_type="application/json"
+    )
+
+
+async def get_commands(request):
+    uid = uuid.UUID(hex=request.match_info["session"])
+    drama = request.app["sessions"][uid].context
+    commands = [
+        command for fn in drama.active
+        for command, (method, kwargs) in CommandParser.expand_commands(fn, drama.ensemble, parent=drama)
+    ]
+    return web.Response(
+        text=json.dumps(commands),
         content_type="application/json"
     )
 
@@ -162,6 +184,7 @@ def build_app(args):
         web.get("/", get_root),
         web.get("/{{session:{0}}}".format(VALIDATION["session"].pattern), get_session),
         web.get("/{{session:{0}}}/assembly".format(VALIDATION["session"].pattern), get_assembly),
+        web.get("/{{session:{0}}}/commands".format(VALIDATION["session"].pattern), get_commands),
         web.post("/{{session:{0}}}/cmd/".format(VALIDATION["session"].pattern), post_command),
     ])
     app.router.add_static(
