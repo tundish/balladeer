@@ -58,7 +58,7 @@ class Bottles(Drama):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.population = []
-        for n in range(10):
+        for n in range(1, 11):
             data = random.choice(Bottle.products)
             self.population.append(
                 Bottle(n=n, **data).set_state(Fruition.inception)
@@ -86,16 +86,13 @@ class Bottles(Drama):
             for fn in self.active
         }
 
-    def do_bottle(self, this, text, presenter, *args, **kwargs):
+    def do_bottle(self, this, text, presenter, bottle: "unbroken", *args, **kwargs):
         """
-        bottle
-        break
+        break {bottle.details}
+        break bottle {bottle.n}
 
         """
-        try:
-            random.choice(self.unbroken).state = Fruition.completion
-        except IndexError:
-            pass
+        bottle.state = Fruition.completion
 
     def do_look(self, this, text, presenter, *args, **kwargs):
         """
@@ -133,11 +130,11 @@ async def get_commands(request):
     uid = uuid.UUID(hex=request.match_info["session"])
     drama = request.app["sessions"][uid].context
     commands = [
-        command for fn in drama.active
+        (command, kwargs) for fn in drama.active
         for command, (method, kwargs) in CommandParser.expand_commands(fn, drama.ensemble, parent=drama)
     ]
     return web.Response(
-        text=json.dumps(commands),
+        text=Assembly.dumps(commands),
         content_type="application/json"
     )
 
