@@ -24,7 +24,7 @@ Install test dependencies:
 
 Run unit tests:
 
-    npx -y tape test_*.js
+    npx -y tape js/test_*.js
 
 * tape
 * jsdom
@@ -33,19 +33,12 @@ Examples: https://github.com/dwyl/learn-tape
 */
 const test = require("tape");
 const typeahead = require("./typeahead.js");
+const commands = require("./commands.json");
 
-test("timing test", function (t) {
-    t.plan(2);
-
-    t.equal(typeof Date.now, "function");
-    var start = Date.now();
-
-    setTimeout(function () {
-        t.equal(Date.now() - start, 100);
-    }, 100);
-});
-
-test("test using promises", async function (t) {
-    const result = await someAsyncThing();
-    t.ok(result);
+test("check command fixture", function (t) {
+    t.ok(Array.isArray(commands));
+    t.ok(Array.isArray(commands[0]));
+    t.equal(typeof commands[0][0], "string");
+    t.equal(typeof commands[0][1], "object");
+    t.end();
 });
