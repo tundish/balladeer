@@ -1,13 +1,17 @@
+import {filter_commands} from "./typeahead.mjs";
+
 const app = Vue.createApp({
 data() {
     return {
         population: [],
+        commands: new Set(),
     }
 },
 async created() {
     const urls = ["assembly", "commands"].map(path => `${window.location}/${path}`);
     let responses = urls.map(url => fetch(url).then(response => response.json()));
     [this.population, this.commands] = await Promise.all(responses);
+    console.log(filter_commands(this.commands));
 },
 });
 
@@ -83,4 +87,4 @@ methods: {
 }
 });
 
-view = app.mount("#app");
+const view = app.mount("#app");
