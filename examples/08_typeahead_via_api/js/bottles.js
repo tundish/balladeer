@@ -1,14 +1,13 @@
 const app = Vue.createApp({
 data() {
     return {
-        population: []
+        population: [],
     }
 },
 async created() {
-    url = window.location + "/assembly";
-    const response = await fetch(url);
-    const data = await response.json();
-    this.population = data;
+    const urls = ["assembly", "commands"].map(path => `${window.location}/${path}`);
+    let responses = urls.map(url => fetch(url).then(response => response.json()));
+    [this.population, this.commands] = await Promise.all(responses);
 },
 });
 
