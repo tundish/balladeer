@@ -46,7 +46,23 @@ test("check command fixture", function (t) {
     t.end();
 });
 
-test("check command fixture", function (t) {
-    filter_commands(commands);
+test("filter with no previous text", function (t) {
+    const rv = filter_commands(commands);
+    t.notEqual(rv.size, commands.length);
+    t.equal(rv.size, 9);
+    t.end();
+});
+
+test("filter with previous 'break' command", function (t) {
+    const rv = filter_commands(commands, "break");
+    t.notEqual(rv.size, commands.length);
+    t.equal(rv.size, 8);
+    t.end();
+});
+
+test("filter with previous 'l' character", function (t) {
+    const rv = filter_commands(commands, "l");
+    t.notEqual(rv.size, commands.length);
+    t.equal(rv.size, 1);
     t.end();
 });
