@@ -24,21 +24,29 @@ Install test dependencies:
 
 Run unit tests:
 
-    npx -y tape js/test_*.js
+    npx -y tape js/test_*.mjs
 
 * tape
 * jsdom
 
 Examples: https://github.com/dwyl/learn-tape
 */
-const test = require("tape");
-const typeahead = require("./typeahead.js");
-const commands = require("./commands.json");
+
+import test from "tape";
+import {filter_commands} from "./typeahead.mjs";
+
+import commands from "./commands.json" assert {type: "json"};
+
 
 test("check command fixture", function (t) {
     t.ok(Array.isArray(commands));
     t.ok(Array.isArray(commands[0]));
     t.equal(typeof commands[0][0], "string");
     t.equal(typeof commands[0][1], "object");
+    t.end();
+});
+
+test("check command fixture", function (t) {
+    filter_commands(commands);
     t.end();
 });
