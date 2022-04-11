@@ -1,4 +1,4 @@
-import {filter_commands} from "./typeahead.mjs";
+import {filter_commands, handle_key_down} from "./typeahead.mjs";
 
 const app = Vue.createApp({
 data() {
@@ -8,13 +8,14 @@ data() {
     }
 },
 async created() {
-    const urls = ["assembly", "commands"].map(path => `${window.location}/${path}`);
+    const urls = ["ensemble", "commands"].map(path => `${window.location}/${path}`);
     let responses = urls.map(url => fetch(url).then(response => response.json()));
     [this.population, this.commands] = await Promise.all(responses);
 },
 mounted() {
     var input = document.querySelector("input[type=text]");
     // console.log(filter_commands(this.commands));
+    input.onkeydown = handle_key_down();
     console.log(input.attributes);
 },
 });

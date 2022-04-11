@@ -118,11 +118,11 @@ async def get_root(request):
     raise web.HTTPFound("/{0.id.hex}".format(story))
 
 
-async def get_assembly(request):
+async def get_ensemble(request):
     uid = uuid.UUID(hex=request.match_info["session"])
     story = request.app["sessions"][uid]
     return web.Response(
-        text=Assembly.dumps(story.context.population),
+        text=Assembly.dumps(story.context.ensemble),
         content_type="application/json"
     )
 
@@ -181,7 +181,7 @@ def build_app(args):
     app.add_routes([
         web.get("/", get_root),
         web.get("/{{session:{0}}}".format(VALIDATION["session"].pattern), get_session),
-        web.get("/{{session:{0}}}/assembly".format(VALIDATION["session"].pattern), get_assembly),
+        web.get("/{{session:{0}}}/ensemble".format(VALIDATION["session"].pattern), get_ensemble),
         web.get("/{{session:{0}}}/commands".format(VALIDATION["session"].pattern), get_commands),
         web.post("/{{session:{0}}}/cmd/".format(VALIDATION["session"].pattern), post_command),
     ])
