@@ -1,4 +1,4 @@
-import {filter_commands, handle_key_down} from "./typeahead.mjs";
+import {filter_commands, handle_key_up} from "./typeahead.mjs";
 
 const app = Vue.createApp({
 data() {
@@ -14,9 +14,7 @@ async created() {
 },
 mounted() {
     var input = document.querySelector("input[type=text]");
-    // console.log(filter_commands(this.commands));
-    input.onkeydown = handle_key_down();
-    console.log(input.attributes);
+    input.onkeyup = handle_key_up(this, input);
 },
 });
 
