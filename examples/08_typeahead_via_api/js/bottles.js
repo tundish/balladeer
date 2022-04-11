@@ -13,8 +13,11 @@ async created() {
     [this.population, this.commands] = await Promise.all(responses);
 },
 mounted() {
-    var input = document.querySelector("input[type=text]");
+    var form = document.querySelector("form[name=cmd]");
+    var input = document.querySelector("input[name=cmd][type=text]");
+    input.autocomplete = "off";
     input.onkeyup = handle_key_up(this, input);
+    // create data-list and setAttribute("list", ...) ?
 },
 });
 
