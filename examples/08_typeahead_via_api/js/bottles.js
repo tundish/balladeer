@@ -13,10 +13,24 @@ async created() {
     [this.population, this.commands] = await Promise.all(responses);
 },
 mounted() {
-    var form = document.querySelector("form[name=cmd]");
-    var input = document.querySelector("input[name=cmd][type=text]");
+    console.log("mounted");
+    let data_list = document.createElement("datalist");
+    data_list.setAttribute("id", "typeahead_data");  // good enough?
+    let bar = document.createElement("option");
+    bar.setAttribute("value", "bar");
+    data_list.appendChild(bar);
+    let foo = document.createElement("option");
+    foo.setAttribute("value", "foo");
+    data_list.appendChild(foo);
+    console.log(data_list);
+
+    let form = document.querySelector("form[name=cmd]");
+    form.after(data_list);
+
+    let input = document.querySelector("input[name=cmd][type=text]");
     input.autocomplete = "off";
-    input.onkeyup = handle_key_up(this, input);
+    // input.onkeyup = handle_key_up(this, input);
+    input.setAttribute("list", "typeahead_data");
     // create data-list and setAttribute("list", ...) ?
 },
 });
