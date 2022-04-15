@@ -1,4 +1,4 @@
-:project:   Balladeer JS frontend example
+:project:   Balladeer JS typeahead example
 :pause:     0
 :dwell:     0.4
 
