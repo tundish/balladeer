@@ -80,13 +80,6 @@ class Bottles(Drama):
     def unbroken(self):
         return [i for i in self.population if i.get_state(Fruition) == Fruition.inception]
 
-    @property
-    def _(self):
-        options = {
-            fn.__name__: list(CommandParser.expand_commands(fn, self.ensemble, parent=self))
-            for fn in self.active
-        }
-
     def do_bottle(self, this, text, presenter, bottle: "unbroken", *args, **kwargs):
         """
         break {bottle.details}
