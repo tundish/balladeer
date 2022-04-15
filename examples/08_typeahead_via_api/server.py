@@ -1,6 +1,6 @@
 """
 This is a complete example of a Balladeer story which accepts text commands over the web.
-It also provides API endpoints to service a Javascript frontent.
+It also provides API endpoints to service a Javascript frontend.
 
 The JS components create a graphical diorama, with extra product detail when the user
 mouses over a game object.
