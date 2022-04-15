@@ -1,5 +1,12 @@
 /*
-Typeahead functionality from URL endpoint.
+Text input 'typeahead' functionality with data from a URL endpoint.
+
+It's possible to achieve a typeahead without any Javascript; simply render the
+the datalist element on the server side.
+
+Done that way, there are only limited options for styling.
+This demo gets you started with populating the data list in JS.
+You can incorporate more advanced features based on this prototype.
 
 */
 

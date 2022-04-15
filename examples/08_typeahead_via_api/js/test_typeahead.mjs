@@ -18,15 +18,22 @@ Now install the latest version of node.js:
     nvm install node
     command -v corepack
 
+Install dependencies
+--------------------
+
 Install test dependencies:
 
     npm install tape jsdom
+
+Run tests
+---------
 
 Run unit tests:
 
     npx -y tape js/test_*.mjs
 
-Examples: https://github.com/dwyl/learn-tape
+For more on Tape testing: https://github.com/dwyl/learn-tape
+
 */
 
 import jsdom from "jsdom";
