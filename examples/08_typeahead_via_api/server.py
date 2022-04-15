@@ -1,5 +1,16 @@
 """
 This is a complete example of a Balladeer story which accepts text commands over the web.
+It also provides API endpoints to service a Javascript frontent.
+
+The JS components create a graphical diorama, with extra product detail when the user
+mouses over a game object.
+
+The main focus of this demo is a JS implementation of a 'typeahead' prompt for user text input.
+
+Follow instructions in README.rst for setup/installation of dependencies.
+To run::
+
+    ~/balladeer-app/bin/python -m server
 
 """
 import argparse
@@ -105,8 +116,8 @@ async def get_root(request):
     drama = Bottles()
     drama.folder = ["song.rst", "end.rst"]
     story = Story(context=drama)
-    text = story.context.deliver("look", presenter=None)
-    story.presenter = story.represent(text)
+    reply = story.context.deliver("look", presenter=None)
+    story.presenter = story.represent(reply)
     request.app["sessions"][story.id] = story
     raise web.HTTPFound("/{0.id.hex}".format(story))
 
@@ -164,8 +175,8 @@ async def post_command(request):
     if cmd and not story.context.validator.match(cmd):
         raise web.HTTPUnauthorized(reason="User sent invalid command.")
     else:
-        text = story.context.deliver(cmd, presenter=story.presenter)
-        story.presenter = story.represent(text, facts=story.context.facts, previous=story.presenter)
+        reply = story.context.deliver(cmd, presenter=story.presenter)
+        story.presenter = story.represent(reply, facts=story.context.facts, previous=story.presenter)
     raise web.HTTPFound("/{0.hex}".format(uid))
 
 

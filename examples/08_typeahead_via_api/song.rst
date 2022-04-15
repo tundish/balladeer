@@ -14,16 +14,6 @@
 Song
 ====
 
-Many
-----
-
-.. condition:: DRAMA.count ((?!0)|(?!1))
-.. condition:: DRAMA.history[0].name do_look
-
-[DRAMA]_
-
-    |BOTTLES| green bottles, hanging on the wall.
-
 One
 ---
 
@@ -34,6 +24,16 @@ One
 
     |BOTTLES| `green bottle <https://www.onegreenbottle.com/>`_, hanging on the wall.
 
+
+Many
+----
+
+.. condition:: DRAMA.count ((?!0)|(?!1))
+.. condition:: DRAMA.history[0].name do_look
+
+[DRAMA]_
+
+    |BOTTLES| green bottles, hanging on the wall.
 
 All
 ---
