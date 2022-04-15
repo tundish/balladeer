@@ -72,7 +72,7 @@ test("filter with previous 'l' character", function (t) {
 
 test("fill options into empty datalist", function (t) {
     const dom = new jsdom.JSDOM(
-        '<!DOCTYPE html><body><datalist id="parent"></datalist></p></body></html>'
+        '<!DOCTYPE html><body><datalist id="parent"></datalist></body></html>'
     );
     let node = dom.window.document.getElementById("parent");
     let options = filter_commands(commands);
