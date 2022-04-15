@@ -31,7 +31,7 @@ Examples: https://github.com/dwyl/learn-tape
 
 import jsdom from "jsdom";
 import test from "tape";
-import {filter_commands} from "./typeahead.mjs";
+import {fill_options, filter_commands} from "./typeahead.mjs";
 
 import commands from "./commands.json" assert {type: "json"};
 
@@ -64,3 +64,16 @@ test("filter with previous 'l' character", function (t) {
     t.equal(rv.size, 1);
     t.end();
 });
+
+test("fill options into empty datalist", function (t) {
+    const dom = new jsdom.JSDOM(
+        '<!DOCTYPE html><body><datalist id="parent"></datalist></p></body></html>'
+    );
+    let node = dom.window.document.getElementById("parent");
+    let options = filter_commands(commands);
+    const rv = fill_options(node, commands);
+    t.same(rv, node);
+    t.equal(rv.childNodes.length, commands.length);
+    t.end();
+});
+

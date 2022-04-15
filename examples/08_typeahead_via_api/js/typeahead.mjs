@@ -8,11 +8,10 @@ export function filter_commands(pairs, text="") {
     return new Set(cmds.filter(cmd => cmd.startsWith(text)));
 }
 
-export function fill_options(node, pairs=[]) {
-    for (const pair of pairs) {
-        const [text, onject] = pair;
-        let option = document.createElement("option");
-        option.setAttribute("value", text);
+export function fill_options(node, commands=[]) {
+    for (const command of commands) {
+        let option = node.ownerDocument.createElement("option");
+        option.setAttribute("value", command);
         node.append(option);
     }
     return node;
