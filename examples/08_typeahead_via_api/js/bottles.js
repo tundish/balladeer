@@ -3,30 +3,20 @@ import {fill_options, filter_commands} from "./typeahead.mjs";
 const app = Vue.createApp({
 data() {
     return {
-        population: [],
+        ensemble: [],
         commands: [],
     }
 },
 async created() {
     const urls = ["ensemble", "commands"].map(path => `${window.location}/${path}`);
     let responses = urls.map(url => fetch(url).then(response => response.json()));
-    [this.population, this.commands] = await Promise.all(responses);
-},
-mounted() {
-    console.log("mounted");
-    let data_list = document.createElement("datalist");
-    data_list.setAttribute("id", "typeahead_data");  // good enough?
+    [this.ensemble, this.commands] = await Promise.all(responses);
 
-    let bar = document.createElement("option");
-    bar.setAttribute("value", "bar");
-    data_list.appendChild(bar);
-    let foo = document.createElement("option");
-    foo.setAttribute("value", "foo");
-    data_list.appendChild(foo);
-    console.log(data_list);
+    let data_list = document.createElement("datalist");
+    data_list.setAttribute("id", "typeahead_data");
 
     let form = document.querySelector("form[name=cmd]");
-    form.after(fill_options(data_list));
+    form.after(fill_options(data_list, filter_commands(this.commands)));
 
     let input = document.querySelector("input[name=cmd][type=text]");
     input.autocomplete = "off";
@@ -37,7 +27,7 @@ mounted() {
 
 app.component("diorama", {
 props: {
-    population: {
+    ensemble: {
         type: Array,
         required: true
     }
@@ -64,7 +54,7 @@ data() {
 },
 computed: {
     unbroken() {
-        return this.population.filter(bottle => bottle._states.Fruition.value == 1);
+        return this.ensemble.filter(bottle => bottle._states.Fruition.value == 1);
     }
 },
 methods: {

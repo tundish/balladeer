@@ -47,7 +47,7 @@ class Story(StoryType):
 
     def render_animated_frame_to_html(self, frame, controls=[], **kwargs):
         return "\n".join([
-            '<div id="app"><diorama v-bind:population="population"></diorama></div>',
+            '<div id="app"><diorama v-bind:ensemble="ensemble"></diorama></div>',
             StoryType.render_animated_frame_to_html(frame, controls, **kwargs),
             '<script src="/js/typeahead.mjs" type="module"></script>',
             '<script src="/js/bottles.js" type="module"></script>',

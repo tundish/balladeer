@@ -12,6 +12,7 @@ export function fill_options(node, commands=[]) {
     for (const command of commands) {
         let option = node.ownerDocument.createElement("option");
         option.setAttribute("value", command);
+        option.innerHTML = command;
         node.append(option);
     }
     return node;
