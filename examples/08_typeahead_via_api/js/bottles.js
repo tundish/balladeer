@@ -1,4 +1,4 @@
-import {filter_commands, handle_key_up} from "./typeahead.mjs";
+import {fill_options, filter_commands} from "./typeahead.mjs";
 
 const app = Vue.createApp({
 data() {
@@ -16,6 +16,7 @@ mounted() {
     console.log("mounted");
     let data_list = document.createElement("datalist");
     data_list.setAttribute("id", "typeahead_data");  // good enough?
+
     let bar = document.createElement("option");
     bar.setAttribute("value", "bar");
     data_list.appendChild(bar);
@@ -25,13 +26,11 @@ mounted() {
     console.log(data_list);
 
     let form = document.querySelector("form[name=cmd]");
-    form.after(data_list);
+    form.after(fill_options(data_list));
 
     let input = document.querySelector("input[name=cmd][type=text]");
     input.autocomplete = "off";
-    // input.onkeyup = handle_key_up(this, input);
     input.setAttribute("list", "typeahead_data");
-    // create data-list and setAttribute("list", ...) ?
 },
 });
 

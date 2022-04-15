@@ -20,18 +20,16 @@ Now install the latest version of node.js:
 
 Install test dependencies:
 
-    npm install tape
+    npm install tape jsdom
 
 Run unit tests:
 
     npx -y tape js/test_*.mjs
 
-* tape
-* jsdom
-
 Examples: https://github.com/dwyl/learn-tape
 */
 
+import jsdom from "jsdom";
 import test from "tape";
 import {filter_commands} from "./typeahead.mjs";
 
