@@ -1,8 +1,6 @@
 /*
 Test Driven Development of Javascript in a minimal, Pythonic style
 
- <venv>/bin/python -m unittest balladeer/test/test_drama.py
-
 Install Node
 ------------
 
