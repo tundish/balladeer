@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.26.0
+======
+
+* Repin to turberfield-dialogue 0.40.0.
+
 0.25.0
 ======
 
