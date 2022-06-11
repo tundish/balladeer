@@ -6,6 +6,13 @@
 Change Log
 ::::::::::
 
+0.27.0
+======
+
+* Add folio module for generation of transcripts.
+* Repin to turberfield-dialogue 0.46.1.
+* Repin to turberfield-utils 0.47.0.
+
 0.26.0
 ======
 
