@@ -60,7 +60,7 @@ setup(
     install_requires=[
         "docutils==0.18.1",
         "turberfield-catchphrase==0.25.0",
-        "turberfield-dialogue==0.46.1",
+        "turberfield-dialogue==0.47.0",
         "turberfield-utils==0.47.0",
     ],
     extras_require={

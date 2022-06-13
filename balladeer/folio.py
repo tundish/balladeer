@@ -19,7 +19,6 @@
 
 
 """
-TODO: Generate orders as per turberfield-dialogue:main.
 
 Usage::
 
@@ -71,6 +70,27 @@ class Folio(Story):
                 max-height: 2rem;
             }
 
+        }
+
+        @page:first {
+            @bottom-center {
+                border: 0;
+                content: "";
+            }
+        }
+
+        @page front{
+            page-break-after: auto;
+            @bottom-center {
+                content: counter(page, lower-roman);
+            }
+            @top-left {
+                content: "";
+            }
+        }
+
+        @page reset {
+            counter-reset: page 0;
         }
 
         @page:left{
@@ -147,7 +167,7 @@ class Folio(Story):
         }
 
         dl {
-            display: none;
+        display: none;
         }
 
         span.call{
@@ -278,8 +298,19 @@ class Folio(Story):
         vertical-align: baseline;
         }
 
-        .catchphrase-banner {
-        display: none;
+        .catchphrase-banner h1::after{
+        content: var(--balladeer-metadata-author);
+        display: block;
+        font-size: 0.8rem;
+        margin-top: 1.2rem;
+        }
+
+        .scene:nth-of-type(3){
+        color: red;
+        }
+
+        .scene:nth-of-type(4){
+        color: blue;
         }
 
         em {
@@ -465,7 +496,7 @@ class TypeGetter:
 
     @property
     def rst(self):
-        return [p for p in self.paths if self.guess_type(p)[0] == "text/x-rst"]
+        return sorted(p for p in self.paths if self.guess_type(p)[0] == "text/x-rst")
 
 
 def main(args):
