@@ -322,21 +322,6 @@ class Folio(Story):
         text-transform: uppercase;
         }
 
-        section.scene:nth-of-type(3),
-        section.scene:nth-of-type(5){
-        page-break-before: auto;
-        page: empty;
-        }
-
-        section.scene:nth-of-type(3) h1,
-        section.scene:nth-of-type(5) h1{
-        display: none;
-        }
-
-        section.scene:nth-of-type(3) p,
-        section.scene:nth-of-type(5) p{
-        text-align: center;
-        }
     """)
 
     def __init__(self, dwell, pause, **kwargs):
@@ -458,7 +443,7 @@ class Folio(Story):
                 n -= 1
         else:
             self.sections[-1] += "\n</section>"
-            self.log.warning("Folder exhausted")
+            self.log.info("Folder exhausted")
 
     @property
     def css(self):
