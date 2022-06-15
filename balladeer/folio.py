@@ -79,18 +79,23 @@ class Folio(Story):
             }
         }
 
-        @page front{
-            page-break-after: auto;
+        @page empty {
             @bottom-center {
-                content: counter(page, lower-roman);
+                border: 0;
+                content: "";
             }
             @top-left {
                 content: "";
             }
         }
 
-        @page reset {
-            counter-reset: page 0;
+        @page front{
+            @bottom-center {
+                content: counter(page, lower-roman);
+            }
+            @top-left {
+                content: "";
+            }
         }
 
         @page:left{
@@ -305,14 +310,6 @@ class Folio(Story):
         margin-top: 1.2rem;
         }
 
-        .scene:nth-of-type(3){
-        color: red;
-        }
-
-        .scene:nth-of-type(4){
-        color: blue;
-        }
-
         em {
         font-style: italic;
         }
@@ -325,6 +322,21 @@ class Folio(Story):
         text-transform: uppercase;
         }
 
+        section.scene:nth-of-type(3),
+        section.scene:nth-of-type(5){
+        page-break-before: auto;
+        page: empty;
+        }
+
+        section.scene:nth-of-type(3) h1,
+        section.scene:nth-of-type(5) h1{
+        display: none;
+        }
+
+        section.scene:nth-of-type(3) p,
+        section.scene:nth-of-type(5) p{
+        text-align: center;
+        }
     """)
 
     def __init__(self, dwell, pause, **kwargs):
@@ -355,7 +367,7 @@ class Folio(Story):
         self.seconds += anim.duration
 
     def render_animated_frame_to_html(self, frame, controls=[], **kwargs):
-        witness = next(i.element for v in frame.values() for i in v if hasattr(i, "element"))
+        witness = next((i.element for v in frame.values() for i in v if hasattr(i, "element")), None)
         dialogue = "\n".join(i for l in frame[Model.Line] for i in self.animated_line_to_html(l, **kwargs))
         stills = "\n".join(self.animated_still_to_html(i, **kwargs) for i in frame[Model.Still])
         spoken = any(anim.element.persona for anim in frame[Model.Line])
@@ -429,8 +441,8 @@ class Folio(Story):
 
         for frame in presenter.frames:
             section = self.animate_frame(presenter, frame, self.dwell, self.pause)
-            self.sections.append(section)
-        self.sections[-1] += "\n</section>"
+            if section:
+                self.sections.append(section)
 
         reply = self.context.deliver(cmd="", presenter=presenter)
         return presenter, reply
@@ -445,7 +457,8 @@ class Folio(Story):
             else:
                 n -= 1
         else:
-            self.log.warning("Folder is empty")
+            self.sections[-1] += "\n</section>"
+            self.log.warning("Folder exhausted")
 
     @property
     def css(self):
