@@ -201,7 +201,7 @@ class Folio(Story):
         border-width: thin;
         display: flex;
         flex-direction: row;
-        flex-flow: wrap;
+        flex-flow: row;
         flex-wrap: wrap;
         font-family: "DejaVu Sans", sans-serif;
         justify-content: space-around;
