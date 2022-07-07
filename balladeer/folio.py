@@ -326,8 +326,12 @@ class Folio(Story):
     """)
 
     @staticmethod
-    def single_space(text):
-        return re.sub("[ ]+", " ", text)
+    def single_space(html):
+        return re.sub(
+            "[ ]+",
+            " ",
+            html.replace("\n", " ").replace("&NewLine;", " ")
+        ).replace("> <", "><").rstrip()
 
     def __init__(self, dwell, pause, **kwargs):
         super().__init__(**kwargs)
@@ -349,16 +353,16 @@ class Folio(Story):
         if name:
             yield "<blockquote>"
             yield f"<header>{name}</header>"
-            yield self.single_space(anim.element.html).rstrip()
+            yield self.single_space(anim.element.html)
             yield "</blockquote>"
         else:
-            yield f"{anim.element.html}".rstrip()
+            yield self.single_space(anim.element.html)
         yield "</div>"
         self.seconds += anim.duration
 
     def render_animated_frame_to_html(self, frame, controls=[], **kwargs):
         witness = next((i.element for v in frame.values() for i in v if hasattr(i, "element")), None)
-        dialogue = "\n".join(i for l in frame[Model.Line] for i in self.animated_line_to_html(l, **kwargs))
+        dialogue = "".join(i for l in frame[Model.Line] for i in self.animated_line_to_html(l, **kwargs))
         stills = "\n".join(self.animated_still_to_html(i, **kwargs) for i in frame[Model.Still])
         spoken = any(anim.element.persona for anim in frame[Model.Line])
         chapter = ([i.get("chapter", 0) for i in self.chapters] or [0])[-1]

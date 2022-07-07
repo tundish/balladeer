@@ -17,7 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import textwrap
 import unittest
+
+from turberfield.dialogue.model import SceneScript
 
 from balladeer.folio import Folio
 
@@ -27,3 +30,15 @@ class SpacingTests(unittest.TestCase):
     def test_simple(self):
         rv = Folio.single_space("a  b   c")
         self.assertEqual("a b c", rv)
+
+    def test_html_spans(self):
+        content = textwrap.dedent("""
+        And they lived happily *ever after*.
+        """)
+        script = SceneScript("inline", doc=SceneScript.read(content))
+        script.cast(script.select([]))
+        model = list(script.run())
+        self.assertFalse(
+            any("\n" in Folio.single_space(l.html) for s, l in model),
+            model
+        )
