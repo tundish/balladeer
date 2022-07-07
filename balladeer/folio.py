@@ -30,6 +30,7 @@ import argparse
 import datetime
 import mimetypes
 import pathlib
+import re
 import sys
 
 from balladeer import Drama
@@ -324,6 +325,10 @@ class Folio(Story):
 
     """)
 
+    @staticmethod
+    def single_space(text):
+        return re.sub("[ ]+", " ", text)
+
     def __init__(self, dwell, pause, **kwargs):
         super().__init__(**kwargs)
         self.dwell = dwell
@@ -344,7 +349,7 @@ class Folio(Story):
         if name:
             yield "<blockquote>"
             yield f"<header>{name}</header>"
-            yield f"{anim.element.html}".rstrip()
+            yield self.single_space(anim.element.html).rstrip()
             yield "</blockquote>"
         else:
             yield f"{anim.element.html}".rstrip()

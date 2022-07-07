@@ -19,11 +19,26 @@
 
 import unittest
 
-from balladeer.folio import Folio
+from balladeer import Phrase
+from balladeer import Name
+from balladeer import Named
+from balladeer import Verb
 
 
-class SpacingTests(unittest.TestCase):
+class NamedTests(unittest.TestCase):
 
     def test_simple(self):
-        rv = Folio.single_space("a  b   c")
-        self.assertEqual("a b c", rv)
+        mug = Named(names=[Name("Cup"), Name("Mug")])
+        self.assertIn("Cup", str(mug))
+        self.assertIn("\n", str(mug))
+        self.assertIn("Mug", str(mug))
+
+
+class VerbTests(unittest.TestCase):
+
+    def test_simple(self):
+        v = Verb("show")
+        self.assertEqual("shows", v.simple)
+        self.assertEqual("is showing", v.progressive)
+        self.assertEqual("showed", v.perfect)
+        self.assertEqual("show", v.imperative)
