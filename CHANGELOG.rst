@@ -9,8 +9,9 @@ Change Log
 0.28.0 (u)
 ======
 
-* Folio introduces named page styles for front and rear matter.
 * Repin to turberfield-dialogue 0.47.0.
+* Folio introduces named page styles for front and rear matter.
+* Fix errant spaces in Folio output.
 
 0.27.0
 ======
