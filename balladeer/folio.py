@@ -375,7 +375,7 @@ class Folio(Story):
             self.chapters.append(metadata)
             yield from self.render_metadata(**metadata)
 
-            yield '<section class="scene">'
+            yield f'<section class="scene" style="--chapter: {metadata["chapter"]}">'
 
             if frame["scene"]:
                 yield f"<h1>{frame['scene']}</h1>"

@@ -12,6 +12,7 @@ Change Log
 * Repin to turberfield-dialogue 0.47.0.
 * Folio introduces named page styles for front and rear matter.
 * Fix errant spaces in Folio output.
+* Add a chapter variable to the style of each section.
 
 0.27.0
 ======
