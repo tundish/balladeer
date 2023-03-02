@@ -10,7 +10,7 @@ def loader(package, resource=".", suffixes=[".dlg.toml"]):
         if "".join(path.suffixes) in suffixes:
             with importlib.resources.as_file(path) as f:
                 text = f.read_text(encoding="utf8")
-                yield tomllib.loads(text)
+                yield (resource, path, tomllib.loads(text))
 
 assets = loader("balladeer.lite")
 print(*list(assets), sep="\n")
