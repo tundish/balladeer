@@ -1,5 +1,6 @@
-__version__ = "0.27.0"
+__version__ = "0.28.0"
 
+"""
 from balladeer.drama import Drama
 from balladeer.gesture import Gesture
 from balladeer.gesture import Hand
@@ -32,3 +33,4 @@ from turberfield.dialogue.types import EnumFactory
 from turberfield.dialogue.types import Stateful
 
 from turberfield.utils.assembly import Assembly
+"""

@@ -1,0 +1,15 @@
+# Scene
+# scene roles
+# scene conditions
+
+# Shot 1..n
+# conditions
+
+# role
+# line
+
+# Also TODO
+# text pipelines
+# eg:
+# raw -> substitutions
+# raw -> substitutions -> markdown -> transforms
