@@ -1,7 +1,9 @@
 # Scene
+[scene]
 # scene roles
 # scene conditions
 
+[[shots]]
 # Shot 1..n
 # conditions
 
@@ -13,4 +15,5 @@
 # eg:
 # raw -> substitutions
 # raw -> substitutions -> markdown -> transforms
+[[shots]]
 foo = 1
