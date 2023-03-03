@@ -1,9 +1,9 @@
 [FIGHTER_1]
-type = "balladeer.Persona"
+type = "Thing"
 roles = "WEAPON"
 
 [FIGHTER_2]
-types = ["balladeer.Persona"]  # Match against __qualname__
+types = ["Thing"]
 
 [DRAMA]
 
