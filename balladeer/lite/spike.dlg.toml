@@ -1,19 +1,31 @@
-# Scene
-[scene]
-# scene roles
-# scene conditions
+[FIGHTER_1]
+type = "balladeer.Persona"
+roles = "WEAPON"
 
-[[shots]]
-# Shot 1..n
-# conditions
+[FIGHTER_2]
+types = "balladeer.Persona"
 
+[DRAMA]
+
+
+[[_]]
+[[_.if]]
+
+[[_.if]]
 # role
 # line
+
+[[_._]]
+
+[[_.do]]
+
+[[_.do]]
+
+0 = "Hell!"
 
 # Also TODO
 # text pipelines
 # eg:
 # raw -> substitutions
 # raw -> substitutions -> markdown -> transforms
-[[shots]]
-foo = 1
+
