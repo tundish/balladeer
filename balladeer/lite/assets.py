@@ -19,7 +19,6 @@
 
 
 from collections import defaultdict
-from collections import Counter
 from collections import namedtuple
 import importlib.resources
 import inspect
@@ -54,9 +53,9 @@ class Loader:
             error = e
         return Loader.Asset(text, tables, resource, path, error)
 
-    def check(asset: Asset) -> Counter:
-        # lower case the sections: S, IF, DO
-        return asset
+    def check(asset: Asset, shot_key):
+        result = dict(shots=len(asset.tables.get(shot_key, [])))
+        return asset, result
 
 
 class Prompter:
@@ -91,12 +90,12 @@ ensemble = [
     Thing(name="thing").set_state(0)
 ]
 
+if __name__ == "__main__":
+    for a in assets:
+        for i in ensemble:
+            typ = Prompter.object_type_name(i)
+            print(typ)
 
-for a in assets:
-    for i in ensemble:
-        typ = Prompter.object_type_name(i)
-        print(typ)
-
-    asset = Loader.check(a)
-    pprint.pprint(a.tables)
-    casting = Prompter.select(asset, ensemble)
+        asset = Loader.check(a)
+        pprint.pprint(a.tables)
+        casting = Prompter.select(asset, ensemble)

@@ -18,7 +18,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from collections import Counter
 import copy
 import enum
 import operator
@@ -47,9 +46,14 @@ class SceneTests(unittest.TestCase):
             \"\"\"
         """)
         asset = Loader.read(content)
-        result = Loader.check(asset)
-        self.assertIsInstance(result, Counter)
-        self.assertEqual("shot", shot.name)
+        rv = Loader.check(asset, shot_key="_")
+        self.assertIsInstance(rv, tuple)
+        self.assertEqual(2, len(rv))
+        a, result = rv
+        self.assertEqual(asset, a)
+        self.assertEqual(1, result.get("shots"))
+
+        self.assertEqual("Text\n", a.tables["_"][0]["-"])
 
     @unittest.skip("not yet")
     def test_multi_scene(self):
