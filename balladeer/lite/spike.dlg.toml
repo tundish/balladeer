@@ -9,19 +9,17 @@ types = "balladeer.Persona"
 
 
 [[_]]
-[[_.if]]
 
-[[_.if]]
-# role
-# line
+if = 1
 
-[[_._]]
+it = """
+<fighter_1:say>
 
-[[_.do]]
 
-[[_.do]]
+"""
 
-0 = "Hell!"
+do = 2
+
 
 # Also TODO
 # text pipelines
