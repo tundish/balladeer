@@ -1,91 +1,57 @@
-#!usr/bin/env python3
-# encoding: utf-8
+#!/usr/bin/env python3
+#   encoding: utf-8
+
+# This is part of the Balladeer library.
+# Copyright (C) 2022 D E Haynes
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 
 from collections import defaultdict
 from collections import namedtuple
 import importlib.resources
 import inspect
+import pathlib
 import pprint
 import tomllib
 import uuid
 
 import markdown
 
-# from turberfield.utils.assembly import Assembly
-
-
-# turberfield.utils.misc
-def group_by_type(items):
-    rv = defaultdict(list)
-    for i in items:
-        rv[type(i)].append(i)
-    return rv
-
-
-# turberfield.dialogue.types
-class EnumFactory:
-
-    @classmethod
-    def factory(cls, name=None, **kwargs):
-        return cls[name]
-
-
-# turberfield.dialogue.types
-class DataObject:
-
-    def __init__(self, *args, id=None, **kwargs):
-        super().__init__(*args)
-        self.id = id or uuid.uuid4()
-        for k, v in kwargs.items():
-            setattr(self, k, v)
-
-    def __repr__(self):
-        return "<{0}> {1}".format(type(self).__name__, vars(self))
-
-
-# turberfield.dialogue.types
-class Stateful:
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._states = {}
-
-    @property
-    def state(self):
-        return self.get_state()
-
-    @state.setter
-    def state(self, value):
-        return self.set_state(value)
-
-    def set_state(self, *args):
-        for value in args:
-            self._states[type(value).__name__] = value
-        return self
-
-    def get_state(self, typ=int, default=0):
-        return self._states.get(typ.__name__, default)
-
-
-class Thing(DataObject, Stateful): pass
+from balladeer.lite.types import group_by_type
+from balladeer.lite.types import Thing
 
 
 class Loader:
 
-    Asset = namedtuple("Scene", ["resource", "path", "text", "tables", "error"])
+    Asset = namedtuple("Scene", ["text", "tables", "resource", "path", "error"], defaults=[None, None, None])
 
     def discover(package, resource=".", suffixes=[".dlg.toml"]):
         for path in importlib.resources.files(package).joinpath(resource).iterdir():
             if "".join(path.suffixes) in suffixes:
                 with importlib.resources.as_file(path) as f:
                     text = f.read_text(encoding="utf8")
-                    try:
-                        tables = tomllib.loads(text)
-                        error = None
-                    except tomllib.TOMLDecodeError as e:
-                        tables = None
-                        error = e
-                    yield Loader.Asset(resource, path, text, tables, error)
+                    yield Loader.read(text)
+
+    def read(text: str, resource="", path=None):
+        try:
+            tables = tomllib.loads(text)
+            error = None
+        except tomllib.TOMLDecodeError as e:
+            tables = None
+            error = e
+        return Loader.Asset(text, tables, resource, path, error)
 
     def check(asset: Asset):
         # lower case the sections: S, IF, DO
@@ -104,7 +70,7 @@ class Prompter:
         entities = dict((k, t) for k, t in asset.tables.items() if k != shot_key)
 
         pool = {Prompter.object_type_name(v[0]): v for t, v in group_by_type(ensemble).items() if v}
-        print(pool) 
+        print(pool)
         return {}
 
     def cast(asset: Loader.Asset, ensemble: list, shot_key="_", dlg_key="-"):
