@@ -9,16 +9,18 @@ types = "balladeer.Persona"
 
 
 [[_]]
+label = "opening"
 
-if = 1
+if = {}
 
 it = """
-<fighter_1:say>
+<FIGHTER_1:say>
 
+{ DRAMA.state.name }
 
 """
 
-do = 2
+do = {}
 
 
 # Also TODO
