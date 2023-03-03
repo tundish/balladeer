@@ -55,113 +55,31 @@ class SceneTests(unittest.TestCase):
 
         self.assertEqual("Text\n", a.tables["_"][0]["-"])
 
-    @unittest.skip("not yet")
     def test_multi_scene(self):
         content = textwrap.dedent(
             """
-            Scene 1
-            =======
+            [[_]]
 
-            Shot 1
-            ------
-
+            -=\"\"\"
             Text
+            \"\"\"
 
-            Scene 2
-            =======
+            [[_]]
 
-            Shot 2
-            ------
-
+            -=\"\"\"
             Text
+            \"\"\"
         """)
-        script = SceneScript("inline", doc=SceneScript.read(content))
-        script.cast(script.select([]))
-        model = list(script.run())
-        shot, line = next(iter(model))
-        self.assertEqual("scene 1", shot.scene)
-        self.assertEqual("shot 1", shot.name)
+        asset = Loader.read(content)
+        rv = Loader.check(asset, shot_key="_")
+        self.assertIsInstance(rv, tuple)
+        self.assertEqual(2, len(rv))
+        a, result = rv
+        self.assertEqual(asset, a)
+        self.assertEqual(2, result.get("shots"))
 
-    @unittest.skip("not yet")
-    def test_duplicate_shot(self):
-        content = textwrap.dedent(
-            """
-            Scene 1
-            =======
-
-            Shot
-            ----
-
-            Text
-
-            Scene 2
-            =======
-
-            Shot
-            ----
-
-            Text
-        """)
-        script = SceneScript("inline", doc=SceneScript.read(content))
-        script.cast(script.select([]))
-        model = list(script.run())
-        shot, line = next(iter(model))
-        self.assertEqual("scene 1", shot.scene)
-        self.assertEqual("shot", shot.name)
-
-    @unittest.skip("not yet")
-    def test_duplicate_scene(self):
-        content = textwrap.dedent(
-            """
-            Scene
-            =====
-
-            Shot 1
-            ------
-
-            Text
-
-            Scene
-            =====
-
-            Shot 1
-            ------
-
-            Text
-        """)
-        script = SceneScript("inline", doc=SceneScript.read(content))
-        script.cast(script.select([]))
-        model = list(script.run())
-        shot, line = next(iter(model))
-        self.assertEqual("scene", shot.scene)
-        self.assertEqual("shot 1", shot.name)
-
-    @unittest.skip("not yet")
-    def test_shot_duplicates_scene(self):
-        content = textwrap.dedent(
-            """
-            Scene 1
-            =======
-
-            Shot 1
-            ------
-
-            Text
-
-            Scene 2
-            =======
-
-            Scene 1
-            -------
-
-            Text
-        """)
-        script = SceneScript("inline", doc=SceneScript.read(content))
-        script.cast(script.select([]))
-        model = list(script.run())
-        shot, line = next(iter(model))
-        self.assertEqual("scene 1", shot.scene)
-        self.assertEqual("shot 1", shot.name)
+        self.assertEqual("Text\n", a.tables["_"][0]["-"])
+        self.assertEqual("Text\n", a.tables["_"][1]["-"])
 
 
 @unittest.skip("not yet")
