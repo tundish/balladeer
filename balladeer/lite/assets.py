@@ -19,6 +19,7 @@
 
 
 from collections import defaultdict
+from collections import Counter
 from collections import namedtuple
 import importlib.resources
 import inspect
@@ -53,7 +54,7 @@ class Loader:
             error = e
         return Loader.Asset(text, tables, resource, path, error)
 
-    def check(asset: Asset):
+    def check(asset: Asset) -> Counter:
         # lower case the sections: S, IF, DO
         return asset
 

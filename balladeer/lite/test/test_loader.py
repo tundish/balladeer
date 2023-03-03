@@ -18,6 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+from collections import Counter
 import copy
 import enum
 import operator
@@ -46,7 +47,8 @@ class SceneTests(unittest.TestCase):
             \"\"\"
         """)
         asset = Loader.read(content)
-        self.assertEqual("scene", shot.scene)
+        result = Loader.check(asset)
+        self.assertIsInstance(result, Counter)
         self.assertEqual("shot", shot.name)
 
     @unittest.skip("not yet")
