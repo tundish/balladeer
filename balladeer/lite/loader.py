@@ -25,27 +25,32 @@ import tomllib
 import xml.etree.ElementTree as etree
 
 import markdown
-#from markdown.extensions import Extension
-from markdown.inlinepatterns import InlineProcessor
-from markdown.preprocessors import Preprocessor
-from markdown.treeprocessors import Treeprocessor
+# from markdown.preprocessors import Preprocessor
+# from markdown.treeprocessors import Treeprocessor
 
 
 class AutoLinker(markdown.extensions.Extension):
     """
     https://spec.commonmark.org/0.30/#autolinks
+
     """
 
+    class AutolinkInlineProcessor(markdown.inlinepatterns.InlineProcessor):
+        """ Return a link Element given an autolink (`<http://example/com>`). """
+        def handleMatch(self, m, data):
+            el = etree.Element("a")
+            el.set("href", self.unescape(m.group(1)))
+            el.text = markdown.util.AtomicString(m.group(1))
+            return el, m.start(0), m.end(0)
+
     def __init__(self, **kwargs):
-        self.config = {
-            'option1' : ['value1', 'description1'],
-            'option2' : ['value2', 'description2']
-        }
         super().__init__(**kwargs)
+        self.regex = r"<([^ :]+:[^ >]+)>"
 
     def extendMarkdown(self, md):
         md.registerExtension(self)
-        # insert processors and patterns here
+        md.inlinePatterns.register(self.AutolinkInlineProcessor(self.regex, md), "autolink", 120)
+
 
 class Loader:
 
@@ -76,10 +81,10 @@ class Loader:
         return asset, report
 
     @staticmethod
-    def parse(text: str):
+    def parse(text: str, ensemble=None):
         # rv = markdown.markdown(text, output_format="xhtml", extensions=[])
         autolinker = AutoLinker()
-        md = markdown.Markdown(safe_mode=True, extensions=[autolinker])
+        md = markdown.Markdown(safe_mode=True, output_format="xhtml", extensions=[autolinker])
         rv = md.convert(text)
         direction = rv
         report = {}
