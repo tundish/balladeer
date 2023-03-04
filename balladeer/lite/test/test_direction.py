@@ -7,6 +7,7 @@ from balladeer.lite.loader import Loader
 
 class DirectionTests(unittest.TestCase):
     # https://python-markdown.github.io/
+    # https://spec.commonmark.org/dingus/
 
     def test_no_direction(self):
         text = """How long, I wonder?"""

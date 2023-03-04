@@ -22,9 +22,30 @@ from collections import namedtuple
 import importlib.resources
 import re
 import tomllib
+import xml.etree.ElementTree as etree
 
 import markdown
+#from markdown.extensions import Extension
+from markdown.inlinepatterns import InlineProcessor
+from markdown.preprocessors import Preprocessor
+from markdown.treeprocessors import Treeprocessor
 
+
+class AutoLinker(markdown.extensions.Extension):
+    """
+    https://spec.commonmark.org/0.30/#autolinks
+    """
+
+    def __init__(self, **kwargs):
+        self.config = {
+            'option1' : ['value1', 'description1'],
+            'option2' : ['value2', 'description2']
+        }
+        super().__init__(**kwargs)
+
+    def extendMarkdown(self, md):
+        md.registerExtension(self)
+        # insert processors and patterns here
 
 class Loader:
 
@@ -56,7 +77,10 @@ class Loader:
 
     @staticmethod
     def parse(text: str):
-        rv = markdown.markdown(text, output_format="xhtml")
+        # rv = markdown.markdown(text, output_format="xhtml", extensions=[])
+        autolinker = AutoLinker()
+        md = markdown.Markdown(safe_mode=True, extensions=[autolinker])
+        rv = md.convert(text)
         direction = rv
         report = {}
         return direction, report
