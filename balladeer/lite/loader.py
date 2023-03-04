@@ -22,6 +22,7 @@ from collections import namedtuple
 import importlib.resources
 import re
 import tomllib
+import urllib.parse
 import xml.etree.ElementTree as etree
 
 import markdown
@@ -39,7 +40,11 @@ class AutoLinker(markdown.extensions.Extension):
         """ Return a link Element given an autolink (`<http://example/com>`). """
         def handleMatch(self, m, data):
             el = etree.Element("a")
-            el.set("href", self.unescape(m.group(1)))
+            href =  self.unescape(m.group(1))
+            if "//" not in href:
+                components = urllib.parse.urlparse("direction://" + href)
+                #  Create Loader.Direction from components
+            el.set("href", href)
             el.set("class", "markdown autolink")
             el.text = markdown.util.AtomicString(m.group(1))
             return el, m.start(0), m.end(0)
