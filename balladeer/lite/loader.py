@@ -39,19 +39,30 @@ class AutoLinker(markdown.extensions.Extension):
 
     class AutolinkInlineProcessor(markdown.inlinepatterns.InlineProcessor):
         """ Return a link Element given an autolink (`<http://example/com>`). """
+
         def handleMatch(self, m, data):
             el = ET.Element("a")
             href =  self.unescape(m.group(1))
-            if "//" not in href:
-                components = urllib.parse.urlparse("dialogue://" + href)
-                role, mode = components.netloc.split(":")
+            url, role, mode = AutoLinker.parse_url(href)
+            if role and mode:
                 el.set("data-role", role)
                 el.set("data-mode", mode)
 
-            el.set("href", href)
-            el.set("class", "markdown autolink")
+            el.set("href", url)
+            el.set("class", "autolink")
             el.text = markdown.util.AtomicString(m.group(1))
             return el, m.start(0), m.end(0)
+
+    @staticmethod
+    def parse_url(url):
+        if "//" in url:
+            components = urllib.parse.urlparse(url)
+            role, mode = (None, None)
+        else:
+            components = urllib.parse.urlparse(url)
+            role, mode = components.path.split(":")
+            url = "dialogue://" + url.replace(":", "/")
+        return url, role, mode
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -107,6 +118,7 @@ class Loader:
 
         directions = []
         for paragraph in root.findall("p"):
+            paragraph.set("class", "markdown")
             link = paragraph.find("a")
             directions.append(Loader.Direction(
                 ET.tostring(paragraph).decode("utf8"),
