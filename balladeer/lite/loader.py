@@ -29,7 +29,9 @@ import markdown
 class Loader:
 
     Asset = namedtuple("Scene", ["text", "tables", "resource", "path", "error"], defaults=[None, None, None])
+    Direction = namedtuple("Direction", ["entity", "path", "params", "query", "fragment"], defaults=[None, None, None])
 
+    @staticmethod
     def discover(package, resource=".", suffixes=[".dlg.toml"]):
         for path in importlib.resources.files(package).joinpath(resource).iterdir():
             if "".join(path.suffixes) in suffixes:
@@ -37,6 +39,7 @@ class Loader:
                     text = f.read_text(encoding="utf8")
                     yield Loader.read(text)
 
+    @staticmethod
     def read(text: str, resource="", path=None):
         try:
             tables = tomllib.loads(text)
@@ -46,6 +49,12 @@ class Loader:
             error = e
         return Loader.Asset(text, tables, resource, path, error)
 
+    @staticmethod
     def check(asset: Asset, shot_key):
-        result = dict(shots=len(asset.tables.get(shot_key, [])))
-        return asset, result
+        report = dict(shots=len(asset.tables.get(shot_key, [])))
+        return asset, report
+
+    @staticmethod
+    def parse(text: str):
+        rv = markdown.markdown(text, output_format="xhtml")
+        return direction, report
