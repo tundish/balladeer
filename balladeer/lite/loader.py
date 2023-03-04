@@ -57,4 +57,6 @@ class Loader:
     @staticmethod
     def parse(text: str):
         rv = markdown.markdown(text, output_format="xhtml")
+        direction = rv
+        report = {}
         return direction, report
