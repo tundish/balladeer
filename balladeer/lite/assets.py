@@ -29,33 +29,9 @@ import uuid
 
 import markdown
 
+from balladeer.lite.loader import Loader
 from balladeer.lite.types import group_by_type
 from balladeer.lite.types import Thing
-
-
-class Loader:
-
-    Asset = namedtuple("Scene", ["text", "tables", "resource", "path", "error"], defaults=[None, None, None])
-
-    def discover(package, resource=".", suffixes=[".dlg.toml"]):
-        for path in importlib.resources.files(package).joinpath(resource).iterdir():
-            if "".join(path.suffixes) in suffixes:
-                with importlib.resources.as_file(path) as f:
-                    text = f.read_text(encoding="utf8")
-                    yield Loader.read(text)
-
-    def read(text: str, resource="", path=None):
-        try:
-            tables = tomllib.loads(text)
-            error = None
-        except tomllib.TOMLDecodeError as e:
-            tables = None
-            error = e
-        return Loader.Asset(text, tables, resource, path, error)
-
-    def check(asset: Asset, shot_key):
-        result = dict(shots=len(asset.tables.get(shot_key, [])))
-        return asset, result
 
 
 class Prompter:
@@ -78,7 +54,7 @@ class Prompter:
         return scene
 
     def update(asset: Loader.Asset, shot_key="_", dlg_key="-"):
-        entities = dict((k, t) for k, t in asset.tables if k != shot_key)
+        entities = dict((k, t) for k, t in asset.tables.items() if k != shot_key)
         shots = asset.tables.get(shot_key, [])
         return scene
 
@@ -96,6 +72,6 @@ if __name__ == "__main__":
             typ = Prompter.object_type_name(i)
             print(typ)
 
-        asset = Loader.check(a)
+        asset, result = Loader.check(a, shot_key="_")
         pprint.pprint(a.tables)
         casting = Prompter.select(asset, ensemble)
