@@ -40,6 +40,7 @@ class AutoLinker(markdown.extensions.Extension):
         def handleMatch(self, m, data):
             el = etree.Element("a")
             el.set("href", self.unescape(m.group(1)))
+            el.set("class", "markdown autolink")
             el.text = markdown.util.AtomicString(m.group(1))
             return el, m.start(0), m.end(0)
 
