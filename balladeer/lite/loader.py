@@ -19,11 +19,12 @@
 
 
 from collections import namedtuple
+import html.parser
 import importlib.resources
 import re
 import tomllib
 import urllib.parse
-import xml.etree.ElementTree as etree
+import xml.etree.ElementTree as ET
 
 import markdown
 # from markdown.preprocessors import Preprocessor
@@ -39,13 +40,13 @@ class AutoLinker(markdown.extensions.Extension):
     class AutolinkInlineProcessor(markdown.inlinepatterns.InlineProcessor):
         """ Return a link Element given an autolink (`<http://example/com>`). """
         def handleMatch(self, m, data):
-            el = etree.Element("a")
+            el = ET.Element("a")
             href =  self.unescape(m.group(1))
             if "//" not in href:
                 components = urllib.parse.urlparse("dialogue://" + href)
-                role, direction = components.netloc.split(":")
+                role, mode = components.netloc.split(":")
                 el.set("data-role", role)
-                el.set("data-direction", direction)
+                el.set("data-mode", mode)
 
             el.set("href", href)
             el.set("class", "markdown autolink")
@@ -64,7 +65,14 @@ class AutoLinker(markdown.extensions.Extension):
 class Loader:
 
     Asset = namedtuple("Scene", ["text", "tables", "resource", "path", "error"], defaults=[None, None, None])
-    Direction = namedtuple("Direction", ["entity", "path", "params", "query", "fragment"], defaults=[None, None, None])
+    Direction = namedtuple(
+        "Direction",
+        ["xml", "role", "mode", "params", "query", "fragment", "entity"],
+        defaults=[None, None, None, None, None]
+    )
+
+    class Parser(html.parser.HTMLParser):
+        pass
 
     @staticmethod
     def discover(package, resource=".", suffixes=[".dlg.toml"]):
@@ -91,10 +99,20 @@ class Loader:
 
     @staticmethod
     def parse(text: str, ensemble=None):
-        # rv = markdown.markdown(text, output_format="xhtml", extensions=[])
         autolinker = AutoLinker()
         md = markdown.Markdown(safe_mode=True, output_format="xhtml", extensions=[autolinker])
-        rv = md.convert(text)
-        direction = rv
+        document = md.convert(text)
+
+        root = ET.fromstring(f"<doc>{document}</doc>")
+
+        directions = []
+        for paragraph in root.findall("p"):
+            link = paragraph.find("a")
+            directions.append(Loader.Direction(
+                ET.tostring(paragraph).decode("utf8"),
+                link and link.attrib.get("data-role"),
+                link and link.attrib.get("data-mode"),
+            ))
+
         report = {}
-        return direction, report
+        return directions, report
