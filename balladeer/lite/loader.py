@@ -42,8 +42,11 @@ class AutoLinker(markdown.extensions.Extension):
             el = etree.Element("a")
             href =  self.unescape(m.group(1))
             if "//" not in href:
-                components = urllib.parse.urlparse("direction://" + href)
-                #  Create Loader.Direction from components
+                components = urllib.parse.urlparse("dialogue://" + href)
+                role, direction = components.netloc.split(":")
+                el.set("data-role", role)
+                el.set("data-direction", direction)
+
             el.set("href", href)
             el.set("class", "markdown autolink")
             el.text = markdown.util.AtomicString(m.group(1))
