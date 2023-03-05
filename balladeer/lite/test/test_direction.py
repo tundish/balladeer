@@ -19,7 +19,7 @@ class DirectiveTests(unittest.TestCase):
         directives, report = rv
         self.assertTrue(directives)
         self.assertIsInstance(directives[0], DialogueParser.Directive)
-        self.assertIn(text, directives[0].xhtml)
+        self.assertIn(text, directives[0].text, directives)
         self.assertEqual(len(text), directives[0].load)
 
     def test_bad_directive(self):
@@ -39,7 +39,7 @@ class DirectiveTests(unittest.TestCase):
         directives, report = rv
         self.assertTrue(directives)
         self.assertIsInstance(directives[0], DialogueParser.Directive)
-        self.assertIn(line, directives[0].xhtml)
+        self.assertIn(line, directives[0].text)
         self.assertEqual(len(line), directives[0].load)
 
     def test_simple_directive(self):

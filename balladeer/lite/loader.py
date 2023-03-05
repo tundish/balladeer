@@ -94,13 +94,24 @@ class DialogueParser(html.parser.HTMLParser):
             role = attribs.get("data-role")
             mode = attribs.get("data-mode")
             d = self.directives.pop()
-            self.directives.append(self.Directive(d._replace(role=role, mode=mode)))
+            self.directives.append(d._replace(role=role, mode=mode))
 
     def handle_endtag(self, tag):
-        print("Encountered an end tag :", tag)
+        line, char = self.getpos()
+        print("???", self.rawdata, line, char)
+        ordinal = len(self.directives)
+        lines = self.rawdata.splitlines(keepends=True)
+        pos = 0 if ordinal in (0, 1) else len(self.directives[-2].xhtml)
+        if ordinal:
+            d = self.directives.pop()
+            xhtml = "Nope"
+            # xhtml = self.rawdata[pos:self.current_index]
+            self.directives.append(d._replace(xhtml=xhtml))
 
     def handle_data(self, data):
-        print("Encountered some data  :", data)
+        if self.directives and not self.directives[-1].text:
+            d = self.directives.pop()
+            self.directives.append(d._replace(text=data))
 
 class Loader:
 
@@ -147,6 +158,7 @@ class Parser:
         parser = DialogueParser(convert_charrefs=True)
         #root = ET.fromstring(f"<doc>{document}</doc>")
         parser.feed(document)
+        print(vars(parser))
 
         directions = []
 
