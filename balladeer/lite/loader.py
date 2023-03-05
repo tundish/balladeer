@@ -78,17 +78,21 @@ class DialogueParser(html.parser.HTMLParser):
 
     Directive = namedtuple(
         "Directive",
-        ["role", "mode", "params", "fragment", "load", "xhtml", "text"],
-        defaults=[None, None, None, None, 0, "", ""]
+        ["role", "mode", "params", "fragment", "load", "xhtml", "index", "until", "text"],
+        defaults=[None, None, None, None, None, "", 0, None, ""]
     )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.directives = deque()
+        self.line_ends = []
 
     def handle_starttag(self, tag, attrs):
+        self.line_ends = self.line_ends or [len(line) for line in self.rawdata.splitlines(keepends=True)]
         if tag == "p":
-            self.directives.append(self.Directive())
+            line, char = self.getpos()
+            pos = sum(self.line_ends[:line]) + char
+            self.directives.append(self.Directive(index=pos, xhtml=self.rawdata))
         elif tag == "a":
             attribs = dict(attrs)
             role = attribs.get("data-role")
@@ -97,16 +101,13 @@ class DialogueParser(html.parser.HTMLParser):
             self.directives.append(d._replace(role=role, mode=mode))
 
     def handle_endtag(self, tag):
-        line, char = self.getpos()
-        print("???", self.rawdata, line, char)
-        ordinal = len(self.directives)
-        lines = self.rawdata.splitlines(keepends=True)
-        pos = 0 if ordinal in (0, 1) else len(self.directives[-2].xhtml)
-        if ordinal:
-            d = self.directives.pop()
-            xhtml = "Nope"
-            # xhtml = self.rawdata[pos:self.current_index]
-            self.directives.append(d._replace(xhtml=xhtml))
+        if tag == "p":
+            line, char = self.getpos()
+            pos = sum(self.line_ends[:line]) + char
+
+            if self.directives:
+                d = self.directives.pop()
+                self.directives.append(d._replace(until=pos))
 
     def handle_data(self, data):
         if self.directives and not self.directives[-1].text:
