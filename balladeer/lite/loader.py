@@ -127,10 +127,6 @@ class Parser:
         # https://helpful.knobs-dials.com/index.php/Python_notes_-_XML#Fetching_text_from_this_data_model
         for paragraph in root.findall("p"):
             paragraph.set("class", "markdown")
-            print(f"{paragraph=} {paragraph.tag} {paragraph.text} {paragraph.tail}")
-            print(ET.tostring(paragraph).decode("utf8"))
-            print(*list(Parser.grab_text(paragraph)))
-            print("$$$$$$$$$$$$$$")
             link = paragraph.find("a")
             text = " ".join(i.strip() for i in Parser.grab_text(paragraph))
             directions.append(Loader.Direction(

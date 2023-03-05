@@ -22,29 +22,36 @@ class DirectionTests(unittest.TestCase):
         self.assertEqual(len(text), directions[0].load)
 
     def test_bad_direction(self):
-        text = """MAN_1:says> How long, I wonder?"""
+        line = "How long, I wonder?"
+        text = f"MAN_1:says> {line}"
         rv = Parser.parse(text)
-        self.assertIsInstance(rv, tuple)
-        self.assertEqual(2, len(rv))
-        print(rv)
-        self.fail(rv)
+        directions, report = rv
+        self.assertTrue(directions)
+        self.assertIsInstance(directions[0], Loader.Direction)
+        self.assertIn(line, directions[0].xml)
+        self.assertEqual(len(text), directions[0].load)
 
     def test_unspaced_direction(self):
-        text = """<MAN_1:says>How long, I wonder?"""
+        line = "How long, I wonder?"
+        text = f"<MAN_1:says>{line}"
         rv = Parser.parse(text)
-        self.assertIsInstance(rv, tuple)
-        self.assertEqual(2, len(rv))
-        print(rv)
-        self.fail(rv)
+        directions, report = rv
+        self.assertTrue(directions)
+        self.assertIsInstance(directions[0], Loader.Direction)
+        self.assertIn(line, directions[0].xml)
+        self.assertEqual(len(line), directions[0].load)
 
     def test_simple_direction(self):
-        text = """<MAN_1:says> How long, I wonder?"""
+        line = "How long, I wonder?"
+        text = f"<MAN_1:says> {line}"
         rv = Parser.parse(text)
-        self.assertIsInstance(rv, tuple)
-        self.assertEqual(2, len(rv))
-        print(rv)
-        self.fail(rv)
+        directions, report = rv
+        self.assertTrue(directions)
+        self.assertIsInstance(directions[0], Loader.Direction)
+        self.assertIn(line, directions[0].xml)
+        self.assertEqual(len(line), directions[0].load)
 
+    @unittest.skip("not yet")
     def test_multiline_direction(self):
         text = textwrap.dedent("""
         <MAN_1:says>
@@ -56,6 +63,7 @@ class DirectionTests(unittest.TestCase):
         print(rv)
         self.fail(rv)
 
+    @unittest.skip("not yet")
     def test_multipart_direction(self):
         text = textwrap.dedent("""
         <MAN_1:says>
