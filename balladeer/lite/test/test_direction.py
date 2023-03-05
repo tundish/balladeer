@@ -4,6 +4,7 @@ import unittest
 import markdown
 
 from balladeer.lite.loader import Loader
+from balladeer.lite.loader import Parser
 
 
 class DirectionTests(unittest.TestCase):
@@ -12,7 +13,7 @@ class DirectionTests(unittest.TestCase):
 
     def test_no_direction(self):
         text = """How long, I wonder?"""
-        rv = Loader.parse(text)
+        rv = Parser.parse(text)
         self.assertIsInstance(rv, tuple)
         directions, report = rv
         self.assertTrue(directions)
@@ -22,7 +23,7 @@ class DirectionTests(unittest.TestCase):
 
     def test_bad_direction(self):
         text = """MAN_1:says> How long, I wonder?"""
-        rv = Loader.parse(text)
+        rv = Parser.parse(text)
         self.assertIsInstance(rv, tuple)
         self.assertEqual(2, len(rv))
         print(rv)
@@ -30,7 +31,7 @@ class DirectionTests(unittest.TestCase):
 
     def test_unspaced_direction(self):
         text = """<MAN_1:says>How long, I wonder?"""
-        rv = Loader.parse(text)
+        rv = Parser.parse(text)
         self.assertIsInstance(rv, tuple)
         self.assertEqual(2, len(rv))
         print(rv)
@@ -38,7 +39,7 @@ class DirectionTests(unittest.TestCase):
 
     def test_simple_direction(self):
         text = """<MAN_1:says> How long, I wonder?"""
-        rv = Loader.parse(text)
+        rv = Parser.parse(text)
         self.assertIsInstance(rv, tuple)
         self.assertEqual(2, len(rv))
         print(rv)
@@ -49,7 +50,7 @@ class DirectionTests(unittest.TestCase):
         <MAN_1:says>
         How long, I wonder?
         """)
-        rv = Loader.parse(text)
+        rv = Parser.parse(text)
         self.assertIsInstance(rv, tuple)
         self.assertEqual(2, len(rv))
         print(rv)
@@ -61,7 +62,7 @@ class DirectionTests(unittest.TestCase):
 
         How long, I wonder?
         """)
-        rv = Loader.parse(text)
+        rv = Parser.parse(text)
         self.assertIsInstance(rv, tuple)
         self.assertEqual(2, len(rv))
         print(rv)

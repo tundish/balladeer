@@ -82,9 +82,6 @@ class Loader:
         defaults=[None, None, None, None, None]
     )
 
-    class Parser(html.parser.HTMLParser):
-        pass
-
     @staticmethod
     def discover(package, resource=".", suffixes=[".dlg.toml"]):
         for path in importlib.resources.files(package).joinpath(resource).iterdir():
@@ -103,8 +100,18 @@ class Loader:
             error = e
         return Loader.Asset(text, tables, resource, path, error)
 
+
+class Parser:
+
     @staticmethod
-    def check(asset: Asset, shot_key):
+    def grab_text(el: ET.Element):
+        if el.text is not None:
+            yield el.text
+        if el.tail is not None:
+            yield el.tail
+
+    @staticmethod
+    def check(asset: Loader.Asset, shot_key):
         report = dict(shots=len(asset.tables.get(shot_key, [])))
         return asset, report
 
@@ -122,12 +129,13 @@ class Loader:
             paragraph.set("class", "markdown")
             print(f"{paragraph=} {paragraph.tag} {paragraph.text} {paragraph.tail}")
             print(ET.tostring(paragraph).decode("utf8"))
-            print(paragraph[0])
+            print(*list(Parser.grab_text(paragraph)))
             print("$$$$$$$$$$$$$$")
             link = paragraph.find("a")
+            text = " ".join(i.strip() for i in Parser.grab_text(paragraph))
             directions.append(Loader.Direction(
                 ET.tostring(paragraph).decode("utf8"),
-                len(paragraph.text),
+                len(text),
                 link and link.attrib.get("data-mode"),
                 link and link.attrib.get("data-role"),
             ))
