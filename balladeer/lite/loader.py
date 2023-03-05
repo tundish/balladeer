@@ -78,7 +78,7 @@ class Loader:
     Asset = namedtuple("Scene", ["text", "tables", "resource", "path", "error"], defaults=[None, None, None])
     Direction = namedtuple(
         "Direction",
-        ["xml", "role", "mode", "params", "query", "fragment", "entity"],
+        ["xml", "load", "mode", "role", "params", "fragment", "entity"],
         defaults=[None, None, None, None, None]
     )
 
@@ -119,11 +119,14 @@ class Loader:
         directions = []
         for paragraph in root.findall("p"):
             paragraph.set("class", "markdown")
+            print(f"{paragraph=} {paragraph.tag} {paragraph.text}")
+            print(ET.tostring(paragraph).decode("utf8"))
             link = paragraph.find("a")
             directions.append(Loader.Direction(
                 ET.tostring(paragraph).decode("utf8"),
-                link and link.attrib.get("data-role"),
+                len(paragraph.text),
                 link and link.attrib.get("data-mode"),
+                link and link.attrib.get("data-role"),
             ))
 
         report = {}

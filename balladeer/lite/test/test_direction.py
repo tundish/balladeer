@@ -17,6 +17,7 @@ class DirectionTests(unittest.TestCase):
         self.assertTrue(directions)
         self.assertIsInstance(directions[0], Loader.Direction)
         self.assertIn(text, directions[0].xml)
+        self.assertEqual(len(text), directions[0].load)
 
     def test_bad_direction(self):
         text = """MAN_1:says> How long, I wonder?"""
