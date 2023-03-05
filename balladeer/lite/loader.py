@@ -18,6 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+from collections import deque
 from collections import namedtuple
 import html.parser
 import importlib.resources
@@ -42,7 +43,7 @@ class AutoLinker(markdown.extensions.Extension):
 
         def handleMatch(self, m, data):
             el = ET.Element("a")
-            href =  self.unescape(m.group(1))
+            href = self.unescape(m.group(1))
             url, role, mode = AutoLinker.parse_url(href)
             if role and mode:
                 el.set("data-role", role)
@@ -73,15 +74,37 @@ class AutoLinker(markdown.extensions.Extension):
         md.inlinePatterns.register(self.AutolinkInlineProcessor(self.regex, md), "autolink", 120)
 
 
+class DialogueParser(html.parser.HTMLParser):
+
+    Directive = namedtuple(
+        "Directive",
+        ["role", "mode", "params", "fragment", "load", "xhtml", "text"],
+        defaults=[None, None, None, None, 0, "", ""]
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.directives = deque()
+
+    def handle_starttag(self, tag, attrs):
+        if tag == "p":
+            self.directives.append(self.Directive())
+        elif tag == "a":
+            attribs = dict(attrs)
+            role = attribs.get("data-role")
+            mode = attribs.get("data-mode")
+            d = self.directives.pop()
+            self.directives.append(self.Directive(d._replace(role=role, mode=mode)))
+
+    def handle_endtag(self, tag):
+        print("Encountered an end tag :", tag)
+
+    def handle_data(self, data):
+        print("Encountered some data  :", data)
+
 class Loader:
 
     Asset = namedtuple("Scene", ["text", "tables", "resource", "path", "error"], defaults=[None, None, None])
-    Direction = namedtuple(
-        "Direction",
-        ["xml", "load", "mode", "role", "params", "fragment", "entity"],
-        defaults=[None, None, None, None, None]
-    )
-
     @staticmethod
     def discover(package, resource=".", suffixes=[".dlg.toml"]):
         for path in importlib.resources.files(package).joinpath(resource).iterdir():
@@ -121,9 +144,13 @@ class Parser:
         md = markdown.Markdown(safe_mode=True, output_format="xhtml", extensions=[autolinker])
         document = md.convert(text)
 
-        root = ET.fromstring(f"<doc>{document}</doc>")
+        parser = DialogueParser(convert_charrefs=True)
+        #root = ET.fromstring(f"<doc>{document}</doc>")
+        parser.feed(document)
 
         directions = []
+
+        """
         # https://helpful.knobs-dials.com/index.php/Python_notes_-_XML#Fetching_text_from_this_data_model
         for paragraph in root.findall("p"):
             paragraph.set("class", "markdown")
@@ -135,6 +162,6 @@ class Parser:
                 link and link.attrib.get("data-mode"),
                 link and link.attrib.get("data-role"),
             ))
-
+        """
         report = {}
-        return directions, report
+        return parser.directives, report
