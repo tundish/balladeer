@@ -1,3 +1,4 @@
+import textwrap
 import unittest
 
 import markdown
@@ -37,6 +38,29 @@ class DirectionTests(unittest.TestCase):
 
     def test_simple_direction(self):
         text = """<MAN_1:says> How long, I wonder?"""
+        rv = Loader.parse(text)
+        self.assertIsInstance(rv, tuple)
+        self.assertEqual(2, len(rv))
+        print(rv)
+        self.fail(rv)
+
+    def test_multiline_direction(self):
+        text = textwrap.dedent("""
+        <MAN_1:says>
+        How long, I wonder?
+        """)
+        rv = Loader.parse(text)
+        self.assertIsInstance(rv, tuple)
+        self.assertEqual(2, len(rv))
+        print(rv)
+        self.fail(rv)
+
+    def test_multipart_direction(self):
+        text = textwrap.dedent("""
+        <MAN_1:says>
+
+        How long, I wonder?
+        """)
         rv = Loader.parse(text)
         self.assertIsInstance(rv, tuple)
         self.assertEqual(2, len(rv))

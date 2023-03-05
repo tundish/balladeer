@@ -117,10 +117,13 @@ class Loader:
         root = ET.fromstring(f"<doc>{document}</doc>")
 
         directions = []
+        # https://helpful.knobs-dials.com/index.php/Python_notes_-_XML#Fetching_text_from_this_data_model
         for paragraph in root.findall("p"):
             paragraph.set("class", "markdown")
-            print(f"{paragraph=} {paragraph.tag} {paragraph.text}")
+            print(f"{paragraph=} {paragraph.tag} {paragraph.text} {paragraph.tail}")
             print(ET.tostring(paragraph).decode("utf8"))
+            print(paragraph[0])
+            print("$$$$$$$$$$$$$$")
             link = paragraph.find("a")
             directions.append(Loader.Direction(
                 ET.tostring(paragraph).decode("utf8"),
