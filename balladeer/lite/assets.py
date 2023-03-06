@@ -2,7 +2,7 @@
 #   encoding: utf-8
 
 # This is part of the Balladeer library.
-# Copyright (C) 2022 D E Haynes
+# Copyright (C) 2023 D E Haynes
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as
@@ -30,6 +30,7 @@ import uuid
 import markdown
 
 from balladeer.lite.loader import Loader
+from balladeer.lite.parser import Parser
 from balladeer.lite.types import group_by_type
 from balladeer.lite.types import Thing
 
@@ -72,6 +73,6 @@ if __name__ == "__main__":
             typ = Prompter.object_type_name(i)
             print(typ)
 
-        asset, result = Loader.check(a, shot_key="_")
+        asset, result = Parser.check(a, shot_key="_")
         pprint.pprint(a.tables)
         casting = Prompter.select(asset, ensemble)

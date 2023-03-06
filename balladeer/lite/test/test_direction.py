@@ -4,8 +4,8 @@ import unittest
 import markdown
 
 from balladeer.lite.loader import Loader
-from balladeer.lite.loader import DialogueParser
-from balladeer.lite.loader import Parser
+from balladeer.lite.parser import DialogueParser
+from balladeer.lite.parser import Parser
 
 
 class DirectiveTests(unittest.TestCase):
