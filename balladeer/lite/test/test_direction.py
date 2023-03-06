@@ -70,7 +70,7 @@ class DirectiveTests(unittest.TestCase):
         self.assertEqual(0, directives[0].enter, directives)
         self.assertEqual(len(directives[0].xhtml), directives[0].exit, directives)
 
-    def test_multipart_directive(self):
+    def test_multipart_directives(self):
         line = "How long, I wonder?"
         text = textwrap.dedent(f"""
         <MAN_1:says>
@@ -83,4 +83,4 @@ class DirectiveTests(unittest.TestCase):
         self.assertIsInstance(directives[0], DialogueParser.Directive)
         self.assertIn(line, directives[0].xhtml)
         self.assertEqual(0, directives[0].enter, directives)
-        self.assertEqual(len(directives[0].xhtml), directives[1].exit, directives)
+        self.assertEqual(len(directives[1].xhtml), directives[1].exit, directives)
