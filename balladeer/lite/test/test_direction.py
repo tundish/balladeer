@@ -13,14 +13,15 @@ class DirectiveTests(unittest.TestCase):
     # https://spec.commonmark.org/dingus/
 
     def test_no_directive(self):
-        text = """How long, I wonder?"""
+        text = "How long, I wonder?"
         rv = Parser.parse(text)
         self.assertIsInstance(rv, tuple)
         directives, report = rv
         self.assertTrue(directives)
         self.assertIsInstance(directives[0], DialogueParser.Directive)
-        self.assertIn(text, directives[0].text, directives)
-        self.assertEqual(len(text), directives[0].load)
+        self.assertIn(text, directives[0].text)
+        self.assertEqual(0, directives[0].enter, directives)
+        self.assertEqual(len(directives[0].xhtml), directives[0].exit, directives)
 
     def test_bad_directive(self):
         line = "How long, I wonder?"
@@ -30,7 +31,8 @@ class DirectiveTests(unittest.TestCase):
         self.assertTrue(directives)
         self.assertIsInstance(directives[0], DialogueParser.Directive)
         self.assertIn(line, directives[0].xhtml)
-        self.assertEqual(len(text), directives[0].load)
+        self.assertEqual(0, directives[0].enter, directives)
+        self.assertEqual(len(directives[0].xhtml), directives[0].exit, directives)
 
     def test_unspaced_directive(self):
         line = "How long, I wonder?"
@@ -39,8 +41,9 @@ class DirectiveTests(unittest.TestCase):
         directives, report = rv
         self.assertTrue(directives)
         self.assertIsInstance(directives[0], DialogueParser.Directive)
-        self.assertIn(line, directives[0].text)
-        self.assertEqual(len(line), directives[0].load)
+        self.assertIn(line, directives[0].text, directives)
+        self.assertEqual(0, directives[0].enter, directives)
+        self.assertEqual(len(directives[0].xhtml), directives[0].exit, directives)
 
     def test_simple_directive(self):
         line = "How long, I wonder?"
@@ -50,7 +53,8 @@ class DirectiveTests(unittest.TestCase):
         self.assertTrue(directives)
         self.assertIsInstance(directives[0], DialogueParser.Directive)
         self.assertIn(line, directives[0].xhtml)
-        self.assertEqual(len(line), directives[0].load)
+        self.assertEqual(0, directives[0].enter, directives)
+        self.assertEqual(len(directives[0].xhtml), directives[0].exit, directives)
 
     @unittest.skip("not yet")
     def test_multiline_directive(self):
@@ -61,7 +65,6 @@ class DirectiveTests(unittest.TestCase):
         rv = Parser.parse(text)
         self.assertIsInstance(rv, tuple)
         self.assertEqual(2, len(rv))
-        print(rv)
         self.fail(rv)
 
     @unittest.skip("not yet")
@@ -74,5 +77,4 @@ class DirectiveTests(unittest.TestCase):
         rv = Parser.parse(text)
         self.assertIsInstance(rv, tuple)
         self.assertEqual(2, len(rv))
-        print(rv)
         self.fail(rv)

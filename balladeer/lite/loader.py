@@ -44,30 +44,19 @@ class AutoLinker(markdown.extensions.Extension):
         def handleMatch(self, m, data):
             el = ET.Element("a")
             href = self.unescape(m.group(1))
-            url, role, mode = AutoLinker.parse_url(href)
-            if role and mode:
-                el.set("data-role", role)
-                el.set("data-mode", mode)
+            components = urllib.parse.urlparse(href)
+            role, mode = components.path.split(":")
+            el.set("data-role", role)
+            el.set("data-mode", mode)
 
-            el.set("href", url)
+            el.set("href", href)
             el.set("class", "autolink")
             el.text = markdown.util.AtomicString(m.group(1))
             return el, m.start(0), m.end(0)
 
-    @staticmethod
-    def parse_url(url):
-        if "//" in url:
-            components = urllib.parse.urlparse(url)
-            role, mode = (None, None)
-        else:
-            components = urllib.parse.urlparse(url)
-            role, mode = components.path.split(":")
-            url = "dialogue://" + url.replace(":", "/")
-        return url, role, mode
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.regex = r"<([^ :]+:[^ >]+)>"
+        self.regex = r"<([^ :]+:[^ >]+)>$"
 
     def extendMarkdown(self, md):
         md.registerExtension(self)
@@ -78,8 +67,8 @@ class DialogueParser(html.parser.HTMLParser):
 
     Directive = namedtuple(
         "Directive",
-        ["role", "mode", "params", "fragment", "load", "xhtml", "index", "until", "text"],
-        defaults=[None, None, None, None, None, "", 0, None, ""]
+        ["role", "mode", "params", "fragment", "xhtml", "enter", "exit", "text"],
+        defaults=[None, None, None, None, "", 0, None, ""]
     )
 
     def __init__(self, *args, **kwargs):
@@ -88,11 +77,11 @@ class DialogueParser(html.parser.HTMLParser):
         self.line_ends = []
 
     def handle_starttag(self, tag, attrs):
-        self.line_ends = self.line_ends or [len(line) for line in self.rawdata.splitlines(keepends=True)]
+        self.line_ends = self.line_ends or [0] + [len(line) for line in self.rawdata.splitlines(keepends=True)]
         if tag == "p":
             line, char = self.getpos()
             pos = sum(self.line_ends[:line]) + char
-            self.directives.append(self.Directive(index=pos, xhtml=self.rawdata))
+            self.directives.append(self.Directive(enter=pos, xhtml=self.rawdata))
         elif tag == "a":
             attribs = dict(attrs)
             role = attribs.get("data-role")
@@ -103,11 +92,11 @@ class DialogueParser(html.parser.HTMLParser):
     def handle_endtag(self, tag):
         if tag == "p":
             line, char = self.getpos()
-            pos = sum(self.line_ends[:line]) + char
+            pos = sum(self.line_ends[:line]) + char + len("</p>")
 
             if self.directives:
                 d = self.directives.pop()
-                self.directives.append(d._replace(until=pos))
+                self.directives.append(d._replace(exit=pos))
 
     def handle_data(self, data):
         if self.directives and not self.directives[-1].text:
@@ -159,7 +148,6 @@ class Parser:
         parser = DialogueParser(convert_charrefs=True)
         #root = ET.fromstring(f"<doc>{document}</doc>")
         parser.feed(document)
-        print(vars(parser))
 
         directions = []
 
