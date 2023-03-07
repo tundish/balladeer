@@ -84,3 +84,30 @@ class DirectiveTests(unittest.TestCase):
         self.assertIn(line, directives[0].xhtml)
         self.assertEqual(0, directives[0].enter, directives)
         self.assertEqual(len(directives[1].xhtml), directives[1].exit, directives)
+
+    def test_multiline_substitution(self):
+        line = "How long, I wonder, { MAN_2['name'] }?"
+        text = textwrap.dedent(f"""
+        <MAN_1:says>
+        {line}
+        """)
+        rv = Parser.parse(text)
+        directives, report = rv
+        self.assertEqual(1, len(directives))
+        self.assertIsInstance(directives[0], DialogueParser.Directive)
+        self.assertIn(line, directives[0].xhtml)
+        self.assertIn(line, directives[0].text)
+
+    def test_multipart_substitution(self):
+        text = textwrap.dedent("""
+        <MAN_1:says>
+
+        How long, I wonder, {MAN_2["name"]}?
+        """)
+        rv = Parser.parse(text)
+        directives, report = rv
+        self.assertEqual(2, len(directives))
+        self.assertIn('{MAN_2["name"]}', directives[0].xhtml)
+        self.assertIn('{MAN_2["name"]}', directives[1].xhtml)
+        self.assertNotIn('{MAN_2["name"]}', directives[0].text)
+        self.assertIn('{MAN_2["name"]}', directives[1].text)
