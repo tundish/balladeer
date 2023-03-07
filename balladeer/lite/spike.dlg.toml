@@ -1,9 +1,11 @@
 [FIGHTER_1]
 type = "Thing"
 roles = "WEAPON"
+states = [1]
 
 [FIGHTER_2]
 types = ["Thing"]
+states = [1]
 
 [DRAMA]
 
