@@ -29,10 +29,18 @@ import uuid
 
 import markdown
 
+from balladeer.lite.director import Director
 from balladeer.lite.loader import Loader
 from balladeer.lite.parser import Parser
 from balladeer.lite.types import group_by_type
 from balladeer.lite.types import Thing
+
+
+class Presenter:
+    """
+    Wrap xhtml with animation div.
+    """
+    pass
 
 
 class Prompter:
@@ -68,11 +76,11 @@ ensemble = [
 ]
 
 if __name__ == "__main__":
-    for a in assets:
-        for i in ensemble:
-            typ = Prompter.object_type_name(i)
-            print(typ)
+    for i in ensemble:
+        typ = Prompter.object_type_name(i)
+        # print(typ)
 
+    for a in assets:
         asset, result = Parser.check(a, shot_key="_")
         pprint.pprint(a.tables)
         casting = Prompter.select(asset, ensemble)

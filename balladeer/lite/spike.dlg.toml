@@ -18,11 +18,13 @@ if = {}
 -="""
 <FIGHTER_1:say>
 
-{ DRAMA.state.name }
+I hate you, { FIGHTER_2["name"] }!
 
 """
 
-do = {}
+do = {
+"FIGHTER_1": [0],
+}
 
 
 # Also TODO

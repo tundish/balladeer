@@ -44,7 +44,7 @@ class Director:
         """
 
     @staticmethod
-    def prompt():
+    def prompt(directives):
         """
         Evaluate 'if' clauses.
         Apply formatting to dialogue.
