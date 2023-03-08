@@ -60,7 +60,7 @@ class AutoLinker(markdown.extensions.Extension):
 
     def extendMarkdown(self, md):
         md.registerExtension(self)
-        md.inlinePatterns.register(self.AutolinkInlineProcessor(self.regex, md), "autolink", 120)
+        md.inlinePatterns.register(self.AutolinkInlineProcessor(self.regex, md), "autolink", 75)
 
 
 class DialogueParser(html.parser.HTMLParser):

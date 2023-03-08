@@ -119,6 +119,7 @@ class DirectiveTests(unittest.TestCase):
 class DirectiveParameterTests(unittest.TestCase):
 
     def test_numerical_parameters(self):
+        import trace
         autolinker = AutoLinker()
         md = markdown.Markdown(safe_mode=True, output_format="xhtml", extensions=[autolinker])
         processor = md.inlinePatterns["autolink"]
@@ -130,8 +131,10 @@ class DirectiveParameterTests(unittest.TestCase):
         text = f"<MAN1:says> {line}"
         match = processor.compiled_re.match(text[:-len(line)].strip())
         self.assertTrue(match)
-        doc = md.convert(text)
-        print(doc)
+        tracer = trace.Trace(countfuncs=1, countcallers=1, ignoremods=["re"])
+        tracer.runfunc(md.convert, text)
+        r = tracer.results()
+        r.write_results(coverdir=".")
 
         rv = Parser.parse(text)
         directives, report = rv
