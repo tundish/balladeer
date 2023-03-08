@@ -42,7 +42,10 @@ class AutoLinker(markdown.extensions.Extension):
             el = ET.Element("a")
             href = self.unescape(m.group(1))
             components = urllib.parse.urlparse(href)
-            role, mode = components.path.split(":")
+            try:
+                role, mode = components.path.split(":")
+            except ValueError:
+                role, mode = "", ""
             el.set("data-role", role)
             el.set("data-mode", mode)
 
@@ -53,7 +56,7 @@ class AutoLinker(markdown.extensions.Extension):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.regex = r"<([^ :]+:[^ >]+)>$"
+        self.regex = "^<([^ :]+:[^ >]+)>$"
 
     def extendMarkdown(self, md):
         md.registerExtension(self)

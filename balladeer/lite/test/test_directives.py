@@ -1,9 +1,12 @@
+import re
 import textwrap
 import unittest
 
 import markdown
+import markdown.util
 
 from balladeer.lite.loader import Loader
+from balladeer.lite.parser import AutoLinker
 from balladeer.lite.parser import DialogueParser
 from balladeer.lite.parser import Parser
 
@@ -113,14 +116,29 @@ class DirectiveTests(unittest.TestCase):
         self.assertIn('{MAN_2["name"]}', directives[1].text)
 
 
-class DrectiveParameterTests(unittest.TestCase):
+class DirectiveParameterTests(unittest.TestCase):
 
     def test_numerical_parameters(self):
+        autolinker = AutoLinker()
+        md = markdown.Markdown(safe_mode=True, output_format="xhtml", extensions=[autolinker])
+        processor = md.inlinePatterns["autolink"]
+        print(processor.compiled_re)
+
         line = "How long, I wonder?"
-        text = f"<MAN1:says?pause=1&dwell=0.2> {line}"
+        line = " "
+        text = f"<MAN1:says?pause=1&dwell=0.2>{line}"
+        text = f"<MAN1:says> {line}"
+        match = processor.compiled_re.match(text[:-len(line)].strip())
+        self.assertTrue(match)
+        doc = md.convert(text)
+        print(doc)
+
         rv = Parser.parse(text)
         directives, report = rv
-        self.fail(directives)
+        self.assertEqual(1, len(directives))
+        self.assertEqual("MAN1", directives[0].role)
+        self.assertEqual("says", directives[0].mode)
+        self.assertIsInstance(dict, directives[0].params)
 
     def test_underscore_with_numerical_parameters(self):
         line = "How long, I wonder?"
