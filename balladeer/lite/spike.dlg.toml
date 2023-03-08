@@ -16,7 +16,7 @@ label = "opening"
 if = {}
 
 -="""
-<FIGHTER_1:say>
+<FIGHTER_1:says>
 
 I hate you, { FIGHTER_2["name"] }!
 
@@ -26,6 +26,16 @@ do = {
 "FIGHTER_1": [0],
 }
 
+
+[[_]]
+if = {}
+-="""
+<FIGHTER_1:says?pause=1&dwell=0.3>
+
+I hate you, { FIGHTER_2["name"] }!
+
+"""
+do = {"FIGHTER_1": [0]}
 
 # Also TODO
 # text pipelines

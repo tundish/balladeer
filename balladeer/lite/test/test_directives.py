@@ -111,3 +111,20 @@ class DirectiveTests(unittest.TestCase):
         self.assertIn('{MAN_2["name"]}', directives[1].xhtml)
         self.assertNotIn('{MAN_2["name"]}', directives[0].text)
         self.assertIn('{MAN_2["name"]}', directives[1].text)
+
+
+class DrectiveParameterTests(unittest.TestCase):
+
+    def test_numerical_parameters(self):
+        line = "How long, I wonder?"
+        text = f"<MAN1:says?pause=1&dwell=0.2> {line}"
+        rv = Parser.parse(text)
+        directives, report = rv
+        self.fail(directives)
+
+    def test_underscore_with_numerical_parameters(self):
+        line = "How long, I wonder?"
+        text = f"<MAN_1:says?pause=1&dwell=0.2> {line}"
+        rv = Parser.parse(text)
+        directives, report = rv
+        self.fail(directives)
