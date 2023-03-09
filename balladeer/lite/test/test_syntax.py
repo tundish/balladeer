@@ -4,6 +4,9 @@
 # Speechmark
 
 from collections import namedtuple
+import sys
+import textwrap
+import warnings
 
 # block = cue + dialogue
 # cue = persona / directive/ @ entity, mode ? parameters # fragment
@@ -62,4 +65,20 @@ Hand = namedtuple(
     ("decline", "suggest", "promise", "disavow", "deliver"),
     defaults=(tuple(), tuple(), tuple(), tuple(), tuple())
 )
+
+class SpeechMark:
+
+    @staticmethod
+    def blocks(text: str):
+        trim = textwrap.dedent(text)
+        if trim != text:
+            warnings.warn(f"Reindentation lost {len(text) - len(trim)} chars")
+
+        lines = text.splitlines(keepends=False)
+        return lines
+
+if __name__ == "__main__":
+    text = sys.stdin.read()
+    blocks = SpeechMark.blocks(text)
+    print(text, file=sys.stdout)
 
