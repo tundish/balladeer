@@ -75,12 +75,21 @@ class SpeechMark:
             warnings.warn(f"Reindentation lost {len(text) - len(trim)} chars")
 
         lines = text.splitlines(keepends=False)
-        spans = [0] + [len(i) for i in lines]
-        return [(n, sum(spans[:n + 1])) for n, l in enumerate(lines) if not n or l.startswith("<")]
+        enter, exit = 0, 0 # character positions
+        start, end = 0, 0  # line numbers
+        for n, l in enumerate(lines):
+            if not n or l.startswith("<"):
+                yield trim, enter, exit, lines, start, end
+                start = n
+                enter = exit
+            else:
+                end = n
+                exit += len(l)
+
 
 if __name__ == "__main__":
     text = sys.stdin.read()
     print(text, file=sys.stdout)
-    blocks = SpeechMark.blocks(text)
+    blocks = list(SpeechMark.blocks(text))
     print(*blocks, file=sys.stdout, sep="\n")
 
