@@ -1,6 +1,14 @@
 #!/usr/bin/env python
 #   encoding: utf8
 
+# Speechmark
+
+from collections import namedtuple
+
+# block = cue + dialogue
+# cue = persona / directive/ @ entity, mode ? parameters # fragment
+
+
 """
 STAFF
 
@@ -14,7 +22,9 @@ PHONE
 "<GUEST>" == "<GUEST:says>"
 
 
-Animation of entity
+# directive: Animation or transition of entity
+# mode: mode of speech act
+
 """
 <GUEST/entering:decides?pause=1&dwell=0.2#a>
 
@@ -38,5 +48,18 @@ Your phone's ringing.
 
 <PHONE/throbbing:alerts@GUEST,STAFF> RIIING RIIING!
 
-""
+"""
+
+Head = namedtuple(
+    "Head",
+    ("propose", "confirm", "counter", "abandon", "condemn", "declare"),
+    defaults=(tuple(), tuple(), tuple(), tuple(), tuple(), tuple())
+)
+
+
+Hand = namedtuple(
+    "Hand",
+    ("decline", "suggest", "promise", "disavow", "deliver"),
+    defaults=(tuple(), tuple(), tuple(), tuple(), tuple())
+)
 
