@@ -56,10 +56,12 @@ class AutoLinker(markdown.extensions.Extension):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.regex = "^<([^ :]+:[^ >]+)>$"
+        self.regex = "<([^ :]+:[^ >]+)>"
 
     def extendMarkdown(self, md):
         md.registerExtension(self)
+        #md.inlinePatterns.deregister("html")
+        #md.preprocessors.deregister("html_block")
         md.inlinePatterns.register(self.AutolinkInlineProcessor(self.regex, md), "autolink", 75)
 
 

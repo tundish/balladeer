@@ -126,7 +126,7 @@ class DirectiveParameterTests(unittest.TestCase):
         print(processor.compiled_re)
 
         line = "How long, I wonder?"
-        line = " "
+        line = "a"
         text = f"<MAN1:says?pause=1&dwell=0.2>{line}"
         text = f"<MAN1:says> {line}"
         match = processor.compiled_re.match(text[:-len(line)].strip())
