@@ -126,22 +126,20 @@ class DirectiveParameterTests(unittest.TestCase):
         print(processor.compiled_re)
 
         line = "How long, I wonder?"
-        line = "a"
         text = f"<MAN1:says?pause=1&dwell=0.2>{line}"
-        text = f"<MAN1:says> {line}"
         match = processor.compiled_re.match(text[:-len(line)].strip())
         self.assertTrue(match)
         tracer = trace.Trace(countfuncs=1, countcallers=1, ignoremods=["re"])
         tracer.runfunc(md.convert, text)
         r = tracer.results()
-        r.write_results(coverdir=".")
+        # r.write_results(coverdir=".")
 
         rv = Parser.parse(text)
         directives, report = rv
         self.assertEqual(1, len(directives))
-        self.assertEqual("MAN1", directives[0].role)
+        self.assertEqual("MAN1", directives[0].role, directives)
         self.assertEqual("says", directives[0].mode)
-        self.assertIsInstance(dict, directives[0].params)
+        self.assertIsInstance(directives[0].params, dict)
 
     def test_underscore_with_numerical_parameters(self):
         line = "How long, I wonder?"

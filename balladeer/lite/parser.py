@@ -20,6 +20,7 @@
 
 from collections import deque
 from collections import namedtuple
+import html
 import html.parser
 import re
 import urllib.parse
@@ -41,9 +42,11 @@ class AutoLinker(markdown.extensions.Extension):
         def handleMatch(self, m, data):
             el = ET.Element("a")
             href = self.unescape(m.group(1))
+            if not href.startswith("//"):
+                href = f"//{href}"
             components = urllib.parse.urlparse(href)
             try:
-                role, mode = components.path.split(":")
+                role, mode = components.netloc.split(":")
             except ValueError:
                 role, mode = "", ""
             el.set("data-role", role)
@@ -60,8 +63,8 @@ class AutoLinker(markdown.extensions.Extension):
 
     def extendMarkdown(self, md):
         md.registerExtension(self)
-        #md.inlinePatterns.deregister("html")
-        #md.preprocessors.deregister("html_block")
+        md.inlinePatterns.deregister("html")
+        md.preprocessors.deregister("html_block")
         md.inlinePatterns.register(self.AutolinkInlineProcessor(self.regex, md), "autolink", 75)
 
 
@@ -111,7 +114,9 @@ class Parser:
     @staticmethod
     def parse(text: str, ensemble=None):
         autolinker = AutoLinker()
+        # TODO instance attribute
         md = markdown.Markdown(safe_mode=True, output_format="xhtml", extensions=[autolinker])
+        md.reset()
         document = md.convert(text)
 
         parser = DialogueParser(convert_charrefs=True)
