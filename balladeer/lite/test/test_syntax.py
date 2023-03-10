@@ -53,6 +53,43 @@ Your phone's ringing.
 
 """
 
+# Rendering as blockquote
+"""
+<blockquote>
+<header>Mandelbrot </header>
+<p><span class="text">You may choose </span>
+<a href="02.html">one</a>
+<span class="text">, </span>
+<a href="03.html">two</a>
+<span class="text"> or </span>
+<a href="04.html">three</a>
+<span class="text"> coins.</span></p>
+</blockquote>
+</li>
+"""
+
+# Ex 2
+"""
+<blockquote>
+<header>Mandelbrot </header>
+<p><span class="text">Look, if you can't make a proper analysis of the situation, why don't you&NewLine;pick at </span>
+<a href="https://www.random.org/integers/?num=1&min=1&max=3&col=1&base=10&format=html">random</a>
+<span class="text">&quest;</span></p>
+</blockquote>
+"""
+
+# Plugins must allow for transformation of links, eg:
+"""
+<nav>
+<ul>
+<li style="animation-delay: 22.80s; animation-duration: 3.70s">
+<form role="form" action="False" method="GET" name="contents">
+
+</form></li>
+</ul>
+</nav>
+"""
+
 Head = namedtuple(
     "Head",
     ("propose", "confirm", "counter", "abandon", "condemn", "declare"),
