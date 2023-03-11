@@ -142,16 +142,13 @@ class Syntax(unittest.TestCase):
     SpeechMark input must be line-based text, and should have UTF-8 encoding.
     The corresponding output must be well-formed HTML5.
 
+    Inline markup consists of emphasis, links, and cues.
+
     Inline markup must consist of pairs of matching delimiters. There must be no line break within them;
     all inline markup must terminate on the same line it begins.
 
     Output must be generated in blocks. Each block may begin with a cue element. A block may contain one
     or more paragraphs. A block may contain a list. Every list item must contain a paragraph.
-
-    * Inline emphasis
-    * Links
-    * Lists
-    * Cues
 
     """
     examples = []
