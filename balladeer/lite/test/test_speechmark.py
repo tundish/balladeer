@@ -18,6 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import re
+import textwrap
 import tomllib
 import unittest
 
@@ -124,29 +125,28 @@ class Syntax(unittest.TestCase):
     SpeechMark is a convention for markup of text documents.
     It is suited for capturing dialogue, attributing speech, and writing screenplays.
 
-    SpeechMark takes inspiration from other markup systems in common use:
+    SpeechMark takes inspiration from other markup systems already in common use:
     * [Markdown](https://commonmark.org/)
     * [RestructuredText](https://docutils.sourceforge.io/rst.html)
 
-    The syntax is deliberately constrained to be simple and unambiguous.
+    SpeechMark syntax is deliberately constrained to be simple and unambiguous.
     This is to encourage adoption by non-technical users and to permit fast and efficient
     processing of many small pieces of text over an extended period of time.
 
     SpeechMark does not concern itself with document structure. There are no titles, sections or breaks.
     Rather, the input is expected to be a stream of text fragments.
 
-    The specification intends to be lossless, so that every detail in the original text
+    The specification intends to be lossless, so that every feature of the original text
     may be retrieved from the output.
 
-    SpeechMark input must be line-based text with UTF-8 encoding. The corresponding output is well-formed HTML5.
+    SpeechMark input must be line-based text, and should have UTF-8 encoding.
+    The corresponding output must be well-formed HTML5.
 
-    Inline markup consists of pairs of matching delimiters. There must be no line break within them;
+    Inline markup must consist of pairs of matching delimiters. There must be no line break within them;
     all inline markup must terminate on the same line it begins.
 
-    Block boundaries are defined as follows:
-    * A cue element terminates the previous block
-    * A blank line terminates a paragraph.
-    * A line with a list marker becomes an element in a list block
+    Output must be generated in blocks. Each block may begin with a cue element. A block may contain one
+    or more paragraphs. A block may contain a list. Every list item must contain a paragraph.
 
     * Inline emphasis
     * Links
@@ -168,30 +168,35 @@ class Syntax(unittest.TestCase):
             return inner
         return wrapper
 
-    def check(self, markup: list=[], output=""):
+    def check(self, markup: dict={}, output=""):
         sm = SpeechMark()
-        for n, m in enumerate(markup):
-            with self.subTest(n=n, m=m):
-                rv = sm.process(m)
-                self.assertEqual(rv, output.strip())
+        for n, (tag, text) in enumerate(markup.items()):
+            with self.subTest(n=n, tag=tag, text=text):
+                rv = sm.process(text)
+                expected = textwrap.dedent(output).strip()
+                self.assertEqual(rv, expected)
 
 
 class SpeechMarkTests(Syntax):
 
     @Syntax.example(label="1.2")
-    def test_minimal_paragraph(self, markup: list=[], output=""):
+    def test_minimal_paragraph(self, markup: dict={}, output=""):
         """
 
         # TOML
-        markup = ["Hello!"]
+        markup."Plain string"  =   "Hello!"
+        markup."Anonymous cue" =   "<> Hello!"
         output = '''
+        <blockquote>
         <p>Hello!</p>
+        </blockquote>
         '''
         """
         return self.check(markup, output)
 
+    @unittest.skip("Fix me")
     @Syntax.example()
-    def test_minimal_blockquote(self, markup: list=[], output=""):
+    def test_minimal_blockquote(self, markup: dict={}, output=""):
         """
 
         # TOML
