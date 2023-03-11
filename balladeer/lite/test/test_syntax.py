@@ -2,6 +2,7 @@
 #   encoding: utf8
 
 import inspect
+import tomllib
 import unittest
 
 # Speechmark
@@ -98,6 +99,7 @@ Your phone's ringing.
 # <em>:  one or more *
 # <strong>: _
 # <code>:  `
+# <a>: [label](url)
 
 Head = namedtuple(
     "Head",
@@ -134,8 +136,15 @@ class SpeechMark:
 
     def process(sel, text: str) -> str:
         return text
+
 class SpeechMarkTests(unittest.TestCase):
 
+    def example(fn):
+        doc = fn.__doc__ or ""
+        print(tomllib.loads(doc))
+        return fn
+
+    @example
     def test_minimal_paragraph(self):
         pass
 
@@ -145,7 +154,8 @@ class SpeechMarkTests(unittest.TestCase):
         self.assertEqual(
             html5,
             """
-            <blockquote cite="" >
+            <blockquote cite="GUEST" >
+            <p>Hello!</p>
             </blockquote>
             """
         )
