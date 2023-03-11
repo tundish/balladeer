@@ -40,6 +40,9 @@ class SpeechMark:
                 end = n
                 exit += len(l)
 
+    def __init__(self):
+        self.cue_matcher = re.compile("")
+
     @property
     def result(self):
         pass
