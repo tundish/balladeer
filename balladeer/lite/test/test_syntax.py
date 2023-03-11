@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   encoding: utf8
 
-import inspect
+import functools
 import tomllib
 import unittest
 
@@ -137,7 +137,7 @@ class SpeechMark:
     def process(sel, text: str) -> str:
         return text
 
-class SpeechMarkTests(unittest.TestCase):
+class Syntax:
 
     def example(fn):
         doc = fn.__doc__ or ""
@@ -145,19 +145,24 @@ class SpeechMarkTests(unittest.TestCase):
         print(tomllib.loads(toml))
         return fn
 
-    @example
-    def test_minimal_paragraph(self, markup="", output=""):
+
+class SpeechMarkTests(unittest.TestCase):
+
+    @Syntax.example
+    def test_minimal_paragraph(self, markup: list=[], output=""):
         """
 
         # TOML
-        markup = "Hello!"
+        markup = ["Hello!"]
         output = '''
         <p>Hello!</p>
         '''
         """
         sm = SpeechMark()
-        rv = sm.process(markup)
-        self.assertEqual(rv, output)
+        for n, m in enumerate(markup):
+            with self.subTest(n=n, m=m):
+                rv = sm.process(m)
+                self.assertEqual(rv, output)
 
     def test_minimal_blockquote(self):
         markup = "<GUEST> Hello!"
