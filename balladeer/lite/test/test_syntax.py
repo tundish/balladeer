@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 #   encoding: utf8
 
-# Speechmark
+import inspect
+import unittest
 
+# Speechmark
 from collections import namedtuple
 import sys
 import textwrap
@@ -90,6 +92,13 @@ Your phone's ringing.
 </nav>
 """
 
+
+# Ordered list marker: '[0-9a-zA-Z].' (remember fragment reference)
+# Unordered list marker: '+'
+# <em>:  one or more *
+# <strong>: _
+# <code>:  `
+
 Head = namedtuple(
     "Head",
     ("propose", "confirm", "counter", "abandon", "condemn", "declare"),
@@ -122,6 +131,24 @@ class SpeechMark:
             else:
                 end = n
                 exit += len(l)
+
+    def process(sel, text: str) -> str:
+        return text
+class SpeechMarkTests(unittest.TestCase):
+
+    def test_minimal_paragraph(self):
+        pass
+
+    def test_minimal_blockquote(self):
+        markup = "<GUEST> Hello!"
+        html5 = SpeechMark().process(markup)
+        self.assertEqual(
+            html5,
+            """
+            <blockquote cite="" >
+            </blockquote>
+            """
+        )
 
 
 if __name__ == "__main__":
