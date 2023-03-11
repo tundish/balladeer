@@ -169,14 +169,14 @@ class Syntax(unittest.TestCase):
         sm = SpeechMark()
         for n, (tag, text) in enumerate(markup.items()):
             with self.subTest(n=n, tag=tag, text=text):
-                rv = sm.process(text)
+                rv = sm.loads(text)
                 expected = textwrap.dedent(output).strip()
                 self.assertEqual(rv, expected)
 
 
 class ParagraphTests(Syntax):
 
-    @Syntax.example(label="1.2")
+    @Syntax.example(label="1.1")
     def test_minimal_paragraph(self, markup: dict={}, output=""):
         """
         Simple strings are encapsulated in paragraphs.
@@ -222,6 +222,40 @@ class ParagraphTests(Syntax):
         <blockquote>
         <p>Hello!</p>
         <p>Hello!</p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+
+class SignificanceTests(Syntax):
+
+    @Syntax.example(label="2.1")
+    def test_minimal_significance(self, markup: dict={}, output=""):
+        """
+        Simple strings are encapsulated in paragraphs.
+
+        # TOML
+        markup."Entire signifier"  =   "_Hello!_"
+        output = '''
+        <blockquote>
+        <p><strong>Hello!</strong></p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    @Syntax.example(label="2.2")
+    def test_multiple_significance(self, markup: dict={}, output=""):
+        """
+        Simple strings are encapsulated in paragraphs.
+
+        # TOML
+        markup."Multiple signifiers" =   "_Hello_ _Hello_!"
+        markup."Abutting signifiers" =   "_Hello__Hello_!"
+        output = '''
+        <blockquote>
+        <p><strong>Hello!</strong><strong>Hello!</strong</p>
         </blockquote>
         '''
         """

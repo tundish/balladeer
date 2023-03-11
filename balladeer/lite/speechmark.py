@@ -48,7 +48,7 @@ class SpeechMark:
         pass
 
     def loads(self, text: str):
-        return
+        return text
 
     def feed(self, text: str):
         for line in text.splitlines():
