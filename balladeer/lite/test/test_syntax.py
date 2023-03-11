@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 #   encoding: utf8
 
-import functools
+import re
 import tomllib
 import unittest
 
@@ -137,18 +137,34 @@ class SpeechMark:
     def process(sel, text: str) -> str:
         return text
 
-class Syntax:
 
-    def example(fn):
-        doc = fn.__doc__ or ""
-        text, sep, toml = doc.partition("# TOML")
-        print(tomllib.loads(toml))
-        return fn
+class Syntax(unittest.TestCase):
+
+    examples = []
+
+    def example(label=None):
+        def wrapper(fn):
+            def inner(self, *args, **kwargs):
+                return fn(self, **data)
+            doc = fn.__doc__ or ""
+            text, toml = re.split(r"#\W*TOML\n", doc, maxsplit=1)
+            data = tomllib.loads(toml)
+            Syntax.examples.append((label, text, data))
+            fn.__doc__ = text
+            return inner
+        return wrapper
+
+    def check(self, markup: list=[], output=""):
+        sm = SpeechMark()
+        for n, m in enumerate(markup):
+            with self.subTest(n=n, m=m):
+                rv = sm.process(m)
+                self.assertEqual(rv, output.strip())
 
 
-class SpeechMarkTests(unittest.TestCase):
+class SpeechMarkTests(Syntax):
 
-    @Syntax.example
+    @Syntax.example(label="1.2")
     def test_minimal_paragraph(self, markup: list=[], output=""):
         """
 
@@ -158,29 +174,22 @@ class SpeechMarkTests(unittest.TestCase):
         <p>Hello!</p>
         '''
         """
-        sm = SpeechMark()
-        for n, m in enumerate(markup):
-            with self.subTest(n=n, m=m):
-                rv = sm.process(m)
-                self.assertEqual(rv, output)
+        return self.check(markup, output)
 
-    def test_minimal_blockquote(self):
-        markup = "<GUEST> Hello!"
-        html5 = SpeechMark().process(markup)
-        self.assertEqual(
-            html5,
-            """
-            <blockquote cite="GUEST">
-            <cite>GUEST</cite>
-            <p>Hello!</p>
-            </blockquote>
-            """
-        )
+    @Syntax.example()
+    def test_minimal_blockquote(self, markup: list=[], output=""):
+        """
+
+        # TOML
+        markup = ["Hello!"]
+        output = '''
+        <blockquote cite="GUEST">
+        <cite>GUEST</cite>
+        <p>Hello!</p>
+        </blockquote>
+        '''
+        """
 
 
 if __name__ == "__main__":
-    text = sys.stdin.read()
-    print(text, file=sys.stdout)
-    blocks = list(SpeechMark.blocks(text))
-    print(*blocks, file=sys.stdout, sep="\n")
-
+    print(*Syntax.examples, sep="\n")
