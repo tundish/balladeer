@@ -120,7 +120,40 @@ Hand = ("decline", "suggest", "promise", "disavow", "deliver")
 
 
 class Syntax(unittest.TestCase):
+    """
+    SpeechMark is a convention for markup of text documents.
+    It is suited for capturing dialogue, attributing speech, and writing screenplays.
 
+    SpeechMark takes inspiration from other markup systems in common use:
+    * [Markdown](https://commonmark.org/)
+    * [RestructuredText](https://docutils.sourceforge.io/rst.html)
+
+    The syntax is deliberately constrained to be simple and unambiguous.
+    This is to encourage adoption by non-technical users and to permit fast and efficient
+    processing of many small pieces of text over an extended period of time.
+
+    SpeechMark does not concern itself with document structure. There are no titles, sections or breaks.
+    Rather, the input is expected to be a stream of text fragments.
+
+    The specification intends to be lossless, so that every detail in the original text
+    may be retrieved from the output.
+
+    SpeechMark input must be line-based text with UTF-8 encoding. The corresponding output is well-formed HTML5.
+
+    Inline markup consists of pairs of matching delimiters. There must be no line break within them;
+    all inline markup must terminate on the same line it begins.
+
+    Block boundaries are defined as follows:
+    * A cue element terminates the previous block
+    * A blank line terminates a paragraph.
+    * A line with a list marker becomes an element in a list block
+
+    * Inline emphasis
+    * Links
+    * Lists
+    * Cues
+
+    """
     examples = []
 
     def example(label=None):
