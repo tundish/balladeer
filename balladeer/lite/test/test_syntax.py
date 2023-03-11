@@ -141,12 +141,23 @@ class SpeechMarkTests(unittest.TestCase):
 
     def example(fn):
         doc = fn.__doc__ or ""
-        print(tomllib.loads(doc))
+        text, sep, toml = doc.partition("# TOML")
+        print(tomllib.loads(toml))
         return fn
 
     @example
-    def test_minimal_paragraph(self):
-        pass
+    def test_minimal_paragraph(self, markup="", output=""):
+        """
+
+        # TOML
+        markup = "Hello!"
+        output = '''
+        <p>Hello!</p>
+        '''
+        """
+        sm = SpeechMark()
+        rv = sm.process(markup)
+        self.assertEqual(rv, output)
 
     def test_minimal_blockquote(self):
         markup = "<GUEST> Hello!"
@@ -154,7 +165,8 @@ class SpeechMarkTests(unittest.TestCase):
         self.assertEqual(
             html5,
             """
-            <blockquote cite="GUEST" >
+            <blockquote cite="GUEST">
+            <cite>GUEST</cite>
             <p>Hello!</p>
             </blockquote>
             """
