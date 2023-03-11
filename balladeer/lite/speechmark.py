@@ -17,6 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import re
+
 
 class SpeechMark:
 
@@ -38,6 +40,16 @@ class SpeechMark:
                 end = n
                 exit += len(l)
 
-    def process(sel, text: str) -> str:
-        return text
+    @property
+    def result(self):
+        pass
 
+    def loads(self, text: str):
+        return
+
+    def feed(self, text: str):
+        for line in text.splitlines():
+            yield line # Tuple or str
+
+    def reset(self):
+        pass
