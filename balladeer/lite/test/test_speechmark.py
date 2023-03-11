@@ -5,11 +5,7 @@ import re
 import tomllib
 import unittest
 
-# Speechmark
-from collections import namedtuple
-import sys
-import textwrap
-import warnings
+from balladeer.lite.speechmark import SpeechMark
 
 # block = cue + dialogue
 # cue = persona / directive/ @ entity, mode ? parameters # fragment
@@ -101,41 +97,18 @@ Your phone's ringing.
 # <code>:  `
 # <a>: [label](url)
 
-Head = namedtuple(
+(
     "Head",
     ("propose", "confirm", "counter", "abandon", "condemn", "declare"),
     defaults=(tuple(), tuple(), tuple(), tuple(), tuple(), tuple())
 )
 
 
-Hand = namedtuple(
+(
     "Hand",
     ("decline", "suggest", "promise", "disavow", "deliver"),
     defaults=(tuple(), tuple(), tuple(), tuple(), tuple())
 )
-
-class SpeechMark:
-
-    @staticmethod
-    def blocks(text: str):
-        trim = textwrap.dedent(text)
-        if trim != text:
-            warnings.warn(f"Reindentation lost {len(text) - len(trim)} chars")
-
-        lines = text.splitlines(keepends=False)
-        enter, exit = 0, 0 # character positions
-        start, end = 0, 0  # line numbers
-        for n, l in enumerate(lines):
-            if not n or l.startswith("<"):
-                yield trim, enter, exit, lines, start, end
-                start = n
-                enter = exit
-            else:
-                end = n
-                exit += len(l)
-
-    def process(sel, text: str) -> str:
-        return text
 
 
 class Syntax(unittest.TestCase):
