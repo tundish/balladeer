@@ -174,11 +174,12 @@ class Syntax(unittest.TestCase):
                 self.assertEqual(rv, expected)
 
 
-class SpeechMarkTests(Syntax):
+class ParagraphTests(Syntax):
 
     @Syntax.example(label="1.2")
     def test_minimal_paragraph(self, markup: dict={}, output=""):
         """
+        Simple strings are encapsulated in paragraphs.
 
         # TOML
         markup."Plain string"  =   "Hello!"
@@ -191,10 +192,48 @@ class SpeechMarkTests(Syntax):
         """
         return self.check(markup, output)
 
-    @unittest.skip("Fix me")
-    @Syntax.example()
-    def test_minimal_blockquote(self, markup: dict={}, output=""):
+    def test_continuing_paragraph(self, markup: dict={}, output=""):
         """
+        A paragraph continues until explicitly terminated.
+
+        # TOML
+        markup."Continuous string"  =   '''
+        Hello!
+        Hello!'''
+        output = '''
+        <blockquote>
+        <p>Hello! Hello!</p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    @Syntax.example()
+    def test_multiple_paragraphs(self, markup: dict={}, output=""):
+        """
+        A paragraph is terminated by a blank line.
+
+        # TOML
+        markup."Broken string"  =   '''
+        Hello!
+
+        Hello!'''
+        output = '''
+        <blockquote>
+        <p>Hello!</p>
+        <p>Hello!</p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+
+class BlockTests(Syntax):
+
+    @Syntax.example()
+    def test_multiple_paragraphs(self, markup: dict={}, output=""):
+        """
+        A cue is used as an attribution of speech.
 
         # TOML
         markup = ["Hello!"]
