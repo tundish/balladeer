@@ -27,6 +27,8 @@ from balladeer.lite.speechmark import SpeechMark
 # block = cue + dialogue
 # cue = persona .directive @ entity, :mode ? parameters # fragment
 
+# Directives: present participles
+# Mode: Simple present, third person (singular or plural)
 
 """
 STAFF
@@ -53,7 +55,7 @@ PHONE
 """
 
 """
-<PHONE:alerts@GUEST>
+<PHONE:announces@GUEST>
 
 <GUEST>
 
@@ -61,11 +63,11 @@ Your phone's ringing.
 
 <STAFF> How strange I didn't hear it.
 
-<PHONE:alerts@GUEST,STAFF>
+<PHONE:announces@GUEST,STAFF>
 
 <STAFF> Oh, now I do!
 
-<PHONE.throbbing:alerts@GUEST,STAFF> RIIING RIIING!
+<PHONE:announces@GUEST,STAFF> RIIING RIIING!
 
 """
 
