@@ -149,7 +149,7 @@ class Syntax(unittest.TestCase):
     Inline markup consists of emphasis, links, and cues.
 
     Inline markup must consist of pairs of matching delimiters. There must be no line break within them;
-    all inline markup must terminate on the same line it begins.
+    all inline markup must terminate on the same line where it begins.
 
     Output must be generated in blocks. Each block may begin with a cue element. A block may contain one
     or more paragraphs. A block may contain a list. Every list item must contain a paragraph.
@@ -380,13 +380,13 @@ class LinkTests(Syntax):
         return self.check(markup, output)
 
     @Syntax.example(label="5.2")
-    def test_multiple_link(self, markup: dict={}, output=""):
+    def test_multiple_links(self, markup: dict={}, output=""):
         """
         There may be multiple hyperlinks on a line.
 
         # TOML
-        markup."Multiple signifiers" =  "[Python](https://python.org) "[PyPI](https://pypi.org)"
-        markup."Abutting signifiers" =  "[Python](https://python.org) "[PyPI](https://pypi.org)"
+        markup."Multiple signifiers" =  "[Python](https://python.org) [PyPI](https://pypi.org)"
+        markup."Abutting signifiers" =  "[Python](https://python.org) [PyPI](https://pypi.org)"
         output = '''
         <blockquote>
         <p><a href="https://python.org">Python</a><a href="https://pypi.org">PyPI</a></p>
@@ -395,15 +395,16 @@ class LinkTests(Syntax):
         """
         return self.check(markup, output)
 
-    def test_cornercases_code(self):
+    def test_cornercases_links(self):
         expected = textwrap.dedent("""
         <blockquote>
-        <p><code>8.8.8.8</code></p>
+        <p>[Python] (https://python.org)</p>
         </blockquote>
         """)
         sm = SpeechMark()
-        rv = sm.loads("`8.8.8.8`")
+        rv = sm.loads("[Python] (https://python.org)")
         self.assertEqual(rv, expected)
+
 
 class BlockTests(Syntax):
 
