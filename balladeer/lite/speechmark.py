@@ -96,7 +96,10 @@ class SpeechMark:
 
             # Check for list items
             # Everything else is a paragraph with inline markup
-            yield line.translate(self.escape_table)
+            l_open, l_close = "", ""
+            p_open, p_close = "", ""
+            content = line.translate(self.escape_table)
+            yield f"{l_open}{p_open}{content}{p_close}{l_close}"
         else:
             yield "</blockquote>"
 
