@@ -408,6 +408,21 @@ class LinkTests(Syntax):
         self.assertEqual(rv, expected)
 
 
+class CueTests:
+
+    def test_anonymous_cue(self):
+        cue = ""
+        line = f"<{cue}> Hello!"
+        expected = textwrap.dedent(f"""
+        <blockquote cite="{cue}">
+        <p>Hello!</p>
+        </blockquote>
+        """)
+        sm = SpeechMark()
+        rv = sm.loads(line)
+        self.assertEqual(rv, expected)
+
+
 class BlockTests(Syntax):
 
     @Syntax.example()
