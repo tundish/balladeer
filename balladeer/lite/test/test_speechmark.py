@@ -237,7 +237,7 @@ class SignificanceTests(Syntax):
     @Syntax.example(label="2.1")
     def test_minimal_significance(self, markup: dict={}, output=""):
         """
-        Simple strings are encapsulated in paragraphs.
+        Significant text is denoted with underscores.
 
         # TOML
         markup."Entire signifier"  =   "_Hello!_"
@@ -250,6 +250,84 @@ class SignificanceTests(Syntax):
         return self.check(markup, output)
 
     @Syntax.example(label="2.2")
+    def test_multiple_significance(self, markup: dict={}, output=""):
+        """
+        There may be multiple snippets of significant text on one line.
+
+        # TOML
+        markup."Multiple signifiers" =   "_Hello_ _Hello_!"
+        markup."Abutting signifiers" =   "_Hello__Hello_!"
+        output = '''
+        <blockquote>
+        <p><strong>Hello!</strong><strong>Hello!</strong</p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+
+class CodeTests(Syntax):
+
+    @Syntax.example(label="3.1")
+    def test_single_code(self, markup: dict={}, output=""):
+        """
+        Code snippets are defined between backticks.
+
+        # TOML
+        markup."Entire signifier"  =   "`git log`"
+        output = '''
+        <blockquote>
+        <p><code>Hello!</code></p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    @Syntax.example(label="3.2")
+    def test_multiple_code(self, markup: dict={}, output=""):
+        """
+        There may be multiple code snippets on a line.
+
+        # TOML
+        markup."Multiple signifiers" =   "`git` `log`"
+        markup."Abutting signifiers" =   "`git``log`"
+        output = '''
+        <blockquote>
+        <p><code>git</code><code>log</code</p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    def test_cornercases_code(self):
+        expected = textwrap.dedent("""
+        <blockquote>
+        <p><code>8.8.8.8</code></p>
+        </blockquote>
+        """)
+        sm = SpeechMark()
+        rv = sm.loads("`8.8.8.8`")
+        self.assertEqual(rv, expected)
+
+
+class EmphasisTests(Syntax):
+
+    @Syntax.example(label="4.1")
+    def test_minimal_significance(self, markup: dict={}, output=""):
+        """
+        Simple strings are encapsulated in paragraphs.
+
+        # TOML
+        markup."Entire signifier"  =   "_Hello!_"
+        output = '''
+        <blockquote>
+        <p><strong>Hello!</strong></p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    @Syntax.example(label="4.2")
     def test_multiple_significance(self, markup: dict={}, output=""):
         """
         Simple strings are encapsulated in paragraphs.
