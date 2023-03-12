@@ -25,7 +25,7 @@ import unittest
 from balladeer.lite.speechmark import SpeechMark
 
 # block = cue + dialogue
-# cue = persona / directive/ @ entity, mode ? parameters # fragment
+# cue = persona .directive @ entity, :mode ? parameters # fragment
 
 
 """
@@ -45,9 +45,9 @@ PHONE
 # mode: mode of speech act
 
 """
-<GUEST/entering:decides?pause=1&dwell=0.2#a>
+<GUEST.entering:asks?pause=1&dwell=0.2#a>
 
-    a. Hello!
+    a. Hello?
     b. Say nothing
 
 """
@@ -65,7 +65,7 @@ Your phone's ringing.
 
 <STAFF> Oh, now I do!
 
-<PHONE/throbbing:alerts@GUEST,STAFF> RIIING RIIING!
+<PHONE.throbbing:alerts@GUEST,STAFF> RIIING RIIING!
 
 """
 
