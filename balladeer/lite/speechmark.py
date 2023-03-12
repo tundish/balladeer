@@ -44,6 +44,8 @@ class SpeechMark:
 
     def __init__(self, lines=[], maxlen=None):
         self.cue_matcher = re.compile("")
+        self.tone_matcher = re.compile("")
+        self.link_matcher = re.compile("")
         self.source = deque(lines, maxlen=maxlen)
         self._index = None
 
@@ -53,9 +55,13 @@ class SpeechMark:
 
     def parse_lines(self):
         lines = itertools.islice(self.source, self._index, None)
+        # Check for cues
+        # Check for list items
+        # Everything else is a paragraph with inline markup
         yield "\n".join(lines)
+        self._index = len(self.source)
 
-    def loads(self, text: str, marker="\n", **kwargs):
+    def loads(self, text: str, marker: str="\n", **kwargs):
         result = marker.join(i for i in self.feed(text, **kwargs) if isinstance(i, str))
         return f"{result}{marker}"
 
@@ -64,4 +70,5 @@ class SpeechMark:
         yield from self.parse_lines()
 
     def reset(self):
-        self.aource.clear()
+        self.source.clear()
+        self._index = 0
