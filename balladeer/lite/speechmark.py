@@ -20,6 +20,7 @@
 from collections import deque
 import html
 import itertools
+import operator
 import re
 
 
@@ -53,7 +54,7 @@ class SpeechMark:
             and v not in "!\"#'()*+,-..:;=@{}~`_"
         })
         self.source = deque(lines, maxlen=maxlen)
-        self._index = None
+        self._index = 0
 
     @property
     def text(self):
@@ -64,12 +65,16 @@ class SpeechMark:
         # Check for list items
         # Everything else is a paragraph with inline markup
         # html escape
-        if terminate:
-            # TODO: Remove cue prior to escaping
-            lines = itertools.islice(self.source, self._index, None)
-            text = "\n".join(lines).translate(self.escape_table)
-            self._index = len(self.source)
-            yield text
+        lines = list(itertools.islice(self.source, self._index, None))
+        # TODO: Remove cue prior to escaping
+        cues = dict(
+            (n, self.cue_matcher.match(line))
+            for n, line in enumerate(lines)
+        )
+        print(cues)
+        text = "\n".join(lines).translate(self.escape_table)
+        self._index = len(self.source)
+        yield text
 
     def loads(self, text: str, marker: str="\n", **kwargs):
         result = marker.join(i for i in self.feed(text, terminate=True) if isinstance(i, str))
