@@ -65,16 +65,30 @@ class SpeechMark:
         # Check for list items
         # Everything else is a paragraph with inline markup
         # html escape
+
+        # Make a local list of lines to process
         lines = list(itertools.islice(self.source, self._index, None))
-        # TODO: Remove cue prior to escaping
-        cues = dict(
-            (n, self.cue_matcher.match(line))
-            for n, line in enumerate(lines)
-        )
-        print(cues)
-        text = "\n".join(lines).translate(self.escape_table)
-        self._index = len(self.source)
-        yield text
+
+        # Match any available cues and store them by line number
+        cues = dict(filter(
+            operator.itemgetter(1),
+            ((n, self.cue_matcher.match(line))
+            for n, line in enumerate(lines))
+        ))
+
+        # Create a sequence of 2-tuples which demarcate each block
+        chunks = list(itertools.pairwise(
+            sorted(set(cues.keys()).union({0, len(lines)} if terminate else {0}))
+        ))
+        for begin, end in chunks:
+            for n, line in enumerate(lines[begin:end]):
+                pos = begin + n
+                if pos in cues:
+                    # TODO: Process cue
+                    continue
+                else:
+                    yield line.translate(self.escape_table)
+        self._index = end
 
     def loads(self, text: str, marker: str="\n", **kwargs):
         result = marker.join(i for i in self.feed(text, terminate=True) if isinstance(i, str))
