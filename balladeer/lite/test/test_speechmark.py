@@ -122,12 +122,16 @@ Hand = ("decline", "suggest", "promise", "disavow", "deliver")
 
 class Syntax(unittest.TestCase):
     """
-    SpeechMark is a convention for markup of text documents.
-    It is suited for capturing dialogue, attributing speech, and writing screenplays.
+    SpeechMark is a convention for markup of authored text.
+    It is suited for capturing dialogue, attributing speech, and writing screenplay directions.
 
     SpeechMark takes inspiration from other markup systems already in common use:
     * [Markdown](https://commonmark.org/)
     * [RestructuredText](https://docutils.sourceforge.io/rst.html)
+
+    I tried both these systems prior to creating SpeechMark. I found the first to be underspecified
+    to support my particular needs. The second is rather too featureful for my purpose, and
+    the document model a little too cumbersome.
 
     SpeechMark syntax is deliberately constrained to be simple and unambiguous.
     This is to encourage adoption by non-technical users and to permit fast and efficient
@@ -136,7 +140,7 @@ class Syntax(unittest.TestCase):
     SpeechMark does not concern itself with document structure. There are no titles, sections or breaks.
     Rather, the input is expected to be a stream of text fragments.
 
-    The specification intends to be lossless, so that every feature of the original text
+    The specification intends to be lossless, so that every non-whitespace feature of the original text
     may be retrieved from the output.
 
     SpeechMark input must be line-based text, and should have UTF-8 encoding.
