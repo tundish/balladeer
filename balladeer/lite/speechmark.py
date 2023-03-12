@@ -17,6 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from collections import deque
+import itertools
 import re
 
 
@@ -40,19 +42,26 @@ class SpeechMark:
                 end = n
                 exit += len(l)
 
-    def __init__(self):
+    def __init__(self, lines=[], maxlen=None):
         self.cue_matcher = re.compile("")
+        self.source = deque(lines, maxlen=maxlen)
+        self._index = None
 
     @property
-    def result(self):
-        pass
+    def text(self):
+        return "\n".join(self.source)
+
+    def parse_lines(self):
+        lines = itertools.islice(self.source, self._index, None)
+        yield "\n".join(lines)
 
     def loads(self, text: str, marker="\n", **kwargs):
-        return marker.join(i for i in self.feed(text, **kwargs) if isinstance(i, str))
+        result = marker.join(i for i in self.feed(text, **kwargs) if isinstance(i, str))
+        return f"{result}{marker}"
 
     def feed(self, text: str, **kwargs):
-        for line in text.splitlines():
-            yield line # Tuple or str
+        self.source.extend(text.splitlines(keepends=False))
+        yield from self.parse_lines()
 
     def reset(self):
-        pass
+        self.aource.clear()
