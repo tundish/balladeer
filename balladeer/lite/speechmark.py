@@ -18,6 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from collections import deque
+import html
 import itertools
 import re
 
@@ -43,9 +44,14 @@ class SpeechMark:
                 exit += len(l)
 
     def __init__(self, lines=[], maxlen=None):
-        self.cue_matcher = re.compile("")
+        self.cue_matcher = re.compile("^<([^ >]*)>")
         self.tone_matcher = re.compile("")
         self.link_matcher = re.compile("")
+        self.escape_table = str.maketrans({
+            v: f"&{k}" for k, v in html.entities.html5.items()
+            if k.endswith(";") and len(v) == 1
+            and v not in "!\"#'()*+,-..:;=@{}~`_"
+        })
         self.source = deque(lines, maxlen=maxlen)
         self._index = None
 
@@ -53,22 +59,31 @@ class SpeechMark:
     def text(self):
         return "\n".join(self.source)
 
-    def parse_lines(self):
-        lines = itertools.islice(self.source, self._index, None)
+    def parse_lines(self, terminate: bool):
         # Check for cues
         # Check for list items
         # Everything else is a paragraph with inline markup
-        yield "\n".join(lines)
-        self._index = len(self.source)
+        # html escape
+        if terminate:
+            # TODO: Remove cue prior to escaping
+            lines = itertools.islice(self.source, self._index, None)
+            text = "\n".join(lines).translate(self.escape_table)
+            self._index = len(self.source)
+            yield text
 
     def loads(self, text: str, marker: str="\n", **kwargs):
-        result = marker.join(i for i in self.feed(text, **kwargs) if isinstance(i, str))
+        result = marker.join(i for i in self.feed(text, terminate=True) if isinstance(i, str))
         return f"{result}{marker}"
 
-    def feed(self, text: str, **kwargs):
+    def feed(self, text: str, terminate=False, **kwargs):
         self.source.extend(text.splitlines(keepends=False))
-        yield from self.parse_lines()
+        yield from self.parse_lines(terminate)
 
     def reset(self):
         self.source.clear()
         self._index = 0
+
+
+if __name__ == "__main__":
+    sm = SpeechMark()
+    print(sm.escape_table)
