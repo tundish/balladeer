@@ -422,6 +422,34 @@ class CueTests:
         rv = sm.loads(line)
         self.assertEqual(rv, expected)
 
+    def test_simple_cue(self):
+        cue = role = "GUEST"
+        line = f"<{cue}> Hello?"
+        expected = textwrap.dedent(f"""
+        <blockquote cite="{cue}">
+        <cite>{role}</cite>
+        <p>Hello!</p>
+        </blockquote>
+        """)
+        sm = SpeechMark()
+        rv = sm.loads(line)
+        self.assertEqual(rv, expected)
+
+    def test_role_mode_cue(self):
+        role = "GUEST"
+        mode = "says"
+        cue = f"{role}:{mode}"
+        line = f"<{cue}> Hello?"
+        expected = textwrap.dedent(f"""
+        <blockquote cite="{cue}">
+        <cite data-mode="{mode}">{role}</cite>
+        <p>Hello!</p>
+        </blockquote>
+        """)
+        sm = SpeechMark()
+        rv = sm.loads(line)
+        self.assertEqual(rv, expected)
+
 
 class BlockTests(Syntax):
 
