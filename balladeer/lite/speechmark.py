@@ -61,10 +61,6 @@ class SpeechMark:
         return "\n".join(self.source)
 
     def parse_lines(self, terminate: bool):
-        # Check for cues
-        # Check for list items
-        # Everything else is a paragraph with inline markup
-        # html escape
 
         # Make a local list of lines to process
         lines = list(itertools.islice(self.source, self._index, None))
@@ -77,18 +73,32 @@ class SpeechMark:
         ))
 
         # Create a sequence of 2-tuples which demarcate each block
-        chunks = list(itertools.pairwise(
+        blocks = list(itertools.pairwise(
             sorted(set(cues.keys()).union({0, len(lines)} if terminate else {0}))
         ))
-        for begin, end in chunks:
-            for n, line in enumerate(lines[begin:end]):
-                pos = begin + n
-                if pos in cues:
-                    # TODO: Process cue
-                    continue
-                else:
-                    yield line.translate(self.escape_table)
+        for begin, end in blocks:
+            cue = cues.get(begin)
+            yield from self.parse_block(cue, lines[begin:end])
+
         self._index = end
+
+    def parse_block(self, cue, lines):
+        # TODO: find paragraph boundaries
+        for n, line in enumerate(lines):
+            if not n:
+                if cue:
+                    # TODO: process cue
+                    continue
+                yield "<blockquote>"
+            if not line:
+                # TODO: new paragraph
+                continue
+
+            # Check for list items
+            # Everything else is a paragraph with inline markup
+            yield line.translate(self.escape_table)
+        else:
+            yield "</blockquote>"
 
     def loads(self, text: str, marker: str="\n", **kwargs):
         result = marker.join(i for i in self.feed(text, terminate=True) if isinstance(i, str))
