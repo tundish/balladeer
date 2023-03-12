@@ -240,10 +240,10 @@ class SignificanceTests(Syntax):
         Significant text is denoted with underscores.
 
         # TOML
-        markup."Entire signifier"  =   "_Hello!_"
+        markup."Entire signifier"  =   "_Warning!_"
         output = '''
         <blockquote>
-        <p><strong>Hello!</strong></p>
+        <p><strong>Warning!</strong></p>
         </blockquote>
         '''
         """
@@ -255,11 +255,11 @@ class SignificanceTests(Syntax):
         There may be multiple snippets of significant text on one line.
 
         # TOML
-        markup."Multiple signifiers" =   "_Hello_ _Hello_!"
-        markup."Abutting signifiers" =   "_Hello__Hello_!"
+        markup."Multiple signifiers" =   "_Warning_ _Warning_!"
+        markup."Abutting signifiers" =   "_Warning__Warning_!"
         output = '''
         <blockquote>
-        <p><strong>Hello!</strong><strong>Hello!</strong</p>
+        <p><strong>Warning!</strong><strong>Warning!</strong</p>
         </blockquote>
         '''
         """
@@ -313,36 +313,97 @@ class CodeTests(Syntax):
 class EmphasisTests(Syntax):
 
     @Syntax.example(label="4.1")
-    def test_minimal_significance(self, markup: dict={}, output=""):
+    def test_minimal_emphasis(self, markup: dict={}, output=""):
         """
-        Simple strings are encapsulated in paragraphs.
+        Emphasis may be added using pairs of asterisks.
 
         # TOML
-        markup."Entire signifier"  =   "_Hello!_"
+        markup."Entire signifier"  =   "*Definitely!*"
         output = '''
         <blockquote>
-        <p><strong>Hello!</strong></p>
+        <p><em>Definitely!</em></p>
         </blockquote>
         '''
         """
         return self.check(markup, output)
 
     @Syntax.example(label="4.2")
-    def test_multiple_significance(self, markup: dict={}, output=""):
+    def test_multiple_emphasis(self, markup: dict={}, output=""):
         """
-        Simple strings are encapsulated in paragraphs.
+        There may be multiple emphasised phrases on a line.
 
         # TOML
-        markup."Multiple signifiers" =   "_Hello_ _Hello_!"
-        markup."Abutting signifiers" =   "_Hello__Hello_!"
+        markup."Multiple signifiers" =   "*Definitely* *Definitely!*"
+        markup."Abutting signifiers" =   "*Definitely**Definitely!*"
         output = '''
         <blockquote>
-        <p><strong>Hello!</strong><strong>Hello!</strong</p>
+        <p><em>Definitely</em><em>Definitely!</em></p>
         </blockquote>
         '''
         """
         return self.check(markup, output)
 
+    @Syntax.example(label="4.3")
+    def test_multiple_emphasis(self, markup: dict={}, output=""):
+        """
+        Simple strings are encapsulated in paragraphs.
+
+        # TOML
+        markup."Multiple signifiers" =   "*Definitely* *Definitely!*"
+        markup."Abutting signifiers" =   "*Definitely**Definitely!*"
+        output = '''
+        <blockquote>
+        <p><em>Hello!</em><em>Hello!</em></p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+
+class LinkTests(Syntax):
+
+    @Syntax.example(label="5.1")
+    def test_single_link(self, markup: dict={}, output=""):
+        """
+        Hyperlinks are defined by placing link text within square brackets and the link destination
+        in parentheses. There must be no space between them.
+        See also https://spec.commonmark.org/0.30/#example-482.
+
+        # TOML
+        markup."Entire signifier"  =    "[Python](https://python.org)"
+        output = '''
+        <blockquote>
+        <p><a href="https://python.org">Python</a></p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    @Syntax.example(label="5.2")
+    def test_multiple_link(self, markup: dict={}, output=""):
+        """
+        There may be multiple hyperlinks on a line.
+
+        # TOML
+        markup."Multiple signifiers" =  "[Python](https://python.org) "[PyPI](https://pypi.org)"
+        markup."Abutting signifiers" =  "[Python](https://python.org) "[PyPI](https://pypi.org)"
+        output = '''
+        <blockquote>
+        <p><a href="https://python.org">Python</a><a href="https://pypi.org">PyPI</a></p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    def test_cornercases_code(self):
+        expected = textwrap.dedent("""
+        <blockquote>
+        <p><code>8.8.8.8</code></p>
+        </blockquote>
+        """)
+        sm = SpeechMark()
+        rv = sm.loads("`8.8.8.8`")
+        self.assertEqual(rv, expected)
 
 class BlockTests(Syntax):
 
