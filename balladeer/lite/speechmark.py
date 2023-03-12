@@ -47,10 +47,10 @@ class SpeechMark:
     def result(self):
         pass
 
-    def loads(self, text: str):
-        return text
+    def loads(self, text: str, marker="\n", **kwargs):
+        return marker.join(i for i in self.feed(text, **kwargs) if isinstance(i, str))
 
-    def feed(self, text: str):
+    def feed(self, text: str, **kwargs):
         for line in text.splitlines():
             yield line # Tuple or str
 
