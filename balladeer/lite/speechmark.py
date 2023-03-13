@@ -136,14 +136,25 @@ class SpeechMark:
         #   list boundaries
         #   then join text
         #   transformations
-        breaks = {
-            n
-            for n, line in enumerate(lines)
+        breaks = ({
+            n for n, line in enumerate(lines)
             if not line.strip()
-        }.union({0, len(lines)} if terminate else {0})
-        paragraphs = list(itertools.pairwise(breaks))
+        }.union({0, len(lines)} if terminate else {0}))
+        open_ps = {i for n, i in enumerate(breaks) if not n % 2}
+        close_ps = {i for n, i in enumerate(breaks) if n % 2}
         yield "<blockquote>"
-        print(paragraphs)
+        for n, line in enumerate(lines):
+            if n in open_ps:
+                if n in close_ps:
+                    yield f"<p>{line}</p>"
+                else:
+                    yield f"<p>{line}"
+            elif n in close_ps:
+                yield f"{line}</p>"
+            else:
+                yield line
+
+        print(breaks)
         yield "\n".join(lines)
         if terminate:
             yield "</blockquote>"
