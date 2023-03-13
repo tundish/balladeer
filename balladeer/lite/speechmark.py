@@ -84,6 +84,7 @@ class SpeechMark:
 
     def parse_block(self, cue, lines):
         # TODO: find paragraph boundaries
+        p_open, p_close = "<p>", ""
         for n, line in enumerate(lines):
             if not n:
                 if cue:
@@ -92,15 +93,26 @@ class SpeechMark:
                 yield "<blockquote>"
             if not line:
                 # TODO: new paragraph
+                yield "</p>"
+                p_open, p_close = "<p>", ""
+                if l_close:
+                    l_open, l_close = "", ""
+                    yield "</ul>"
                 continue
+            elif line.startswith("+"):
+                l_open, l_close = "<li>", "</li>"
+                yield "<ul>"  # TODO also ol
 
             # Check for list items
             # Everything else is a paragraph with inline markup
             l_open, l_close = "", ""
-            p_open, p_close = "", ""
             content = line.translate(self.escape_table)
             yield f"{l_open}{p_open}{content}{p_close}{l_close}"
+            p_open, p_close = "", ""
         else:
+            if l_close:
+                l_open, l_close = "", ""
+                yield "</ul>"
             yield "</blockquote>"
 
     def loads(self, text: str, marker: str="\n", **kwargs):
