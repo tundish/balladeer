@@ -180,6 +180,20 @@ class Syntax(unittest.TestCase):
                 self.assertEqual(rv, expected)
 
 
+class CommentTests(Syntax):
+
+    @Syntax.example(label="1.0")
+    def test_single_comment(self, markup: dict={}, output=""):
+        """
+        Any line beginning with a "#" is a comment. It is ignored.
+
+        # TOML
+        markup."Entire signifier"  =    "# No effect on output"
+        output = ""
+        """
+        return self.check(markup, output)
+
+
 class ParagraphTests(Syntax):
 
     @Syntax.example(label="1.1")

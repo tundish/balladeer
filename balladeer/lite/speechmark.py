@@ -88,6 +88,7 @@ class SpeechMark:
         #   list boundaries
         #   then join text
         #   transformations
+        l_open, l_close = "", ""
         p_open, p_close = "<p>", ""
         for n, line in enumerate(lines):
             if not n:
