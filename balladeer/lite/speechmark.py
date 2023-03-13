@@ -86,7 +86,9 @@ class SpeechMark:
         ))
         for begin, end in blocks:
             cue = cues.get(begin)
-            yield from self.parse_block(cue, lines[begin:end])
+            yield from self.parse_block(
+                cue, lines[begin:end], terminate
+            )
 
         self._index = end
 
@@ -128,15 +130,23 @@ class SpeechMark:
                 yield "</ul>"
             yield "</blockquote>"
 
-    def parse_block(self, cue, lines):
+    def parse_block(self, cue, lines, terminate=False):
         # TODO:
         #   find paragraph boundaries
         #   list boundaries
         #   then join text
         #   transformations
+        breaks = {
+            n
+            for n, line in enumerate(lines)
+            if not line.strip()
+        }.union({0, len(lines)} if terminate else {0})
+        paragraphs = list(itertools.pairwise(breaks))
         yield "<blockquote>"
+        print(paragraphs)
         yield "\n".join(lines)
-        yield "</blockquote>"
+        if terminate:
+            yield "</blockquote>"
 
     def loads(self, text: str, marker: str="\n", **kwargs):
         result = marker.join(i for i in self.feed(text, terminate=True) if isinstance(i, str))
