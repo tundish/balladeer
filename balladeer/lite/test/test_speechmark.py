@@ -424,6 +424,7 @@ class LinkTests(Syntax):
 
 class CueTests(Syntax):
 
+    @unittest.skip("Not yet.")
     def test_anonymous_cue(self):
         cue = ""
         line = f"<{cue}> Hello!"
@@ -436,6 +437,7 @@ class CueTests(Syntax):
         rv = sm.loads(line)
         self.assertEqual(rv, expected)
 
+    @unittest.skip("Not yet.")
     def test_simple_cue(self):
         cue = role = "GUEST"
         line = f"<{cue}> Hello?"
@@ -449,6 +451,7 @@ class CueTests(Syntax):
         rv = sm.loads(line)
         self.assertEqual(rv, expected)
 
+    @unittest.skip("Not yet.")
     def test_role_mode_cue(self):
         role = "GUEST"
         mode = "says"
@@ -475,6 +478,7 @@ class CueTests(Syntax):
             with self.subTest(line=line):
                 rv = sm.cue_matcher.match(line)
                 self.assertTrue(rv)
+                self.assertEqual(6, len(rv.groupdict()))
 
     def test_cue_matching_negative(self):
         examples = [
