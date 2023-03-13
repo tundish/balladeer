@@ -46,9 +46,9 @@ class SpeechMark:
 
     def __init__(self, lines=[], maxlen=None):
         self.cue_matcher = re.compile("""
-        ^<(?P<role>[^\.: >]*)       # Role
-        (?P<directives>[^\: >]*)    # Directives
-        (?P<mode>[^\? >]*)>         # Mode
+        ^<(?P<role>[^\.:\\?# >]*)       # Role
+        (?P<directives>[^\:\\?# >]*)    # Directives
+        (?P<mode>[^\\? >]*)>         # Mode
         """, re.VERBOSE)
         self.tone_matcher = re.compile("")
         self.link_matcher = re.compile("")

@@ -472,6 +472,11 @@ class CueTests(Syntax):
             "<>", "<> Hi!",
             "<role>", "<ROLE>",
             "<role:mode>", "<ROLE:MODE>",
+            "<ROLE.d1.d2:mode>",
+            "<ROLE:mode?p=0&q=a>",
+            "<ROLE:mode#frag>",
+            "<ROLE#frag>",
+            "<ROLE.d1.d2:mode?p=0&q=a>",
             "<ROLE.d1.d2:mode?p=0&q=a#frag>",
         ]
         sm = SpeechMark()
