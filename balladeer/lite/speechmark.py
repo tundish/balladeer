@@ -83,7 +83,11 @@ class SpeechMark:
         self._index = end
 
     def parse_block(self, cue, lines):
-        # TODO: find paragraph boundaries
+        # TODO:
+        #   find paragraph boundaries
+        #   list boundaries
+        #   then join text
+        #   transformations
         p_open, p_close = "<p>", ""
         for n, line in enumerate(lines):
             if not n:
