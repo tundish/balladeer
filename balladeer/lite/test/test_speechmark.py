@@ -472,13 +472,16 @@ class CueTests(Syntax):
             "<>", "<> Hi!",
             "<role>", "<ROLE>",
             "<role:mode>", "<ROLE:MODE>",
+            "<ROLE.d1.d2:mode?p=0&q=a#frag>",
         ]
         sm = SpeechMark()
         for line in examples:
             with self.subTest(line=line):
                 rv = sm.cue_matcher.match(line)
                 self.assertTrue(rv)
-                self.assertEqual(6, len(rv.groupdict()))
+                d = rv.groupdict()
+                print(d)
+                self.assertEqual(5, len(d))
 
     def test_cue_matching_negative(self):
         examples = [

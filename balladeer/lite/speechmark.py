@@ -45,7 +45,9 @@ class SpeechMark:
                 exit += len(l)
 
     def __init__(self, lines=[], maxlen=None):
-        self.cue_matcher = re.compile("^<([^ >]*)>")
+        self.cue_matcher = re.compile(
+        "^<(?P<role>[^\. >]*)(?P<directive>[^\: >]*)>"
+        )
         self.tone_matcher = re.compile("")
         self.link_matcher = re.compile("")
         self.escape_table = str.maketrans({
