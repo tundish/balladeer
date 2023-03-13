@@ -128,6 +128,16 @@ class SpeechMark:
                 yield "</ul>"
             yield "</blockquote>"
 
+    def parse_block(self, cue, lines):
+        # TODO:
+        #   find paragraph boundaries
+        #   list boundaries
+        #   then join text
+        #   transformations
+        yield "<blockquote>"
+        yield "\n".join(lines)
+        yield "</blockquote>"
+
     def loads(self, text: str, marker: str="\n", **kwargs):
         result = marker.join(i for i in self.feed(text, terminate=True) if isinstance(i, str))
         return f"{result}{marker}"
