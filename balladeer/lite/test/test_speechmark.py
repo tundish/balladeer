@@ -465,6 +465,76 @@ class CueTests:
         self.assertEqual(rv, expected)
 
 
+class UnorderedListTests(Syntax):
+
+    @Syntax.example(label="5.1")
+    def test_minimal_list(self, markup: dict={}, output=""):
+        """
+        A line beginning with a '+' character constitutes an
+        item in an unordered list.
+
+        # TOML
+        markup."Entire list"  =  '''
+        + Hat
+        + Gloves
+        '''
+        output = '''
+        <blockquote>
+        <ul>
+        <li><p>Hat</p></li>
+        <li><p>Gloves</p></li>
+        </ul>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+
+class OrderedListTests(Syntax):
+
+    @Syntax.example(label="5.1")
+    def test_numbered_list(self, markup: dict={}, output=""):
+        """
+        Ordered lists have lines which begin with one or more digits. Then a dot, and at least one space. 
+
+        # TOML
+        markup."Entire list"  =  '''
+        1. Hat
+        2. Gloves
+        '''
+        output = '''
+        <blockquote>
+        <ol>
+        <li id="1"><p>Hat</p></li>
+        <li id="2"><p>Gloves</p></li>
+        </ol>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    @Syntax.example(label="5.1")
+    def test_zeropadded_list(self, markup: dict={}, output=""):
+        """
+        Ordered list numbering is exactly as you define. No normalization is performed.
+
+        # TOML
+        markup."Entire list"  =  '''
+        01. Hat
+        02. Gloves
+        '''
+        output = '''
+        <blockquote>
+        <ol>
+        <li id="01"><p>Hat</p></li>
+        <li id="02"><p>Gloves</p></li>
+        </ol>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+
 class BlockTests(Syntax):
 
     @Syntax.example()
