@@ -422,7 +422,7 @@ class LinkTests(Syntax):
         self.assertEqual(rv, expected)
 
 
-class CueTests:
+class CueTests(Syntax):
 
     def test_anonymous_cue(self):
         cue = ""
@@ -463,6 +463,29 @@ class CueTests:
         sm = SpeechMark()
         rv = sm.loads(line)
         self.assertEqual(rv, expected)
+
+    def test_cue_matching_positive(self):
+        examples = [
+            "<>", "<> Hi!",
+            "<role>", "<ROLE>",
+            "<role:mode>", "<ROLE:MODE>",
+        ]
+        sm = SpeechMark()
+        for line in examples:
+            with self.subTest(line=line):
+                rv = sm.cue_matcher.match(line)
+                self.assertTrue(rv)
+
+    def test_cue_matching_negative(self):
+        examples = [
+            "< >", "< >Hi!",
+            "<role >", "< ROLE>"
+        ]
+        sm = SpeechMark()
+        for line in examples:
+            with self.subTest(line=line):
+                rv = sm.cue_matcher.match(line)
+                self.assertFalse(rv)
 
 
 class UnorderedListTests(Syntax):
