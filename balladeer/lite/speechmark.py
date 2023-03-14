@@ -26,24 +26,6 @@ import re
 
 class SpeechMark:
 
-    @staticmethod
-    def blocks(text: str):
-        trim = textwrap.dedent(text)
-        if trim != text:
-            warnings.warn(f"Reindentation lost {len(text) - len(trim)} chars")
-
-        lines = text.splitlines(keepends=False)
-        enter, exit = 0, 0 # character positions
-        start, end = 0, 0  # line numbers
-        for n, l in enumerate(lines):
-            if not n or l.startswith("<"):
-                yield trim, enter, exit, lines, start, end
-                start = n
-                enter = exit
-            else:
-                end = n
-                exit += len(l)
-
     def __init__(
             self,
             lines=[], maxlen=None,
@@ -96,67 +78,25 @@ class SpeechMark:
         ))
         for begin, end in blocks:
             cue = cues.get(begin)
-            yield from self.parse_block(
+            yield "\n".join(self.parse_block(
                 cue, lines[begin:end], terminate
-            )
+            ))
 
         self._index = end
 
-    def parse_block(self, cue, lines):
-        # TODO:
-        #   find paragraph boundaries
-        #   list boundaries
-        #   then join text
-        #   transformations
-        l_open, l_close = "", ""
-        p_open, p_close = "<p>", ""
-        for n, line in enumerate(lines):
-            if not n:
-                if cue:
-                    # TODO: process cue
-                    continue
-                yield "<blockquote>"
-            if not line:
-                # TODO: new paragraph
-                yield "</p>"
-                p_open, p_close = "<p>", ""
-                if l_close:
-                    l_open, l_close = "", ""
-                    yield "</ul>"
-                continue
-            elif line.startswith("+"):
-                l_open, l_close = "<li>", "</li>"
-                yield "<ul>"  # TODO also ol
-
-            # Check for list items
-            # Everything else is a paragraph with inline markup
-            l_open, l_close = "", ""
-            content = line.translate(self.escape_table)
-            yield f"{l_open}{p_open}{content}{p_close}{l_close}"
-            p_open, p_close = "", ""
-        else:
-            if l_close:
-                l_open, l_close = "", ""
-                yield "</ul>"
-            yield "</blockquote>"
-
     def parse_block(self, cue, lines, terminate=False):
-        # TODO:
-        #   find paragraph boundaries
-        #   list boundaries
-        #   then join text
-        #   transformations
+
         lists = dict(filter(
             operator.itemgetter(1),
             ((n, self.list_matcher.match(line))
             for n, line in enumerate(lines))
         ))
 
-        print(f"Lists: {lists}")
         paragraphs = list(itertools.pairwise(sorted({
             n for n, line in enumerate(lines)
             if not line.strip()
         }.union({0, len(lines)} if terminate else {0}))))
+
         for n, line in enumerate(lines):
             if cue:
                 yield '<blockquote cite="{0}">'.format(
