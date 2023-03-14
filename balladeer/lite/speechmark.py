@@ -46,7 +46,10 @@ class SpeechMark:
         (?P<ordinal>\+|\d+\.)           # Digits and a dot
         """, re.VERBOSE)
 
-        self.tone_matcher = re.compile("")
+        self.tag_matcher = re.compile("""
+        (?P<tag>[`*_]).*?(?P=tag)        # Non-greedy pair
+        """, re.VERBOSE)
+
         self.link_matcher = re.compile("")
         self.escape_table = str.maketrans({
             v: f"&{k}" for k, v in html.entities.html5.items()
@@ -59,6 +62,9 @@ class SpeechMark:
     @property
     def text(self):
         return "\n".join(self.source)
+
+    def tag(self, match):
+        return match.string
 
     def parse_lines(self, terminate: bool):
 
@@ -128,7 +134,10 @@ class SpeechMark:
                 yield "</p>"
                 yield "<p>"
 
-            yield line.translate(self.escape_table)
+            line = line.translate(self.escape_table)
+            if False and self.tag_matcher.match(line):
+                line = self.tag_matcher.sub(self.tag, line)
+            yield line
 
         if terminate:
             if list_type:
