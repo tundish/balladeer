@@ -142,8 +142,21 @@ class SpeechMark:
         }.union({0, len(lines)} if terminate else {0}))
         open_ps = {i for n, i in enumerate(breaks) if not n % 2}
         close_ps = {i for n, i in enumerate(breaks) if n % 2}
-        yield "<blockquote>"
         for n, line in enumerate(lines):
+            if cue:
+                yield '<blockquote cite="{0}">'.format(
+                    html.escape(line[:cue.end()], quote=True)
+                )
+
+                attrs = " ".join(
+                    f'data-{k}="{html.escape(v, quote=True)}"'
+                    for k, v in cue.groupdict().items()
+                    if v
+                )
+                yield f"<cite{' ' if attrs else ''}{attrs}>{cue['role']}</cite>"
+                line = line[cue.end():].lstrip()  # Retain hanging text
+            else:
+                yield "<blockquote>"
             if n in open_ps:
                 if n in close_ps:
                     yield f"<p>{line}</p>"
@@ -154,8 +167,6 @@ class SpeechMark:
             else:
                 yield line
 
-        print(breaks)
-        yield "\n".join(lines)
         if terminate:
             yield "</blockquote>"
 
