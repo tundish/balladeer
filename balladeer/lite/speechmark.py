@@ -111,7 +111,7 @@ class SpeechMark:
                 )
                 yield f"<cite{' ' if attrs else ''}{attrs}>{cue['role']}</cite>"
                 line = line[cue.end():].lstrip()  # Retain hanging text
-            else:
+            elif not n:
                 yield "<blockquote>"
 
             if n in list_items:
