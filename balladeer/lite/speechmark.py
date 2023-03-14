@@ -136,12 +136,15 @@ class SpeechMark:
         #   list boundaries
         #   then join text
         #   transformations
-        breaks = ({
+        lists = list(itertools.pairwise(sorted({
+            n for n, line in enumerate(lines)
+            if line.strip().startswith("+")
+        })))
+        print(f"Lists: {lists}")
+        paragraphs = list(itertools.pairwise(sorted({
             n for n, line in enumerate(lines)
             if not line.strip()
-        }.union({0, len(lines)} if terminate else {0}))
-        open_ps = {i for n, i in enumerate(breaks) if not n % 2}
-        close_ps = {i for n, i in enumerate(breaks) if n % 2}
+        }.union({0, len(lines)} if terminate else {0}))))
         for n, line in enumerate(lines):
             if cue:
                 yield '<blockquote cite="{0}">'.format(
@@ -157,15 +160,8 @@ class SpeechMark:
                 line = line[cue.end():].lstrip()  # Retain hanging text
             else:
                 yield "<blockquote>"
-            if n in open_ps:
-                if n in close_ps:
-                    yield f"<p>{line}</p>"
-                else:
-                    yield f"<p>{line}"
-            elif n in close_ps:
-                yield f"{line}</p>"
-            else:
-                yield line
+
+            yield line.translate(self.escape_table)
 
         if terminate:
             yield "</blockquote>"
