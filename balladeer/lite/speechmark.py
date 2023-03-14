@@ -86,7 +86,7 @@ class SpeechMark:
 
     def parse_block(self, cue, lines, terminate=False):
 
-        lists = dict(filter(
+        list_items = dict(filter(
             operator.itemgetter(1),
             ((n, self.list_matcher.match(line))
             for n, line in enumerate(lines))
@@ -97,6 +97,7 @@ class SpeechMark:
             if not line.strip()
         }.union({0, len(lines)} if terminate else {0}))))
 
+        list_type = ""
         for n, line in enumerate(lines):
             if cue:
                 yield '<blockquote cite="{0}">'.format(
@@ -113,9 +114,23 @@ class SpeechMark:
             else:
                 yield "<blockquote>"
 
+            if n in list_items:
+                details = list_items[n].groupdict()
+                if list_type:
+                    yield f"</p></li>"
+                else:
+                    list_type = "ul" if details["ordinal"] == "+" else "ol"
+
+                yield f"<{list_type}>"
+                if list_type == "ul":
+                    yield f"<li><p>"
+                else:
+                    yield f"""<li id="{details['ordinal']}"><p>"""
             yield line.translate(self.escape_table)
 
         if terminate:
+            if list_type:
+                yield f"</{list_type}>"
             yield "</blockquote>"
 
     def loads(self, text: str, marker: str="\n", **kwargs):
