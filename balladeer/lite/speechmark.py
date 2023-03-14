@@ -92,11 +92,6 @@ class SpeechMark:
             for n, line in enumerate(lines))
         ))
 
-        paragraphs = list(itertools.pairwise(sorted({
-            n for n, line in enumerate(lines)
-            if not line.strip()
-        }.union({0, len(lines)} if terminate else {0}))))
-
         list_type = ""
         for n, line in enumerate(lines):
             while paragraphs and n < paragraphs[0][0]:
@@ -132,20 +127,18 @@ class SpeechMark:
                     yield f"""<li id="{details['ordinal'].rstrip('.')}"><p>"""
                 line = line[item.end():].lstrip()  # Retain hanging text
 
-            if paragraphs and n == paragraphs[0][0]:
-                # yield "<p>"
-                pass
+            elif not line:
+                yield "</p>"
+                yield "<p>"
 
             yield line.translate(self.escape_table)
-
-            if paragraphs and n == paragraphs[0][1]:
-                # yield "</p>"
-                pass
 
         if terminate:
             if list_type:
                 yield "</p></li>"
                 yield f"</{list_type}>"
+            else:
+                yield "</p>"
             yield "</blockquote>"
 
     def loads(self, text: str, marker: str="\n", **kwargs):
