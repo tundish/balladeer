@@ -118,9 +118,9 @@ class SpeechMark:
                 item = list_items[n]
                 details = item.groupdict()
                 if list_type:
-                    yield f"</p></li>"
+                    yield "</p></li>"
                 else:
-                    list_type = "ul" if details["ordinal"] == "+" else "ol"
+                    list_type = "ul" if details["ordinal"].strip() == "+" else "ol"
                     yield f"<{list_type}>"
 
                 if list_type == "ul":
@@ -132,6 +132,7 @@ class SpeechMark:
 
         if terminate:
             if list_type:
+                yield "</p></li>"
                 yield f"</{list_type}>"
             yield "</blockquote>"
 
