@@ -94,9 +94,6 @@ class SpeechMark:
 
         list_type = ""
         for n, line in enumerate(lines):
-            while paragraphs and n < paragraphs[0][0]:
-                paragraphs.pop()
-
             if cue:
                 yield '<blockquote cite="{0}">'.format(
                     html.escape(line[:cue.end()], quote=True)
