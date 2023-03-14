@@ -115,7 +115,8 @@ class SpeechMark:
                 yield "<blockquote>"
 
             if n in list_items:
-                details = list_items[n].groupdict()
+                item = list_items[n]
+                details = item.groupdict()
                 if list_type:
                     yield f"</p></li>"
                 else:
@@ -125,7 +126,8 @@ class SpeechMark:
                 if list_type == "ul":
                     yield f"<li><p>"
                 else:
-                    yield f"""<li id="{details['ordinal']}"><p>"""
+                    yield f"""<li id="{details['ordinal'].rstrip('.')}"><p>"""
+                line = line[item.end():].lstrip()  # Retain hanging text
             yield line.translate(self.escape_table)
 
         if terminate:
