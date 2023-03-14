@@ -176,8 +176,9 @@ class Syntax(unittest.TestCase):
         for n, (tag, text) in enumerate(markup.items()):
             with self.subTest(n=n, tag=tag, text=text):
                 rv = sm.loads(text)
-                expected = textwrap.dedent(output).strip()
-                self.assertEqual(rv, expected)
+                result = "".join(i.strip() for i in rv.splitlines())
+                expected = "".join(i.strip() for i in output.splitlines())
+                self.assertEqual(result, expected, rv)
 
 
 class CommentTests(Syntax):

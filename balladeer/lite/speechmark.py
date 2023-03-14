@@ -121,8 +121,8 @@ class SpeechMark:
                     yield f"</p></li>"
                 else:
                     list_type = "ul" if details["ordinal"] == "+" else "ol"
+                    yield f"<{list_type}>"
 
-                yield f"<{list_type}>"
                 if list_type == "ul":
                     yield f"<li><p>"
                 else:
