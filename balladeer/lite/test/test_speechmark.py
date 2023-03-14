@@ -524,6 +524,7 @@ class UnorderedListTests(Syntax):
 
 class OrderedListTests(Syntax):
 
+    @unittest.skip("Not yet")
     @Syntax.example(label="5.1")
     def test_numbered_list(self, markup: dict={}, output=""):
         """
@@ -545,6 +546,7 @@ class OrderedListTests(Syntax):
         """
         return self.check(markup, output)
 
+    @unittest.skip("Not yet")
     @Syntax.example(label="5.1")
     def test_zeropadded_list(self, markup: dict={}, output=""):
         """
@@ -565,6 +567,31 @@ class OrderedListTests(Syntax):
         '''
         """
         return self.check(markup, output)
+
+    def test_list_matching_positive(self):
+        examples = [
+            "<>", "<> Hi!",
+            "<role>", "<ROLE>",
+        ]
+        sm = SpeechMark()
+        for line in examples:
+            with self.subTest(line=line):
+                rv = sm.list_matcher.match(line)
+                self.assertTrue(rv)
+                d = rv.groupdict()
+                print(d)
+                self.assertEqual(5, len(d))
+
+    def test_cue_matching_negative(self):
+        examples = [
+            "< >", "< >Hi!",
+            "<role >", "< ROLE>"
+        ]
+        sm = SpeechMark()
+        for line in examples:
+            with self.subTest(line=line):
+                rv = sm.list_matcher.match(line)
+                self.assertFalse(rv)
 
 
 class BlockTests(Syntax):

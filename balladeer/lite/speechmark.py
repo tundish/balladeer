@@ -54,6 +54,10 @@ class SpeechMark:
         (?P<fragments>[^ >]*)           # Fragments
         >                               # Closing bracket
         """, re.VERBOSE)
+
+        self.list_matcher = re.compile("""
+        """, re.VERBOSE)
+
         self.tone_matcher = re.compile("")
         self.link_matcher = re.compile("")
         self.escape_table = str.maketrans({
@@ -136,10 +140,12 @@ class SpeechMark:
         #   list boundaries
         #   then join text
         #   transformations
-        lists = list(itertools.pairwise(sorted({
-            n for n, line in enumerate(lines)
-            if line.strip().startswith("+")
-        })))
+        lists = dict(filter(
+            operator.itemgetter(1),
+            ((n, self.list_matcher.match(line))
+            for n, line in enumerate(lines))
+        ))
+
         print(f"Lists: {lists}")
         paragraphs = list(itertools.pairwise(sorted({
             n for n, line in enumerate(lines)
