@@ -47,7 +47,7 @@ class SpeechMark:
         """, re.VERBOSE)
 
         self.tag_matcher = re.compile("""
-        (?P<tag>[`*_]).*?(?P=tag)        # Non-greedy pair
+        (?P<tag>[`*_])(?P<text>.*?)(?P=tag) # Non-greedy pair
         """, re.VERBOSE)
 
         self.link_matcher = re.compile("")
@@ -64,6 +64,8 @@ class SpeechMark:
         return "\n".join(self.source)
 
     def tag(self, match):
+        tag = match.groupdict().get("tag")
+        print(match.groupdict(), match.group(0, 1), match.string)
         return match.string
 
     def parse_lines(self, terminate: bool):
