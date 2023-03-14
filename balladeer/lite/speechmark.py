@@ -135,7 +135,7 @@ class SpeechMark:
                 yield "<p>"
 
             line = line.translate(self.escape_table)
-            if False and self.tag_matcher.match(line):
+            if self.tag_matcher.match(line):
                 line = self.tag_matcher.sub(self.tag, line)
             yield line
 
