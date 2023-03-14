@@ -60,6 +60,8 @@ class SpeechMark:
         """, re.VERBOSE)
 
         self.list_matcher = re.compile("""
+        ^\s*                            # Leading space
+        (?P<ordinal>\+|\d+\.)           # Digits and a dot
         """, re.VERBOSE)
 
         self.tone_matcher = re.compile("")
