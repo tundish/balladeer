@@ -44,7 +44,11 @@ class SpeechMark:
                 end = n
                 exit += len(l)
 
-    def __init__(self, lines=[], maxlen=None):
+    def __init__(
+            self,
+            lines=[], maxlen=None,
+            noescape="!\"#'()*+,-..:;=@{}~`_",
+        ):
         self.cue_matcher = re.compile("""
         ^<                              # Opening bracket
         (?P<role>[^\.:\\?# >]*)         # Role
@@ -63,7 +67,7 @@ class SpeechMark:
         self.escape_table = str.maketrans({
             v: f"&{k}" for k, v in html.entities.html5.items()
             if k.endswith(";") and len(v) == 1
-            and v not in "!\"#'()*+,-..:;=@{}~`_"
+            and v not in noescape
         })
         self.source = deque(lines, maxlen=maxlen)
         self._index = 0
