@@ -99,6 +99,9 @@ class SpeechMark:
 
         list_type = ""
         for n, line in enumerate(lines):
+            while paragraphs and n < paragraphs[0][0]:
+                paragraphs.pop()
+
             if cue:
                 yield '<blockquote cite="{0}">'.format(
                     html.escape(line[:cue.end()], quote=True)
@@ -128,7 +131,16 @@ class SpeechMark:
                 else:
                     yield f"""<li id="{details['ordinal'].rstrip('.')}"><p>"""
                 line = line[item.end():].lstrip()  # Retain hanging text
+
+            if paragraphs and n == paragraphs[0][0]:
+                # yield "<p>"
+                pass
+
             yield line.translate(self.escape_table)
+
+            if paragraphs and n == paragraphs[0][1]:
+                # yield "</p>"
+                pass
 
         if terminate:
             if list_type:
