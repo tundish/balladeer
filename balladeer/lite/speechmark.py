@@ -64,9 +64,12 @@ class SpeechMark:
         return "\n".join(self.source)
 
     def tag(self, match):
-        tag = match.groupdict().get("tag")
-        print(match.groupdict(), match.group(0, 1), match.string)
-        return match.string
+        tags = {"`": "code", "_": "strong", "*": "em"}
+        tag = tags.get(match.groupdict().get("tag"), "")
+        if match.start("tag") == 0:
+            return f"<{tag}>"
+        else:
+            return f"</{tag}>"
 
     def parse_lines(self, terminate: bool):
 
