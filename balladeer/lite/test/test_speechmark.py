@@ -390,7 +390,7 @@ class LinkTests(Syntax):
         sm = SpeechMark()
         match = sm.link_matcher.match("[Python](https://python.org)")
         self.assertTrue(match)
-        self.assertEqual("Python", match.groupdict().get("text"))
+        self.assertEqual("Python", match.groupdict().get("label"))
         self.assertEqual("https://python.org", match.groupdict().get("link"))
 
     @Syntax.example(label="5.1")

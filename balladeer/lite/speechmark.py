@@ -53,9 +53,14 @@ class SpeechMark:
         self.tagging = {"`": "code", "_": "strong", "*": "em"}
 
         self.link_matcher = re.compile("""
-        \\[(?P<text>[^\\]]*?)\\]        # Non-greedy, permissive
+        \\[(?P<label>[^\\]]*?)\\]       # Non-greedy, permissive
         \\((?P<link>[^\\)]*?)\\)        # Non-greedy, permissive
         """, re.VERBOSE)
+
+        self.inline_matcher = re.compile(
+            f"{self.tag_matcher.pattern}|{self.link_matcher.pattern}"
+        )
+
         self.escape_table = str.maketrans({
             v: f"&{k}" for k, v in html.entities.html5.items()
             if k.endswith(";") and len(v) == 1
@@ -76,7 +81,7 @@ class SpeechMark:
     def link(self, match):
         details = match.groupdict()
         href = html.escape(details["link"], quote=True)
-        return f"""<a href="{href}">{details['text']}</a>"""
+        return f"""<a href="{href}">{details['label']}</a>"""
 
     def parse_lines(self, terminate: bool):
 
@@ -155,6 +160,7 @@ class SpeechMark:
 
             # TODO: split by re first so non-matching strings can be escaped
             # line = line.translate(self.escape_table)
+            print(self.inline_matcher.split(line))
             line = self.link_matcher.sub(self.link, line)
 
             if self.tag_matcher.match(line):
