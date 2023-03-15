@@ -22,6 +22,7 @@ import html
 import itertools
 import operator
 import re
+import sys
 
 
 class SpeechMark:
@@ -68,10 +69,6 @@ class SpeechMark:
         details = match.groupdict()
         tag = tags.get(details.get("tag"), "")
         return f"<{tag}>{details['text']}</{tag}>"
-        if match.start("tag") == 0:
-            return f"<{tag}>"
-        else:
-            return f"</{tag}>"
 
     def parse_lines(self, terminate: bool):
 
@@ -106,6 +103,7 @@ class SpeechMark:
         ))
 
         list_type = ""
+        paragraph = False
         for n, line in enumerate(lines):
             if cue:
                 yield '<blockquote cite="{0}">'.format(
@@ -129,6 +127,8 @@ class SpeechMark:
                     yield "</p></li>"
                 else:
                     list_type = "ul" if details["ordinal"].strip() == "+" else "ol"
+                    if paragraph:
+                        yield "</p>"
                     yield f"<{list_type}>"
 
                 if list_type == "ul":
@@ -137,6 +137,9 @@ class SpeechMark:
                     yield f"""<li id="{details['ordinal'].rstrip('.')}"><p>"""
                 line = line[item.end():].lstrip()  # Retain hanging text
 
+            elif not paragraph and n < min(list_items or [sys.maxsize]):
+                paragraph = True
+                yield f"<p>"
             elif not line:
                 yield "</p>"
                 yield "<p>"
