@@ -50,6 +50,7 @@ class SpeechMark:
         self.tag_matcher = re.compile("""
         (?P<tag>[`*_])(?P<text>.*?)(?P=tag) # Non-greedy pair
         """, re.VERBOSE)
+        self.tagging = {"`": "code", "_": "strong", "*": "em"}
 
         self.link_matcher = re.compile("")
         self.escape_table = str.maketrans({
@@ -65,9 +66,8 @@ class SpeechMark:
         return "\n".join(self.source)
 
     def tag(self, match):
-        tags = {"`": "code", "_": "strong", "*": "em"}
         details = match.groupdict()
-        tag = tags.get(details.get("tag"), "")
+        tag = self.tagging.get(details.get("tag"), "")
         return f"<{tag}>{details['text']}</{tag}>"
 
     def parse_lines(self, terminate: bool):
