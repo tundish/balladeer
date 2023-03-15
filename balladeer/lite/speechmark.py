@@ -65,7 +65,9 @@ class SpeechMark:
 
     def tag(self, match):
         tags = {"`": "code", "_": "strong", "*": "em"}
-        tag = tags.get(match.groupdict().get("tag"), "")
+        details = match.groupdict()
+        tag = tags.get(details.get("tag"), "")
+        return f"<{tag}>{details['text']}</{tag}>"
         if match.start("tag") == 0:
             return f"<{tag}>"
         else:
