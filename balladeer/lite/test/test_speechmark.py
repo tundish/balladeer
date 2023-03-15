@@ -276,14 +276,25 @@ class SignificanceTests(Syntax):
 
         # TOML
         markup."Multiple signifiers" =   "_Warning_ _Warning_!"
-        markup."Abutting signifiers" =   "_Warning__Warning_!"
         output = '''
         <blockquote>
-        <p><strong>Warning!</strong><strong>Warning!</strong</p>
+        <p><strong>Warning</strong> <strong>Warning</strong>!</p>
         </blockquote>
         '''
         """
         return self.check(markup, output)
+
+    def test_cornercases_code(self):
+        expected = textwrap.dedent("""
+        <blockquote>
+        <p>
+        <strong>Warning</strong><strong>Warning</strong>!
+        </p>
+        </blockquote>
+        """)
+        sm = SpeechMark()
+        rv = sm.loads("_Warning__Warning_!")
+        self.compare(rv, expected, rv)
 
 
 class CodeTests(Syntax):
