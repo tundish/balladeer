@@ -460,7 +460,7 @@ class CueTests(Syntax):
         cue = ""
         line = f"<{cue}> Hello!"
         expected = textwrap.dedent(f"""
-        <blockquote cite="{cue}">
+        <blockquote cite="&lt;&gt;">
         <p>Hello!</p>
         </blockquote>
         """)
@@ -473,7 +473,7 @@ class CueTests(Syntax):
         line = f"<{cue}> Hello?"
         expected = textwrap.dedent(f"""
         <blockquote cite="&lt;{role}&gt;">
-        <cite>{role}</cite>
+        <cite data-role="GUEST">{role}</cite>
         <p>Hello?</p>
         </blockquote>
         """)
