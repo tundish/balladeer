@@ -402,6 +402,13 @@ class EmphasisTests(Syntax):
 
 class LinkTests(Syntax):
 
+    def test_basic_match(self):
+        sm = SpeechMark()
+        match = sm.link_matcher.match("[Python](https://python.org)")
+        self.assertTrue(match)
+        self.assertEqual("Python", match.groupdict().get("text"))
+        self.assertEqual("https://python.org", match.groupdict().get("link"))
+
     @Syntax.example(label="5.1")
     def test_single_link(self, markup: dict={}, output=""):
         """
@@ -426,16 +433,15 @@ class LinkTests(Syntax):
 
         # TOML
         markup."Multiple signifiers" =  "[Python](https://python.org) [PyPI](https://pypi.org)"
-        markup."Abutting signifiers" =  "[Python](https://python.org) [PyPI](https://pypi.org)"
         output = '''
         <blockquote>
-        <p><a href="https://python.org">Python</a><a href="https://pypi.org">PyPI</a></p>
+        <p><a href="https://python.org">Python</a> <a href="https://pypi.org">PyPI</a></p>
         </blockquote>
         '''
         """
         return self.check(markup, output)
 
-    def test_cornercases_links(self):
+    def test_cornercases_links_with_spaces(self):
         expected = textwrap.dedent("""
         <blockquote>
         <p>[Python] (https://python.org)</p>
@@ -443,7 +449,17 @@ class LinkTests(Syntax):
         """)
         sm = SpeechMark()
         rv = sm.loads("[Python] (https://python.org)")
-        self.assertEqual(rv, expected)
+        self.compare(rv, expected, rv)
+
+    def test_cornercases_abutting_links(self):
+        expected = textwrap.dedent("""
+        <blockquote>
+        <p><a href="https://python.org">Python</a><a href="https://python.org">Python</a></p>
+        </blockquote>
+        """)
+        sm = SpeechMark()
+        rv = sm.loads("[Python](https://python.org)[Python](https://python.org)")
+        self.compare(rv, expected, rv)
 
 
 class CueTests(Syntax):
