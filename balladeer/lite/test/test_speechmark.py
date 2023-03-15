@@ -207,7 +207,6 @@ class ParagraphTests(Syntax):
 
         # TOML
         markup."Plain string"  =   "Hello!"
-        markup."Anonymous cue" =   "<> Hello!"
         output = '''
         <blockquote>
         <p>Hello!</p>
@@ -250,6 +249,16 @@ class ParagraphTests(Syntax):
         '''
         """
         return self.check(markup, output)
+
+    def test_cornercases_code(self):
+        expected = textwrap.dedent("""
+        <blockquote cite="&lt;&gt;">
+        <p>Hello!</p>
+        </blockquote>
+        """)
+        sm = SpeechMark()
+        rv = sm.loads("<> Hello!")
+        self.compare(rv, expected, rv)
 
 
 class SignificanceTests(Syntax):

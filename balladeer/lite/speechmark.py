@@ -115,7 +115,8 @@ class SpeechMark:
                     for k, v in cue.groupdict().items()
                     if v
                 )
-                yield f"<cite{' ' if attrs else ''}{attrs}>{cue['role']}</cite>"
+                if cue["role"]:
+                    yield f"<cite{' ' if attrs else ''}{attrs}>{cue['role']}</cite>"
                 line = line[cue.end():].lstrip()  # Retain hanging text
             elif not n:
                 yield "<blockquote>"
