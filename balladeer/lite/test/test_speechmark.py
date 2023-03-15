@@ -374,15 +374,23 @@ class EmphasisTests(Syntax):
 
         # TOML
         markup."Multiple signifiers" =   "*Definitely* *Definitely!*"
-        markup."Abutting signifiers" =   "*Definitely**Definitely!*"
         output = '''
         <blockquote>
-        <p><em>Definitely</em><em>Definitely!</em></p>
+        <p><em>Definitely</em> <em>Definitely!</em></p>
         </blockquote>
         '''
         """
         return self.check(markup, output)
 
+    def test_cornercases_abutting_emphasis(self):
+        expected = textwrap.dedent("""
+        <blockquote>
+        <p><em>Definitely</em><em>Definitely!</em></p>
+        </blockquote>
+        """)
+        sm = SpeechMark()
+        rv = sm.loads("*Definitely**Definitely!*")
+        self.compare(rv, expected, rv)
 
 class LinkTests(Syntax):
 
@@ -458,20 +466,20 @@ class CueTests(Syntax):
         """)
         sm = SpeechMark()
         rv = sm.loads(line)
-        self.assertEqual(rv, expected)
+        self.compare(rv, expected, rv)
 
     def test_simple_cue(self):
         cue = role = "GUEST"
         line = f"<{cue}> Hello?"
         expected = textwrap.dedent(f"""
-        <blockquote cite="{cue}">
+        <blockquote cite="&lt;{role}&gt;">
         <cite>{role}</cite>
-        <p>Hello!</p>
+        <p>Hello?</p>
         </blockquote>
         """)
         sm = SpeechMark()
         rv = sm.loads(line)
-        self.assertEqual(rv, expected)
+        self.compare(rv, expected, rv)
 
     def test_role_mode_cue(self):
         role = "GUEST"
@@ -479,14 +487,14 @@ class CueTests(Syntax):
         cue = f"{role}:{mode}"
         line = f"<{cue}> Hello?"
         expected = textwrap.dedent(f"""
-        <blockquote cite="{cue}">
+        <blockquote cite="&lt;{cue}&gt;">
         <cite data-mode="{mode}">{role}</cite>
         <p>Hello!</p>
         </blockquote>
         """)
         sm = SpeechMark()
         rv = sm.loads(line)
-        self.assertEqual(rv, expected)
+        self.compare(rv, expected, rv)
 
     def test_cue_matching_positive(self):
         examples = [
