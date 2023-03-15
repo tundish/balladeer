@@ -317,7 +317,7 @@ class CodeTests(Syntax):
         markup."Entire signifier"  =   "`git log`"
         output = '''
         <blockquote>
-        <p><code>Hello!</code></p>
+        <p><code>git log</code></p>
         </blockquote>
         '''
         """
@@ -347,7 +347,7 @@ class CodeTests(Syntax):
         """)
         sm = SpeechMark()
         rv = sm.loads("`8.8.8.8`")
-        self.assertEqual(rv, expected)
+        self.compare(rv, expected, rv)
 
 
 class EmphasisTests(Syntax):
@@ -378,22 +378,6 @@ class EmphasisTests(Syntax):
         output = '''
         <blockquote>
         <p><em>Definitely</em><em>Definitely!</em></p>
-        </blockquote>
-        '''
-        """
-        return self.check(markup, output)
-
-    @Syntax.example(label="4.3")
-    def test_multiple_emphasis(self, markup: dict={}, output=""):
-        """
-        Simple strings are encapsulated in paragraphs.
-
-        # TOML
-        markup."Multiple signifiers" =   "*Definitely* *Definitely!*"
-        markup."Abutting signifiers" =   "*Definitely**Definitely!*"
-        output = '''
-        <blockquote>
-        <p><em>Hello!</em><em>Hello!</em></p>
         </blockquote>
         '''
         """

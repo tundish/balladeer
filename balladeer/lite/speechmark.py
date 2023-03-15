@@ -53,8 +53,8 @@ class SpeechMark:
         self.tagging = {"`": "code", "_": "strong", "*": "em"}
 
         self.link_matcher = re.compile("""
-        \\[(?P<text>[^\\]]*?)\\]           # Non-greedy, permissive
-        \\((?P<link>[^\\)]*?)\\)           # Non-greedy, permissive
+        \\[(?P<text>[^\\]]*?)\\]        # Non-greedy, permissive
+        \\((?P<link>[^\\)]*?)\\)        # Non-greedy, permissive
         """, re.VERBOSE)
         self.escape_table = str.maketrans({
             v: f"&{k}" for k, v in html.entities.html5.items()
@@ -153,7 +153,8 @@ class SpeechMark:
                 yield "</p>"
                 yield "<p>"
 
-            #line = line.translate(self.escape_table)
+            # TODO: split by re first so non-matching strings can be escaped
+            # line = line.translate(self.escape_table)
             line = self.link_matcher.sub(self.link, line)
 
             if self.tag_matcher.match(line):
