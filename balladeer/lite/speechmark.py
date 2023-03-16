@@ -30,7 +30,7 @@ class SpeechMark:
     def __init__(
             self,
             lines=[], maxlen=None,
-            noescape="!\"#'()*+,-..:;=@{}~`_",
+            noescape="!\"#'[]()*+,-.:;/=@{}?~`_",
         ):
         self.cue_matcher = re.compile("""
         ^<                              # Opening bracket
@@ -56,10 +56,6 @@ class SpeechMark:
         \\[(?P<label>[^\\]]*?)\\]       # Non-greedy, permissive
         \\((?P<link>[^\\)]*?)\\)        # Non-greedy, permissive
         """, re.VERBOSE)
-
-        self.inline_matcher = re.compile(
-            f"{self.tag_matcher.pattern}|{self.link_matcher.pattern}"
-        )
 
         self.escape_table = str.maketrans({
             v: f"&{k}" for k, v in html.entities.html5.items()
@@ -101,9 +97,9 @@ class SpeechMark:
         ))
         for begin, end in blocks:
             cue = cues.get(begin)
-            yield "\n".join(self.parse_block(
-                cue, lines[begin:end], terminate
-            ))
+            yield "\n".join(
+                i for i in self.parse_block(cue, lines[begin:end], terminate) if isinstance(i, str)
+            )
 
         self._index = end
 
@@ -162,13 +158,12 @@ class SpeechMark:
                 yield "</p>"
                 yield "<p>"
 
-            # TODO: split by re first so non-matching strings can be escaped
-            # line = line.translate(self.escape_table)
-            # print(self.inline_matcher.split(line))
-            line = self.link_matcher.sub(self.link, line)
+            line = line.translate(self.escape_table)
+            line, links_count = self.link_matcher.subn(self.link, line)
+            yield (self.link_matcher, links_count)
 
-            if self.tag_matcher.match(line):
-                line = self.tag_matcher.sub(self.tag, line)
+            line, tags_count = self.tag_matcher.subn(self.tag, line)
+
             yield line
 
         if terminate:
@@ -180,7 +175,7 @@ class SpeechMark:
             yield "</blockquote>"
 
     def loads(self, text: str, marker: str="\n", **kwargs):
-        result = marker.join(i for i in self.feed(text, terminate=True) if isinstance(i, str))
+        result = marker.join(self.feed(text, terminate=True))
         return f"{result}{marker}"
 
     def feed(self, text: str, terminate=False, **kwargs):

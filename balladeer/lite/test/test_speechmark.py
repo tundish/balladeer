@@ -672,7 +672,6 @@ class BlockTests(Syntax):
         sm = SpeechMark()
         for m in markup.values():
             sm.loads(m)
-            print(f"Text: {sm.text}")
 
 
 if __name__ == "__main__":
