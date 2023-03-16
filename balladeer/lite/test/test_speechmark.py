@@ -661,7 +661,13 @@ class BlockTests(Syntax):
         A cue is used as an attribution of speech.
 
         # TOML
-        markup."Single Word" = "Hello!"
+        markup."Checking in" = '''
+
+        <GUEST> Hello?
+
+        Is there anyone there?
+
+        '''
         output = '''
         <blockquote cite="GUEST">
         <cite>GUEST</cite>
@@ -669,9 +675,7 @@ class BlockTests(Syntax):
         </blockquote>
         '''
         """
-        sm = SpeechMark()
-        for m in markup.values():
-            sm.loads(m)
+        return self.check(markup, output)
 
 
 if __name__ == "__main__":

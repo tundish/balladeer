@@ -30,7 +30,7 @@ class SpeechMark:
     def __init__(
             self,
             lines=[], maxlen=None,
-            noescape="!\"#'[]()*+,-.:;/=@{}?~`_",
+            noescape="!\"',-;{}~",
         ):
         self.cue_matcher = re.compile("""
         ^<                              # Opening bracket
@@ -60,7 +60,7 @@ class SpeechMark:
         self.escape_table = str.maketrans({
             v: f"&{k}" for k, v in html.entities.html5.items()
             if k.endswith(";") and len(v) == 1
-            and v not in noescape
+            and v not in noescape + "<>#+.`_*[]()@?=&:/"
         })
         self.source = deque(lines, maxlen=maxlen)
         self._index = 0
@@ -115,6 +115,7 @@ class SpeechMark:
         paragraph = False
         for n, line in enumerate(lines):
             if cue:
+                yield cue
                 yield '<blockquote cite="{0}">'.format(
                     html.escape(line[:cue.end()], quote=True)
                 )
@@ -136,6 +137,7 @@ class SpeechMark:
 
             if n in list_items:
                 item = list_items[n]
+                yield item
                 details = item.groupdict()
                 if list_type:
                     yield "</p></li>"
@@ -162,10 +164,14 @@ class SpeechMark:
             line, links_count = self.link_matcher.subn(self.link, line)
             yield (self.link_matcher, links_count)
 
+            # line = html.escape(line)
+
             line, tags_count = self.tag_matcher.subn(self.tag, line)
+            yield (self.tag_matcher, tags_count)
 
             yield line
 
+        yield terminate
         if terminate:
             if list_type:
                 yield "</p></li>"
