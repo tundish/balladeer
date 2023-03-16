@@ -43,7 +43,7 @@ class SpeechMark:
         """, re.VERBOSE)
 
         self.list_matcher = re.compile("""
-        ^\s*                            # Leading space
+        ^                            # Leading space
         (?P<ordinal>\+|\d+\.)           # Digits and a dot
         """, re.VERBOSE)
 
@@ -60,7 +60,7 @@ class SpeechMark:
         self.escape_table = str.maketrans({
             v: f"&{k}" for k, v in html.entities.html5.items()
             if k.endswith(";") and len(v) == 1
-            and v not in noescape + "<>#+.`_*[]()@?=&:/"
+            and v not in noescape + "#+.`_*[]()@?=:/"
         })
         self.source = deque(lines, maxlen=maxlen)
         self._index = 0
@@ -72,12 +72,12 @@ class SpeechMark:
     def tag(self, match):
         details = match.groupdict()
         tag = self.tagging.get(details.get("tag"), "")
-        return f"<{tag}>{details['text']}</{tag}>"
+        return f"<{tag}>{details['text'].translate(self.escape_table)}</{tag}>"
 
     def link(self, match):
         details = match.groupdict()
         href = html.escape(details["link"], quote=True)
-        return f"""<a href="{href}">{details['label']}</a>"""
+        return f"""<a href="{href}">{details['label'].translate(self.escape_table)}</a>"""
 
     def parse_lines(self, terminate: bool):
 
@@ -115,7 +115,6 @@ class SpeechMark:
         paragraph = False
         for n, line in enumerate(lines):
             if cue:
-                yield cue
                 yield '<blockquote cite="{0}">'.format(
                     html.escape(line[:cue.end()], quote=True)
                 )
@@ -160,18 +159,19 @@ class SpeechMark:
                 yield "</p>"
                 yield "<p>"
 
-            line = line.translate(self.escape_table)
-            line, links_count = self.link_matcher.subn(self.link, line)
-            yield (self.link_matcher, links_count)
+            subs = dict(
+                (m.span(), fn(m))
+                for fn, i in ((self.link, self.link_matcher), (self.tag, self.tag_matcher))
+                for m in i.finditer(line)
+            )
+            chunks = list(itertools.pairwise(sorted({pos for span in subs for pos in span} | {0, len(line)})))
+            for span in chunks:
+                if span not in subs:
+                    subs[span] = line[span[0]: span[1]].translate(self.escape_table)
 
-            # line = html.escape(line)
-
-            line, tags_count = self.tag_matcher.subn(self.tag, line)
-            yield (self.tag_matcher, tags_count)
-
+            line = "".join(subs[span] for span in chunks)
             yield line
 
-        yield terminate
         if terminate:
             if list_type:
                 yield "</p></li>"

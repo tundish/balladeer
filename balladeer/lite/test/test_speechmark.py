@@ -175,6 +175,7 @@ class Syntax(unittest.TestCase):
     def check(self, markup: dict={}, output=""):
         sm = SpeechMark()
         for n, (tag, text) in enumerate(markup.items()):
+            text = textwrap.dedent(text)
             with self.subTest(n=n, tag=tag, text=text):
                 rv = sm.loads(text)
                 self.compare(rv, output)
@@ -665,7 +666,7 @@ class BlockTests(Syntax):
 
         <GUEST> Hello?
 
-        Is there anyone there?
+        Is *anyone* there?
 
         '''
         output = '''
@@ -675,6 +676,9 @@ class BlockTests(Syntax):
         </blockquote>
         '''
         """
+        sm = SpeechMark()
+        rv = sm.cue_matcher.match(markup["Checking in"])
+        print(rv)
         return self.check(markup, output)
 
 
