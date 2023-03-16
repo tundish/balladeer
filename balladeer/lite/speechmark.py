@@ -130,6 +130,7 @@ class SpeechMark:
                 yield '<blockquote cite="{0}">'.format(
                     html.escape(cue.group(), quote=True)
                 )
+                yield self.cue_element(cue)
 
             elif not n:
                 yield "<blockquote>"
@@ -163,6 +164,7 @@ class SpeechMark:
                 yield "</p>"
                 yield "<p>"
 
+            # Collect all matches and their substitutions
             subs = dict(
                 (m.span(), fn(m))
                 for fn, i in (
@@ -172,13 +174,16 @@ class SpeechMark:
                 )
                 for m in i.finditer(line)
             )
+
+            # Create spans for unmatched chunks of text
             chunks = list(itertools.pairwise(sorted({pos for span in subs for pos in span} | {0, len(line)})))
+
+            # Add default processing for each unmatched span
             for span in chunks:
                 if span not in subs:
                     subs[span] = line[span[0]: span[1]].translate(self.escape_table)
 
-            print(f"Subs: {subs}")
-            line = "".join(subs[span] for span in chunks)
+            line = "".join("" if cue and cue.span() == span else subs[span] for n, span in enumerate(chunks))
             yield line
 
         if terminate:
@@ -190,7 +195,7 @@ class SpeechMark:
             yield "</blockquote>"
 
     def loads(self, text: str, marker: str="\n", **kwargs):
-        result = marker.join(self.feed(text, terminate=True))
+        result = "marker".join(i.strip() for i in self.feed(text, terminate=True))
         return f"{result}{marker}"
 
     def feed(self, text: str, terminate=False, **kwargs):
