@@ -189,11 +189,16 @@ class CommentTests(Syntax):
     @Syntax.example(label="1.0")
     def test_single_comment(self, markup: dict={}, output=""):
         """
-        Any line beginning with a "#" is a comment. It is ignored.
+        Any line beginning with a "#" is a comment.
+        It is output in its entirety (including delimiter) as an HTML comment.
 
         # TOML
-        markup."Entire signifier"  =    "# No effect on output"
-        output = ""
+        markup."Entire signifier"  =    "# TODO"
+        output = '''
+        <blockquote>
+        <!-- # TODO -->
+        </blockquote>
+        '''
         """
         return self.check(markup, output)
 
@@ -330,7 +335,6 @@ class CodeTests(Syntax):
 
         # TOML
         markup."Multiple signifiers" =   "`git` `log`"
-        markup."Abutting signifiers" =   "`git``log`"
         output = '''
         <blockquote>
         <p><code>git</code><code>log</code</p>
@@ -347,6 +351,16 @@ class CodeTests(Syntax):
         """)
         sm = SpeechMark()
         rv = sm.loads("`8.8.8.8`")
+        self.compare(rv, expected, rv)
+
+    def test_cornercases_abutted_code(self):
+        expected = textwrap.dedent("""
+        <blockquote>
+        <p><code>git</code><code>log</code</p>
+        </blockquote>
+        """)
+        sm = SpeechMark()
+        rv = sm.loads("`git``log`")
         self.compare(rv, expected, rv)
 
 
@@ -488,8 +502,8 @@ class CueTests(Syntax):
         line = f"<{cue}> Hello?"
         expected = textwrap.dedent(f"""
         <blockquote cite="&lt;{cue}&gt;">
-        <cite data-mode="{mode}">{role}</cite>
-        <p>Hello!</p>
+        <cite data-role="{role}" data-mode=":{mode}">{role}</cite>
+        <p>Hello?</p>
         </blockquote>
         """)
         sm = SpeechMark()

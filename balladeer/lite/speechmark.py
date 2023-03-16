@@ -134,6 +134,10 @@ class SpeechMark:
             elif not n:
                 yield "<blockquote>"
 
+            if line.lstrip().startswith("#"):
+                yield f"<!-- {line.translate(self.escape_table)} -->"
+                continue
+
             if n in list_items:
                 item = list_items[n]
                 details = item.groupdict()
@@ -171,7 +175,7 @@ class SpeechMark:
             if list_type:
                 yield "</p></li>"
                 yield f"</{list_type}>"
-            else:
+            elif paragraph:
                 yield "</p>"
             yield "</blockquote>"
 
