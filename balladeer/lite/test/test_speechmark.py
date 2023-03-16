@@ -160,14 +160,14 @@ class Syntax(unittest.TestCase):
     """
     examples = []
 
-    def example(label=None):
+    def example(label=""):
         def wrapper(fn):
             def inner(self, *args, **kwargs):
                 return fn(self, **data)
             doc = fn.__doc__ or ""
             text, toml = re.split(r"#\W*TOML\n", doc, maxsplit=1)
             data = tomllib.loads(toml)
-            Syntax.examples.append((label, text, data))
+            Syntax.examples.append((label, text, data, fn))
             fn.__doc__ = text
             return inner
         return wrapper
@@ -682,4 +682,20 @@ class BlockTests(Syntax):
 
 
 if __name__ == "__main__":
-    print(*Syntax.examples, sep="\n")
+    from collections import defaultdict
+    import inspect
+
+    examples = defaultdict(list)
+    for label, text, data, fn in sorted(Syntax.examples):
+        info = dict(inspect.getmembers(fn)) # ["__self__"]["__class__"]
+        cls = globals().get(info["__qualname__"].split(".")[0])
+        examples[cls].append((label, text, data, fn))
+
+    for cls, entries in examples.items():
+        if cls.__doc__:
+            print(cls.__doc__)
+        for label, text, data, fn in entries:
+
+            print(label)
+            print("-" * len(label))
+            print(textwrap.dedent(text))
