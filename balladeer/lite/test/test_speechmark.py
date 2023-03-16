@@ -337,7 +337,7 @@ class CodeTests(Syntax):
         markup."Multiple signifiers" =   "`git` `log`"
         output = '''
         <blockquote>
-        <p><code>git</code><code>log</code</p>
+        <p><code>git</code> <code>log</code></p>
         </blockquote>
         '''
         """
@@ -356,7 +356,7 @@ class CodeTests(Syntax):
     def test_cornercases_abutted_code(self):
         expected = textwrap.dedent("""
         <blockquote>
-        <p><code>git</code><code>log</code</p>
+        <p><code>git</code><code>log</code></p>
         </blockquote>
         """)
         sm = SpeechMark()
@@ -528,7 +528,6 @@ class CueTests(Syntax):
                 rv = sm.cue_matcher.match(line)
                 self.assertTrue(rv)
                 d = rv.groupdict()
-                print(d)
                 self.assertEqual(5, len(d))
 
     def test_cue_matching_negative(self):

@@ -164,7 +164,7 @@ class SpeechMark:
 
             # TODO: split by re first so non-matching strings can be escaped
             # line = line.translate(self.escape_table)
-            print(self.inline_matcher.split(line))
+            # print(self.inline_matcher.split(line))
             line = self.link_matcher.sub(self.link, line)
 
             if self.tag_matcher.match(line):
