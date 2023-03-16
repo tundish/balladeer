@@ -69,12 +69,24 @@ class SpeechMark:
     def text(self):
         return "\n".join(self.source)
 
-    def tag(self, match):
+    def cue_element(self, match):
+        details = match.groupdict()
+        if not details["role"].strip() and not details["parameters"]:
+            return ""
+
+        attrs = " ".join(
+            f'data-{k}="{html.escape(v, quote=True)}"'
+            for k, v in details.items()
+            if v.strip()
+        )
+        return f"<cite{' ' if attrs else ''}{attrs}>{details['role']}</cite>"
+
+    def tag_element(self, match):
         details = match.groupdict()
         tag = self.tagging.get(details.get("tag"), "")
         return f"<{tag}>{details['text'].translate(self.escape_table)}</{tag}>"
 
-    def link(self, match):
+    def link_element(self, match):
         details = match.groupdict()
         href = html.escape(details["link"], quote=True)
         return f"""<a href="{href}">{details['label'].translate(self.escape_table)}</a>"""
@@ -114,19 +126,11 @@ class SpeechMark:
         list_type = ""
         paragraph = False
         for n, line in enumerate(lines):
-            if cue:
+            if cue and not paragraph:
                 yield '<blockquote cite="{0}">'.format(
-                    html.escape(line[:cue.end()], quote=True)
+                    html.escape(cue.group(), quote=True)
                 )
 
-                attrs = " ".join(
-                    f'data-{k}="{html.escape(v, quote=True)}"'
-                    for k, v in cue.groupdict().items()
-                    if v
-                )
-                if cue["role"]:
-                    yield f"<cite{' ' if attrs else ''}{attrs}>{cue['role']}</cite>"
-                line = line[cue.end():].lstrip()  # Retain hanging text
             elif not n:
                 yield "<blockquote>"
 
@@ -161,7 +165,11 @@ class SpeechMark:
 
             subs = dict(
                 (m.span(), fn(m))
-                for fn, i in ((self.link, self.link_matcher), (self.tag, self.tag_matcher))
+                for fn, i in (
+                    (self.cue_element, self.cue_matcher),
+                    (self.link_element, self.link_matcher),
+                    (self.tag_element, self.tag_matcher)
+                )
                 for m in i.finditer(line)
             )
             chunks = list(itertools.pairwise(sorted({pos for span in subs for pos in span} | {0, len(line)})))
@@ -169,6 +177,7 @@ class SpeechMark:
                 if span not in subs:
                     subs[span] = line[span[0]: span[1]].translate(self.escape_table)
 
+            print(f"Subs: {subs}")
             line = "".join(subs[span] for span in chunks)
             yield line
 
