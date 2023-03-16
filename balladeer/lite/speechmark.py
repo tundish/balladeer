@@ -183,7 +183,7 @@ class SpeechMark:
                 if span not in subs:
                     subs[span] = line[span[0]: span[1]].translate(self.escape_table)
 
-            line = "".join("" if cue and cue.span() == span else subs[span] for n, span in enumerate(chunks))
+            line = "".join("" if cue and cue.span() == span else subs[span] for span in chunks)
             yield line
 
         if terminate:
