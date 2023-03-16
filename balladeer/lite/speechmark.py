@@ -195,7 +195,7 @@ class SpeechMark:
             yield "</blockquote>"
 
     def loads(self, text: str, marker: str="\n", **kwargs):
-        result = "marker".join(i.strip() for i in self.feed(text, terminate=True))
+        result = marker.join(i.strip() for i in self.feed(text, terminate=True))
         return f"{result}{marker}"
 
     def feed(self, text: str, terminate=False, **kwargs):
