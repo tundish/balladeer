@@ -691,11 +691,14 @@ if __name__ == "__main__":
         cls = globals().get(info["__qualname__"].split(".")[0])
         examples[cls].append((label, text, data, fn))
 
+    print(textwrap.dedent(Syntax.__doc__))
     for cls, entries in examples.items():
         if cls.__doc__:
-            print(cls.__doc__)
+            print(textwrap.dedent(cls.__doc__))
         for label, text, data, fn in entries:
 
             print(label)
             print("-" * len(label))
             print(textwrap.dedent(text))
+
+    print(textwrap.dedent(__doc__))
