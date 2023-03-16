@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import html
 import re
 import textwrap
 import tomllib
@@ -633,6 +634,24 @@ class OrderedListTests(Syntax):
                 rv = sm.list_matcher.match(line)
                 self.assertFalse(rv)
 
+
+class EscapingTests(Syntax):
+
+    def test_text_escaping(self):
+        sm = SpeechMark()
+        for char in ">&<":
+            text = f" M {char} B?"
+            with self.subTest(text=text):
+                rv = sm.loads(text)
+                self.assertIn(html.escape(char), rv)
+
+    def test_label_escaping(self):
+        sm = SpeechMark()
+        for char in ">&<":
+            text = f"[M {char} B?](http://google.com)"
+            with self.subTest(text=text):
+                rv = sm.loads(text)
+                self.assertIn(html.escape(char), rv)
 
 class BlockTests(Syntax):
 
