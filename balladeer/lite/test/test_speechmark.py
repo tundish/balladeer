@@ -520,7 +520,7 @@ class LinkTests(Syntax):
         See also https://spec.commonmark.org/0.30/#example-482.
 
         # TOML
-        markup."Entire signifier"  =    "[Python](https://python.org)"
+        markup."Single instance"  =    "[Python](https://python.org)"
         output = '''
         <blockquote>
         <p><a href="https://python.org">Python</a></p>
@@ -535,7 +535,7 @@ class LinkTests(Syntax):
         There may be multiple hyperlinks on a line.
 
         # TOML
-        markup."Multiple signifiers" =  "[Python](https://python.org) [PyPI](https://pypi.org)"
+        markup."Multiple instances" =  "[Python](https://python.org) [PyPI](https://pypi.org)"
         output = '''
         <blockquote>
         <p><a href="https://python.org">Python</a> <a href="https://pypi.org">PyPI</a></p>
@@ -566,15 +566,20 @@ class LinkTests(Syntax):
 
 
 class CommentTests(Syntax):
+    """
+    4. Comments
+    -----------
 
-    @Syntax.example(label="6.0")
+    """
+
+    @Syntax.example(label="4.01")
     def test_single_comment(self, markup: dict={}, output=""):
         """
         Any line beginning with a "#" is a comment.
         It is output in its entirety (including delimiter) as an HTML comment.
 
         # TOML
-        markup."Entire signifier"  =    "# TODO"
+        markup."Single instance"  =    "# TODO"
         output = '''
         <blockquote>
         <!-- # TODO -->
@@ -644,6 +649,7 @@ class ParagraphTests(Syntax):
         sm = SpeechMark()
         rv = sm.loads("<> Hello!")
         self.compare(rv, expected, rv)
+
 
 class CueTests(Syntax):
 
@@ -728,7 +734,7 @@ class UnorderedListTests(Syntax):
         item in an unordered list.
 
         # TOML
-        markup."Entire list"  =  '''
+        markup."Single list"  =  '''
         + Hat
         + Gloves
         '''
@@ -752,7 +758,7 @@ class OrderedListTests(Syntax):
         Ordered lists have lines which begin with one or more digits. Then a dot, and at least one space. 
 
         # TOML
-        markup."Entire list"  =  '''
+        markup."Single list"  =  '''
         1. Hat
         2. Gloves
         '''
@@ -773,7 +779,7 @@ class OrderedListTests(Syntax):
         Ordered list numbering is exactly as you define. No normalization is performed.
 
         # TOML
-        markup."Entire list"  =  '''
+        markup."Single list"  =  '''
         01. Hat
         02. Gloves
         '''
