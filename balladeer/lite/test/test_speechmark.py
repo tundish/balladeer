@@ -87,8 +87,8 @@ class Syntax(unittest.TestCase):
     * `Markdown <https://commonmark.org/>`_
     * `RestructuredText <https://docutils.sourceforge.io/rst.html>`_
 
-    I tried both these systems prior to creating SpeechMark. I discovered the first to lack some features
-    I found I needed. The second is overspecified for this particular purpose, hence the document model
+    I tried both these systems prior to creating SpeechMark. I found I needed some features which
+    Markdown didn't have. RST proved to be overkill for this particular purpose, and the document model
     became cumbersome to me.
 
     Philosophy
@@ -220,7 +220,7 @@ class Syntax(unittest.TestCase):
 
         <?pause=3&dwell=0.4>
 
-            Up above, there is the sound of footsteps.
+            From above there is the sound of footsteps.
 
             Snagging on a threadbare carpet.
 
@@ -316,12 +316,13 @@ class Syntax(unittest.TestCase):
     1.3
     ```
 
-    The generated output must be correctly-terminated tags of HTML5.
+    The generated output must be one or more HTML5 ``blockquote`` elements.
+    All elements must be explicitly terminated.
 
     1.4
     ```
 
-    Output must be generated in blocks. Each block may begin with a cue element. A block may contain one
+    All output must be placed within blocks. Each block may begin with a cite element. A block may contain one
     or more paragraphs. A block may contain a list. Every list item must contain a paragraph.
 
     """
@@ -589,69 +590,131 @@ class CommentTests(Syntax):
         return self.check(markup, output)
 
 
-class ParagraphTests(Syntax):
+class UnorderedListTests(Syntax):
+    """
+    5. Lists
+    --------
 
-    def test_minimal_paragraph(self, markup: dict={}, output=""):
+    """
+
+    @Syntax.example(label="5.01")
+    def test_minimal_list(self, markup: dict={}, output=""):
         """
-        Simple strings are encapsulated in paragraphs.
+        A line beginning with a '+' character constitutes an
+        item in an unordered list.
 
         # TOML
-        markup."Plain string"  =   "Hello!"
+        markup."Single list"  =  '''
+        + Hat
+        + Gloves
+        '''
         output = '''
         <blockquote>
-        <p>Hello!</p>
+        <ul>
+        <li><p>Hat</p></li>
+        <li><p>Gloves</p></li>
+        </ul>
         </blockquote>
         '''
         """
         return self.check(markup, output)
 
-    def test_continuing_paragraph(self, markup: dict={}, output=""):
+
+class OrderedListTests(Syntax):
+
+    @Syntax.example(label="5.02")
+    def test_numbered_list(self, markup: dict={}, output=""):
         """
-        A paragraph continues until explicitly terminated.
+        Ordered lists have lines which begin with one or more digits. Then a dot, and at least one space.
 
         # TOML
-        markup."Continuous string"  =   '''
-        Hello!
-        Hello!'''
+        markup."Single list"  =  '''
+        1. Hat
+        2. Gloves
+        '''
         output = '''
         <blockquote>
-        <p>Hello! Hello!</p>
+        <ol>
+        <li id="1"><p>Hat</p></li>
+        <li id="2"><p>Gloves</p></li>
+        </ol>
         </blockquote>
         '''
         """
         return self.check(markup, output)
 
-    @Syntax.example()
-    def test_multiple_paragraphs(self, markup: dict={}, output=""):
+    @Syntax.example(label="5.03")
+    def test_zeropadded_list(self, markup: dict={}, output=""):
         """
-        A paragraph is terminated by a blank line.
+        Ordered list numbering is exactly as declared. No normalization is performed.
 
         # TOML
-        markup."Broken string"  =   '''
-        Hello!
-
-        Hello!'''
+        markup."Single list"  =  '''
+        01. Hat
+        02. Gloves
+        '''
         output = '''
         <blockquote>
-        <p>Hello!</p>
-        <p>Hello!</p>
+        <ol>
+        <li id="01"><p>Hat</p></li>
+        <li id="02"><p>Gloves</p></li>
+        </ol>
         </blockquote>
         '''
         """
         return self.check(markup, output)
 
-    def test_cornercases_code(self):
-        expected = textwrap.dedent("""
-        <blockquote cite="&lt;&gt;">
-        <p>Hello!</p>
-        </blockquote>
-        """)
+    def test_list_matching_positive(self):
+        examples = [
+            "+Hat", "+ Hat", "+ <Hat>",
+            "1.Hat", "1. Hat", "1. <Hat>",
+            "01.Hat", "01. Hat", "01. <Hat>",
+        ]
         sm = SpeechMark()
-        rv = sm.loads("<> Hello!")
-        self.compare(rv, expected, rv)
+        for line in examples:
+            with self.subTest(line=line):
+                rv = sm.list_matcher.match(line)
+                self.assertTrue(rv)
+                d = rv.groupdict()
+                self.assertEqual(1, len(d))
+
+    def test_list_matching_negative(self):
+        examples = [ "<> +", ]
+        sm = SpeechMark()
+        for line in examples:
+            with self.subTest(line=line):
+                rv = sm.list_matcher.match(line)
+                self.assertFalse(rv)
 
 
 class CueTests(Syntax):
+    """
+    6. Cues
+    -------
+
+    A cue mark generates a new block.
+
+    6.01
+    ````
+    A generated ``blockquote`` tag may store the original cue string in its ``cite`` attribute.
+    The string must be appropriately escaped.
+
+    """
+
+    @Syntax.example(label="6.02")
+    def test_single_link(self, markup: dict={}, output=""):
+        """
+        All components of a cue are optional.
+
+        # TOML
+        markup."Anonymous cue"  =    "<> Once upon a time, far, far away..."
+        output = '''
+        <blockquote cite="&lt;&gt;">
+        <p>Once upon a time, far, far away...</p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
 
     def test_anonymous_cue(self):
         cue = ""
@@ -725,96 +788,66 @@ class CueTests(Syntax):
                 self.assertFalse(rv)
 
 
-class UnorderedListTests(Syntax):
+class ParagraphTests(Syntax):
 
-    @Syntax.example(label="5.1")
-    def test_minimal_list(self, markup: dict={}, output=""):
+    def test_minimal_paragraph(self, markup: dict={}, output=""):
         """
-        A line beginning with a '+' character constitutes an
-        item in an unordered list.
+        Simple strings are encapsulated in paragraphs.
 
         # TOML
-        markup."Single list"  =  '''
-        + Hat
-        + Gloves
-        '''
+        markup."Plain string"  =   "Hello!"
         output = '''
         <blockquote>
-        <ul>
-        <li><p>Hat</p></li>
-        <li><p>Gloves</p></li>
-        </ul>
+        <p>Hello!</p>
         </blockquote>
         '''
         """
         return self.check(markup, output)
 
-
-class OrderedListTests(Syntax):
-
-    @Syntax.example(label="5.1")
-    def test_numbered_list(self, markup: dict={}, output=""):
+    def test_continuing_paragraph(self, markup: dict={}, output=""):
         """
-        Ordered lists have lines which begin with one or more digits. Then a dot, and at least one space. 
+        A paragraph continues until explicitly terminated.
 
         # TOML
-        markup."Single list"  =  '''
-        1. Hat
-        2. Gloves
-        '''
+        markup."Continuous string"  =   '''
+        Hello!
+        Hello!'''
         output = '''
         <blockquote>
-        <ol>
-        <li id="1"><p>Hat</p></li>
-        <li id="2"><p>Gloves</p></li>
-        </ol>
+        <p>Hello! Hello!</p>
         </blockquote>
         '''
         """
         return self.check(markup, output)
 
-    @Syntax.example(label="5.1")
-    def test_zeropadded_list(self, markup: dict={}, output=""):
+    @Syntax.example()
+    def test_multiple_paragraphs(self, markup: dict={}, output=""):
         """
-        Ordered list numbering is exactly as you define. No normalization is performed.
+        A paragraph is terminated by a blank line.
 
         # TOML
-        markup."Single list"  =  '''
-        01. Hat
-        02. Gloves
-        '''
+        markup."Broken string"  =   '''
+        Hello!
+
+        Hello!'''
         output = '''
         <blockquote>
-        <ol>
-        <li id="01"><p>Hat</p></li>
-        <li id="02"><p>Gloves</p></li>
-        </ol>
+        <p>Hello!</p>
+        <p>Hello!</p>
         </blockquote>
         '''
         """
         return self.check(markup, output)
 
-    def test_list_matching_positive(self):
-        examples = [
-            "+Hat", "+ Hat", "+ <Hat>",
-            "1.Hat", "1. Hat", "1. <Hat>",
-            "01.Hat", "01. Hat", "01. <Hat>",
-        ]
+    def test_cornercases_code(self):
+        expected = textwrap.dedent("""
+        <blockquote cite="&lt;&gt;">
+        <p>Hello!</p>
+        </blockquote>
+        """)
         sm = SpeechMark()
-        for line in examples:
-            with self.subTest(line=line):
-                rv = sm.list_matcher.match(line)
-                self.assertTrue(rv)
-                d = rv.groupdict()
-                self.assertEqual(1, len(d))
-
-    def test_list_matching_negative(self):
-        examples = [ "<> +", ]
-        sm = SpeechMark()
-        for line in examples:
-            with self.subTest(line=line):
-                rv = sm.list_matcher.match(line)
-                self.assertFalse(rv)
+        rv = sm.loads("<> Hello!")
+        self.compare(rv, expected, rv)
 
 
 class EscapingTests(Syntax):
