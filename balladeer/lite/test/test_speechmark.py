@@ -810,9 +810,7 @@ class CueTests(Syntax):
         output = '''
         <blockquote cite="&lt;?pause=3&amp;dwell=0.4&gt;">
         <cite data-parameters="?pause=3&amp;dwell=0.4"></cite>
-        <p>
-         Above, there is the sound of footsteps.
-        </p>
+        <p>Above, there is the sound of footsteps.</p>
         </blockquote>
         '''
         """
