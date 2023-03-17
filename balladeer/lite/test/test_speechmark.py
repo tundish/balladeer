@@ -469,7 +469,7 @@ class LinkTests(Syntax):
 
 class CueTests(Syntax):
     """
-    A cue marks the start of a new block of dialogue. They are denoted by angled brackets: ``<>``.
+    A cue marks the start of a new block of dialogue. Is is denoted by angled brackets: ``<>``.
 
     Cues are flexible structures. They have a number of features you can use all together, or
     you can leave them empty.
@@ -490,14 +490,18 @@ class CueTests(Syntax):
 
     Directives indicate that there are specific side-effects to the delivery of the dialogue.
     They may be used to fire transitions in a state machine, denoting that the speech marks some
-    progress through some social protocol.
+    progress with respect to a social protocol.
 
     It's recommended that these directives be stated as present participles such as 'promising' or 'declining'.
 
     Directives, being transitive in nature, sometimes demand objects to their action. So you may
     specify the recipient roles of the directive if necessary too.
 
-    Parameters
+    Parameters are key-value pairs which modify the presentation of the dialogue. Their meaning is
+    specific to the application. For example, you might want to specify some exact timing for the
+    revealling of the text::
+
+        <?pause=3>
 
     Fragments
 
