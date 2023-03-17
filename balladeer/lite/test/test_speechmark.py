@@ -106,6 +106,86 @@ class Syntax(unittest.TestCase):
     Features
     ========
 
+    SpeechMark has the basic elements you see in other markup systems, ie:
+
+        * Emphasis
+        * Hyperlinks
+        * Comments
+
+    There is a one feature very specific to SpeechMark:
+
+        * Cues_
+
+    SpeechMark doesn't try to do everything. To integrate it into an application, you may
+    need:
+
+        * Preprocessing
+        * Postprocessing
+
+    Cues
+    ----
+
+    A cue marks the start of a new block of dialogue. Is is denoted by angled brackets::
+
+        <>  Once upon a time, far far away...
+
+    Cues are flexible structures. They have a number of features you can use all together, or
+    you can leave them empty.
+
+    A cue may contain information about the speaker of the dialogue, and how they deliver it.
+
+    The most basic of these is the role. This is the named origin of the lines of dialogue.
+    It is recommended that you state the role in upper case letters, eg: GUEST, STAFF.
+    Inanimate objects can speak too of course. Eg: KETTLE, and PHONE::
+
+        <PHONE> Ring riiing!
+
+    The mode declares the form in which the act of speech is delivered.
+    Although the most common, 'says' is just one of many possible modes of speech.
+    There are others you might want to use, like 'whispers' or 'thinks'.
+    The mode is separated by a colon::
+
+        <GUEST:thinks> I wonder if anyone is going to answer that phone.
+
+    Capturing the mode of speech enables different presentation options,
+    eg: character animations to match the delivery.
+    Modes of speech should be stated in the simple present, third person form.
+
+    Directives indicate that there are specific side-effects to the delivery of the dialogue.
+    They may be used to fire transitions in a state machine, denoting that the speech marks some
+    progress with respect to a social protocol.
+
+    It's recommended that these directives be stated as present participles
+    such as 'promising' or 'declining'::
+
+        <PHONE.announcing> Ring riiing!
+
+    Directives, being transitive in nature, sometimes demand objects to their action. So you may
+    specify the recipient roles of the directive if necessary too::
+
+        <PHONE.announcing@GUEST,STAFF> Ring riiing!
+
+    Parameters are key-value pairs which modify the presentation of the dialogue. SpeechMark borrows the
+    Web URL syntax for parameters (a '?', and '&' as the delimiter).
+
+    Their meaning is specific to the application. For example, it might be necessary to specify
+    some exact timing for the revealing of the text::
+
+        <?pause=3&dwell=0.4>
+
+            Then in silence, very slowly,
+
+            It sank beneath the waves.
+
+    SpeechMark also recognises the concept of fragments, which also come from URLs. That's the part after a '#'
+    symbol. You can use the fragment to refer to items in a list::
+
+        <STAFF.suggesting#3> What would you like sir? We have some very good fish today.
+
+            1. Order the Beef Wellington
+            2. Go for the Cottage Pie
+            3. Try the Dover Sole
+
     Specification
     =============
 
@@ -434,69 +514,6 @@ class LinkTests(Syntax):
 
 
 class CueTests(Syntax):
-    """
-    A cue marks the start of a new block of dialogue. Is is denoted by angled brackets::
-
-        <>  Once upon a time, far far away...
-
-    Cues are flexible structures. They have a number of features you can use all together, or
-    you can leave them empty.
-
-    A cue may contain information about the speaker of the dialogue, and how they deliver it.
-
-    The most basic of these is the role. This is the named origin of the lines of dialogue.
-    It is recommended that you state the role in upper case letters, eg: GUEST, STAFF.
-    Inanimate objects can speak too of course. Eg: KETTLE, and PHONE::
-
-        <PHONE> Ring riing!
-
-    The mode declares the form in which the act of speech is delivered.
-    Although the most common, 'says' is just one of many possible modes of speech.
-    There are others you might want to use, like 'whispers' or 'thinks'.
-    The mode is separated by a colon::
-
-        <GUEST:thinks> I wonder if anyone is going to answer that phone.
-
-    Capturing the mode of speech enables different presentation options,
-    eg: character animations to match the delivery.
-    Modes of speech should be stated in the simple present, third person form.
-
-    Directives indicate that there are specific side-effects to the delivery of the dialogue.
-    They may be used to fire transitions in a state machine, denoting that the speech marks some
-    progress with respect to a social protocol.
-
-    It's recommended that these directives be stated as present participles
-    such as 'promising' or 'declining'::
-
-        <PHONE.announcing> Ring riing!
-
-    Directives, being transitive in nature, sometimes demand objects to their action. So you may
-    specify the recipient roles of the directive if necessary too::
-
-        <PHONE.announcing@GUEST,STAFF> Ring riing!
-
-    Parameters are key-value pairs which modify the presentation of the dialogue. SpeechMark borrows the
-    Web URL syntax for parameters (a '?', and '&' as the delimiter).
-
-    Their meaning is specific to the application. For example, it might be necessary to specify
-    some exact timing for the revealing of the text::
-
-        <?pause=3&dwell=0.4>
-
-            Then in silence, very slowly,
-
-            It sank beneath the waves.
-
-    SpeechMark also recognises the concept of fragments, which also come from URLs. That's the part after a '#'
-    symbol. You can use the fragment to refer to items in a list::
-
-        <STAFF.suggesting#3> What would you like sir? We have some very good fish today.
-
-            1. Order the Beef Wellington
-            2. Go for the Cottage Pie
-            3. Try the Dover Sole
-
-    """
 
     def test_anonymous_cue(self):
         cue = ""
