@@ -469,25 +469,37 @@ class LinkTests(Syntax):
 
 class CueTests(Syntax):
     """
-    A cue marks the start of a new block of dialogue.
+    A cue marks the start of a new block of dialogue. They are denoted by angled brackets: ``<>``.
 
     Cues are flexible structures. They have a number of features you can use all together, or
     you can leave them empty.
 
     A cue may contain information about the speaker of the dialogue, and how they deliver it.
- 
-    Because, 'says' is one of many possible modes of speech. There are others you might want to use, like
-    'whispers' or 'thinks'. Capturing the mode of speech enables different presentation options,
+
+    The most basic of these is the role. This is the named origin of the lines of dialogue.
+    It is recommended that you state the role in upper case letters, eg: GUEST, STAFF.
+    Inanimate objects can speak too of course. Eg: KETTLE, and PHONE.
+
+    The mode declares the form in which the act of speech is delivered.
+    Although the most common, 'says' is just one of many possible modes of speech.
+    There are others you might want to use, like 'whispers' or 'thinks'.
+
+    Capturing the mode of speech enables different presentation options,
     eg: character animations to match the delivery.
     Modes of speech should be stated in the simple present, third person form.
 
     Directives indicate that there are specific side-effects to the delivery of the dialogue.
-    They may be used to fire transitions in a state machine, denoting that the speech is 
-    It's recommended that these be present participles such as 'promising' or 'declining'
-    Directive
-        Animation or transition of entity
-    Mode
-        mode of speech act
+    They may be used to fire transitions in a state machine, denoting that the speech marks some
+    progress through some social protocol.
+
+    It's recommended that these directives be stated as present participles such as 'promising' or 'declining'.
+
+    Directives, being transitive in nature, sometimes demand objects to their action. So you may
+    specify the recipient roles of the directive if necessary too.
+
+    Parameters
+
+    Fragments
 
     """
 
