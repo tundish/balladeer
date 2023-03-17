@@ -224,12 +224,12 @@ class Syntax(unittest.TestCase):
 
             Snagging on a threadbare carpet.
 
-            Then scuffing down the ancient stairs.
+            Then shuffling down the ancient stairs.
 
     SpeechMark recognises the concept of **fragments**, which also come from URLs. That's the part after a '#'
     symbol. You can use the fragment to refer to items in a list::
 
-        <STAFF.suggesting#3> What will you have, sir? The special is fish today.
+        <STAFF.proposing#3> What will you have, sir? The special is fish today.
 
             1. Order the Beef Wellington
             2. Go for the Cottage Pie
