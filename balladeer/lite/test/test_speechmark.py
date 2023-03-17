@@ -79,13 +79,13 @@ class Syntax(unittest.TestCase):
     ##########
 
     SpeechMark is a convention for markup of authored text.
-    It is suited for capturing dialogue, attributing speech, and writing screenplay directions.
+    It is designed for capturing dialogue, attributing speech, and writing screenplay directions.
     This document explains the syntax, and shows how it should be rendered in HTML5.
 
     SpeechMark takes inspiration from other markup systems already in common use, eg:
 
     * `Markdown <https://commonmark.org/>`_
-    * `RestructuredText <https://docutils.sourceforge.io/rst.html>`_
+    * `reStructuredText <https://docutils.sourceforge.io/rst.html>`_
 
     I tried both these systems prior to creating SpeechMark. I found I needed some features which
     Markdown didn't have. RST proved to be overkill for this particular purpose, and the document model
@@ -702,7 +702,7 @@ class CueTests(Syntax):
     """
 
     @Syntax.example(label="6.02")
-    def test_single_link(self, markup: dict={}, output=""):
+    def test_empty_cue(self, markup: dict={}, output=""):
         """
         All components of a cue are optional.
 
@@ -711,6 +711,65 @@ class CueTests(Syntax):
         output = '''
         <blockquote cite="&lt;&gt;">
         <p>Once upon a time, far, far away...</p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    @Syntax.example(label="6.03")
+    def test_role_only_cue(self, markup: dict={}, output=""):
+        """
+        It is recommended that roles be stated in upper case.
+        When a role is stated, a ``cite`` element must be generated.
+        The value of the role must be stored in the ``data-role`` attribute of the cite tag.
+        The role value must be appropriately escaped.
+
+        # TOML
+        markup."Role only"  =    "<PHONE> Ring riiing!"
+        output = '''
+        <blockquote cite="&lt;PHONE&gt;">
+        <cite data-role="PHONE">PHONE</cite>
+        <p>Ring riiing!</p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    @Syntax.example(label="6.04")
+    def test_role_with_mode(self, markup: dict={}, output=""):
+        """
+        A mode is preceded by a colon. It is stated after any role.
+        When a mode is stated, a ``cite`` element must be generated.
+        The value of the mode must be stored in the ``data-mode`` attribute of the cite tag.
+        The mode value retains its delimiter. The mode value must be appropriately escaped.
+        Modes of speech should be stated in the third person simple present form.
+
+        # TOML
+        markup."Role with mode" =   "<GUEST:thinks> I wonder if anyone is going to answer that phone."
+        output = '''
+        <blockquote cite="&lt;GUEST:thinks&gt;">
+        <cite data-role="GUEST" data-mode=":thinks">GUEST</cite>
+        <p>I wonder if anyone is going to answer that phone.</p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    @Syntax.example(label="6.05")
+    def test_role_with_directive(self, markup: dict={}, output=""):
+        """
+        There may be multiple directives, each preceded by a dot. They are stated after any role.
+        When a directive is stated, a ``cite`` element must be generated.
+        The directives must be stored in the ``data-directives`` attribute of the cite tag.
+        They retain their delimiters. The directives value must be appropriately escaped.
+        Directives should be stated as present participles.
+
+        # TOML
+        markup."Role with directive" =  "<PHONE.announcing> Ring riiing!"
+        output = '''
+        <blockquote cite="&lt;PHONE.announcing&gt;">
+        <cite data-role="PHONE" data-directives=".announcing">PHONE</cite>
+        <p>Ring riiing!</p>
         </blockquote>
         '''
         """
