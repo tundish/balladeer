@@ -80,6 +80,7 @@ class Syntax(unittest.TestCase):
 
     SpeechMark is a convention for markup of authored text.
     It is suited for capturing dialogue, attributing speech, and writing screenplay directions.
+    This document explains the syntax, and shows how it should be rendered in HTML5.
 
     SpeechMark takes inspiration from other markup systems already in common use, eg:
 
@@ -88,7 +89,7 @@ class Syntax(unittest.TestCase):
 
     I tried both these systems prior to creating SpeechMark. I discovered the first to lack some features
     I found I needed. The second is overspecified for this particular purpose, hence the document model
-    felt overly cumbersome to me.
+    became cumbersome to me.
 
     Philosophy
     ==========
@@ -108,19 +109,65 @@ class Syntax(unittest.TestCase):
 
     SpeechMark has the basic elements you see in other markup systems, ie:
 
-        * Emphasis
-        * Hyperlinks
-        * Comments
+        * Emphasis_
+        * Hyperlinks_
+        * Comments_
+        * Lists_
 
-    There is a one feature very specific to SpeechMark:
+    There is one feature very specific to SpeechMark:
 
         * Cues_
 
     SpeechMark doesn't try to do everything. To integrate it into an application, you may
     need:
 
-        * Preprocessing
-        * Postprocessing
+        * Preprocessing_
+        * Postprocessing_
+
+    Emphasis
+    --------
+
+    SpeechMark supports three flavours of emphasis.
+
+    * Surround text by asterisks ``*like this*`` to generate ``<em>`` tags.
+    * Use underscores ``_like this_`` to generate ``<strong>`` tags.
+    * Use backticks ```like this``` to generate ``<code>`` tags.
+
+    Hyperlinks
+    ----------
+
+    Hyperlinks have two components; the label and the URL.
+    The label appears first within square brackets, followed by the URL in parentheses::
+
+        [SpeechMark](https://github.com/tundish/speechmark)
+
+    Comments
+    --------
+
+    The `#` character denotes a comment. It must be the first character on a line::
+
+        # Comments aren't ignored. They get converted to HTML (<!-- -->)
+
+    Lists
+    -----
+
+    Unordered lists
+    ```````````````
+
+    The `+` character creates a list item of the text which follows it, like so::
+
+        + Beef
+        + Lamb
+        + Fish
+
+
+    Ordered lists
+    `````````````
+    Using digits and a dot before text will give you an ordered list::
+
+        1. Beef
+        2. Lamb
+        3. Fish
 
     Cues
     ----
@@ -134,15 +181,15 @@ class Syntax(unittest.TestCase):
 
     A cue may contain information about the speaker of the dialogue, and how they deliver it.
 
-    The most basic of these is the role. This is the named origin of the lines of dialogue.
+    The most basic of these is the **role**. This is the named origin of the lines of dialogue.
     It is recommended that you state the role in upper case letters, eg: GUEST, STAFF.
     Inanimate objects can speak too of course. Eg: KETTLE, and PHONE::
 
         <PHONE> Ring riiing!
 
-    The mode declares the form in which the act of speech is delivered.
-    Although the most common, 'says' is just one of many possible modes of speech.
-    There are others you might want to use, like 'whispers' or 'thinks'.
+    The **mode** declares the form in which the act of speech is delivered.
+    Although it's the most common, *says* is just one of many possible modes of speech.
+    There are others you might want to use, like *whispers* or *thinks*.
     The mode is separated by a colon::
 
         <GUEST:thinks> I wonder if anyone is going to answer that phone.
@@ -151,12 +198,12 @@ class Syntax(unittest.TestCase):
     eg: character animations to match the delivery.
     Modes of speech should be stated in the simple present, third person form.
 
-    Directives indicate that there are specific side-effects to the delivery of the dialogue.
-    They may be used to fire transitions in a state machine, denoting that the speech marks some
-    progress with respect to a social protocol.
+    **Directives** indicate that there are specific side-effects to the delivery of the dialogue.
+    They may be used to fire transitions in a state machine, specifying that the speech achieves
+    progress according to some social protocol.
 
     It's recommended that these directives be stated as present participles
-    such as 'promising' or 'declining'::
+    such as *promising* or *declining*::
 
         <PHONE.announcing> Ring riiing!
 
@@ -165,34 +212,68 @@ class Syntax(unittest.TestCase):
 
         <PHONE.announcing@GUEST,STAFF> Ring riiing!
 
-    Parameters are key-value pairs which modify the presentation of the dialogue. SpeechMark borrows the
-    Web URL syntax for parameters (a '?', and '&' as the delimiter).
+    **Parameters** are key-value pairs which modify the presentation of the dialogue. SpeechMark borrows the
+    Web URL syntax for parameters (first a '?', with '&' as the delimiter).
 
     Their meaning is specific to the application. For example, it might be necessary to specify
     some exact timing for the revealing of the text::
 
         <?pause=3&dwell=0.4>
 
-            Then in silence, very slowly,
+            Up above, there is the sound of footsteps.
 
-            It sank beneath the waves.
+            Snagging on a threadbare carpet.
 
-    SpeechMark also recognises the concept of fragments, which also come from URLs. That's the part after a '#'
+            Then scuffing down the ancient stairs.
+
+    SpeechMark recognises the concept of **fragments**, which also come from URLs. That's the part after a '#'
     symbol. You can use the fragment to refer to items in a list::
 
-        <STAFF.suggesting#3> What would you like sir? We have some very good fish today.
+        <STAFF.suggesting#3> What will you have, sir? The special is fish today.
 
             1. Order the Beef Wellington
             2. Go for the Cottage Pie
             3. Try the Dover Sole
 
+    Preprocessing
+    =============
+
+    Whitespace
+    ----------
+
+    A SpeechMark parser expects certain delimiters to appear only at the beginning of a line.
+    Therefore, if your marked-up text has been loaded from a file or data structure, you may need to
+    remove any common indentation and trim the lines of whitespace characters.
+
+    Variable substitution
+    ---------------------
+
+    It is a very useful trick for dialogue to reference attributes of the objects in scope,
+    eg: ``GUEST.surname``.
+
+    Unfortunately, the syntax for variable substitution is language dependent.
+    Equally the mode of attribute access is application dependent.
+    Should it be ``GUEST.surname`` or ``GUEST['surname']``?
+
+    SpeechMark therefore does not provide this ability, and it must be performed prior to parsing.
+    Here's an example using Python string formatting, where the context variables are dictionaries::
+
+        <GUEST> I'll have the Fish, please.
+
+        <STAFF> Very good, {GUEST['honorific']} {GUEST['surname']}.
+
+
+    Postprocessing
+    ==============
+
+    * Attribute removal
+    * Code extensions
+
     Specification
     =============
 
     SpeechMark input must be line-based text, and should have UTF-8 encoding.
-    The corresponding output must be well-formed HTML5.
-
-    Inline markup consists of emphasis_, links_, and cues_.
+    The corresponding output must be correctly-terminated tags of HTML5.
 
     Inline markup must consist of pairs of matching delimiters. There must be no line break within them;
     all inline markup must terminate on the same line where it begins.
