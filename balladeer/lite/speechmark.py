@@ -209,4 +209,6 @@ class SpeechMark:
 
 if __name__ == "__main__":
     sm = SpeechMark()
-    print(sm.escape_table)
+    text = sys.stdin.read()
+    html5 = sm.loads(text)
+    print(html5)

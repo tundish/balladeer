@@ -232,7 +232,7 @@ class Syntax(unittest.TestCase):
         <STAFF.proposing#3> What will you have, sir? The special is fish today.
 
             1. Order the Beef Wellington
-            2. Go for the Cottage Pie
+            2. Go for the Shepherd's Pie
             3. Try the Dover Sole
 
     Preprocessing
@@ -266,17 +266,60 @@ class Syntax(unittest.TestCase):
     Postprocessing
     ==============
 
-    * Attribute removal
-    * Code extensions
+    Pruning
+    -------
+
+    SpeechMark tries not to throw anything away. You might not want that behaviour. Specifically,
+    you may prefer to remove lines of comment from the HTML5 output.
+
+    Since the output is line-based, it's a simple matter to strip out those lines using your favourite prgramming
+    language or command line tools.
+
+    Extending
+    ---------
+
+    Speechmark does not support extensions. There is no syntax to create custom tags.
+
+    However, if you need to transform the output before it gets to the web, you could utilise the
+    ``<code>`` tag for that purpose.
+
+    Suppose you have a menu you've defined as a list::
+
+        + `button`[Map](/api/map)
+        + `button`[Inventory](/api/inventory)
+
+    Here is part of that output::
+
+        <li><p><code>button</code><a href="/api/map">Map</a></p></li>
+
+    This could be sufficient to trigger a ``button`` function in your postprocessor which replaces
+    the bare link with a ``<form>`` and ``<input>`` controls to pop up the map.
 
     Specification
     =============
 
+    1. General
+    ----------
+
+    1.1
+    ```
+
     SpeechMark input must be line-based text, and should have UTF-8 encoding.
-    The corresponding output must be correctly-terminated tags of HTML5.
+
+    1.2
+    ```
 
     Inline markup must consist of pairs of matching delimiters. There must be no line break within them;
-    all inline markup must terminate on the same line where it begins.
+    all inline markup must terminate on the same line where it begins. Delimiters may not contain other
+    delimiter pairs. There is no nested markup.
+
+    1.3
+    ```
+
+    The generated output must be correctly-terminated tags of HTML5.
+
+    1.4
+    ```
 
     Output must be generated in blocks. Each block may begin with a cue element. A block may contain one
     or more paragraphs. A block may contain a list. Every list item must contain a paragraph.
@@ -310,9 +353,221 @@ class Syntax(unittest.TestCase):
         self.assertEqual(x, y, msg or a)
 
 
+class EmphasisTests(Syntax):
+    """
+    2. Emphasis
+    -----------
+
+    """
+
+    @Syntax.example(label="2.01")
+    def test_minimal_emphasis(self, markup: dict={}, output=""):
+        """
+        Emphasis is added using pairs of asterisks.
+
+        # TOML
+        markup."Single instance"  =   "*Definitely!*"
+        output = '''
+        <blockquote>
+        <p><em>Definitely!</em></p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    @Syntax.example(label="2.02")
+    def test_multiple_emphasis(self, markup: dict={}, output=""):
+        """
+        There may be multiple emphasized phrases on a line.
+
+        # TOML
+        markup."Multiple instances" =   "*Definitely* *Definitely!*"
+        output = '''
+        <blockquote>
+        <p><em>Definitely</em> <em>Definitely!</em></p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    def test_cornercases_abutting_emphasis(self):
+        expected = textwrap.dedent("""
+        <blockquote>
+        <p><em>Definitely</em><em>Definitely!</em></p>
+        </blockquote>
+        """)
+        sm = SpeechMark()
+        rv = sm.loads("*Definitely**Definitely!*")
+        self.compare(rv, expected, rv)
+
+
+class SignificanceTests(Syntax):
+    @Syntax.example(label="2.03")
+    def test_minimal_significance(self, markup: dict={}, output=""):
+        """
+        Strong text is denoted with underscores.
+
+        # TOML
+        markup."Single instance"  =   "_Warning!_"
+        output = '''
+        <blockquote>
+        <p><strong>Warning!</strong></p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    @Syntax.example(label="2.04")
+    def test_multiple_significance(self, markup: dict={}, output=""):
+        """
+        There may be multiple snippets of significant text on one line.
+
+        # TOML
+        markup."Multiple instances" =   "_Warning_ _Warning_!"
+        output = '''
+        <blockquote>
+        <p><strong>Warning</strong> <strong>Warning</strong>!</p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    def test_cornercases_code(self):
+        expected = textwrap.dedent("""
+        <blockquote>
+        <p>
+        <strong>Warning</strong><strong>Warning</strong>!
+        </p>
+        </blockquote>
+        """)
+        sm = SpeechMark()
+        rv = sm.loads("_Warning__Warning_!")
+        self.compare(rv, expected, rv)
+
+
+class CodeTests(Syntax):
+
+    @Syntax.example(label="2.05")
+    def test_single_code(self, markup: dict={}, output=""):
+        """
+        Code snippets are defined between backticks.
+
+        # TOML
+        markup."Single instance"  =   "`git log`"
+        output = '''
+        <blockquote>
+        <p><code>git log</code></p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    @Syntax.example(label="2.06")
+    def test_multiple_code(self, markup: dict={}, output=""):
+        """
+        There may be multiple code snippets on a line.
+
+        # TOML
+        markup."Multiple instances" =   "`git` `log`"
+        output = '''
+        <blockquote>
+        <p><code>git</code> <code>log</code></p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    def test_cornercases_code(self):
+        expected = textwrap.dedent("""
+        <blockquote>
+        <p><code>8.8.8.8</code></p>
+        </blockquote>
+        """)
+        sm = SpeechMark()
+        rv = sm.loads("`8.8.8.8`")
+        self.compare(rv, expected, rv)
+
+    def test_cornercases_abutted_code(self):
+        expected = textwrap.dedent("""
+        <blockquote>
+        <p><code>git</code><code>log</code></p>
+        </blockquote>
+        """)
+        sm = SpeechMark()
+        rv = sm.loads("`git``log`")
+        self.compare(rv, expected, rv)
+
+
+class LinkTests(Syntax):
+    """
+    3. Hyperlinks
+    -------------
+
+    """
+
+    def test_basic_match(self):
+        sm = SpeechMark()
+        match = sm.link_matcher.match("[Python](https://python.org)")
+        self.assertTrue(match)
+        self.assertEqual("Python", match.groupdict().get("label"))
+        self.assertEqual("https://python.org", match.groupdict().get("link"))
+
+    @Syntax.example(label="3.01")
+    def test_single_link(self, markup: dict={}, output=""):
+        """
+        Hyperlinks are defined by placing link text within square brackets and the link destination
+        in parentheses. There must be no space between them.
+        See also https://spec.commonmark.org/0.30/#example-482.
+
+        # TOML
+        markup."Entire signifier"  =    "[Python](https://python.org)"
+        output = '''
+        <blockquote>
+        <p><a href="https://python.org">Python</a></p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    @Syntax.example(label="3.02")
+    def test_multiple_links(self, markup: dict={}, output=""):
+        """
+        There may be multiple hyperlinks on a line.
+
+        # TOML
+        markup."Multiple signifiers" =  "[Python](https://python.org) [PyPI](https://pypi.org)"
+        output = '''
+        <blockquote>
+        <p><a href="https://python.org">Python</a> <a href="https://pypi.org">PyPI</a></p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    def test_cornercases_links_with_spaces(self):
+        expected = textwrap.dedent("""
+        <blockquote>
+        <p>[Python] (https://python.org)</p>
+        </blockquote>
+        """)
+        sm = SpeechMark()
+        rv = sm.loads("[Python] (https://python.org)")
+        self.compare(rv, expected, rv)
+
+    def test_cornercases_abutting_links(self):
+        expected = textwrap.dedent("""
+        <blockquote>
+        <p><a href="https://python.org">Python</a><a href="https://python.org">Python</a></p>
+        </blockquote>
+        """)
+        sm = SpeechMark()
+        rv = sm.loads("[Python](https://python.org)[Python](https://python.org)")
+        self.compare(rv, expected, rv)
+
+
 class CommentTests(Syntax):
 
-    @Syntax.example(label="1.0")
+    @Syntax.example(label="6.0")
     def test_single_comment(self, markup: dict={}, output=""):
         """
         Any line beginning with a "#" is a comment.
@@ -331,7 +586,6 @@ class CommentTests(Syntax):
 
 class ParagraphTests(Syntax):
 
-    @Syntax.example(label="1.1")
     def test_minimal_paragraph(self, markup: dict={}, output=""):
         """
         Simple strings are encapsulated in paragraphs.
@@ -390,209 +644,6 @@ class ParagraphTests(Syntax):
         sm = SpeechMark()
         rv = sm.loads("<> Hello!")
         self.compare(rv, expected, rv)
-
-
-class SignificanceTests(Syntax):
-
-    @Syntax.example(label="2.1")
-    def test_minimal_significance(self, markup: dict={}, output=""):
-        """
-        Significant text is denoted with underscores.
-
-        # TOML
-        markup."Entire signifier"  =   "_Warning!_"
-        output = '''
-        <blockquote>
-        <p><strong>Warning!</strong></p>
-        </blockquote>
-        '''
-        """
-        return self.check(markup, output)
-
-    @Syntax.example(label="2.2")
-    def test_multiple_significance(self, markup: dict={}, output=""):
-        """
-        There may be multiple snippets of significant text on one line.
-
-        # TOML
-        markup."Multiple signifiers" =   "_Warning_ _Warning_!"
-        output = '''
-        <blockquote>
-        <p><strong>Warning</strong> <strong>Warning</strong>!</p>
-        </blockquote>
-        '''
-        """
-        return self.check(markup, output)
-
-    def test_cornercases_code(self):
-        expected = textwrap.dedent("""
-        <blockquote>
-        <p>
-        <strong>Warning</strong><strong>Warning</strong>!
-        </p>
-        </blockquote>
-        """)
-        sm = SpeechMark()
-        rv = sm.loads("_Warning__Warning_!")
-        self.compare(rv, expected, rv)
-
-
-class CodeTests(Syntax):
-
-    @Syntax.example(label="3.1")
-    def test_single_code(self, markup: dict={}, output=""):
-        """
-        Code snippets are defined between backticks.
-
-        # TOML
-        markup."Entire signifier"  =   "`git log`"
-        output = '''
-        <blockquote>
-        <p><code>git log</code></p>
-        </blockquote>
-        '''
-        """
-        return self.check(markup, output)
-
-    @Syntax.example(label="3.2")
-    def test_multiple_code(self, markup: dict={}, output=""):
-        """
-        There may be multiple code snippets on a line.
-
-        # TOML
-        markup."Multiple signifiers" =   "`git` `log`"
-        output = '''
-        <blockquote>
-        <p><code>git</code> <code>log</code></p>
-        </blockquote>
-        '''
-        """
-        return self.check(markup, output)
-
-    def test_cornercases_code(self):
-        expected = textwrap.dedent("""
-        <blockquote>
-        <p><code>8.8.8.8</code></p>
-        </blockquote>
-        """)
-        sm = SpeechMark()
-        rv = sm.loads("`8.8.8.8`")
-        self.compare(rv, expected, rv)
-
-    def test_cornercases_abutted_code(self):
-        expected = textwrap.dedent("""
-        <blockquote>
-        <p><code>git</code><code>log</code></p>
-        </blockquote>
-        """)
-        sm = SpeechMark()
-        rv = sm.loads("`git``log`")
-        self.compare(rv, expected, rv)
-
-
-class EmphasisTests(Syntax):
-
-    @Syntax.example(label="4.1")
-    def test_minimal_emphasis(self, markup: dict={}, output=""):
-        """
-        Emphasis may be added using pairs of asterisks.
-
-        # TOML
-        markup."Entire signifier"  =   "*Definitely!*"
-        output = '''
-        <blockquote>
-        <p><em>Definitely!</em></p>
-        </blockquote>
-        '''
-        """
-        return self.check(markup, output)
-
-    @Syntax.example(label="4.2")
-    def test_multiple_emphasis(self, markup: dict={}, output=""):
-        """
-        There may be multiple emphasised phrases on a line.
-
-        # TOML
-        markup."Multiple signifiers" =   "*Definitely* *Definitely!*"
-        output = '''
-        <blockquote>
-        <p><em>Definitely</em> <em>Definitely!</em></p>
-        </blockquote>
-        '''
-        """
-        return self.check(markup, output)
-
-    def test_cornercases_abutting_emphasis(self):
-        expected = textwrap.dedent("""
-        <blockquote>
-        <p><em>Definitely</em><em>Definitely!</em></p>
-        </blockquote>
-        """)
-        sm = SpeechMark()
-        rv = sm.loads("*Definitely**Definitely!*")
-        self.compare(rv, expected, rv)
-
-class LinkTests(Syntax):
-
-    def test_basic_match(self):
-        sm = SpeechMark()
-        match = sm.link_matcher.match("[Python](https://python.org)")
-        self.assertTrue(match)
-        self.assertEqual("Python", match.groupdict().get("label"))
-        self.assertEqual("https://python.org", match.groupdict().get("link"))
-
-    @Syntax.example(label="5.1")
-    def test_single_link(self, markup: dict={}, output=""):
-        """
-        Hyperlinks are defined by placing link text within square brackets and the link destination
-        in parentheses. There must be no space between them.
-        See also https://spec.commonmark.org/0.30/#example-482.
-
-        # TOML
-        markup."Entire signifier"  =    "[Python](https://python.org)"
-        output = '''
-        <blockquote>
-        <p><a href="https://python.org">Python</a></p>
-        </blockquote>
-        '''
-        """
-        return self.check(markup, output)
-
-    @Syntax.example(label="5.2")
-    def test_multiple_links(self, markup: dict={}, output=""):
-        """
-        There may be multiple hyperlinks on a line.
-
-        # TOML
-        markup."Multiple signifiers" =  "[Python](https://python.org) [PyPI](https://pypi.org)"
-        output = '''
-        <blockquote>
-        <p><a href="https://python.org">Python</a> <a href="https://pypi.org">PyPI</a></p>
-        </blockquote>
-        '''
-        """
-        return self.check(markup, output)
-
-    def test_cornercases_links_with_spaces(self):
-        expected = textwrap.dedent("""
-        <blockquote>
-        <p>[Python] (https://python.org)</p>
-        </blockquote>
-        """)
-        sm = SpeechMark()
-        rv = sm.loads("[Python] (https://python.org)")
-        self.compare(rv, expected, rv)
-
-    def test_cornercases_abutting_links(self):
-        expected = textwrap.dedent("""
-        <blockquote>
-        <p><a href="https://python.org">Python</a><a href="https://python.org">Python</a></p>
-        </blockquote>
-        """)
-        sm = SpeechMark()
-        rv = sm.loads("[Python](https://python.org)[Python](https://python.org)")
-        self.compare(rv, expected, rv)
-
 
 class CueTests(Syntax):
 
@@ -850,7 +901,19 @@ if __name__ == "__main__":
         if cls.__doc__:
             print(textwrap.dedent(cls.__doc__))
         for label, text, data, fn in entries:
+            if not label:
+                continue
 
             print(label)
-            print("-" * len(label))
+            print("`" * len(label))
             print(textwrap.dedent(text))
+
+            for note, snippet in data.get("markup", {}).items():
+                print(f"{note}::\n")
+                print(textwrap.indent(snippet, " " * 4))
+                print()
+                output = data.get("output", "")
+
+                print("HTML5 output::\n")
+                print(textwrap.indent(output, " " * 4))
+                print()
