@@ -23,66 +23,19 @@ import textwrap
 import tomllib
 import unittest
 
+import balladeer
 from balladeer.lite.speechmark import SpeechMark
+
+__doc__ = f"""
+:Version: {balladeer.__version__}
+:Author: D E Haynes
+:Licence: `CC BY-NC-ND <https://creativecommons.org/licenses/by-nc-nd/4.0/>`_ Attribution-NonCommercial-NoDerivs
+
+"""
 
 # block = cue + dialogue
 # cue = persona .directive @ entity, :mode ? parameters # fragment
 
-# Directives: present participles
-# Mode: Simple present, third person (singular or plural)
-
-"""
-STAFF
-
-GUEST
-
-PHONE
-
-
-"""
-
-"<GUEST>" == "<GUEST:says>"
-
-
-"""
-<GUEST.entering:asks?pause=1&dwell=0.2#a>
-
-    a. Hello?
-    b. Say nothing
-
-"""
-
-"""
-<PHONE:announces@GUEST>
-
-<GUEST>
-
-Your phone's ringing.
-
-<STAFF> How strange I didn't hear it.
-
-<PHONE:announces@GUEST,STAFF>
-
-<STAFF> Oh, now I do!
-
-<PHONE:announces@GUEST,STAFF> RIIING RIIING!
-
-"""
-
-# Rendering as blockquote
-"""
-<blockquote>
-<header>Mandelbrot </header>
-<p><span class="text">You may choose </span>
-<a href="02.html">one</a>
-<span class="text">, </span>
-<a href="03.html">two</a>
-<span class="text"> or </span>
-<a href="04.html">three</a>
-<span class="text"> coins.</span></p>
-</blockquote>
-</li>
-"""
 
 # Ex 2
 """
@@ -122,26 +75,39 @@ Hand = ("decline", "suggest", "promise", "disavow", "deliver")
 
 class Syntax(unittest.TestCase):
     """
+    SpeechMark
+    ##########
+
     SpeechMark is a convention for markup of authored text.
     It is suited for capturing dialogue, attributing speech, and writing screenplay directions.
 
-    SpeechMark takes inspiration from other markup systems already in common use:
-    * [Markdown](https://commonmark.org/)
-    * [RestructuredText](https://docutils.sourceforge.io/rst.html)
+    SpeechMark takes inspiration from other markup systems already in common use, eg:
 
-    I tried both these systems prior to creating SpeechMark. I found the first to be underspecified
-    to support my particular needs. The second is rather too featureful for my purpose, and
-    the document model a little too cumbersome.
+    * `Markdown <https://commonmark.org/>`_
+    * `RestructuredText <https://docutils.sourceforge.io/rst.html>`_
+
+    I tried both these systems prior to creating SpeechMark. I discovered the first to lack some features
+    I found I needed. The second is overspecified for this particular purpose, hence the document model
+    felt overly cumbersome to me.
+
+    Philosophy
+    ==========
 
     SpeechMark syntax is deliberately constrained to be simple and unambiguous.
-    This is to encourage adoption by non-technical users and to permit fast and efficient
-    processing of many small pieces of text over an extended period of time.
+    This is to permit fast and efficient processing of many small pieces of text over an extended period of time.
 
     SpeechMark does not concern itself with document structure. There are no titles, sections or breaks.
     Rather, the input is expected to be a stream of text fragments.
 
     The specification intends to be lossless, so that every non-whitespace feature of the original text
-    may be retrieved from the output.
+    may be retrieved from the output. It should be possible to round-trip your SpeechMark scripts into
+    HTML5 and back again.
+
+    Features
+    ========
+
+    Specification
+    =============
 
     SpeechMark input must be line-based text, and should have UTF-8 encoding.
     The corresponding output must be well-formed HTML5.
@@ -778,6 +744,9 @@ if __name__ == "__main__":
         cls = globals().get(info["__qualname__"].split(".")[0])
         examples[cls].append((label, text, data, fn))
 
+    if __doc__:
+        print(textwrap.dedent(__doc__))
+
     print(textwrap.dedent(Syntax.__doc__))
     for cls, entries in examples.items():
         if cls.__doc__:
@@ -787,6 +756,3 @@ if __name__ == "__main__":
             print(label)
             print("-" * len(label))
             print(textwrap.dedent(text))
-
-    if __doc__:
-        print(textwrap.dedent(__doc__))
