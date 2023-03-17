@@ -220,9 +220,9 @@ class Syntax(unittest.TestCase):
 
         <?pause=3&dwell=0.4>
 
-            From above there is the sound of footsteps.
+            Above, there is the sound of footsteps.
 
-            Snagging on a threadbare carpet.
+            Of snagging on a threadbare carpet.
 
             Then shuffling down the ancient stairs.
 
@@ -248,8 +248,8 @@ class Syntax(unittest.TestCase):
     Variable substitution
     ---------------------
 
-    It is a very useful trick for dialogue to reference attributes of the objects in scope,
-    eg: ``GUEST.surname``.
+    It would be very handy for dialogue to reference some objects in scope.
+    That would allow us to make use of their attributes, eg: ``GUEST.surname``.
 
     Unfortunately, the syntax for variable substitution is language dependent.
     Equally the mode of attribute access is application dependent.
@@ -696,6 +696,8 @@ class CueTests(Syntax):
 
     6.01
     ````
+
+    A cue mark must appear at the start of a line. No whitespace is allowed in a cue mark.
     A generated ``blockquote`` tag may store the original cue string in its ``cite`` attribute.
     The string must be appropriately escaped.
 
@@ -769,6 +771,26 @@ class CueTests(Syntax):
         output = '''
         <blockquote cite="&lt;PHONE.announcing&gt;">
         <cite data-role="PHONE" data-directives=".announcing">PHONE</cite>
+        <p>Ring riiing!</p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    @Syntax.example(label="6.06")
+    def test_role_with_recipients(self, markup: dict={}, output=""):
+        """
+        When a directive is stated, a recipient list may follow it. A recipient list begins with a ``@`` symbol.
+        The items in the list are separated by commas.
+        The recipients must be stored in the ``data-directives`` attribute of the cite tag.
+        They retain their delimiters. The directives value must be appropriately escaped.
+        Recipients should be stated elsewhere as roles.
+
+        # TOML
+        markup."Role with directive" =  "<PHONE.announcing@GUEST,STAFF> Ring riiing!"
+        output = '''
+        <blockquote cite="&lt;PHONE.announcing@GUEST,STAFF&gt;">
+        <cite data-role="PHONE" data-directives=".announcing@GUEST,STAFF">PHONE</cite>
         <p>Ring riiing!</p>
         </blockquote>
         '''
