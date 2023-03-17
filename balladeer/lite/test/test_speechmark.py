@@ -787,11 +787,62 @@ class CueTests(Syntax):
         Recipients should be stated elsewhere as roles.
 
         # TOML
-        markup."Role with directive" =  "<PHONE.announcing@GUEST,STAFF> Ring riiing!"
+        markup."Role with directive and recipients" =  "<PHONE.announcing@GUEST,STAFF> Ring riiing!"
         output = '''
         <blockquote cite="&lt;PHONE.announcing@GUEST,STAFF&gt;">
         <cite data-role="PHONE" data-directives=".announcing@GUEST,STAFF">PHONE</cite>
         <p>Ring riiing!</p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    @Syntax.example(label="6.07")
+    def test_parameters_only(self, markup: dict={}, output=""):
+        """
+        A parameter list begins with a ``?`` symbol. It consists of ``key=value`` pairs separated by ampersands.
+        Should a directive be stated, any parameter list must come after it.
+        The parameters must be stored in the ``data-parameters`` attribute of the cite tag.
+        They retain their delimiters. The parameters value must be appropriately escaped.
+
+        # TOML
+        markup."Parameters only" =  "<?pause=3&dwell=0.4> Above, there is the sound of footsteps."
+        output = '''
+        <blockquote cite="&lt;?pause=3&amp;dwell=0.4&gt;">
+        <cite data-parameters="?pause=3&amp;dwell=0.4"></cite>
+        <p>
+         Above, there is the sound of footsteps.
+        </p>
+        </blockquote>
+        '''
+        """
+        return self.check(markup, output)
+
+    @Syntax.example(label="6.08")
+    def test_directive_and_fragment(self, markup: dict={}, output=""):
+        """
+        There may be multiple fragments. The first begins with a ``#`` symbol.
+        All semantics are those of `Web URLs <https://url.spec.whatwg.org>`_.
+        The fragments appear at the end of any cue mark.
+        The fragments must be stored in the ``data-fragments`` attribute of the cite tag.
+        They retain all delimiters. The fragments value must be appropriately escaped. 
+
+        # TOML
+        markup."Role with directive and fragment" =  '''
+        <STAFF.proposing#3> What will you have, sir? The special is fish today.
+            1. Order the Beef Wellington
+            2. Go for the Shepherd's Pie
+            3. Try the Dover Sole
+        '''
+        output = '''
+        <blockquote cite="&lt;STAFF.proposing#3&gt;">
+        <cite data-role="STAFF" data-directives=".proposing" data-fragments="#3">STAFF</cite>
+        <p>What will you have, sir? The special is fish today.</p>
+        <ol>
+        <li id="1"><p>Order the Beef Wellington</p></li>
+        <li id="2"><p>Go for the Shepherd's Pie</p></li>
+        <li id="3"><p>Try the Dover Sole</p></li>
+        </ol>
         </blockquote>
         '''
         """
