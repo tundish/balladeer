@@ -469,7 +469,9 @@ class LinkTests(Syntax):
 
 class CueTests(Syntax):
     """
-    A cue marks the start of a new block of dialogue. Is is denoted by angled brackets: ``<>``.
+    A cue marks the start of a new block of dialogue. Is is denoted by angled brackets::
+
+        <>  Once upon a time, far far away...
 
     Cues are flexible structures. They have a number of features you can use all together, or
     you can leave them empty.
@@ -478,11 +480,16 @@ class CueTests(Syntax):
 
     The most basic of these is the role. This is the named origin of the lines of dialogue.
     It is recommended that you state the role in upper case letters, eg: GUEST, STAFF.
-    Inanimate objects can speak too of course. Eg: KETTLE, and PHONE.
+    Inanimate objects can speak too of course. Eg: KETTLE, and PHONE::
+
+        <PHONE> Ring riing!
 
     The mode declares the form in which the act of speech is delivered.
     Although the most common, 'says' is just one of many possible modes of speech.
     There are others you might want to use, like 'whispers' or 'thinks'.
+    The mode is separated by a colon::
+
+        <GUEST:thinks> I wonder if anyone is going to answer that phone.
 
     Capturing the mode of speech enables different presentation options,
     eg: character animations to match the delivery.
@@ -492,18 +499,36 @@ class CueTests(Syntax):
     They may be used to fire transitions in a state machine, denoting that the speech marks some
     progress with respect to a social protocol.
 
-    It's recommended that these directives be stated as present participles such as 'promising' or 'declining'.
+    It's recommended that these directives be stated as present participles
+    such as 'promising' or 'declining'::
+
+        <PHONE.announcing> Ring riing!
 
     Directives, being transitive in nature, sometimes demand objects to their action. So you may
-    specify the recipient roles of the directive if necessary too.
+    specify the recipient roles of the directive if necessary too::
 
-    Parameters are key-value pairs which modify the presentation of the dialogue. Their meaning is
-    specific to the application. For example, you might want to specify some exact timing for the
-    revealling of the text::
+        <PHONE.announcing@GUEST,STAFF> Ring riing!
 
-        <?pause=3>
+    Parameters are key-value pairs which modify the presentation of the dialogue. SpeechMark borrows the
+    Web URL syntax for parameters (a '?', and '&' as the delimiter).
 
-    Fragments
+    Their meaning is specific to the application. For example, it might be necessary to specify
+    some exact timing for the revealing of the text::
+
+        <?pause=3&dwell=0.4>
+
+            Then in silence, very slowly,
+
+            It sank beneath the waves.
+
+    SpeechMark also recognises the concept of fragments, which also come from URLs. That's the part after a '#'
+    symbol. You can use the fragment to refer to items in a list::
+
+        <STAFF.suggesting#3> What would you like sir? We have some very good fish today.
+
+            1. Order the Beef Wellington
+            2. Go for the Cottage Pie
+            3. Try the Dover Sole
 
     """
 
@@ -689,6 +714,7 @@ class EscapingTests(Syntax):
                 rv = sm.loads(text)
                 self.assertIn(html.escape(char), rv)
 
+
 class BlockTests(Syntax):
 
     @Syntax.example()
@@ -709,6 +735,32 @@ class BlockTests(Syntax):
         <cite data-role="GUEST">GUEST</cite>
         <p>Hello?</p>
         <p>Is <em>anyone</em> there?</p>
+        </blockquote>
+        '''
+        """
+        sm = SpeechMark()
+        return self.check(markup, output)
+
+    @Syntax.example()
+    def test_choice_lists(self, markup: dict={}, output=""):
+        """
+        # TOML
+        markup."Dialogue options" = '''
+        <STAFF.suggesting#3> What would you like sir? We have some very good fish today.
+            1. Order the Beef Wellington
+            2. Go for the Cottage Pie
+            3. Try the Dover Sole
+
+        '''
+        output = '''
+        <blockquote cite="&lt;STAFF.suggesting#3&gt;">
+        <cite data-role="STAFF" data-directives=".suggesting" data-fragments="#3">STAFF</cite>
+        <p>What would you like sir? We have some very good fish today.</p>
+        <ol>
+        <li id="1"><p>Order the Beef Wellington</p></li>
+        <li id="2"><p>Go for the Cottage Pie</p></li>
+        <li id="3"><p>Try the Dover Sole</p></li>
+        </ol>
         </blockquote>
         '''
         """
