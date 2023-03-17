@@ -44,9 +44,6 @@ PHONE
 "<GUEST>" == "<GUEST:says>"
 
 
-# directive: Animation or transition of entity
-# mode: mode of speech act
-
 """
 <GUEST.entering:asks?pause=1&dwell=0.2#a>
 
@@ -149,7 +146,7 @@ class Syntax(unittest.TestCase):
     SpeechMark input must be line-based text, and should have UTF-8 encoding.
     The corresponding output must be well-formed HTML5.
 
-    Inline markup consists of emphasis, links, and cues.
+    Inline markup consists of emphasis_, links_, and cues_.
 
     Inline markup must consist of pairs of matching delimiters. There must be no line break within them;
     all inline markup must terminate on the same line where it begins.
@@ -471,6 +468,28 @@ class LinkTests(Syntax):
 
 
 class CueTests(Syntax):
+    """
+    A cue marks the start of a new block of dialogue.
+
+    Cues are flexible structures. They have a number of features you can use all together, or
+    you can leave them empty.
+
+    A cue may contain information about the speaker of the dialogue, and how they deliver it.
+ 
+    Because, 'says' is one of many possible modes of speech. There are others you might want to use, like
+    'whispers' or 'thinks'. Capturing the mode of speech enables different presentation options,
+    eg: character animations to match the delivery.
+    Modes of speech should be stated in the simple present, third person form.
+
+    Directives indicate that there are specific side-effects to the delivery of the dialogue.
+    They may be used to fire transitions in a state machine, denoting that the speech is 
+    It's recommended that these be present participles such as 'promising' or 'declining'
+    Directive
+        Animation or transition of entity
+    Mode
+        mode of speech act
+
+    """
 
     def test_anonymous_cue(self):
         cue = ""
@@ -701,4 +720,5 @@ if __name__ == "__main__":
             print("-" * len(label))
             print(textwrap.dedent(text))
 
-    print(textwrap.dedent(__doc__))
+    if __doc__:
+        print(textwrap.dedent(__doc__))
