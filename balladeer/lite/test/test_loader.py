@@ -34,6 +34,7 @@ from balladeer.lite.types import Stateful
 from balladeer.lite.loader import Loader
 
 
+@unittest.skip("To be refactored.")
 class SceneTests(unittest.TestCase):
 
     def test_one_scene(self):

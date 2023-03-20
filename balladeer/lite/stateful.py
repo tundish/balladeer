@@ -32,23 +32,6 @@ class EnumFactory:
     def factory(cls, name=None, **kwargs):
         return cls[name]
 
-@enum.unique
-class Ownership(EnumFactory, enum.Enum):
-    lost = 0
-    acquired = 1
-
-@enum.unique
-class Presence(EnumFactory, enum.Enum):
-    invisible = 0
-    visible = 1
-    shine = 2
-    fade = 3
-    throb = 4
-
-@enum.unique
-class Vocabulary(EnumFactory, enum.Enum):
-    forgot = 0
-    prompted = 1
 
 class DataObject:
 
@@ -60,27 +43,6 @@ class DataObject:
 
     def __repr__(self):
         return "<{0}> {1}".format(type(self).__name__, vars(self))
-
-
-class Persona(DataObject):
-
-    def __init__(self, *args, **kwargs):
-        self._name = kwargs.pop("name", None)
-        super().__init__(*args, **kwargs)
-
-        try:
-            bits = self._name.split()
-            self.name = Name(bits[0], bits[1], bits[2:-1], bits[-1])
-        except AttributeError:
-            # self._name not a string, assume a Name
-            self.name = self._name
-        except IndexError:
-            self.name = Name("", self._name, [], "")
-
-
-    @property
-    def nickname(self):
-        return random.choice(self.name.nicknames)
 
 
 class Stateful:
@@ -105,7 +67,5 @@ class Stateful:
     def get_state(self, typ=int, default=0):
         return self._states.get(typ.__name__, default)
 
-class Player(Persona, Stateful):
-    pass
 
-Assembly.register(Name, type(uuid.uuid4()))
+Assembly.register(type(uuid.uuid4()))
