@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import enum
 import unittest
 
 from turberfield.utils.assembly import Assembly
@@ -24,7 +25,7 @@ from turberfield.utils.assembly import Assembly
 from balladeer.lite.stateful import Stateful
 
 
-class TestStateful(unittest.TestCase):
+class TestIntegerStates(unittest.TestCase):
 
     def test_state_as_int(self):
         s = Stateful()

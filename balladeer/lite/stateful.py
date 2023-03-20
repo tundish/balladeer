@@ -19,6 +19,7 @@
 
 from collections import namedtuple
 import enum
+from numbers import Number
 import random
 import uuid
 
@@ -54,6 +55,10 @@ class Stateful:
     @property
     def state(self):
         return self.get_state()
+
+    @property
+    def states(self):
+        return self._states.copy()
 
     @state.setter
     def state(self, value):
