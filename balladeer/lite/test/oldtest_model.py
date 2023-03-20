@@ -32,7 +32,7 @@ from balladeer.lite.types import EnumFactory
 from balladeer.lite.types import Stateful
 from balladeer.lite.types import Player
 
-
+@unittest.skip("Reference only.")
 class SceneTests(unittest.TestCase):
 
     def test_one_scene(self):

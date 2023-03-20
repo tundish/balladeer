@@ -31,7 +31,7 @@ from balladeer.lite.types import DataObject
 from balladeer.lite.types import EnumFactory
 from balladeer.lite.types import Stateful
 
-from balladeer.lite.assets import Loader
+from balladeer.lite.loader import Loader
 
 
 class SceneTests(unittest.TestCase):
