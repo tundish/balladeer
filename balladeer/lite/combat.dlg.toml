@@ -19,10 +19,9 @@ type = "Tool"
 [[__]]
 
 -="""
-<WEAPON.attacking@FIGHTER_2>
+<WEAPON.attacking@FIGHTER_2:shouts>
 
-    + _Whack!_
-    + `audio`
+    _Whack!_
 
 <FIGHTER_2>
 
