@@ -12,16 +12,17 @@ type = "Tool"
 -="""
 <FIGHTER_1>
 
-    I hate how you use me, {FIGHTER_2.name}
+    I hate how you use me, {FIGHTER_2.name}!
 
 """
 
 [[__]]
 
 -="""
-<WEAPON.attacking@FIGHTER_2:>
+<WEAPON.attacking@FIGHTER_2>
 
-    _Whack!_
+    + _Whack!_
+    + `audio`
 
 <FIGHTER_2>
 
