@@ -31,6 +31,7 @@ class Story(Renderer, DataObject):
         super().__init__(**kwargs)
 
         # TODO: Settings -> Theme
+        # ballad-ink-washout, etc
         self.definitions = {
             "catchphrase-colour-washout": "hsl(50, 0%, 100%, 1.0)",
             "catchphrase-colour-shadows": "hsl(202.86, 100%, 4.12%)",
