@@ -30,6 +30,7 @@ class Story(Renderer, DataObject):
     def __init__(self, cfg=None, context=None, **kwargs):
         super().__init__(**kwargs)
 
+        # TODO: Settings -> Theme
         self.definitions = {
             "catchphrase-colour-washout": "hsl(50, 0%, 100%, 1.0)",
             "catchphrase-colour-shadows": "hsl(202.86, 100%, 4.12%)",

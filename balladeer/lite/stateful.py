@@ -21,6 +21,7 @@ from collections import namedtuple
 import enum
 from numbers import Number
 import random
+import re
 import uuid
 
 from turberfield.utils.assembly import Assembly
@@ -71,6 +72,9 @@ class Stateful:
 
     def get_state(self, typ=int, default=0):
         return self._states.get(typ.__name__, default)
+
+    def compare(self, key: str, pattern: [str, re.Pattern]):
+        pass
 
 
 Assembly.register(type(uuid.uuid4()))

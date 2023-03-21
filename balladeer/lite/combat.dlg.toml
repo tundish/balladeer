@@ -1,0 +1,30 @@
+[FIGHTER_1]
+roles = ["WEAPON"]
+
+[FIGHTER_2]
+type = "Animal"
+
+[WEAPON]
+type = "Tool"
+
+[[__]]
+
+-="""
+<FIGHTER_1>
+
+    I hate how you use me, {FIGHTER_2.name}
+
+"""
+
+[[__]]
+
+-="""
+<WEAPON.attacking@FIGHTER_2:>
+
+    _Whack!_
+
+<FIGHTER_2>
+
+    Uuurrggh!
+
+"""
