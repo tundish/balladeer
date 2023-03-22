@@ -26,7 +26,7 @@ import xml.etree.ElementTree as ET
 
 class Loader:
 
-    Asset = namedtuple("Scene", ["text", "tables", "resource", "path", "error"], defaults=[None, None, None])
+    Scene = namedtuple("Scene", ["text", "tables", "resource", "path", "error"], defaults=[None, None, None])
 
     @staticmethod
     def discover(package, resource=".", suffixes=[".dlg.toml"]):
@@ -44,4 +44,4 @@ class Loader:
         except tomllib.TOMLDecodeError as e:
             tables = None
             error = e
-        return Loader.Asset(text, tables, resource, path, error)
+        return Loader.Scene(text, tables, resource, path, error)
