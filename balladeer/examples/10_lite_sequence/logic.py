@@ -20,6 +20,7 @@
 import asyncio
 import sys
 import textwrap
+import uuid
 
 import hypercorn
 from hypercorn.asyncio import serve
@@ -30,6 +31,7 @@ from starlette.applications import Starlette
 from starlette.endpoints import HTTPEndpoint
 from starlette.responses import HTMLResponse
 from starlette.responses import PlainTextResponse
+from starlette.responses import RedirectResponse
 from starlette.routing import Mount
 from starlette.routing import Route
 from starlette.staticfiles import StaticFiles
@@ -89,8 +91,23 @@ class About(HTTPEndpoint):
     async def get(self, request):
         return PlainTextResponse(f"Hello, world!")
 
+
 class Start(HTTPEndpoint):
     async def get(self, request):
+        sessions = request.app.state.sessions
+        key = len(sessions)
+        sessions[key] = []
+        return RedirectResponse(
+            url=request.url_for("session", session_id=key)
+        )
+
+
+class Session(HTTPEndpoint):
+    async def get(self, request):
+        session_id = request.path_params["session_id"]
+        session = request.app.state.sessions[session_id]
+
+        print(f"Session: {session_id}")
         page = html()
         return HTMLResponse(page)
 
@@ -98,10 +115,13 @@ class Start(HTTPEndpoint):
 async def app_factory(scripts, loop=None):
     routes = [
         Route("/", Start),
+        Route("/about", About),
+        Route("/session/{session_id:int}", Session, name="session"),
         #  Mount("/static", app=StaticFiles(directory="static"), name="static"),
         Mount("/static", app=StaticFiles(directory="."), name="static"),
     ]
     app = Starlette(routes=routes)
+    app.state.scripts = scripts
     app.state.sessions = {}
     return app
 
