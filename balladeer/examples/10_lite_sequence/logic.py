@@ -17,8 +17,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import asyncio
 import sys
 import textwrap
+
+import hypercorn
+from hypercorn.asyncio import serve
 
 from speechmark import SpeechMark
 
@@ -26,11 +30,12 @@ from starlette.applications import Starlette
 from starlette.endpoints import HTTPEndpoint
 from starlette.responses import PlainTextResponse
 from starlette.routing import Mount
+from starlette.routing import Route
 from starlette.staticfiles import StaticFiles
-
 
 import balladeer
 from balladeer.lite.loader import Loader
+
 
 __doc__ = """
 ~/py3.11-dev/bin/python -m balladeer.examples.10_lite_sequence.logic
@@ -83,20 +88,31 @@ class About(HTTPEndpoint):
     async def get(self, request):
         return PlainTextResponse(f"Hello, world!")
 
+class Start(HTTPEndpoint):
+    async def get(self, request):
+        return HTMLResponse(html)
 
-def app_factory():
+
+async def app_factory(scripts, loop=None):
     routes = [
+        Route("/", Start),
         #  Mount("/static", app=StaticFiles(directory="static"), name="static"),
         Mount("/static", app=StaticFiles(directory="."), name="static"),
     ]
     app = Starlette(routes=routes)
+    app.state.sessions = {}
     return app
 
 
 if __name__ == "__main__":
-    dialogue = list(
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+
+    scripts = list(
         Loader.discover(balladeer.examples, "10_lite_sequence")
     )
-    print(dialogue)
-    print(html())
+    app = loop.run_until_complete(app_factory(scripts, loop=loop))
+    settings = hypercorn.Config.from_mapping({"bind": "localhost:8080"})
+
+    loop.run_until_complete(serve(app, settings))
 
