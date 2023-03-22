@@ -28,6 +28,7 @@ from speechmark import SpeechMark
 
 from starlette.applications import Starlette
 from starlette.endpoints import HTTPEndpoint
+from starlette.responses import HTMLResponse
 from starlette.responses import PlainTextResponse
 from starlette.routing import Mount
 from starlette.routing import Route
@@ -90,7 +91,8 @@ class About(HTTPEndpoint):
 
 class Start(HTTPEndpoint):
     async def get(self, request):
-        return HTMLResponse(html)
+        page = html()
+        return HTMLResponse(page)
 
 
 async def app_factory(scripts, loop=None):
