@@ -62,41 +62,73 @@ __doc__ = """
         except AttributeError:
             pass
 """
+themes = {
+    "default": {
+        "ballad-ink-washout": "hsl(50, 0%, 100%, 1.0)",
+        "ballad-ink-shadows": "hsl(202.86, 100%, 4.12%)",
+        "ballad-ink-lolight": "hsl(203.39, 96.72%, 11.96%)",
+        "ballad-ink-midtone": "hsl(203.39, 96.72%, 11.96%)",
+        "ballad-ink-hilight": "hsl(203.06, 97.3%, 56.47%)",
+        "ballad-ink-glamour": "hsl(353.33, 96.92%, 12.75%)",
+        "ballad-ink-gravity": "hsl(293.33, 96.92%, 12.75%)",
+    },
+}
 
-def head_elements():
-    yield ""
+"""
+<form role="form" action="/sessions" method="POST" name="ballad-form-start">
+<button action="submit">Begin</button>
+</form>
+"""
 
-def body_elements():
-    yield ""
+class Page:
 
-def html(**kwargs):
-    text = [
-        "\n".join(head_elements(**kwargs)),
-        "\n".join(body_elements(**kwargs)),
-    ]
-    return textwrap.dedent(f"""
-    <!DOCTYPE html>
-    <html>
-    <head>
-    {text[0]}
-    </head>
-    <body>
-    {text[1]}
-    </body>
-    </html>
-    """).strip()
+    @staticmethod
+    def head_elements(**kwargs):
+        yield ""
+
+    @staticmethod
+    def body_elements(**kwargs):
+        yield ""
+
+    def __init__(self, head=None, body=None, **kwargs):
+        self.head = head or self.head_elements(**kwargs)
+        self.body = body or self.body_elements(**kwargs)
+
+    @property
+    def html(self):
+        text = ["\n".join(self.head), "\n".join(self.body)]
+        return textwrap.dedent(f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+        {text[0]}
+        </head>
+        <body>
+        {text[1]}
+        </body>
+        </html>
+        """).strip()
 
 
 class About(HTTPEndpoint):
     async def get(self, request):
-        return PlainTextResponse(f"Hello, world!")
+        return PlainTextResponse("\n".join((
+            f"Balladeer {balladeer.__version__}",
+            "Example 10",
+        )))
+
+
+class Home(HTTPEndpoint):
+    async def get(self, request):
+        page = Page(self.head_elements(), self.body_elements())
+        return HTMLResponse(page.html)
 
 
 class Start(HTTPEndpoint):
     async def get(self, request):
         sessions = request.app.state.sessions
-        key = len(sessions)
-        sessions[key] = []
+        key , val = await session_factory()
+        sessions[key] = val
         return RedirectResponse(
             url=request.url_for("session", session_id=key)
         )
@@ -108,15 +140,18 @@ class Session(HTTPEndpoint):
         session = request.app.state.sessions[session_id]
 
         print(f"Session: {session_id}")
-        page = html()
+        page = Page().html
         return HTMLResponse(page)
 
+
+async def session_factory():
+    return uuid.uuid4(), {}
 
 async def app_factory(scripts, loop=None):
     routes = [
         Route("/", Start),
         Route("/about", About),
-        Route("/session/{session_id:int}", Session, name="session"),
+        Route("/session/{session_id:uuid}", Session, name="session"),
         #  Mount("/static", app=StaticFiles(directory="static"), name="static"),
         Mount("/static", app=StaticFiles(directory="."), name="static"),
     ]
