@@ -74,11 +74,6 @@ themes = {
     },
 }
 
-"""
-<form role="form" action="/sessions" method="POST" name="ballad-form-start">
-<button action="submit">Begin</button>
-</form>
-"""
 
 class Page:
 
@@ -97,17 +92,17 @@ class Page:
     @property
     def html(self):
         text = ["\n".join(self.head), "\n".join(self.body)]
-        return textwrap.dedent(f"""
+        return textwrap.dedent("""
         <!DOCTYPE html>
         <html>
         <head>
-        {text[0]}
+        {0}
         </head>
         <body>
-        {text[1]}
+        {1}
         </body>
         </html>
-        """).strip()
+        """).format(*text).strip()
 
 
 class About(HTTPEndpoint):
@@ -119,18 +114,38 @@ class About(HTTPEndpoint):
 
 
 class Home(HTTPEndpoint):
+
+    @staticmethod
+    def head_elements(**kwargs):
+        yield textwrap.dedent("""
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>FIXME</title>
+        <link rel="stylesheet" href="/static/styles.css" />
+        """).strip()
+
+    @staticmethod
+    def body_elements(**kwargs):
+        yield textwrap.dedent("""
+        <form role="form" action="/sessions" method="POST" name="ballad-form-start">
+        <button action="submit">Begin</button>
+        </form>
+        """).strip()
+
     async def get(self, request):
-        page = Page(self.head_elements(), self.body_elements())
+        page = Page(head=Home.head_elements(), body=Home.body_elements())
         return HTMLResponse(page.html)
 
 
 class Start(HTTPEndpoint):
-    async def get(self, request):
+    async def post(self, request):
         sessions = request.app.state.sessions
         key , val = await session_factory()
         sessions[key] = val
         return RedirectResponse(
-            url=request.url_for("session", session_id=key)
+            url=request.url_for("session", session_id=key),
+            status_code=303
         )
 
 
@@ -140,20 +155,21 @@ class Session(HTTPEndpoint):
         session = request.app.state.sessions[session_id]
 
         print(f"Session: {session_id}")
-        page = Page().html
-        return HTMLResponse(page)
+        page = Page()
+        return HTMLResponse(page.html)
 
 
 async def session_factory():
     return uuid.uuid4(), {}
 
-async def app_factory(scripts, loop=None):
+
+async def app_factory(scripts, static=None, loop=None):
     routes = [
-        Route("/", Start),
+        Route("/", Home),
         Route("/about", About),
+        Route("/sessions", Start, methods=["POST"], name="start"),
         Route("/session/{session_id:uuid}", Session, name="session"),
-        #  Mount("/static", app=StaticFiles(directory="static"), name="static"),
-        Mount("/static", app=StaticFiles(directory="."), name="static"),
+        Mount("/static", app=StaticFiles(directory=static), name="static"),
     ]
     app = Starlette(routes=routes)
     app.state.scripts = scripts
@@ -162,14 +178,17 @@ async def app_factory(scripts, loop=None):
 
 
 if __name__ == "__main__":
+    print(HTTPEndpoint.__subclasses__())  # Register head, body generators?
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
     scripts = list(
         Loader.discover(balladeer.examples, "10_lite_sequence")
     )
-    app = loop.run_until_complete(app_factory(scripts, loop=loop))
-    settings = hypercorn.Config.from_mapping({"bind": "localhost:8080"})
+    app = loop.run_until_complete(app_factory(scripts, static=scripts[0].path.parent, loop=loop))
+    settings = hypercorn.Config.from_mapping(
+        {"bind": "localhost:8080", "errorlog": "-"}
+    )
 
     loop.run_until_complete(serve(app, settings))
 

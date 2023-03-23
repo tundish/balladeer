@@ -34,7 +34,7 @@ class Loader:
             if "".join(path.suffixes) in suffixes:
                 with importlib.resources.as_file(path) as f:
                     text = f.read_text(encoding="utf8")
-                    yield Loader.read(text)
+                    yield Loader.read(text, resource=resource, path=path)
 
     @staticmethod
     def read(text: str, resource="", path=None):
