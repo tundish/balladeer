@@ -25,6 +25,9 @@ import xml.etree.ElementTree as ET
 
 
 class Loader:
+    #   TODO: Loader detects media files for preload, prefetch.
+    #   Think of hex grid map. Get resources for neighbours.
+    #   So every Location declares resources to a Stage?
 
     Scene = namedtuple("Scene", ["text", "tables", "resource", "path", "error"], defaults=[None, None, None])
 

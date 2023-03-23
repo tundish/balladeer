@@ -18,6 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import asyncio
+from collections import defaultdict
 import sys
 import textwrap
 import uuid
@@ -88,6 +89,18 @@ class Page:
     def __init__(self, head=None, body=None, **kwargs):
         self.head = head or self.head_elements(**kwargs)
         self.body = body or self.body_elements(**kwargs)
+        self.zones = defaultdict(list)  # meta, title, link (preload, prefetch), style
+        # Sort links by type, eg: css, js, font, etc
+        # <link
+        #   rel="preload"
+        #   href="fonts/zantroke-webfont.woff2"
+        #   as="font"
+        #   type="font/woff2"
+        #   crossorigin />
+
+        # NB: Prefetch gets resources for the next page.
+        # Stateful Presenter needs lookahead.
+
 
     @property
     def html(self):
