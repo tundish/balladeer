@@ -20,21 +20,24 @@
 
 from collections import namedtuple
 import importlib.resources
+import mimetypes
 import tomllib
 import xml.etree.ElementTree as ET
 
 
 class Loader:
-    #   TODO: Loader detects media files for preload, prefetch.
-    #   Think of hex grid map. Get resources for neighbours.
-    #   So every Location declares resources to a Stage?
 
-    Asset = namedtuple("Asset", ["text", "tables", "resource", "path", "error"], defaults=[None, None, None])
-    Scene = namedtuple("Scene", ["text", "tables", "resource", "path", "error"], defaults=[None, None, None])
+    Asset = namedtuple("Asset", ["resource", "path", "mimetype", "stats"], defaults=[None, None])
+    Scene = namedtuple("Scene", ["text", "tables", "resource", "path", "stats"], defaults=[None, None, None])
 
     @staticmethod
     def discover(package, resource=".", suffixes=[".dlg.toml"]):
         for path in importlib.resources.files(package).joinpath(resource).iterdir():
+            typ, _ = mimetypes.guess_type(path)
+            if typ and typ != "text/x-python":
+                with importlib.resources.as_file(path) as f:
+                    yield Loader.Asset(resource, path, typ, f.stat())
+
             if "".join(path.suffixes) in suffixes:
                 with importlib.resources.as_file(path) as f:
                     text = f.read_text(encoding="utf8")
@@ -44,8 +47,8 @@ class Loader:
     def read(text: str, resource="", path=None):
         try:
             tables = tomllib.loads(text)
-            error = None
+            stats = {}
         except tomllib.TOMLDecodeError as e:
             tables = None
-            error = e
-        return Loader.Scene(text, tables, resource, path, error)
+            stats = e
+        return Loader.Scene(text, tables, resource, path, stats)

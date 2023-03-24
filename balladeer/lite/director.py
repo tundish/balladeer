@@ -22,6 +22,9 @@ from balladeer.lite.parser import Parser
 
 
 class Director:
+    #   TODO: Director detects media files for preload, prefetch.
+    #   Think of hex grid map. Get resources for neighbours.
+    #   So every Location declares resources to a Stage?
 
     @staticmethod
     def select(assets):

@@ -46,32 +46,15 @@ __doc__ = """
 
 """
 
-"""
-        typ = mimetypes.guess_type(rsrc)[0]
-        item = None
-        try:
-            if typ.startswith("audio"):
-                item = Model.Audio(pkg, rsrc, offset, duration, loop, self.fP, node.line)
-            elif typ.startswith("image"):
-                item = Model.Still(pkg, rsrc, offset, duration, loop, label, width, height, self.fP, node.line)
-            elif typ.startswith("video"):
-                item = Model.Video(
-                    pkg, rsrc, offset, duration, loop, label, width, height,
-                    *(node["options"].get(i, None) for i in ["poster", "url"]),
-                    path=self.fP, line_nr=node.line
-                )
-        except AttributeError:
-            pass
-"""
 themes = {
     "default": {
-        "ballad-ink-washout": "hsl(50, 0%, 100%, 1.0)",
+        "ballad-ink-gravity": "hsl(293.33, 96.92%, 12.75%)",
         "ballad-ink-shadows": "hsl(202.86, 100%, 4.12%)",
         "ballad-ink-lolight": "hsl(203.39, 96.72%, 11.96%)",
         "ballad-ink-midtone": "hsl(203.39, 96.72%, 11.96%)",
         "ballad-ink-hilight": "hsl(203.06, 97.3%, 56.47%)",
+        "ballad-ink-washout": "hsl(50, 0%, 100%, 1.0)",
         "ballad-ink-glamour": "hsl(353.33, 96.92%, 12.75%)",
-        "ballad-ink-gravity": "hsl(293.33, 96.92%, 12.75%)",
     },
 }
 
@@ -199,12 +182,12 @@ if __name__ == "__main__":
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
-    scripts = list(
+    assets = list(
         Loader.discover(balladeer.examples, "10_lite_sequence")
     )
     app = loop.run_until_complete(app_factory(
         static=scripts[0].path.parent, loop=loop,
-        scripts=scripts, sessions={}
+        assets=assets, sessions={}
     ))
     settings = hypercorn.Config.from_mapping(
         {"bind": "localhost:8080", "errorlog": "-"}
