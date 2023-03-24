@@ -166,6 +166,7 @@ class Session(HTTPEndpoint):
 
         print(f"Ensemble: {ensemble}")
         print(f"Scripts: {scripts}")
+        print(f"Selection: {selection}")
         page = Page()
         return HTMLResponse(page.html)
 

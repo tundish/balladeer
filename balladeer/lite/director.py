@@ -46,16 +46,17 @@ class Director:
         """
         lookup = defaultdict(set)
         for entity in ensemble:
-            lookup[entity.__class__.__name__] = entity
+            lookup[entity.__class__.__name__] = entity  # Classic
+            if hasattr(entity, "type"):
+                lookup[entity.type] = entity  # Classic
 
         for scene in scripts:
             entities = dict(sorted(
                 ((k, v) for k, v in scene.tables.items() if k != self.shot_key),
                 key=lambda x: self.constraint_count(x[1]), reverse=True
             ))
-            print(entities)
             shots = scene.tables.get(self.shot_key, [])
-            return scene
+            return {k: lookup.get(entity.get("type")) for k, entity in entities.items()}
 
     @staticmethod
     def cast():
