@@ -41,6 +41,7 @@ from starlette.staticfiles import StaticFiles
 
 import balladeer
 from balladeer.lite.loader import Loader
+from balladeer.lite.director import Director
 
 
 __doc__ = """
@@ -159,6 +160,10 @@ class Session(HTTPEndpoint):
 
         ensemble = story.context.ensemble(story.world)
         scripts = story.context.scripts(state.assets)
+
+        director = Director()
+        selection = director.select(scripts, ensemble)
+
         print(f"Ensemble: {ensemble}")
         print(f"Scripts: {scripts}")
         page = Page()

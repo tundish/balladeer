@@ -7,7 +7,7 @@ type = "Animal"
 [WEAPON]
 type = "Tool"
 
-[[__]]
+[[_]]
 
 -="""
 <FIGHTER_1>
@@ -16,7 +16,7 @@ type = "Tool"
 
 """
 
-[[__]]
+[[_]]
 
 -="""
 <WEAPON.attacking@FIGHTER_2:shouts/slapwhack>

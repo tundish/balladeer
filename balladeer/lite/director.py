@@ -18,7 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from balladeer.lite.parser import Parser
+from collections import defaultdict
 
 
 class Director:
@@ -26,16 +26,28 @@ class Director:
     #   Think of hex grid map. Get resources for neighbours.
     #   So every Location declares resources to a Stage?
 
-    @staticmethod
-    def select(assets):
+    def __init__(self, shot_key="_", dlg_key="-"):
+        self.shot_key = shot_key
+        self.dlg_key = dlg_key
+
+    def select(self, scripts, ensemble=[], roles=1):
         """
         Pick appropriate dialogue files. 
         First selection comes from the Drama.
 
         This code understands types, roles, states.
 
+        See turberfield-dialogue/turberfield/dialogue/model
         """
-        pass
+        lookup = defaultdict(set)
+        for entity in ensemble:
+            lookup[entity.__class__.__name__] = entity
+
+        for scene in scripts:
+            entities = {k: v for k, v in scene.tables.items() if k != self.shot_key}
+            print(entities)
+            shots = scene.tables.get(self.shot_key, [])
+            return scene
 
     @staticmethod
     def cast():
