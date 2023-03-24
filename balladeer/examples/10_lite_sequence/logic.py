@@ -19,6 +19,7 @@
 
 import asyncio
 from collections import defaultdict
+import copy
 import sys
 import textwrap
 import uuid
@@ -58,6 +59,9 @@ themes = {
     },
 }
 
+
+class Presenter:
+    pass
 
 class Page:
 
@@ -155,11 +159,47 @@ class Session(HTTPEndpoint):
         return HTMLResponse(page.html)
 
 
+class World:
+
+    def __init__(self, config):
+        self.config = config
+
+    def build(self):
+        yield from []
+ 
+    def population():
+        return copy.deepcopy(self.entities)
+
+
+class Drama:
+
+    def __init__(self, config):
+        self.config = config
+
+    def ensemble(self, world):
+        return population
+
+
+class Story:
+
+    def __init__(self, config=None):
+        self.uid = uuid.uuid4()
+        self.config = config
+        self.world = World(config)
+        self.drama = [
+            Drama(config)
+        ]
+
+    def context(self):
+        return self.drama[0]
+
+
 async def session_factory():
-    return uuid.uuid4(), {}
+    story = Story()
+    return story.uid, story
 
 
-async def app_factory(static=None, loop=None, **kwargs):
+async def app_factory(config=None, static=None, loop=None, **kwargs):
     routes = [
         Route("/", Home),
         Route("/about", About),
@@ -170,6 +210,7 @@ async def app_factory(static=None, loop=None, **kwargs):
         routes.append(Mount("/static", app=StaticFiles(directory=static), name="static"))
 
     app = Starlette(routes=routes)
+    app.state.config = config
 
     for k, v in kwargs.items():
         setattr(app.state, k, v)
@@ -186,7 +227,7 @@ if __name__ == "__main__":
         Loader.discover(balladeer.examples, "10_lite_sequence")
     )
     app = loop.run_until_complete(app_factory(
-        static=scripts[0].path.parent, loop=loop,
+        static=assets[0].path.parent, loop=loop,
         assets=assets, sessions={}
     ))
     settings = hypercorn.Config.from_mapping(
