@@ -63,6 +63,7 @@ themes = {
 class Presenter:
     pass
 
+
 class Page:
 
     @staticmethod
@@ -141,7 +142,7 @@ class Home(HTTPEndpoint):
 class Start(HTTPEndpoint):
     async def post(self, request):
         sessions = request.app.state.sessions
-        key , val = await session_factory()
+        key , val = await session_factory(request.app.state.config)
         sessions[key] = val
         return RedirectResponse(
             url=request.url_for("session", session_id=key),
@@ -194,8 +195,8 @@ class Story:
         return self.drama[0]
 
 
-async def session_factory():
-    story = Story()
+async def session_factory(config):
+    story = Story(config)
     return story.uid, story
 
 
