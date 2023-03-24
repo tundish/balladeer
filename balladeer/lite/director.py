@@ -26,6 +26,11 @@ class Director:
     #   Think of hex grid map. Get resources for neighbours.
     #   So every Location declares resources to a Stage?
 
+    @staticmethod
+    def constraint_count(entity):
+        n = 1 if "type" in entity else 0
+        return len(entity.get("states", [])) + n
+
     def __init__(self, shot_key="_", dlg_key="-"):
         self.shot_key = shot_key
         self.dlg_key = dlg_key
@@ -44,7 +49,10 @@ class Director:
             lookup[entity.__class__.__name__] = entity
 
         for scene in scripts:
-            entities = {k: v for k, v in scene.tables.items() if k != self.shot_key}
+            entities = dict(sorted(
+                ((k, v) for k, v in scene.tables.items() if k != self.shot_key),
+                key=lambda x: self.constraint_count(x[1]), reverse=True
+            ))
             print(entities)
             shots = scene.tables.get(self.shot_key, [])
             return scene

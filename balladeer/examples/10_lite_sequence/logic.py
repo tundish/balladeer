@@ -178,9 +178,9 @@ class World:
 
     def build(self):
         yield from [
-            SN(name="Biffy"),
-            SN(name="Bashy"),
-            SN(name="Rusty"),
+            SN(name="Biffy", type="Animal"),
+            SN(name="Bashy", type="Animal"),
+            SN(name="Rusty", type="Tool"),
         ]
 
 
