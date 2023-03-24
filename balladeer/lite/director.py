@@ -35,7 +35,7 @@ class Director:
         self.shot_key = shot_key
         self.dlg_key = dlg_key
 
-    def select(self, scripts, ensemble=[], roles=1):
+    def selection(self, scripts, ensemble=[], roles=1):
         """
         Pick appropriate dialogue files. 
         First selection comes from the Drama.
@@ -55,17 +55,14 @@ class Director:
                 ((k, v) for k, v in scene.tables.items() if k != self.shot_key),
                 key=lambda x: self.constraint_count(x[1]), reverse=True
             ))
-            shots = scene.tables.get(self.shot_key, [])
-            return {k: lookup.get(entity.get("type")) for k, entity in entities.items()}
+            cast = {k: lookup.get(entity.get("type")) for k, entity in entities.items()}
+            return scene, cast
 
-    @staticmethod
-    def cast():
-        """
-        Returns a mapping of roles to entities.
-
-        Assists in processing the 'do' clause.
-
-        """
+    def blocking(self, scene, selection: dict={}):
+        shots = scene.tables.get(self.shot_key, [])
+        for shot in shots:
+            dialogue = shot.get(self.dlg_key, "")
+            yield dialogue.format(**selection)
 
     @staticmethod
     def prompt(directives):

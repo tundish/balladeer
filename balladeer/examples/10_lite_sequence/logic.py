@@ -162,11 +162,13 @@ class Session(HTTPEndpoint):
         scripts = story.context.scripts(state.assets)
 
         director = Director()
-        selection = director.select(scripts, ensemble)
+        scene, cast = director.selection(scripts, ensemble)
+        blocking = list(director.blocking(scene, cast))
 
         print(f"Ensemble: {ensemble}")
         print(f"Scripts: {scripts}")
-        print(f"Selection: {selection}")
+        print(f"Cast: {cast}")
+        print(f"Blocking: {blocking}")
         page = Page()
         return HTMLResponse(page.html)
 
