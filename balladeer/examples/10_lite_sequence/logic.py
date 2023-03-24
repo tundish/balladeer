@@ -176,17 +176,21 @@ async def session_factory():
     return uuid.uuid4(), {}
 
 
-async def app_factory(scripts, static=None, loop=None):
+async def app_factory(static=None, loop=None, **kwargs):
     routes = [
         Route("/", Home),
         Route("/about", About),
         Route("/sessions", Start, methods=["POST"], name="start"),
         Route("/session/{session_id:uuid}", Session, name="session"),
-        Mount("/static", app=StaticFiles(directory=static), name="static"),
     ]
+    if static:
+        routes.append(Mount("/static", app=StaticFiles(directory=static), name="static"))
+
     app = Starlette(routes=routes)
-    app.state.scripts = scripts
-    app.state.sessions = {}
+
+    for k, v in kwargs.items():
+        setattr(app.state, k, v)
+
     return app
 
 
@@ -198,7 +202,10 @@ if __name__ == "__main__":
     scripts = list(
         Loader.discover(balladeer.examples, "10_lite_sequence")
     )
-    app = loop.run_until_complete(app_factory(scripts, static=scripts[0].path.parent, loop=loop))
+    app = loop.run_until_complete(app_factory(
+        static=scripts[0].path.parent, loop=loop,
+        scripts=scripts, sessions={}
+    ))
     settings = hypercorn.Config.from_mapping(
         {"bind": "localhost:8080", "errorlog": "-"}
     )

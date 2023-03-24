@@ -29,6 +29,7 @@ class Loader:
     #   Think of hex grid map. Get resources for neighbours.
     #   So every Location declares resources to a Stage?
 
+    Asset = namedtuple("Asset", ["text", "tables", "resource", "path", "error"], defaults=[None, None, None])
     Scene = namedtuple("Scene", ["text", "tables", "resource", "path", "error"], defaults=[None, None, None])
 
     @staticmethod
