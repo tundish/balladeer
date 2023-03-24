@@ -9,7 +9,7 @@ type = "Tool"
 
 [[_]]
 
--="""
+D="""
 <FIGHTER_1>
 
     I hate how you use me, {FIGHTER_2.name}!
@@ -18,7 +18,7 @@ type = "Tool"
 
 [[_]]
 
--="""
+D="""
 <WEAPON.attacking@FIGHTER_2:shouts/slapwhack>
 
     _Whack!_
