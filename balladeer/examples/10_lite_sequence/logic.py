@@ -22,6 +22,7 @@ from collections import defaultdict
 import copy
 import sys
 import textwrap
+from types import SimpleNamespace as SN
 import uuid
 
 import hypercorn
@@ -153,9 +154,13 @@ class Start(HTTPEndpoint):
 class Session(HTTPEndpoint):
     async def get(self, request):
         session_id = request.path_params["session_id"]
-        session = request.app.state.sessions[session_id]
+        state = request.app.state
+        story = state.sessions[session_id]
 
-        print(f"Session: {session_id}")
+        ensemble = story.context.ensemble(story.world)
+        scripts = story.context.scripts(state.assets)
+        print(f"Ensemble: {ensemble}")
+        print(f"Scripts: {scripts}")
         page = Page()
         return HTMLResponse(page.html)
 
@@ -164,12 +169,14 @@ class World:
 
     def __init__(self, config):
         self.config = config
+        self.population = list(self.build())
 
     def build(self):
-        yield from []
- 
-    def population():
-        return copy.deepcopy(self.entities)
+        yield from [
+            SN(name="Biffy"),
+            SN(name="Bashy"),
+            SN(name="Rusty"),
+        ]
 
 
 class Drama:
@@ -178,7 +185,10 @@ class Drama:
         self.config = config
 
     def ensemble(self, world):
-        return population
+        return world.population
+
+    def scripts(self, assets):
+        return [i for i in assets if isinstance(i, Loader.Scene)]
 
 
 class Story:
@@ -191,6 +201,7 @@ class Story:
             Drama(config)
         ]
 
+    @property
     def context(self):
         return self.drama[0]
 
