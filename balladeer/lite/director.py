@@ -62,12 +62,8 @@ class Director:
         shots = scene.tables.get(self.shot_key, [])
         for shot in shots:
             dialogue = shot.get(self.dlg_key, "")
-            yield dialogue.format(**selection)
+            shot[self.dlg_key] = dialogue.format(**selection)
+            yield shot
 
-    @staticmethod
-    def prompt(directives):
-        """
-        Evaluate 'if' clauses.
-        Apply formatting to dialogue.
-
-        """
+    def allows(self, shot):
+        return True

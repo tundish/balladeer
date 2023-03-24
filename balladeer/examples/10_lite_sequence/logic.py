@@ -163,7 +163,8 @@ class Session(HTTPEndpoint):
 
         director = Director()
         scene, cast = director.selection(scripts, ensemble)
-        blocking = list(director.blocking(scene, cast))
+        blocking = list(director.blocking(scene, cast))  # deque?
+        shot = next(i for i in blocking if director.allows(i))
 
         print(f"Ensemble: {ensemble}")
         print(f"Scripts: {scripts}")
