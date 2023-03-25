@@ -31,7 +31,8 @@ class Director:
         n = 1 if "type" in entity else 0
         return len(entity.get("states", [])) + n
 
-    def __init__(self, shot_key="_", dlg_key="D"):
+    def __init__(self, story, shot_key="_", dlg_key="D"):
+        self.story = story
         self.shot_key = shot_key
         self.dlg_key = dlg_key
 

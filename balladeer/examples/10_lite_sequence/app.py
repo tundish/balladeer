@@ -186,12 +186,13 @@ class Session(HTTPEndpoint):
         ensemble = story.context.ensemble(story.world)
         scripts = story.context.scripts(state.assets)
 
-        director = Director()
+        director = Director(story)
         scene, cast = director.selection(scripts, ensemble)
         rewriter = director.rewrite(scene, cast)
         shot = next(i for i in rewriter if director.allows(i))
 
         text = shot.get(director.dlg_key, "")
+
         page = Page()
         page.paste(page.zone.title, "<title>Example</title>")
         page.paste(page.zone.meta, Home.meta)
