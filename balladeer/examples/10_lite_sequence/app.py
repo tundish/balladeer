@@ -64,10 +64,6 @@ themes = {
 }
 
 
-class Presenter:
-    pass
-
-
 class Page:
 
     @enum.unique
@@ -93,24 +89,16 @@ class Page:
         script  =   38
         end     =   40
 
-    @staticmethod
-    def head_elements(**kwargs):
-        yield ""
+    def __init__(self, zone=Zone):
+        self.zone = zone
+        self.structure = self.setup(zone)
 
-    @staticmethod
-    def body_elements(**kwargs):
-        yield ""
-
-    def __init__(self, head=None, body=None, **kwargs):
-        self.head = head or self.head_elements(**kwargs)
-        self.body = body or self.body_elements(**kwargs)
-        self.zones = {z: list() for z in self.Zone}
-
-    def structure(self):
-        self.zones[self.Zone.doc].append("<!DOCTYPE html>")
-        self.zones[self.Zone.html].append("<html>")
-        self.zones[self.Zone.head].append("<head>")
-        self.zones[self.Zone.body].extend(["</head>", "<body>"])
+    def setup(self, zone):
+        rv = {z: list() for z in zone}
+        rv[zone.doc].append("<!DOCTYPE html>")
+        rv[zone.html].append("<html>")
+        rv[zone.head].append("<head>")
+        rv[zone.body].extend(["</head>", "<body>"])
         # Sort links by type, eg: css, js, font, etc
         # <link
         #   rel="preload"
@@ -121,20 +109,21 @@ class Page:
 
         # NB: Prefetch gets resources for the next page.
         # Stateful Presenter needs lookahead.
-        self.zones[self.Zone.end].extend(["</body>", "</html>", "\n"])
-        return self
+        rv[zone.end].extend(["</body>", "</html>"])
+        return rv
 
     def paste(self, zone, *args):
-        self.zones[zone].extend(args)
+        self.structure[zone].extend(args)
         return self
 
     @property
     def html(self):
         return "\n".join(
             gen if isinstance(gen, str) else "\n".join(gen)
-            for seq in self.zones.values()
+            for seq in self.structure.values()
             for gen in seq
         )
+
 
 class About(HTTPEndpoint):
     async def get(self, request):
@@ -146,28 +135,26 @@ class About(HTTPEndpoint):
 
 class Home(HTTPEndpoint):
 
-    @staticmethod
-    def head_elements(**kwargs):
-        yield textwrap.dedent("""
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>FIXME</title>
-        <link rel="stylesheet" href="/static/styles.css" />
-        """).strip()
+    meta = textwrap.dedent("""
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    """).strip()
 
-    @staticmethod
-    def body_elements(**kwargs):
-        yield textwrap.dedent("""
-        <form role="form" action="/sessions" method="POST" name="ballad-form-start">
-        <button action="submit">Begin</button>
-        </form>
-        """).strip()
+    css = """<link rel="stylesheet" href="/static/styles.css" />"""
+
+    body = textwrap.dedent("""
+    <form role="form" action="/sessions" method="POST" name="ballad-form-start">
+    <button action="submit">Begin</button>
+    </form>
+    """).strip()
 
     async def get(self, request):
         page = Page()
-        page.paste(page.Zone.meta, Home.head_elements())
-        page.paste(page.Zone.body, Home.body_elements())
+        page.paste(page.zone.title, "<title>Example</title>")
+        page.paste(page.zone.meta, self.meta)
+        page.paste(page.zone.css, self.css)
+        page.paste(page.zone.body, self.body)
         return HTMLResponse(page.html)
 
 
@@ -183,16 +170,6 @@ class Start(HTTPEndpoint):
 
 
 class Session(HTTPEndpoint):
-
-    @staticmethod
-    def head_elements(**kwargs):
-        yield textwrap.dedent("""
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>FIXME</title>
-        <link rel="stylesheet" href="/static/styles.css" />
-        """).strip()
 
     @staticmethod
     def body_elements(text, **kwargs):
@@ -215,8 +192,10 @@ class Session(HTTPEndpoint):
 
         text = shot.get(director.dlg_key, "")
         page = Page()
-        page.paste(page.Zone.meta, Session.head_elements())
-        page.paste(page.Zone.body, Session.body_elements(text))
+        page.paste(page.zone.title, "<title>Example</title>")
+        page.paste(page.zone.meta, Home.meta)
+        page.paste(page.zone.css, Home.css)
+        page.paste(page.zone.body, self.body_elements(text))
         return HTMLResponse(page.html)
 
 
