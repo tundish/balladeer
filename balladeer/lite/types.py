@@ -19,6 +19,7 @@
 
 from collections import defaultdict
 import dataclasses
+import enum
 import random
 import uuid
 
@@ -31,6 +32,11 @@ def group_by_type(items):
     for i in items:
         rv[type(i)].append(i)
     return rv
+
+
+Into = None
+Spot = None
+Exit = None
 
 
 # turberfield.dialogue.types
@@ -55,17 +61,42 @@ class Entity:
 
     @property
     def name(self):
-        return random.choice(self.names)
+        return random.choice(self.names or [self.name])
 
 
-class World:
+class Traffic(State, enum.Enum):
+    blocked = enum.auto()
+    forward = enum.auto()
+    reverse = enum.auto()
+    flowing = enum.auto()
 
-    def __init__(self, config):
+
+class Transit(Entity):
+    pass
+
+
+# TODO: Reconcile with balladeer.cartography.Map
+class MapBuilder:
+
+    def __init__(self, spots):
+        global Into, Spot, Exit
+        self.into = Into = enum.Enum("Into", spots, type=Waypoint)
+        self.exit = Exit = enum.Enum("Exit", spots, type=Waypoint)
+        self.spot = Spot = enum.Enum("Spot", spots, type=Waypoint)
+        self.transits = list(self.build())
+
+    def build(self):
+        raise NotImplementedError
+
+
+class WorldBuilder:
+
+    def __init__(self, config, map=None):
         self.config = config
-        self.population = list(self.build())
+        self.map = map
+        self.entities = list(self.build())
 
-    @staticmethod
-    def build():
+    def build(self):
         raise NotImplementedError
 
  
@@ -75,7 +106,7 @@ class Drama:
         self.config = config
 
     def ensemble(self, world):
-        return world.population
+        return world.entities
 
     def scripts(self, assets):
         return [i for i in assets if isinstance(i, Loader.Scene)]
@@ -83,16 +114,13 @@ class Drama:
 
 class Story:
 
-    def __init__(self, config=None, world_builder=World):
+    def __init__(self, config=None, world=None, drama=[]):
         self.uid = uuid.uuid4()
         self.config = config
-        self.world = world_builder(config)
-        self.drama = [
-            Drama(config)
-        ]
+        self.world = world
+        self.drama = drama or [Drama(config)]
 
     @property
     def context(self):
         return self.drama[0]
-
 

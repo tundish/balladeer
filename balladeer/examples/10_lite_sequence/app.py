@@ -40,8 +40,9 @@ from starlette.staticfiles import StaticFiles
 import balladeer
 from balladeer.lite.loader import Loader
 from balladeer.lite.director import Director
+from balladeer.lite.types import Story
 
-from .logic import Story
+from .logic import World
 
 
 __doc__ = """
@@ -189,7 +190,8 @@ class Session(HTTPEndpoint):
 
 
 async def session_factory(config):
-    story = Story(config)
+    world = World(config)
+    story = Story(config, world)
     return story.uid, story
 
 

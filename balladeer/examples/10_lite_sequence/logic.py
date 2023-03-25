@@ -18,15 +18,14 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from balladeer.lite.types import Entity
-from balladeer.lite.types import Story
-from balladeer.lite.types import World
+from balladeer.lite.types import WorldBuilder
 
 
-def build():
-    yield from [
-        Entity(name="Biffy", type="Animal"),
-        Entity(name="Bashy", type="Animal"),
-        Entity(name="Rusty", type="Tool"),
-    ]
+class World(WorldBuilder):
 
-World.build = staticmethod(build)
+    def build(self):
+        yield from [
+            Entity(name="Biffy", type="Animal"),
+            Entity(name="Bashy", type="Animal"),
+            Entity(name="Rusty", type="Tool"),
+        ]
