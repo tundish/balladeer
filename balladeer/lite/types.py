@@ -2,7 +2,7 @@
 #   encoding: utf-8
 
 # This is part of the Balladeer library.
-# Copyright (C) 2022 D E Haynes
+# Copyright (C) 2023 D E Haynes
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as
@@ -18,16 +18,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from collections import defaultdict
-from collections import namedtuple
-import importlib.resources
-import inspect
-import pprint
-import tomllib
+import dataclasses
 import uuid
 
-import markdown
-
-# from turberfield.utils.assembly import Assembly
+from balladeer.lite.loader import Loader
 
 
 # turberfield.utils.misc
@@ -39,49 +33,56 @@ def group_by_type(items):
 
 
 # turberfield.dialogue.types
-class EnumFactory:
+class State:
 
     @classmethod
     def factory(cls, name=None, **kwargs):
         return cls[name]
 
 
-# turberfield.dialogue.types
-class DataObject:
+@dataclasses.dataclass(unsafe_hash=True)
+class Entity:
 
-    def __init__(self, *args, id=None, **kwargs):
-        super().__init__(*args)
-        self.id = id or uuid.uuid4()
-        for k, v in kwargs.items():
-            setattr(self, k, v)
-
-    def __repr__(self):
-        return "<{0}> {1}".format(type(self).__name__, vars(self))
+    name: str
+    type: str = None
+    states: dict = dataclasses.field(default_factory=dict, compare=False)
 
 
-# turberfield.dialogue.types
-class Stateful:
+class World:
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._states = {}
+    def __init__(self, config):
+        self.config = config
+        self.population = list(self.build())
+
+    @staticmethod
+    def build():
+        raise NotImplementedError
+
+ 
+class Drama:
+
+    def __init__(self, config):
+        self.config = config
+
+    def ensemble(self, world):
+        return world.population
+
+    def scripts(self, assets):
+        return [i for i in assets if isinstance(i, Loader.Scene)]
+
+
+class Story:
+
+    def __init__(self, config=None, world_builder=World):
+        self.uid = uuid.uuid4()
+        self.config = config
+        self.world = world_builder(config)
+        self.drama = [
+            Drama(config)
+        ]
 
     @property
-    def state(self):
-        return self.get_state()
+    def context(self):
+        return self.drama[0]
 
-    @state.setter
-    def state(self, value):
-        return self.set_state(value)
-
-    def set_state(self, *args):
-        for value in args:
-            self._states[type(value).__name__] = value
-        return self
-
-    def get_state(self, typ=int, default=0):
-        return self._states.get(typ.__name__, default)
-
-
-class Thing(DataObject, Stateful): pass
 
