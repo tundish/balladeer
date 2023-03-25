@@ -19,6 +19,7 @@
 
 import asyncio
 from collections import defaultdict
+import enum
 import sys
 import textwrap
 import uuid
@@ -68,6 +69,28 @@ class Presenter:
 
 
 class Page:
+
+    @enum.unique
+    class Zone(enum.Enum):
+        xml     =  2
+        doc     =  4
+        html    =  6
+        head    =  8
+        title   =  10
+        rdf     =  12
+        meta    =  14
+        link    =  16
+        css     =  18
+        theme   =  20
+        style   =  22
+        body    =  24
+        app     =  26
+        nav     =  28
+        main    =  30
+        aside   =  32
+        svg     =  34
+        iframe  =  36
+        script  =  38
 
     @staticmethod
     def head_elements(**kwargs):

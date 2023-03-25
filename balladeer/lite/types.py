@@ -80,9 +80,9 @@ class MapBuilder:
 
     def __init__(self, spots):
         global Into, Spot, Exit
-        self.into = Into = enum.Enum("Into", spots, type=Waypoint)
-        self.exit = Exit = enum.Enum("Exit", spots, type=Waypoint)
-        self.spot = Spot = enum.Enum("Spot", spots, type=Waypoint)
+        self.into = Into = enum.Enum("Into", spots, type=State)
+        self.exit = Exit = enum.Enum("Exit", spots, type=State)
+        self.spot = Spot = enum.Enum("Spot", spots, type=State)
         self.transits = list(self.build())
 
     def build(self):
