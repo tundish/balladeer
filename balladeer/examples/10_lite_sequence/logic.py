@@ -153,6 +153,23 @@ class Start(HTTPEndpoint):
 
 
 class Session(HTTPEndpoint):
+
+    @staticmethod
+    def head_elements(**kwargs):
+        yield textwrap.dedent("""
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>FIXME</title>
+        <link rel="stylesheet" href="/static/styles.css" />
+        """).strip()
+
+    @staticmethod
+    def body_elements(text, **kwargs):
+        sm = SpeechMark()
+        blocks = sm.loads(text)
+        yield blocks
+
     async def get(self, request):
         session_id = request.path_params["session_id"]
         state = request.app.state
@@ -163,14 +180,11 @@ class Session(HTTPEndpoint):
 
         director = Director()
         scene, cast = director.selection(scripts, ensemble)
-        blocking = list(director.blocking(scene, cast))  # deque?
-        shot = next(i for i in blocking if director.allows(i))
+        rewriter = director.rewrite(scene, cast)
+        shot = next(i for i in rewriter if director.allows(i))
 
-        print(f"Ensemble: {ensemble}")
-        print(f"Scripts: {scripts}")
-        print(f"Cast: {cast}")
-        print(f"Blocking: {blocking}")
-        page = Page()
+        text = shot.get(director.dlg_key, "")
+        page = Page(head=Session.head_elements(), body=Session.body_elements(text))
         return HTMLResponse(page.html)
 
 

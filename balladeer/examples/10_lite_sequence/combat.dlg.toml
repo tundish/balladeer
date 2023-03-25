@@ -12,7 +12,7 @@ type = "Tool"
 D="""
 <FIGHTER_1>
 
-    I hate how you use me, {FIGHTER_2.name}!
+    I don't like the way you use me, {FIGHTER_2.name}!
 
 """
 

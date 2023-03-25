@@ -58,7 +58,7 @@ class Director:
             cast = {k: lookup.get(entity.get("type")) for k, entity in entities.items()}
             return scene, cast
 
-    def blocking(self, scene, selection: dict={}):
+    def rewrite(self, scene, selection: dict={}):
         shots = scene.tables.get(self.shot_key, [])
         for shot in shots:
             dialogue = shot.get(self.dlg_key, "")
