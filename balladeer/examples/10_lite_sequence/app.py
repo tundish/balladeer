@@ -68,26 +68,27 @@ class Page:
 
     @enum.unique
     class Zone(enum.Enum):
-        xml     =   2
-        doc     =   4
-        html    =   6
-        head    =   8
-        title   =   10
-        rdf     =   12
-        meta    =   14
-        link    =   16
-        css     =   18
-        theme   =   20
-        style   =   22
-        body    =   24
-        app     =   26
-        nav     =   28
-        main    =   30
-        aside   =   32
-        svg     =   34
-        iframe  =   36
-        script  =   38
-        end     =   40
+        xml     =   enum.auto()
+        doc     =   enum.auto()
+        html    =   enum.auto()
+        head    =   enum.auto()
+        title   =   enum.auto()
+        rdf     =   enum.auto()
+        meta    =   enum.auto()
+        link    =   enum.auto()
+        css     =   enum.auto()
+        theme   =   enum.auto()
+        style   =   enum.auto()
+        body    =   enum.auto()
+        app     =   enum.auto()
+        nav     =   enum.auto()
+        main    =   enum.auto()
+        asides  =   enum.auto()
+        inputs  =   enum.auto()
+        svg     =   enum.auto()
+        iframe  =   enum.auto()
+        script  =   enum.auto()
+        end     =   enum.auto()
 
     def __init__(self, zone=Zone):
         self.zone = zone
