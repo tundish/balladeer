@@ -19,10 +19,9 @@
 
 import asyncio
 from collections import defaultdict
-import copy
+import dataclasses
 import sys
 import textwrap
-from types import SimpleNamespace as SN
 import uuid
 
 import hypercorn
@@ -61,6 +60,13 @@ themes = {
     },
 }
 
+
+@dataclasses.dataclass(unsafe_hash=True)
+class Entity:
+
+    name: str
+    type: str = None
+    states: dict = dataclasses.field(default_factory=dict, compare=False)
 
 class Presenter:
     pass
@@ -196,9 +202,9 @@ class World:
 
     def build(self):
         yield from [
-            SN(name="Biffy", type="Animal"),
-            SN(name="Bashy", type="Animal"),
-            SN(name="Rusty", type="Tool"),
+            Entity(name="Biffy", type="Animal"),
+            Entity(name="Bashy", type="Animal"),
+            Entity(name="Rusty", type="Tool"),
         ]
 
 

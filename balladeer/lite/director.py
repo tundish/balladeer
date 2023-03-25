@@ -46,19 +46,25 @@ class Director:
         """
         lookup = defaultdict(set)
         for entity in ensemble:
-            lookup[entity.__class__.__name__] = entity  # Classic
+            try:
+                lookup[entity.__class__.__name__].add(entity)  # Classic
+            except TypeError:
+                # eg: SimpleNamespace is unhashable
+                pass
+
             if hasattr(entity, "type"):
-                lookup[entity.type] = entity  # Classic
+                lookup[entity.type].add(entity) # Lite
 
         for scene in scripts:
-            entities = dict(sorted(
+            roles = dict(sorted(
                 ((k, v) for k, v in scene.tables.items() if k != self.shot_key),
                 key=lambda x: self.constraint_count(x[1]), reverse=True
             ))
-            cast = {k: lookup.get(entity.get("type")) for k, entity in entities.items()}
+            cast = {k: lookup.get(role["type"]).pop() for k, role in roles.items() if "type" in role}
             return scene, cast
 
     def rewrite(self, scene, selection: dict={}):
+        # TODO: replace/retain <cite data-role="FIGHTER_1">FIGHTER_1</cite>
         shots = scene.tables.get(self.shot_key, [])
         for shot in shots:
             dialogue = shot.get(self.dlg_key, "")
