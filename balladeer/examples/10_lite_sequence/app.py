@@ -72,25 +72,26 @@ class Page:
 
     @enum.unique
     class Zone(enum.Enum):
-        xml     =  2
-        doc     =  4
-        html    =  6
-        head    =  8
-        title   =  10
-        rdf     =  12
-        meta    =  14
-        link    =  16
-        css     =  18
-        theme   =  20
-        style   =  22
-        body    =  24
-        app     =  26
-        nav     =  28
-        main    =  30
-        aside   =  32
-        svg     =  34
-        iframe  =  36
-        script  =  38
+        xml     =   2
+        doc     =   4
+        html    =   6
+        head    =   8
+        title   =   10
+        rdf     =   12
+        meta    =   14
+        link    =   16
+        css     =   18
+        theme   =   20
+        style   =   22
+        body    =   24
+        app     =   26
+        nav     =   28
+        main    =   30
+        aside   =   32
+        svg     =   34
+        iframe  =   36
+        script  =   38
+        end     =   40
 
     @staticmethod
     def head_elements(**kwargs):
@@ -103,7 +104,13 @@ class Page:
     def __init__(self, head=None, body=None, **kwargs):
         self.head = head or self.head_elements(**kwargs)
         self.body = body or self.body_elements(**kwargs)
-        self.zones = defaultdict(list)  # meta, title, link (preload, prefetch), style
+        self.zones = {z: list() for z in self.Zone}
+
+    def structure(self):
+        self.zones[self.Zone.doc].append("<!DOCTYPE html>")
+        self.zones[self.Zone.html].append("<html>")
+        self.zones[self.Zone.head].append("<head>")
+        self.zones[self.Zone.body].extend(["</head>", "<body>"])
         # Sort links by type, eg: css, js, font, etc
         # <link
         #   rel="preload"
@@ -114,23 +121,20 @@ class Page:
 
         # NB: Prefetch gets resources for the next page.
         # Stateful Presenter needs lookahead.
+        self.zones[self.Zone.end].extend(["</body>", "</html>", "\n"])
+        return self
 
+    def paste(self, zone, *args):
+        self.zones[zone].extend(args)
+        return self
 
     @property
     def html(self):
-        text = ["\n".join(self.head), "\n".join(self.body)]
-        return textwrap.dedent("""
-        <!DOCTYPE html>
-        <html>
-        <head>
-        {0}
-        </head>
-        <body>
-        {1}
-        </body>
-        </html>
-        """).format(*text).strip()
-
+        return "\n".join(
+            gen if isinstance(gen, str) else "\n".join(gen)
+            for seq in self.zones.values()
+            for gen in seq
+        )
 
 class About(HTTPEndpoint):
     async def get(self, request):
@@ -161,7 +165,9 @@ class Home(HTTPEndpoint):
         """).strip()
 
     async def get(self, request):
-        page = Page(head=Home.head_elements(), body=Home.body_elements())
+        page = Page()
+        page.paste(page.Zone.meta, Home.head_elements())
+        page.paste(page.Zone.body, Home.body_elements())
         return HTMLResponse(page.html)
 
 
@@ -208,7 +214,9 @@ class Session(HTTPEndpoint):
         shot = next(i for i in rewriter if director.allows(i))
 
         text = shot.get(director.dlg_key, "")
-        page = Page(head=Session.head_elements(), body=Session.body_elements(text))
+        page = Page()
+        page.paste(page.Zone.meta, Session.head_elements())
+        page.paste(page.Zone.body, Session.body_elements(text))
         return HTMLResponse(page.html)
 
 
