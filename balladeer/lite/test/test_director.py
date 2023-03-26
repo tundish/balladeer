@@ -17,10 +17,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import textwrap
 import unittest
 
 from speechmark import SpeechMark
 
+from balladeer.lite.director import Director
 
 class DirectorTests(unittest.TestCase):
 
@@ -30,15 +32,29 @@ class DirectorTests(unittest.TestCase):
         """
 
     def test_word_counter(self):
-        """
+        text = textwrap.dedent("""
         <STAFF.proposing#3> What will you have, sir? The special is fish today.
 
             1. Order the Beef Wellington
             2. Go for the Shepherd's Pie
             3. Try the Dover Sole
+        """).strip()
+        sm = SpeechMark()
+        html = sm.loads(text)
+
+        director = Director(story=None)
+        self.assertEqual(5, len(director.lines(html)))
+        self.assertEqual(24, len(director.words(html)))
+
+    def test_rewriter_single_blocks(self):
+        """
+        <FIGHTER_1>
+
+            I don't like the way you use me, {FIGHTER_2.name}!
+
         """
 
-    def test_rewriter(self):
+    def test_rewriter_multiple_blocks(self):
         """
         <WEAPON.attacking@FIGHTER_2:shouts/slapwhack>
 

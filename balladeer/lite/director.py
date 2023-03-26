@@ -19,6 +19,7 @@
 
 
 from collections import defaultdict
+import re
 
 
 class Director:
@@ -35,6 +36,14 @@ class Director:
         self.story = story
         self.shot_key = shot_key
         self.dlg_key = dlg_key
+        self.tag_matcher = re.compile("<[^>]+?>")
+
+    def lines(self, html: str) -> list:
+        text = self.tag_matcher.sub("", html)
+        return list(filter(None, (i.strip() for i in text.splitlines())))
+
+    def words(self, html: str) -> list:
+        return " ".join(self.lines(html)).split(" ")
 
     def selection(self, scripts, ensemble=[], roles=1):
         """
