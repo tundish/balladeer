@@ -63,8 +63,30 @@ class DirectorTests(unittest.TestCase):
 
         sm = SpeechMark()
         html = sm.loads(text)
-        rv = director.edit(html, selection)
-        self.fail(rv)
+        edit = director.edit(html, selection)
+        self.assertIn('data-role="FIGHTER_1"', edit)
+        self.assertIn("Bashy!", edit)
+        self.assertIn('data-entity="Bashy"', edit)
+
+    def test_rewriter_extended_characters(self):
+        text = textwrap.dedent("""
+        <FIGHTER_1>
+
+            I don't like the way you use me, {FIGHTER_2.name}!
+
+        """).strip()
+        director = Director(story=None)
+        selection = {
+            "FIGHTER_1": SN(name="Bîffy"),
+            "FIGHTER_2": SN(name="Båshy"),
+        }
+
+        sm = SpeechMark()
+        html = sm.loads(text)
+        edit = director.edit(html, selection)
+        self.assertIn('data-role="FIGHTER_1"', edit)
+        self.assertIn("B&aring;shy!", edit)
+        self.assertIn('data-entity="B&icirc;ffy"', edit)
 
     def test_rewriter_multiple_blocks(self):
         """
