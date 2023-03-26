@@ -26,10 +26,8 @@ import textwrap
 import unittest
 import uuid
 
-# from turberfield.dialogue.performer import Performer
-from balladeer.lite.types import DataObject
-from balladeer.lite.types import EnumFactory
-from balladeer.lite.types import Stateful
+from balladeer.lite.types import Entity
+from balladeer.lite.types import State
 
 from balladeer.lite.loader import Loader
 
@@ -86,11 +84,11 @@ class SceneTests(unittest.TestCase):
 @unittest.skip("not yet")
 class ConditionDirectiveTests(unittest.TestCase):
 
-    class Rain(Stateful): pass
-    class Sleet(Stateful): pass
-    class Snow(Stateful): pass
+    class Rain(Entity): pass
+    class Sleet(Entity): pass
+    class Snow(Entity): pass
 
-    class Weather(EnumFactory, enum.Enum):
+    class Weather(State, enum.Enum):
         quiet = 0
         stormy = 1
 
@@ -197,17 +195,17 @@ class ConditionDirectiveTests(unittest.TestCase):
 class SelectTests(unittest.TestCase):
 
     @enum.unique
-    class Aggression(EnumFactory, enum.Enum):
+    class Aggression(State, enum.Enum):
         calm = 0
         angry = 1
 
     @enum.unique
-    class Contentment(EnumFactory, enum.Enum):
+    class Contentment(State, enum.Enum):
         sad = 0
         happy = 1
 
     @enum.unique
-    class Location(EnumFactory, enum.Enum):
+    class Location(State, enum.Enum):
         pub = 0
         pub_bar = 1
         pub_carpark = 2

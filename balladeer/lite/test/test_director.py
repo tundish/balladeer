@@ -19,8 +19,33 @@
 
 import unittest
 
+from speechmark import SpeechMark
 
-class EntityTests(unittest.TestCase):
 
-    pass
+class DirectorTests(unittest.TestCase):
 
+    def test_directive_handling(self):
+        """
+        <PHONE.announcing@GUEST,STAFF> Ring riiing!
+        """
+
+    def test_word_counter(self):
+        """
+        <STAFF.proposing#3> What will you have, sir? The special is fish today.
+
+            1. Order the Beef Wellington
+            2. Go for the Shepherd's Pie
+            3. Try the Dover Sole
+        """
+
+    def test_rewriter(self):
+        """
+        <WEAPON.attacking@FIGHTER_2:shouts/slapwhack>
+
+            _Whack!_
+
+        <FIGHTER_2>
+
+            Uuurrggh!
+
+        """
