@@ -45,6 +45,9 @@ class Director:
     def words(self, html: str) -> list:
         return " ".join(self.lines(html)).split(" ")
 
+    def edit(self, text: str, selection: dict) -> str:
+        return text.format(**selection)
+
     def selection(self, scripts, ensemble=[], roles=1):
         """
         Pick appropriate dialogue files. 
@@ -78,7 +81,7 @@ class Director:
         shots = scene.tables.get(self.shot_key, [])
         for shot in shots:
             dialogue = shot.get(self.dlg_key, "")
-            shot[self.dlg_key] = dialogue.format(**selection)
+            shot[self.dlg_key] = self.edit(dialogue, selection)
             yield shot
 
     def allows(self, shot):

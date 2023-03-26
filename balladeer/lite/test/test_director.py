@@ -18,11 +18,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import textwrap
+from types import SimpleNamespace as SN
 import unittest
 
 from speechmark import SpeechMark
 
 from balladeer.lite.director import Director
+
 
 class DirectorTests(unittest.TestCase):
 
@@ -47,12 +49,22 @@ class DirectorTests(unittest.TestCase):
         self.assertEqual(24, len(director.words(html)))
 
     def test_rewriter_single_blocks(self):
-        """
+        text = textwrap.dedent("""
         <FIGHTER_1>
 
             I don't like the way you use me, {FIGHTER_2.name}!
 
-        """
+        """).strip()
+        director = Director(story=None)
+        selection = {
+            "FIGHTER_1": SN(name="Biffy"),
+            "FIGHTER_2": SN(name="Bashy"),
+        }
+
+        sm = SpeechMark()
+        html = sm.loads(text)
+        rv = director.edit(html, selection)
+        self.fail(rv)
 
     def test_rewriter_multiple_blocks(self):
         """
