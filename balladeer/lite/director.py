@@ -45,8 +45,8 @@ class Director:
     def words(self, html: str) -> list:
         return " ".join(self.lines(html)).split(" ")
 
-    def edit(self, text: str, selection: dict) -> str:
-        return text.format(**selection)
+    def edit(self, html: str, selection: dict) -> str:
+        return html.format(**selection)
 
     def selection(self, scripts, ensemble=[], roles=1):
         """
