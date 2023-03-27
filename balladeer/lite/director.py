@@ -120,7 +120,6 @@ class Director:
             return scene, cast
 
     def rewrite(self, scene, selection: dict[str, Entity]={}):
-        # TODO: replace/retain <cite data-role="FIGHTER_1">FIGHTER_1</cite>
         shots = scene.tables.get(self.shot_key, [])
         for shot in shots:
             dialogue = shot.get(self.dlg_key, "")
