@@ -25,6 +25,8 @@ import string
 
 from speechmark import SpeechMark
 
+from balladeer.lite.types import Entity
+
 
 class Director:
     #   TODO: Director detects media files for preload, prefetch.
@@ -44,7 +46,7 @@ class Director:
                 return value.translate(self.spmk.escape_table)
 
     @staticmethod
-    def rank_constraints(entity):
+    def rank_constraints(entity: Entity):
         n = 1 if "type" in entity else 0
         return len(entity.get("states", [])) + n
 
@@ -89,7 +91,7 @@ class Director:
         html5 = self.cite_matcher.sub(self.edit_cite, html5)
         return self.fmtr.format(html5, **self.cast)
 
-    def selection(self, scripts, ensemble=[], roles=1):
+    def selection(self, scripts, ensemble: list[Entity]=[], roles=1):
         """
         Pick appropriate dialogue files. 
         First selection comes from the Drama.
@@ -117,7 +119,7 @@ class Director:
             cast = {k: lookup.get(role["type"]).pop() for k, role in roles.items() if "type" in role}
             return scene, cast
 
-    def rewrite(self, scene, selection: dict={}):
+    def rewrite(self, scene, selection: dict[str, Entity]={}):
         # TODO: replace/retain <cite data-role="FIGHTER_1">FIGHTER_1</cite>
         shots = scene.tables.get(self.shot_key, [])
         for shot in shots:
