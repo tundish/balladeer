@@ -64,8 +64,8 @@ class DirectorTests(unittest.TestCase):
         sm = SpeechMark()
         html = sm.loads(text)
         edit = director.edit(html, selection)
-        self.assertIn('data-role="FIGHTER_1"', edit, html)
-        self.assertIn('data-entity="Biffy"', edit)
+        self.assertIn('data-role="FIGHTER_1"', edit)
+        self.assertIn('data-entity="Biffy"', edit, html)
         self.assertIn(">Biffy</cite>", edit)
         self.assertIn("Bashy!", edit)
 
@@ -87,6 +87,7 @@ class DirectorTests(unittest.TestCase):
         edit = director.edit(html, selection)
         self.assertIn('data-role="FIGHTER_1"', edit)
         self.assertIn("B&aring;shy!", edit)
+        self.assertIn("B&icirc;ffy</cite>", edit)
         self.assertIn('data-entity="Bîffy"', edit)
 
     def test_edit_multiple_blocks(self):

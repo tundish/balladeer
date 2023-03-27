@@ -22,6 +22,8 @@ from collections import defaultdict
 import html
 import re
 
+from speechmark import SpeechMark
+
 
 class Director:
     #   TODO: Director detects media files for preload, prefetch.
@@ -34,31 +36,42 @@ class Director:
         return len(entity.get("states", [])) + n
 
     def __init__(self, story, shot_key="_", dlg_key="s"):
+        self.sm = SpeechMark()
         self.story = story
         self.shot_key = shot_key
         self.dlg_key = dlg_key
         self.tag_matcher = re.compile("<[^>]+?>")
         self.role_matcher = re.compile(
-            '(?P<tag><cite.*?data-role=")(?P<role>[^"]+)'
+        """
+        (?P<head><cite.*?data-role=")   # Up until role attribute
+        (?P<role>[^"]+?)                # Role attribute
+        (?P<tail>"[^>]*?>)              # Until end of open tag
+        .*?</cite>                      # Text and closing tag
+        """, re.VERBOSE
         )
 
-    def lines(self, html: str) -> list:
-        text = self.tag_matcher.sub("", html)
+    def lines(self, html5: str) -> list:
+        text = self.tag_matcher.sub("", html5)
         return list(filter(None, (i.strip() for i in text.splitlines())))
 
-    def words(self, html: str) -> list:
-        return " ".join(self.lines(html)).split(" ")
+    def words(self, html5: str) -> list:
+        return " ".join(self.lines(html5)).split(" ")
 
-    def edit(self, html: str, selection: dict) -> str:
+    def edit(self, html5: str, selection: dict) -> str:
 
         def replace_role(match):
-            tag = match.group("tag")
-            role = match.group("role")
-            entity = selection.get(role, "")
-            attr = entity and f'" data-entity="{entity.names[0]}"'
-            return f"{tag}{role}{attr}"
+            head, role, tail = [match.group(i) for i in ("head", "role", "tail")]
+            try:
+                entity = selection[role]
+            except KeyError:
+                return match.group()
+            else:
+                sm = SpeechMark()
+                attr = f'" data-entity="{entity.names[0]}"'
+                text = entity.names[0].translate(self.sm.escape_table)
+                return f"{head}{role}{attr}{tail}{text}</cite>"
 
-        html = self.role_matcher.sub(replace_role, html)
+        html5 = self.role_matcher.sub(replace_role, html5)
         """
         if match:
             try:
@@ -69,7 +82,8 @@ class Director:
                 html = match.sub(
                 print(f"Match: {match.group('role')}")
         """
-        return html.format(**selection)
+        return html5.format(**selection)
+        return html5.format(**selection).translate(self.sm.escape_table)
 
     def selection(self, scripts, ensemble=[], roles=1):
         """
