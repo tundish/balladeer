@@ -21,6 +21,7 @@
 from collections import defaultdict
 import html
 import re
+import string
 
 from speechmark import SpeechMark
 
@@ -30,25 +31,51 @@ class Director:
     #   Think of hex grid map. Get resources for neighbours.
     #   So every Entity declares resources to a Stage?
 
+    class Formatter(string.Formatter):
+
+        def __init__(self, spmk, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.spmk = spmk
+
+        def convert_field(self, value, conversion):
+            if conversion != "s":
+                return super().convert_field(value, conversion)
+            else:
+                return value.translate(self.spmk.escape_table)
+
     @staticmethod
-    def constraint_count(entity):
+    def rank_constraints(entity):
         n = 1 if "type" in entity else 0
         return len(entity.get("states", [])) + n
 
     def __init__(self, story, shot_key="_", dlg_key="s"):
-        self.sm = SpeechMark()
+        self.spmk = SpeechMark()
+        self.fmtr = self.Formatter(self.spmk)
+
         self.story = story
         self.shot_key = shot_key
         self.dlg_key = dlg_key
         self.tag_matcher = re.compile("<[^>]+?>")
-        self.role_matcher = re.compile(
+        self.cite_matcher = re.compile(
         """
         (?P<head><cite.*?data-role=")   # Up until role attribute
         (?P<role>[^"]+?)                # Role attribute
-        (?P<tail>"[^>]*?>)              # Until end of open tag
+        (?P<tail>"[^>]*?>)              # Until end of opening tag
         .*?</cite>                      # Text and closing tag
         """, re.VERBOSE
         )
+        self.cast = None
+
+    def edit_cite(self, match: re.Match):
+        head, role, tail = [match.group(i) for i in ("head", "role", "tail")]
+        try:
+            entity = self.cast[role]
+        except KeyError:
+            return match.group()
+
+        attr = f'" data-entity="{entity.names[0]}"'
+        text = entity.names[0].translate(self.spmk.escape_table)
+        return f"{head}{role}{attr}{tail}{text}</cite>"
 
     def lines(self, html5: str) -> list:
         text = self.tag_matcher.sub("", html5)
@@ -58,32 +85,9 @@ class Director:
         return " ".join(self.lines(html5)).split(" ")
 
     def edit(self, html5: str, selection: dict) -> str:
-
-        def replace_role(match):
-            head, role, tail = [match.group(i) for i in ("head", "role", "tail")]
-            try:
-                entity = selection[role]
-            except KeyError:
-                return match.group()
-            else:
-                sm = SpeechMark()
-                attr = f'" data-entity="{entity.names[0]}"'
-                text = entity.names[0].translate(self.sm.escape_table)
-                return f"{head}{role}{attr}{tail}{text}</cite>"
-
-        html5 = self.role_matcher.sub(replace_role, html5)
-        """
-        if match:
-            try:
-                entity = selection[match.group("role")]
-            except KeyError:
-                pass
-            else:
-                html = match.sub(
-                print(f"Match: {match.group('role')}")
-        """
-        return html5.format(**selection)
-        return html5.format(**selection).translate(self.sm.escape_table)
+        self.cast = selection.copy()
+        html5 = self.cite_matcher.sub(self.edit_cite, html5)
+        return self.fmtr.format(html5, **self.cast)
 
     def selection(self, scripts, ensemble=[], roles=1):
         """
@@ -108,7 +112,7 @@ class Director:
         for scene in scripts:
             roles = dict(sorted(
                 ((k, v) for k, v in scene.tables.items() if k != self.shot_key),
-                key=lambda x: self.constraint_count(x[1]), reverse=True
+                key=lambda x: self.rank_constraints(x[1]), reverse=True
             ))
             cast = {k: lookup.get(role["type"]).pop() for k, role in roles.items() if "type" in role}
             return scene, cast

@@ -69,7 +69,7 @@ class DirectorTests(unittest.TestCase):
         self.assertIn(">Biffy</cite>", edit)
         self.assertIn("Bashy!", edit)
 
-    def test_edit_extended_characters(self):
+    def test_edit_extended_characters_unescaped(self):
         text = textwrap.dedent("""
         <FIGHTER_1>
 
@@ -86,9 +86,30 @@ class DirectorTests(unittest.TestCase):
         html = sm.loads(text)
         edit = director.edit(html, selection)
         self.assertIn('data-role="FIGHTER_1"', edit)
-        self.assertIn("B&aring;shy!", edit)
-        self.assertIn("B&icirc;ffy</cite>", edit)
         self.assertIn('data-entity="Bîffy"', edit)
+        self.assertIn("B&icirc;ffy</cite>", edit)
+        self.assertIn("Båshy!", edit)
+
+    def test_edit_extended_characters_escaped(self):
+        text = textwrap.dedent("""
+        <FIGHTER_1>
+
+            I don't like the way you use me, {FIGHTER_2.name!s}!
+
+        """).strip()
+        director = Director(story=None)
+        selection = {
+            "FIGHTER_1": Entity(name="Bîffy"),
+            "FIGHTER_2": Entity(name="Båshy"),
+        }
+
+        sm = SpeechMark()
+        html = sm.loads(text)
+        edit = director.edit(html, selection)
+        self.assertIn('data-role="FIGHTER_1"', edit)
+        self.assertIn('data-entity="Bîffy"', edit)
+        self.assertIn("B&icirc;ffy</cite>", edit)
+        self.assertIn("B&aring;shy!", edit)
 
     def test_edit_multiple_blocks(self):
         """
