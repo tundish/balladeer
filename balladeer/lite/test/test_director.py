@@ -18,12 +18,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import textwrap
-from types import SimpleNamespace as SN
 import unittest
 
 from speechmark import SpeechMark
 
 from balladeer.lite.director import Director
+from balladeer.lite.types import Entity
 
 
 class DirectorTests(unittest.TestCase):
@@ -57,18 +57,19 @@ class DirectorTests(unittest.TestCase):
         """).strip()
         director = Director(story=None)
         selection = {
-            "FIGHTER_1": SN(name="Biffy"),
-            "FIGHTER_2": SN(name="Bashy"),
+            "FIGHTER_1": Entity(name="Biffy"),
+            "FIGHTER_2": Entity(name="Bashy"),
         }
 
         sm = SpeechMark()
         html = sm.loads(text)
         edit = director.edit(html, selection)
-        self.assertIn('data-role="FIGHTER_1"', edit)
+        self.assertIn('data-role="FIGHTER_1"', edit, html)
+        self.assertIn('data-entity="Biffy"', edit)
+        self.assertIn(">Biffy</cite>", edit)
         self.assertIn("Bashy!", edit)
-        self.assertIn('data-entity="Bashy"', edit)
 
-    def test_rewriter_extended_characters(self):
+    def test_edit_extended_characters(self):
         text = textwrap.dedent("""
         <FIGHTER_1>
 
@@ -77,8 +78,8 @@ class DirectorTests(unittest.TestCase):
         """).strip()
         director = Director(story=None)
         selection = {
-            "FIGHTER_1": SN(name="Bîffy"),
-            "FIGHTER_2": SN(name="Båshy"),
+            "FIGHTER_1": Entity(name="Bîffy"),
+            "FIGHTER_2": Entity(name="Båshy"),
         }
 
         sm = SpeechMark()
@@ -86,9 +87,9 @@ class DirectorTests(unittest.TestCase):
         edit = director.edit(html, selection)
         self.assertIn('data-role="FIGHTER_1"', edit)
         self.assertIn("B&aring;shy!", edit)
-        self.assertIn('data-entity="B&icirc;ffy"', edit)
+        self.assertIn('data-entity="Bîffy"', edit)
 
-    def test_rewriter_multiple_blocks(self):
+    def test_edit_multiple_blocks(self):
         """
         <WEAPON.attacking@FIGHTER_2:shouts/slapwhack>
 

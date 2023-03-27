@@ -19,13 +19,14 @@
 
 
 from collections import defaultdict
+import html
 import re
 
 
 class Director:
     #   TODO: Director detects media files for preload, prefetch.
     #   Think of hex grid map. Get resources for neighbours.
-    #   So every Location declares resources to a Stage?
+    #   So every Entity declares resources to a Stage?
 
     @staticmethod
     def constraint_count(entity):
@@ -37,6 +38,9 @@ class Director:
         self.shot_key = shot_key
         self.dlg_key = dlg_key
         self.tag_matcher = re.compile("<[^>]+?>")
+        self.role_matcher = re.compile(
+            '(?P<tag><cite.*?data-role=")(?P<role>[^"]+)'
+        )
 
     def lines(self, html: str) -> list:
         text = self.tag_matcher.sub("", html)
@@ -46,6 +50,25 @@ class Director:
         return " ".join(self.lines(html)).split(" ")
 
     def edit(self, html: str, selection: dict) -> str:
+
+        def replace_role(match):
+            tag = match.group("tag")
+            role = match.group("role")
+            entity = selection.get(role, "")
+            attr = entity and f'" data-entity="{entity.names[0]}"'
+            return f"{tag}{role}{attr}"
+
+        html = self.role_matcher.sub(replace_role, html)
+        """
+        if match:
+            try:
+                entity = selection[match.group("role")]
+            except KeyError:
+                pass
+            else:
+                html = match.sub(
+                print(f"Match: {match.group('role')}")
+        """
         return html.format(**selection)
 
     def selection(self, scripts, ensemble=[], roles=1):
