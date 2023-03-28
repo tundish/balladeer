@@ -39,7 +39,6 @@ Spot = None
 Exit = None
 
 
-# turberfield.dialogue.types
 class State:
 
     @classmethod
@@ -47,21 +46,7 @@ class State:
         return cls[name]
 
 
-@dataclasses.dataclass(unsafe_hash=True)
-class Entity:
-
-    name: dataclasses.InitVar = ""
-    names: list = dataclasses.field(default_factory=list, compare=False)
-    type: str = None
-    states: dict = dataclasses.field(default_factory=dict, compare=False)
-
-    def __post_init__(self, name):
-        if name:
-            self.names.insert(0, name)
-
-    @property
-    def name(self):
-        return random.choice(self.names or [self.name])
+from balladeer.lite.entity import Entity
 
 
 class Traffic(State, enum.Enum):

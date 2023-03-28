@@ -20,29 +20,27 @@
 import enum
 import unittest
 
-from turberfield.utils.assembly import Assembly
-
-from balladeer.lite.stateful import Stateful
+from balladeer.lite.types import Entity
 
 
 class TestIntegerStates(unittest.TestCase):
 
     def test_state_as_int(self):
-        s = Stateful()
+        s = Entity()
         s.set_state(3)
         self.assertEqual(3, s.get_state())
         self.assertEqual(3, s.state)
         self.assertEqual({"int": 3}, s.states)
 
     def test_state_as_int_twice(self):
-        s = Stateful()
+        s = Entity()
         s.set_state(3).set_state(4)
         self.assertEqual(4, s.get_state())
         self.assertEqual(4, s.state)
         self.assertEqual({"int": 4}, s.states)
 
     def test_state_as_int_args(self):
-        s = Stateful()
+        s = Entity()
         s.set_state(3, 4)
         self.assertEqual(4, s.get_state())
         self.assertEqual(4, s.state)
@@ -57,7 +55,7 @@ class TestEnumStates(unittest.TestCase):
         blue = "0000ff"
 
     def test_state_as_enum(self):
-        s = Stateful()
+        s = Entity()
         s.set_state(TestEnumStates.Colour.red)
         self.assertEqual(
             TestEnumStates.Colour.red,
@@ -70,7 +68,7 @@ class TestEnumStates(unittest.TestCase):
         )
 
     def test_state_as_enum_twice(self):
-        s = Stateful()
+        s = Entity()
         s.set_state(
             TestEnumStates.Colour.red,
             TestEnumStates.Colour.red,
@@ -86,7 +84,7 @@ class TestEnumStates(unittest.TestCase):
         )
 
     def test_state_as_enum_args(self):
-        s = Stateful()
+        s = Entity()
         s.set_state(
             TestEnumStates.Colour.red,
             TestEnumStates.Colour.green,

@@ -17,64 +17,51 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from collections import namedtuple
+import dataclasses
 import enum
-from numbers import Number
 import random
 import re
-import uuid
-
-from turberfield.utils.assembly import Assembly
-
-Name = namedtuple("Name", ["title", "firstname", "nicknames", "surname"])
-
-class EnumFactory:
-
-    @classmethod
-    def factory(cls, name=None, **kwargs):
-        return cls[name]
 
 
-class DataObject:
+@dataclasses.dataclass(unsafe_hash=True)
+class Entity:
 
-    def __init__(self, *args, id=None, **kwargs):
-        super().__init__(*args)
-        self.id = id or uuid.uuid4()
-        for k, v in kwargs.items():
-            setattr(self, k, v)
+    name: dataclasses.InitVar = ""
+    names: list = dataclasses.field(default_factory=list, compare=False)
+    type: str = None
+    states: dict = dataclasses.field(default_factory=dict, compare=False)
 
-    def __repr__(self):
-        return "<{0}> {1}".format(type(self).__name__, vars(self))
+    def __post_init__(self, name):
+        if name:
+            self.names.insert(0, name)
 
-
-class Stateful:
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._states = {}
+    @property
+    def name(self):
+        return random.choice(self.names or [self.name])
 
     @property
     def state(self):
         return self.get_state()
-
-    @property
-    def states(self):
-        return self._states.copy()
 
     @state.setter
     def state(self, value):
         return self.set_state(value)
 
     def set_state(self, *args):
-        for value in args:
-            self._states[type(value).__name__] = value
+        for arg in args:
+            if isinstance(arg, str):
+                key, value = arg.rsplit(".")
+                self.states[key] = value
+            else:
+                self.states[type(arg).__name__] = arg
         return self
 
-    def get_state(self, typ=int, default=0):
-        return self._states.get(typ.__name__, default)
+    def get_state(self, typ: [type | str]=int, default=0):
+        if isinstance(typ, str):
+            return self.states.get(typ, default)
+        else:
+            return self.states.get(typ.__name__, default)
 
     def compare(self, key: str, pattern: [str, re.Pattern]):
         pass
 
-
-Assembly.register(type(uuid.uuid4()))
