@@ -128,3 +128,6 @@ class Director:
 
     def allows(self, shot):
         return True
+
+    def compare(self, key: str, pattern: [str, re.Pattern]):
+        pass

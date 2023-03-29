@@ -17,10 +17,84 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import enum
 import unittest
 
+from balladeer.lite.types import Entity
 
-class EntityTests(unittest.TestCase):
 
-    pass
+class TestIntegerStates(unittest.TestCase):
 
+    def test_state_as_int(self):
+        s = Entity()
+        s.set_state(3)
+        self.assertEqual(3, s.get_state())
+        self.assertEqual(3, s.state)
+        self.assertEqual({"int": 3}, s.states)
+
+    def test_state_as_int_twice(self):
+        s = Entity()
+        s.set_state(3).set_state(4)
+        self.assertEqual(4, s.get_state())
+        self.assertEqual(4, s.state)
+        self.assertEqual({"int": 4}, s.states)
+
+    def test_state_as_int_args(self):
+        s = Entity()
+        s.set_state(3, 4)
+        self.assertEqual(4, s.get_state())
+        self.assertEqual(4, s.state)
+        self.assertEqual({"int": 4}, s.states)
+
+
+class TestEnumStates(unittest.TestCase):
+
+    class Colour(enum.Enum):
+        red = "ff0000"
+        green = "00ff00"
+        blue = "0000ff"
+
+    def test_state_as_enum(self):
+        s = Entity()
+        s.set_state(TestEnumStates.Colour.red)
+        self.assertEqual(
+            TestEnumStates.Colour.red,
+            s.get_state(TestEnumStates.Colour)
+        )
+        self.assertEqual(0, s.state)
+        self.assertEqual(
+            {"Colour": TestEnumStates.Colour.red},
+            s.states
+        )
+
+    def test_state_as_enum_twice(self):
+        s = Entity()
+        s.set_state(
+            TestEnumStates.Colour.red,
+            TestEnumStates.Colour.red,
+        )
+        self.assertEqual(
+            TestEnumStates.Colour.red,
+            s.get_state(TestEnumStates.Colour)
+        )
+        self.assertEqual(0, s.state)
+        self.assertEqual(
+            {"Colour": TestEnumStates.Colour.red},
+            s.states
+        )
+
+    def test_state_as_enum_args(self):
+        s = Entity()
+        s.set_state(
+            TestEnumStates.Colour.red,
+            TestEnumStates.Colour.green,
+        )
+        self.assertEqual(
+            TestEnumStates.Colour.green,
+            s.get_state(TestEnumStates.Colour)
+        )
+        self.assertEqual(0, s.state)
+        self.assertEqual(
+            {"Colour": TestEnumStates.Colour.green},
+            s.states
+        )

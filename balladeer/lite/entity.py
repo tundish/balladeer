@@ -49,19 +49,12 @@ class Entity:
 
     def set_state(self, *args):
         for arg in args:
-            if isinstance(arg, str):
-                key, value = arg.rsplit(".")
-                self.states[key] = value
-            else:
-                self.states[type(arg).__name__] = arg
+            self.states[type(arg).__name__] = arg
         return self
 
     def get_state(self, typ: [type | str]=int, default=0):
-        if isinstance(typ, str):
-            return self.states.get(typ, default)
-        else:
+        try:
             return self.states.get(typ.__name__, default)
-
-    def compare(self, key: str, pattern: [str, re.Pattern]):
-        pass
+        except AttributeError:
+            return self.states.get(typ, default)
 
