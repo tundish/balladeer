@@ -139,55 +139,39 @@ class ConditionDirectiveTests(unittest.TestCase):
 
     content = textwrap.dedent(
         """
-        .. entity:: WEATHER
-           :types: turberfield.dialogue.test.test_model.ConditionDirectiveTests.Rain
-                   turberfield.dialogue.test.test_model.ConditionDirectiveTests.Snow
-           :states: turberfield.dialogue.test.test_model.ConditionDirectiveTests.Weather.stormy
 
-        A stormy night
-        ~~~~~~~~~~~~~~
+        [WEATHER]
+        types   =   ["Rain", "Snow"]
+        states  =   ["Weather.stormy"]
 
-        Outside.
+        [[_]]
+        s="Outside."
 
-        Intense
-        -------
+        [[_]]
+        # Intense
+        if.WEATHER.state = "Weather.stormy"
 
-        .. condition:: WEATHER.state
-                       turberfield.dialogue.test.test_model.ConditionDirectiveTests.Weather.stormy
+        s="<WEATHER> It's stormy!"
 
-        [WEATHER]_
+        [[_]]
+        # Hushed
+        if.WEATHER.state = "Weather.quiet"
 
-            It's stormy!
+        s="<WEATHER> It's quiet."
 
-        Hushed
-        ------
+        [[__]]
+        # Snow storm
+        if.WEATHER.type = "Snow"
 
-        .. condition:: WEATHER.state.name quiet
+        s="<WEATHER> Flurry, flurry."
 
-        [WEATHER]_
+        [[__]]
+        # Rainfall
+        if.WEATHER.type = "Rain"
 
-            It's quiet.
+        s="<WEATHER> Pitter patter."
 
-        Snow storm
-        ----------
-
-        .. condition:: WEATHER.__class__
-                       turberfield.dialogue.test.test_model.ConditionDirectiveTests.Snow
-
-        [WEATHER]_
-
-            Flurry, flurry.
-
-        Rainfall
-        --------
-
-        .. condition:: WEATHER.__class__
-                       turberfield.dialogue.test.test_model.ConditionDirectiveTests.Rain
-
-        [WEATHER]_
-
-            Pitter patter.
-        """)
+        """).strip()
 
     effects = [
         Rain().set_state(Weather.stormy),
