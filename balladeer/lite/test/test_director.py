@@ -142,7 +142,7 @@ class ConditionDirectiveTests(unittest.TestCase):
 
         [WEATHER]
         types   =   ["Rain", "Snow"]
-        states  =   ["Weather.stormy"]
+        states.Weather = ["stormy"]
 
         [[_]]
         s="Outside."
@@ -242,17 +242,15 @@ class SelectTests(unittest.TestCase):
         pub_toilets = 4
 
     def test_select_with_required_state(self):
-
         content = textwrap.dedent("""
-            .. entity:: FIGHTER_1
-               :states: turberfield.dialogue.test.test_model.SelectTests.Aggression.angry
+            [FIGHTER_1]
+            states.Aggression = ["angry"]
 
-            .. entity:: FIGHTER_2
-               :states: turberfield.dialogue.test.test_model.SelectTests.Contentment.sad
+            [FIGHTER_2]
+            states.Contentment = ["sad"]
 
-            .. entity:: WEAPON
-
-               A weapon which makes a noise in use. 
+            [WEAPON]
+            # A weapon which makes a noise in use.
             """)
         ensemble = copy.deepcopy(PropertyDirectiveTests.personae)
         ensemble[0].set_state(SelectTests.Contentment.sad)
@@ -273,15 +271,14 @@ class SelectTests(unittest.TestCase):
     def test_select_with_hierarchical_state(self):
 
         content = textwrap.dedent("""
-            .. entity:: FIGHTER_1
-               :states: turberfield.dialogue.test.test_model.SelectTests.Location.pub
+            [FIGHTER_1]
+            states.Location = ["pub_bar", "pub_toilets"]
 
-            .. entity:: FIGHTER_2
-               :states: turberfield.dialogue.test.test_model.SelectTests.Location.pub
+            [FIGHTER_2]
+            states.Location = ["pub_bar"]
 
-            .. entity:: WEAPON
-
-               A weapon which makes a noise in use. 
+            [WEAPON]
+            # A weapon which makes a noise in use.
             """)
         ensemble = copy.deepcopy(PropertyDirectiveTests.personae)
         ensemble[0].set_state(SelectTests.Location.pub_bar)
@@ -356,7 +353,7 @@ class SelectTests(unittest.TestCase):
 
             .. entity:: WEAPON
 
-               A weapon which makes a noise in use. 
+               A weapon which makes a noise in use.
             """)
         ensemble = copy.deepcopy(PropertyDirectiveTests.personae)
         ensemble[0].set_state(SelectTests.Contentment.sad)
