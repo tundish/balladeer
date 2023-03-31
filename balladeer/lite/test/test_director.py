@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import copy
 import enum
 import textwrap
 import unittest
@@ -28,12 +29,7 @@ from balladeer.lite.types import Entity
 from balladeer.lite.types import State
 
 
-class DirectorTests(unittest.TestCase):
-
-    def test_directive_handling(self):
-        """
-        <PHONE.announcing@GUEST,STAFF> Ring riiing!
-        """
+class EditTests(unittest.TestCase):
 
     def test_word_counter(self):
         text = textwrap.dedent("""
@@ -220,8 +216,7 @@ class ConditionDirectiveTests(unittest.TestCase):
         self.assertFalse(Performer.allows(conditions[3]))
 
 
-@unittest.skip("Not yet.")
-class SelectTests(unittest.TestCase):
+class SelectionTests(unittest.TestCase):
 
     @enum.unique
     class Aggression(State, enum.Enum):
@@ -241,6 +236,13 @@ class SelectTests(unittest.TestCase):
         pub_snug = 3
         pub_toilets = 4
 
+    def setUp(self):
+        self.ensemble = [
+            Entity(name="Biffy", type="Animal"),
+            Entity(name="Bashy", type="Animal"),
+            Entity(name="Rusty", type="Weapon"),
+        ]
+
     def test_select_with_required_state(self):
         content = textwrap.dedent("""
             [FIGHTER_1]
@@ -252,21 +254,21 @@ class SelectTests(unittest.TestCase):
             [WEAPON]
             # A weapon which makes a noise in use.
             """)
-        ensemble = copy.deepcopy(PropertyDirectiveTests.personae)
-        ensemble[0].set_state(SelectTests.Contentment.sad)
+        cast = {i.name: i for i in self.ensemble}
+        cast["Biffy"].set_state(SelectTests.Contentment.sad)
         self.assertEqual(
             SelectTests.Contentment.sad,
-            ensemble[0].get_state(SelectTests.Contentment)
+            cast["Biffy"].get_state(SelectTests.Contentment)
         )
-        ensemble[1].set_state(SelectTests.Aggression.angry)
+        cast["Bashy"].set_state(SelectTests.Aggression.angry)
         self.assertEqual(
             SelectTests.Aggression.angry,
-            ensemble[1].get_state(SelectTests.Aggression)
+            cast["Bashy"].get_state(SelectTests.Aggression)
         )
         script = SceneScript("inline", doc=SceneScript.read(content))
         rv = list(script.select(ensemble).values())
-        self.assertEqual(ensemble[0], rv[1])
-        self.assertEqual(ensemble[1], rv[0])
+        self.assertEqual(cast["Biffy"], rv[1])
+        self.assertEqual(cast["Bashy"], rv[0])
 
     def test_select_with_hierarchical_state(self):
 
@@ -601,3 +603,14 @@ class AdLibTests(unittest.TestCase):
     def test_adlib_on(self):
         director = Director(story=None, ad_lib=True)
         self.assertEqual(5, len(director.lines(self.html)))
+
+
+@unittest.skip("not yet")
+class DirectiveTests(unittest.TestCase):
+
+    def test_directive_handling(self):
+        """
+        <PHONE.announcing@GUEST,STAFF> Ring riiing!
+        """
+        # TODO: Mock Drama methods.
+
