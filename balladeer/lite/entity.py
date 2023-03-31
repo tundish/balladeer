@@ -27,13 +27,18 @@ import re
 class Entity:
 
     name: dataclasses.InitVar = ""
-    names: list = dataclasses.field(default_factory=list, compare=False)
-    type: str = None
+    names: list = dataclasses.field(default_factory=list, compare=True)
+
+    type: dataclasses.InitVar = ""
+    types: list = dataclasses.field(default_factory=list, compare=True)
+
     states: dict = dataclasses.field(default_factory=dict, compare=False)
 
-    def __post_init__(self, name):
+    def __post_init__(self, name, type):
         if name:
             self.names.insert(0, name)
+        if type:
+            self.types.append(type)
 
     @property
     def name(self):
@@ -52,7 +57,7 @@ class Entity:
             self.states[type(arg).__name__] = arg
         return self
 
-    def get_state(self, typ: [type | str]=int, default=0):
+    def get_state(self, typ: str="", default=0):
         try:
             return self.states.get(typ.__name__, default)
         except AttributeError:

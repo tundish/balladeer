@@ -23,6 +23,16 @@ import unittest
 from balladeer.lite.types import Entity
 
 
+class TestNamesAndTypes(unittest.TestCase):
+
+    class Thing(Entity):
+        pass
+
+    def test_string_type(self):
+        e = Entity(type="Thing")
+        self.assertEqual(["Thing"], e.types)
+
+
 class TestIntegerStates(unittest.TestCase):
 
     def test_state_as_int(self):

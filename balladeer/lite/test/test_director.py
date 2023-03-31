@@ -238,8 +238,8 @@ class SelectionTests(unittest.TestCase):
 
     def setUp(self):
         self.ensemble = [
-            Entity(name="Biffy", type="Animal"),
-            Entity(name="Bashy", type="Animal"),
+            Entity(name="Biffy", types=["Animal", "Canine"]),
+            Entity(name="Bashy", types=["Animal", "Feline"]),
             Entity(name="Rusty", type="Weapon"),
         ]
 
