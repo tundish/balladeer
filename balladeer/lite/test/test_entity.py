@@ -33,30 +33,6 @@ class TestNamesAndTypes(unittest.TestCase):
         self.assertEqual(["Thing"], e.types)
 
 
-class TestIntegerStates(unittest.TestCase):
-
-    def test_state_as_int(self):
-        s = Entity()
-        s.set_state(3)
-        self.assertEqual(3, s.get_state())
-        self.assertEqual(3, s.state)
-        self.assertEqual({"int": 3}, s.states)
-
-    def test_state_as_int_twice(self):
-        s = Entity()
-        s.set_state(3).set_state(4)
-        self.assertEqual(4, s.get_state())
-        self.assertEqual(4, s.state)
-        self.assertEqual({"int": 4}, s.states)
-
-    def test_state_as_int_args(self):
-        s = Entity()
-        s.set_state(3, 4)
-        self.assertEqual(4, s.get_state())
-        self.assertEqual(4, s.state)
-        self.assertEqual({"int": 4}, s.states)
-
-
 class TestEnumStates(unittest.TestCase):
 
     class Colour(enum.Enum):
@@ -71,7 +47,6 @@ class TestEnumStates(unittest.TestCase):
             TestEnumStates.Colour.red,
             s.get_state(TestEnumStates.Colour)
         )
-        self.assertEqual(0, s.state)
         self.assertEqual(
             {"Colour": TestEnumStates.Colour.red},
             s.states
@@ -87,7 +62,6 @@ class TestEnumStates(unittest.TestCase):
             TestEnumStates.Colour.red,
             s.get_state(TestEnumStates.Colour)
         )
-        self.assertEqual(0, s.state)
         self.assertEqual(
             {"Colour": TestEnumStates.Colour.red},
             s.states
@@ -103,8 +77,22 @@ class TestEnumStates(unittest.TestCase):
             TestEnumStates.Colour.green,
             s.get_state(TestEnumStates.Colour)
         )
-        self.assertEqual(0, s.state)
         self.assertEqual(
             {"Colour": TestEnumStates.Colour.green},
             s.states
         )
+
+
+class TestStringStates(unittest.TestCase):
+
+    class Colour(enum.Enum):
+        red = "ff0000"
+        green = "00ff00"
+        blue = "0000ff"
+
+    def test_get_state_as_string(self):
+        e = Entity()
+        e.set_state(TestEnumStates.Colour.green)
+
+        self.assertEqual(TestEnumStates.Colour.green, e.get_state("Colour"))
+        self.assertIsNone(e.get_state("Color"))

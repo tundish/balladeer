@@ -22,6 +22,8 @@ import enum
 import random
 import re
 
+from balladeer.lite.types import State
+
 
 @dataclasses.dataclass(unsafe_hash=True)
 class Entity:
@@ -57,9 +59,11 @@ class Entity:
             self.states[type(arg).__name__] = arg
         return self
 
-    def get_state(self, typ: str="", default=0):
+    def get_state(self, typ: State=None):
         try:
-            return self.states.get(typ.__name__, default)
+            return self.states.get(typ.__name__)
         except AttributeError:
-            return self.states.get(typ, default)
+            return self.states.get(typ)
+        else:
+            return None
 
