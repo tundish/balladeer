@@ -32,6 +32,10 @@ class TestNamesAndTypes(unittest.TestCase):
         e = Entity(type="Thing")
         self.assertEqual(["Thing"], e.types)
 
+    def test_declared_type(self):
+        e = Entity(type=TestNamesAndTypes.Thing)
+        self.assertEqual(["Thing"], e.types)
+
 
 class TestEnumStates(unittest.TestCase):
 

@@ -40,7 +40,10 @@ class Entity:
         if name:
             self.names.insert(0, name)
         if type:
-            self.types.append(type)
+            try:
+                self.types.append(type.__name__)
+            except AttributeError:
+                self.types.append(type)
 
     @property
     def name(self):
