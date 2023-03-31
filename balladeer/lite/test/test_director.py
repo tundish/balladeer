@@ -578,3 +578,26 @@ class RstFeatureTests(unittest.TestCase):
         model = script.run()
         self.assertEqual(2, model.shots[-1].items[-1].html.count("marquee"))
         self.assertEqual(0, model.shots[-1].items[-1].text.count("marquee"))
+
+
+class AdLibTests(unittest.TestCase):
+
+    def setUp(self):
+        text = textwrap.dedent("""
+        <GUEST>
+
+            + This, or
+            + This, or
+            + This, or
+
+        """).strip()
+        sm = SpeechMark()
+        self.html = sm.loads(text)
+
+    def test_adlib_off(self):
+        director = Director(story=None, ad_lib=False)
+        self.assertEqual(5, len(director.lines(self.html)))
+
+    def test_adlib_on(self):
+        director = Director(story=None, ad_lib=True)
+        self.assertEqual(5, len(director.lines(self.html)))
