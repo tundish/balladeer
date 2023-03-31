@@ -96,7 +96,7 @@ class DirectorTests(unittest.TestCase):
         text = textwrap.dedent("""
         <FIGHTER_1>
 
-            I don't like the way you use me, {FIGHTER_2.name!s}!
+            I don't like the way you use me, {FIGHTER_2.name!a}!
 
         """).strip()
         director = Director(story=None)

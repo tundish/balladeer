@@ -40,7 +40,7 @@ class Director:
             self.spmk = spmk
 
         def convert_field(self, value, conversion):
-            if conversion != "s":
+            if conversion != "a":
                 return super().convert_field(value, conversion)
             else:
                 return value.translate(self.spmk.escape_table)
