@@ -271,15 +271,15 @@ class SelectionTests(unittest.TestCase):
             # A weapon which makes a noise in use.
             """)
         cast = {i.name: i for i in self.ensemble}
-        cast["Biffy"].set_state(SelectTests.Contentment.sad)
+        cast["Biffy"].set_state(SelectionTests.Contentment.sad)
         self.assertEqual(
-            SelectTests.Contentment.sad,
-            cast["Biffy"].get_state(SelectTests.Contentment)
+            SelectionTests.Contentment.sad,
+            cast["Biffy"].get_state(SelectionTests.Contentment)
         )
-        cast["Bashy"].set_state(SelectTests.Aggression.angry)
+        cast["Bashy"].set_state(SelectionTests.Aggression.angry)
         self.assertEqual(
-            SelectTests.Aggression.angry,
-            cast["Bashy"].get_state(SelectTests.Aggression)
+            SelectionTests.Aggression.angry,
+            cast["Bashy"].get_state(SelectionTests.Aggression)
         )
         script = SceneScript("inline", doc=SceneScript.read(content))
         rv = list(script.select(ensemble).values())
@@ -289,115 +289,40 @@ class SelectionTests(unittest.TestCase):
     def test_select_with_hierarchical_state(self):
 
         content = textwrap.dedent("""
-            [FIGHTER_1]
-            states.Location = ["pub_bar", "pub_toilets"]
+        [FIGHTER_1]
+        states.Location = ["pub_bar", "pub_toilets"]
 
-            [FIGHTER_2]
-            states.Location = ["pub_bar"]
+        [FIGHTER_2]
+        states.Location = ["pub_bar"]
 
-            [WEAPON]
-            # A weapon which makes a noise in use.
-            """)
-        ensemble = copy.deepcopy(PropertyDirectiveTests.personae)
-        ensemble[0].set_state(SelectTests.Location.pub_bar)
+        [WEAPON]
+        # A weapon which makes a noise in use.
+        """).strip()
+        cast = {i.name: i for i in self.ensemble}
+        cast["Biffy"].set_state(SelectionTests.Location.pub_bar)
         self.assertEqual(
-            SelectTests.Location.pub_bar,
-            ensemble[0].get_state(SelectTests.Location)
+            SelectionTests.Location.pub_bar,
+            cast["Biffy"].get_state(SelectionTests.Location)
         )
-        ensemble[1].set_state(SelectTests.Location.pub_toilets)
+        cast["Bashy"].set_state(SelectionTests.Location.pub_toilets)
         self.assertEqual(
-            SelectTests.Location.pub_toilets,
-            ensemble[1].get_state(SelectTests.Location)
+            SelectionTests.Location.pub_toilets,
+            cast["Bashy"].get_state(SelectionTests.Location)
         )
+        director = Director(None)
         script = SceneScript("inline", doc=SceneScript.read(content))
         rv = list(script.select(ensemble).values())
-        self.assertEqual(ensemble[0], rv[0])
-        self.assertEqual(ensemble[1], rv[1])
-
-    def test_select_with_integer_state(self):
-
-        content = textwrap.dedent("""
-            .. entity:: FIGHTER_1
-               :states: 1
-
-            .. entity:: FIGHTER_2
-               :states: 2
-
-            .. entity:: WEAPON
-
-               A weapon which makes a noise in use.
-            """)
-        ensemble = copy.deepcopy(PropertyDirectiveTests.personae)
-        ensemble[0].set_state(2)
-        self.assertEqual(2, ensemble[0].get_state())
-        ensemble[1].set_state(1)
-        self.assertEqual(1, ensemble[1].get_state())
-        script = SceneScript("inline", doc=SceneScript.read(content))
-        rv = list(script.select(ensemble).values())
-        self.assertEqual(ensemble[0], rv[1])
-        self.assertEqual(ensemble[1], rv[0])
-
-    def test_select_with_herarchical_integer_state(self):
-
-        content = textwrap.dedent("""
-            .. entity:: FIGHTER_1
-               :states: 3
-
-            .. entity:: FIGHTER_2
-               :states: 3
-
-            .. entity:: WEAPON
-
-               A weapon which makes a noise in use.
-            """)
-        ensemble = copy.deepcopy(PropertyDirectiveTests.personae)
-        ensemble[0].set_state(31)
-        self.assertEqual(31, ensemble[0].get_state())
-        ensemble[1].set_state(32)
-        self.assertEqual(32, ensemble[1].get_state())
-        script = SceneScript("inline", doc=SceneScript.read(content))
-        rv = list(script.select(ensemble).values())
-        self.assertEqual(ensemble[0], rv[0])
-        self.assertEqual(ensemble[1], rv[1])
-
-    def test_select_with_unfulfilled_state(self):
-
-        content = textwrap.dedent("""
-            .. entity:: FIGHTER_1
-               :states: turberfield.dialogue.test.test_model.SelectTests.Aggression.angry
-
-            .. entity:: FIGHTER_2
-               :states: turberfield.dialogue.test.test_model.SelectTests.Contentment.sad
-
-            .. entity:: WEAPON
-
-               A weapon which makes a noise in use.
-            """)
-        ensemble = copy.deepcopy(PropertyDirectiveTests.personae)
-        ensemble[0].set_state(SelectTests.Contentment.sad)
-        self.assertEqual(
-            SelectTests.Contentment.sad,
-            ensemble[0].get_state(SelectTests.Contentment)
-        )
-        ensemble[1].set_state(SelectTests.Contentment.sad)
-        self.assertEqual(
-            SelectTests.Contentment.sad,
-            ensemble[1].get_state(SelectTests.Contentment)
-        )
-        script = SceneScript("inline", doc=SceneScript.read(content))
-        rv = list(script.select(ensemble).values())
-        self.assertIsNone(rv[0])
-        self.assertEqual(ensemble[0], rv[1])
+        self.assertEqual(self.cast["Biffy"], rv[0])
+        self.assertEqual(cast["Bashy"], rv[1])
 
     def test_select_with_two_roles(self):
-
         content = textwrap.dedent("""
-            .. entity:: CHARACTER_1
-               :roles: CHARACTER_2
+        [CHARACTER_1]
+        roles = ["CHARACTER_2"]
 
-            .. entity:: CHARACTER_2
+        [CHARACTER_2]
 
-            """)
+        """).strip()
         ensemble = copy.deepcopy(PropertyDirectiveTests.personae[0:1])
         script = SceneScript("inline", doc=SceneScript.read(content))
         rv = list(script.select(ensemble, roles=2).values())

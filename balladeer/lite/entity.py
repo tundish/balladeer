@@ -29,10 +29,10 @@ from balladeer.lite.types import State
 class Entity:
 
     name: dataclasses.InitVar = ""
-    names: list = dataclasses.field(default_factory=list, compare=True)
+    names: list = dataclasses.field(default_factory=list, compare=False)
 
     type: dataclasses.InitVar = ""
-    types: list = dataclasses.field(default_factory=list, compare=True)
+    types: list = dataclasses.field(default_factory=list, compare=False)
 
     states: dict = dataclasses.field(default_factory=dict, compare=False)
 

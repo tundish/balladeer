@@ -66,7 +66,6 @@ class Director:
         .*?</cite>                      # Text and closing tag
         """, re.VERBOSE
         )
-        self.cast = None
 
     def edit_cite(self, match: re.Match):
         head, role, tail = [match.group(i) for i in ("head", "role", "tail")]
@@ -112,12 +111,16 @@ class Director:
                 lookup[entity.type].add(entity) # Lite
 
         for scene in scripts:
-            roles = dict(sorted(
-                ((k, v) for k, v in scene.tables.items() if k != self.shot_key),
-                key=lambda x: self.rank_constraints(x[1]), reverse=True
-            ))
-            cast = {k: lookup.get(role["type"]).pop() for k, role in roles.items() if "type" in role}
-            return scene, cast
+            cast = self.cast(scene, lookup)
+            if cast:
+                return scene, cast
+
+    def cast(self, scene, lookup):
+        roles = dict(sorted(
+            ((k, v) for k, v in scene.tables.items() if k != self.shot_key),
+            key=lambda x: self.rank_constraints(x[1]), reverse=True
+        ))
+        return {k: lookup.get(role["type"]).pop() for k, role in roles.items() if "type" in role}
 
     def rewrite(self, scene, selection: dict[str, Entity]={}):
         shots = scene.tables.get(self.shot_key, [])
