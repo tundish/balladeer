@@ -264,7 +264,7 @@ class RoleTests(unittest.TestCase):
             "A": {
             },
             "B": {
-            "state": "Switched.On",
+                "state": "Switched.on",
             },
             "C": {
                 "states": {
@@ -273,21 +273,21 @@ class RoleTests(unittest.TestCase):
                 },
             },
             "D": {
-            "state": "Switched.On",
-            "type": "Torch",
+                "state": "Switched.on",
+                "type": "Torch",
             },
             "E": {
-            "state": "Switched.On",
-            "types": ["Torch", "Desklight"],
+                "state": "Switched.on",
+                "types": ["Torch", "Desklight"],
             },
             "F": {
-            "state": "Switched.On",
-            "types": ["Desklight"],
+                "state": "Switched.on",
+                "types": ["Desklight"],
             },
             "G": {
-            "state": "Switched.On",
-            "types": ["Torch", "Desklight"],
-            "roles": ["B", "D"]
+                "state": "Switched.on",
+                "types": ["Torch", "Desklight"],
+                "roles": ["B", "D"]
             },
         }
         ranks = [0, 1, 2, 2, 3, 2, 1]
