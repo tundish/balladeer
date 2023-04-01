@@ -187,8 +187,8 @@ class Session(HTTPEndpoint):
         scripts = story.context.scripts(state.assets)
 
         director = Director(story)
-        scene, cast = director.selection(scripts, ensemble)
-        rewriter = director.rewrite(scene, cast)
+        scene, roles = director.selection(scripts, ensemble)
+        rewriter = director.rewrite(scene, roles)
         shot = next(i for i in rewriter if director.allows(i))
 
         text = shot.get(director.dlg_key, "")
