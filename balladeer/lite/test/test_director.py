@@ -368,7 +368,7 @@ class RoleTests(unittest.TestCase):
         self.assertEqual(entities["Biffy"], rv["FIGHTER_2"])
         self.assertEqual(entities["Rusty"], rv["WEAPON"])
 
-    def test_role_with_two_roles(self):
+    def test_roles_not_greedy(self):
         text = textwrap.dedent("""
         [CHARACTER_1]
         roles = ["CHARACTER_2"]
@@ -379,11 +379,13 @@ class RoleTests(unittest.TestCase):
         scene = tomllib.loads(text)
         self.assertIsInstance(scene, dict)
 
+        entities = {i.name: i for i in self.ensemble}
+
         director = Director(None)
         rv = dict(director.roles(scene, self.ensemble))
         self.assertEqual(2, len(rv), rv)
-        self.assertEqual(self.ensemble[0], rv[0])
-        self.assertEqual(self.ensemble[0], rv[1])
+        self.assertEqual(entities["Bashy"], rv["CHARACTER_1"])
+        self.assertEqual(entities["Biffy"], rv["CHARACTER_2"])
 
 
 @unittest.skip("not yet")
