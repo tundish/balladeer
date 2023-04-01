@@ -27,5 +27,5 @@ class World(WorldBuilder):
         yield from [
             Entity(name="Biffy", type="Animal"),
             Entity(name="Bashy", type="Animal"),
-            Entity(name="Rusty", type="Tool"),
+            Entity(name="Rusty", type="Weapon"),
         ]

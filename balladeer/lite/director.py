@@ -131,7 +131,6 @@ class Director:
                 pool[entity] = roles
                 yield role, entity
 
-
     def rewrite(self, scene, roles: dict[str, Entity]={}):
         shots = scene.tables.get(self.shot_key, [])
         for shot in shots:
