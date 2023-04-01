@@ -103,21 +103,10 @@ class Director:
         return f"{head}{role}{attr}{tail}{text}</cite>"
 
     def selection(self, scripts, ensemble: list[Entity]=[], roles=1):
-        lookup = defaultdict(set)
-        for entity in ensemble:
-            try:
-                lookup[entity.__class__.__name__].add(entity)  # Classic
-            except TypeError:
-                # eg: SimpleNamespace is unhashable
-                pass
-
-            if hasattr(entity, "type"):
-                lookup[entity.type].add(entity) # Lite
-
         for scene in scripts:
             specs = {k: v for k, v in scene.tables.items() if k != self.shot_key}
-            roles = self.roles(specs, ensemble)
-            if roles:
+            roles = dict(self.roles(specs, ensemble))
+            if len(roles) == len(specs):
                 return scene, roles
 
     def roles(self, specs: dict, ensemble: list[Entity]) -> dict:

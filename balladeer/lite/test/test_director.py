@@ -322,7 +322,7 @@ class RoleTests(unittest.TestCase):
         sm = SpeechMark()
         scene = sm.loads(text)
         director = Director(None)
-        rv = director.roles(scene, self.ensemble)
+        rv = dict(director.roles(scene, self.ensemble))
         self.assertEqual(entities["Biffy"], rv[1])
         self.assertEqual(entities["Bashy"], rv[0])
 
@@ -352,7 +352,7 @@ class RoleTests(unittest.TestCase):
         sm = SpeechMark()
         scene = sm.loads(text)
         director = Director(None)
-        rv = director.roles(scene, self.ensemble)
+        rv = dict(director.roles(scene, self.ensemble))
         self.assertEqual(entities["Biffy"], rv[0])
         self.assertEqual(entities["Bashy"], rv[1])
 
@@ -367,7 +367,7 @@ class RoleTests(unittest.TestCase):
         sm = SpeechMark()
         scene = sm.loads(text)
         director = Director(None)
-        rv = director.roles(scene, self.ensemble)
+        rv = dict(director.roles(scene, self.ensemble))
         self.assertEqual(self.ensemble[0], rv[0])
         self.assertEqual(self.ensemble[0], rv[1])
 
