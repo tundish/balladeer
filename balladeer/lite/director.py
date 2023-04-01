@@ -58,6 +58,10 @@ class Director:
 
         return roles, states, types
 
+    @staticmethod
+    def specify_shot(shot: dict, roles: dict) -> tuple:
+        pass
+
     def __init__(self, story, shot_key="_", dlg_key="s"):
         self.spmk = SpeechMark()
         self.fmtr = self.Formatter(self.spmk)
