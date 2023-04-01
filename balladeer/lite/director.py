@@ -114,19 +114,19 @@ class Director:
             specs.items(),
             key=lambda x: self.rank_constraints(x[1]), reverse=True
         ))
-        pool = set(ensemble)
+        pool = {i: set(specs.keys()) for i in ensemble}
         for role, spec in specs.items():
             roles, states, types = self.specify_role(spec)
-            entity = next(
-            (
-                i for i in pool if i.types.intersection(types)
-                and all(i.get_state(k) in v for k, v in states.items())
-                # and not roles or role in roles
-            ), None)
-            if entity:
-                if not roles:
-                    pool.discard(entity)
+            try:
+                entity = next((
+                    i for i, j in pool.items() if i.types.intersection(types)
+                    and all(i.get_state(k) in v for k, v in states.items())
+                    and role in j
+                ))
+                pool[entity] = roles
                 yield role, entity
+            except StopIteration:
+                continue
 
     def rewrite(self, scene, roles: dict[str, Entity]={}):
         shots = scene.tables.get(self.shot_key, [])
