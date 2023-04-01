@@ -58,9 +58,11 @@ class Director:
 
         return roles, states, types
 
-    @staticmethod
-    def specify_shot(shot: dict, roles: dict) -> tuple:
-        pass
+    def specify_shot(self, shot: dict, roles: dict) -> tuple:
+        # conditions(scene)
+        for role, guard in shot.get("if", {}).items():
+            yield role, self.specify_role(guard)
+        #roles = dict(self.roles(specs, ensemble))
 
     def __init__(self, story, shot_key="_", dlg_key="s"):
         self.spmk = SpeechMark()
@@ -138,6 +140,7 @@ class Director:
     def rewrite(self, scene, roles: dict[str, Entity]={}):
         shots = scene.tables.get(self.shot_key, [])
         for shot in shots:
+            # TODO: Evaluate conditions for shot
             text = shot.get(self.dlg_key, "")
             html5 = self.spmk.loads(text)
             yield self.edit(html5, roles)

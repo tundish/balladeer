@@ -171,13 +171,13 @@ class ConditionDirectiveTests(unittest.TestCase):
 
         s="<WEATHER> It's quiet."
 
-        [[__]]
+        [[_]]
         # Snow storm
         if.WEATHER.type = "Snow"
 
         s="<WEATHER> Flurry, flurry."
 
-        [[__]]
+        [[_]]
         # Rainfall
         if.WEATHER.type = "Rain"
 
@@ -190,6 +190,35 @@ class ConditionDirectiveTests(unittest.TestCase):
         Sleet().set_state(Weather.stormy),
         Snow().set_state(Weather.quiet),
     ]
+
+    def setUp(self):
+        self.ensemble = [
+            Entity(name="Biffy", types={"Animal", "Canine"}),
+            Entity(name="Bashy", types={"Animal", "Feline"}),
+            Entity(name="Rusty", type="Weapon"),
+        ]
+
+    def test_guard_conditions_strings(self):
+        content = textwrap.dedent("""
+        [[_]]
+        if.WEATHER.state = "Weather.stormy"
+
+        """).strip()
+        scene = tomllib.loads(content)
+        director = Director(None)
+        shot = next(iter(scene.get(director.shot_key)))
+        rv = dict(director.specify_shot(shot, self.ensemble))
+        self.fail(rv)
+
+    def test_guard_conditions_regex(self):
+        content = textwrap.dedent("""
+        [[_]]
+        if."(Weather.stormy)" = "{WEATHER.state}"
+        if."{WEATHER.stormy}" = "{WEATHER.state}"
+
+        """).strip()
+        scene = tomllib.loads(content)
+        self.fail(scene)
 
     def test_condition_evaluation_one(self):
         effects = [
