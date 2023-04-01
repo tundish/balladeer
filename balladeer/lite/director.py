@@ -117,12 +117,20 @@ class Director:
         pool = {i: set(specs.keys()) for i in ensemble}
         for role, spec in specs.items():
             roles, states, types = self.specify_role(spec)
-            for entity, jobs in pool.items():
-                if role in jobs:
-                    if entity.types.intersection(types):
-                        if all(entity.get_state(k).name in v for k, v in states.items()):
-                            pool[entity] = roles
-                            yield role, entity
+
+            try:
+                entity = next(
+                    entity
+                    for entity, jobs in pool.items()
+                    if role in jobs and (not types or entity.types.intersection(types))
+                    and all(k in entity.states and entity.get_state(k).name in v for k, v in states.items())
+                )
+            except StopIteration:
+                continue
+            else:
+                pool[entity] = roles
+                yield role, entity
+
 
     def rewrite(self, scene, roles: dict[str, Entity]={}):
         shots = scene.tables.get(self.shot_key, [])

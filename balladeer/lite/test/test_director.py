@@ -298,13 +298,13 @@ class RoleTests(unittest.TestCase):
                 rank = d.rank_constraints(v)
                 self.assertEqual(ranks[n], rank, d.specify_role(v))
 
-    def test_role_with_required_state(self):
+    def test_role_with_single_required_state(self):
         text = textwrap.dedent("""
         [FIGHTER_1]
         states.Aggression = ["angry"]
 
         [FIGHTER_2]
-        states.Contentment = ["sad"]
+        state = "Contentment.sad"
 
         [WEAPON]
         # A weapon which makes a noise in use.
@@ -326,8 +326,8 @@ class RoleTests(unittest.TestCase):
         director = Director(None)
         rv = dict(director.roles(scene, self.ensemble))
         self.assertEqual(2, len(rv), rv)
-        self.assertEqual(entities["Biffy"], rv[1])
-        self.assertEqual(entities["Bashy"], rv[0])
+        self.assertEqual(entities["Bashy"], rv["FIGHTER_1"])
+        self.assertEqual(entities["Biffy"], rv["FIGHTER_2"])
 
     def test_role_with_hierarchical_state(self):
         text = textwrap.dedent("""
