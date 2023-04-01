@@ -172,12 +172,6 @@ class Start(HTTPEndpoint):
 
 class Session(HTTPEndpoint):
 
-    @staticmethod
-    def body_elements(text, **kwargs):
-        sm = SpeechMark()
-        blocks = sm.loads(text)
-        yield blocks
-
     async def get(self, request):
         session_id = request.path_params["session_id"]
         state = request.app.state
@@ -189,15 +183,14 @@ class Session(HTTPEndpoint):
         director = Director(story)
         scene, roles = director.selection(scripts, ensemble)
         rewriter = director.rewrite(scene, roles)
-        shot = next(i for i in rewriter if director.allows(i))
-
-        text = shot.get(director.dlg_key, "")
+        html5 = next(i for i in rewriter if director.allows(i))
+        print(f"{len(director.words(html5))} words")
 
         page = Page()
         page.paste(page.zone.title, "<title>Example</title>")
         page.paste(page.zone.meta, Home.meta)
         page.paste(page.zone.css, Home.css)
-        page.paste(page.zone.body, self.body_elements(text))
+        page.paste(page.zone.body, html5)
         return HTMLResponse(page.html)
 
 

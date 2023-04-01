@@ -134,9 +134,9 @@ class Director:
     def rewrite(self, scene, roles: dict[str, Entity]={}):
         shots = scene.tables.get(self.shot_key, [])
         for shot in shots:
-            dialogue = shot.get(self.dlg_key, "")
-            shot[self.dlg_key] = self.edit(dialogue, roles)
-            yield shot
+            text = shot.get(self.dlg_key, "")
+            html5 = self.spmk.loads(text)
+            yield self.edit(html5, roles)
 
     def allows(self, shot):
         return True
