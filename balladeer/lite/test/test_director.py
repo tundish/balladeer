@@ -110,7 +110,7 @@ class EditTests(unittest.TestCase):
         self.assertIn("B&aring;shy!", edit)
 
     def test_edit_multiple_blocks(self):
-        """
+        text = textwrap.dedent("""
         <WEAPON.attacking@FIGHTER_2:shouts/slapwhack>
 
             _Whack!_
@@ -119,7 +119,23 @@ class EditTests(unittest.TestCase):
 
             Uuurrggh!
 
-        """
+        """).strip()
+        director = Director(story=None)
+        selection = {
+            "WEAPON": Entity(name="Rusty"),
+            "FIGHTER_2": Entity(name="Bashy"),
+        }
+
+        sm = SpeechMark()
+        html = sm.loads(text)
+        edit = director.edit(html, selection)
+        self.assertIn('data-role="WEAPON"', edit)
+        self.assertIn('data-entity="Rusty"', edit, html)
+        self.assertIn(">Rusty</cite>", edit)
+
+        self.assertIn('data-role="FIGHTER_2"', edit)
+        self.assertIn('data-entity="Bashy"', edit, html)
+        self.assertIn(">Bashy</cite>", edit)
 
 
 @unittest.skip("not yet")
