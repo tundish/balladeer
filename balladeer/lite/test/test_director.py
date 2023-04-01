@@ -288,10 +288,11 @@ class SelectionTests(unittest.TestCase):
             },
         }
         ranks = [0, 1, 2, 2, 3, 2, 1]
+        d = Director(None)
         for n, (k, v) in enumerate(roles.items()):
             with self.subTest(role=k, spec=v):
-                rank = Director.rank_constraints(v)
-                self.assertEqual(ranks[n], rank, Director.specify_role(v))
+                rank = d.rank_constraints(v)
+                self.assertEqual(ranks[n], rank, d.specify_role(v))
 
     def test_select_with_required_state(self):
         content = textwrap.dedent("""

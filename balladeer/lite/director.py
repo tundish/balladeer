@@ -52,11 +52,6 @@ class Director:
         types = set(filter(None, spec.get("types", []) + [spec.get("type")]))
         return roles, states, types
 
-    @staticmethod
-    def rank_constraints(spec: dict) -> int:
-        roles, states, types = Director.specify_role(spec)
-        return len(states) + len(types) - len(roles)
-
     def __init__(self, story, shot_key="_", dlg_key="s"):
         self.spmk = SpeechMark()
         self.fmtr = self.Formatter(self.spmk)
@@ -74,16 +69,9 @@ class Director:
         """, re.VERBOSE
         )
 
-    def edit_cite(self, match: re.Match):
-        head, role, tail = [match.group(i) for i in ("head", "role", "tail")]
-        try:
-            entity = self.cast[role]
-        except KeyError:
-            return match.group()
-
-        attr = f'" data-entity="{entity.names[0]}"'
-        text = entity.names[0].translate(self.spmk.escape_table)
-        return f"{head}{role}{attr}{tail}{text}</cite>"
+    def rank_constraints(self, spec: dict) -> int:
+        roles, states, types = Director.specify_role(spec)
+        return len(states) + len(types) - len(roles)
 
     def lines(self, html5: str) -> list:
         text = self.tag_matcher.sub("", html5)
@@ -96,6 +84,17 @@ class Director:
         self.cast = selection.copy()
         html5 = self.cite_matcher.sub(self.edit_cite, html5)
         return self.fmtr.format(html5, **self.cast)
+
+    def edit_cite(self, match: re.Match):
+        head, role, tail = [match.group(i) for i in ("head", "role", "tail")]
+        try:
+            entity = self.cast[role]
+        except KeyError:
+            return match.group()
+
+        attr = f'" data-entity="{entity.names[0]}"'
+        text = entity.names[0].translate(self.spmk.escape_table)
+        return f"{head}{role}{attr}{tail}{text}</cite>"
 
     def selection(self, scripts, ensemble: list[Entity]=[], roles=1):
         lookup = defaultdict(set)
@@ -110,11 +109,11 @@ class Director:
                 lookup[entity.type].add(entity) # Lite
 
         for scene in scripts:
-            cast = self.cast(scene, lookup)
+            cast = self.roles(scene, lookup)
             if cast:
                 return scene, cast
 
-    def cast(self, scene, lookup):
+    def roles(self, scene, lookup):
         roles = dict(sorted(
             ((k, v) for k, v in scene.tables.items() if k != self.shot_key),
             key=lambda x: self.rank_constraints(x[1]), reverse=True
