@@ -98,7 +98,7 @@ class Director:
         except KeyError:
             return match.group()
 
-        attr = f'" data-entity="{entity.names[0]}"'
+        attr = f'" data-entity="{entity.names[0]}'
         text = entity.names[0].translate(self.spmk.escape_table)
         return f"{head}{role}{attr}{tail}{text}</cite>"
 
