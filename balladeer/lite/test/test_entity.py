@@ -23,6 +23,19 @@ import unittest
 from balladeer.lite.types import Entity
 
 
+class TestComparisons(unittest.TestCase):
+
+    def test_quality(self):
+        a = Entity(name="a")
+        b = Entity(name="a")
+        self.assertEqual(a, b)
+
+    def test_inequality(self):
+        a = Entity(name="a")
+        b = Entity(name="b")
+        self.assertNotEqual(a, b)
+
+
 class TestNamesAndTypes(unittest.TestCase):
 
     class Thing(Entity):

@@ -269,29 +269,34 @@ class RoleTests(unittest.TestCase):
             },
             "C": {
                 "states": {
+                    "Switched": ["on", "off"],
+                }
+            },
+            "D": {
+                "states": {
                     "Switched": ["on"],
                     "Spinning": ["clockwise"],
                 },
             },
-            "D": {
+            "E": {
                 "state": "Switched.on",
                 "type": "Torch",
             },
-            "E": {
+            "F": {
                 "state": "Switched.on",
                 "types": ["Torch", "Desklight"],
             },
-            "F": {
+            "G": {
                 "state": "Switched.on",
                 "types": ["Desklight"],
             },
-            "G": {
+            "H": {
                 "state": "Switched.on",
                 "types": ["Torch", "Desklight"],
                 "roles": ["B", "D"]
             },
         }
-        ranks = [0, 1, 2, 2, 3, 2, 1]
+        ranks = [0, 1, 0.5, 2, 2, 3, 2, 1]
         d = Director(None)
         for n, (k, v) in enumerate(roles.items()):
             with self.subTest(role=k, spec=v):
@@ -325,17 +330,18 @@ class RoleTests(unittest.TestCase):
 
         director = Director(None)
         rv = dict(director.roles(scene, self.ensemble))
-        self.assertEqual(2, len(rv), rv)
+        self.assertEqual(3, len(rv), rv)
         self.assertEqual(entities["Bashy"], rv["FIGHTER_1"])
         self.assertEqual(entities["Biffy"], rv["FIGHTER_2"])
+        self.assertEqual(entities["Rusty"], rv["WEAPON"])
 
-    def test_role_with_hierarchical_state(self):
+    def test_role_with_multiple_states(self):
         text = textwrap.dedent("""
         [FIGHTER_1]
         states.Location = ["pub_bar", "pub_toilets"]
 
         [FIGHTER_2]
-        states.Location = ["pub_bar"]
+        state = "Location.pub_bar"
 
         [WEAPON]
         # A weapon which makes a noise in use.
@@ -357,9 +363,10 @@ class RoleTests(unittest.TestCase):
 
         director = Director(None)
         rv = dict(director.roles(scene, self.ensemble))
-        self.assertEqual(2, len(rv), rv)
-        self.assertEqual(entities["Biffy"], rv[0])
-        self.assertEqual(entities["Bashy"], rv[1])
+        self.assertEqual(3, len(rv), rv)
+        self.assertEqual(entities["Bashy"], rv["FIGHTER_1"])
+        self.assertEqual(entities["Biffy"], rv["FIGHTER_2"])
+        self.assertEqual(entities["Rusty"], rv["WEAPON"])
 
     def test_role_with_two_roles(self):
         text = textwrap.dedent("""

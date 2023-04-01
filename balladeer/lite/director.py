@@ -77,7 +77,7 @@ class Director:
 
     def rank_constraints(self, spec: dict) -> int:
         roles, states, types = Director.specify_role(spec)
-        return len(states) + len(types) - len(roles)
+        return sum(1 / len(v) for v in states.values()) + len(types) - len(roles)
 
     def lines(self, html5: str) -> list:
         text = self.tag_matcher.sub("", html5)

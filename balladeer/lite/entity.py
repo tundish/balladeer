@@ -45,6 +45,9 @@ class Entity:
             except AttributeError:
                 self.types.add(type)
 
+    def __eq__(self, other):
+        return set(self.names).union(self.types) == set(other.names).union(other.types)
+
     @property
     def name(self):
         return random.choice(self.names or [self.name])
