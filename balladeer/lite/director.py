@@ -46,9 +46,9 @@ class Director:
                 return value.translate(self.spmk.escape_table)
 
     @staticmethod
-    def rank_constraints(entity: Entity):
-        n = 1 if "type" in entity else 0
-        return len(entity.get("states", [])) + n
+    def rank_constraints(spec: dict):
+        n = 1 if "type" in spec else 0
+        return len(spec.get("states", [])) + n
 
     def __init__(self, story, shot_key="_", dlg_key="s"):
         self.spmk = SpeechMark()
@@ -91,14 +91,6 @@ class Director:
         return self.fmtr.format(html5, **self.cast)
 
     def selection(self, scripts, ensemble: list[Entity]=[], roles=1):
-        """
-        Pick appropriate dialogue files. 
-        First selection comes from the Drama.
-
-        This code understands types, roles, states.
-
-        See turberfield-dialogue/turberfield/dialogue/model
-        """
         lookup = defaultdict(set)
         for entity in ensemble:
             try:

@@ -259,6 +259,21 @@ class SelectionTests(unittest.TestCase):
             Entity(name="Rusty", type="Weapon"),
         ]
 
+    def test_rank_contstraints(self):
+        roles = {
+            "A": {
+            },
+            "B": {
+            },
+            "C": {
+            },
+            "D": {
+            },
+        }
+        for k, v in roles.items():
+            with self.subTest(role=k, spec=v):
+                self.fail(Director.rank_constraints(v))
+
     def test_select_with_required_state(self):
         content = textwrap.dedent("""
             [FIGHTER_1]
