@@ -46,9 +46,16 @@ class Director:
                 return value.translate(self.spmk.escape_table)
 
     @staticmethod
-    def rank_constraints(spec: dict):
-        n = 1 if "type" in spec else 0
-        return len(spec.get("states", [])) + n
+    def specify_role(spec: dict) -> tuple:
+        roles = set(filter(None, spec.get("roles", []) + [spec.get("role")]))
+        states = set(filter(None, spec.get("states", []) + [spec.get("state")]))
+        types = set(filter(None, spec.get("types", []) + [spec.get("type")]))
+        return roles, states, types
+
+    @staticmethod
+    def rank_constraints(spec: dict) -> int:
+        roles, states, types = Director.specify_role(spec)
+        return len(states) + len(types) - len(roles)
 
     def __init__(self, story, shot_key="_", dlg_key="s"):
         self.spmk = SpeechMark()

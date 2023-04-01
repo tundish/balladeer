@@ -259,7 +259,7 @@ class SelectionTests(unittest.TestCase):
             Entity(name="Rusty", type="Weapon"),
         ]
 
-    def test_rank_contstraints(self):
+    def test_rank_constraints(self):
         roles = {
             "A": {
             },
@@ -273,15 +273,15 @@ class SelectionTests(unittest.TestCase):
             "state": "Switched.On",
             "type": "Torch",
             },
-            "D": {
+            "E": {
             "state": "Switched.On",
             "types": ["Torch", "Desklight"],
             },
-            "E": {
+            "F": {
             "state": "Switched.On",
             "types": ["Desklight"],
             },
-            "F": {
+            "G": {
             "state": "Switched.On",
             "types": ["Torch", "Desklight"],
             "roles": ["B", "D"]
@@ -291,7 +291,7 @@ class SelectionTests(unittest.TestCase):
         for n, (k, v) in enumerate(roles.items()):
             with self.subTest(role=k, spec=v):
                 rank = Director.rank_constraints(v)
-                self.assertEqual(ranks[n], rank)
+                self.assertEqual(ranks[n], rank, Director.specify_role(v))
 
     def test_select_with_required_state(self):
         content = textwrap.dedent("""
