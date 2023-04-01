@@ -48,8 +48,14 @@ class Director:
     @staticmethod
     def specify_role(spec: dict) -> tuple:
         roles = set(filter(None, spec.get("roles", []) + [spec.get("role")]))
-        states = set(filter(None, spec.get("states", []) + [spec.get("state")]))
         types = set(filter(None, spec.get("types", []) + [spec.get("type")]))
+        states = {k: set(v) for k, v in spec.get("states", {}).items()}
+        try:
+            key, value = spec["state"].split(".")
+            states.setdefault(key, set()).add(value)
+        except  (KeyError,):
+            pass
+
         return roles, states, types
 
     def __init__(self, story, shot_key="_", dlg_key="s"):

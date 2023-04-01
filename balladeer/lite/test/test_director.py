@@ -267,7 +267,10 @@ class RoleTests(unittest.TestCase):
             "state": "Switched.On",
             },
             "C": {
-            "states": ["Switched.On", "Spinning.clockwise"],
+                "states": {
+                    "Switched": ["on"],
+                    "Spinning": ["clockwise"],
+                },
             },
             "D": {
             "state": "Switched.On",
