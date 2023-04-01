@@ -109,16 +109,17 @@ class Director:
                 lookup[entity.type].add(entity) # Lite
 
         for scene in scripts:
-            roles = self.roles(scene, lookup)
+            specs = {k: v for k, v in scene.tables.items() if k != self.shot_key}
+            roles = self.roles(specs, ensemble)
             if roles:
                 return scene, roles
 
-    def roles(self, scene, lookup):
+    def roles(self, specs: dict, ensemble: list[Entity]) -> dict:
         roles = dict(sorted(
-            ((k, v) for k, v in scene.tables.items() if k != self.shot_key),
+            specs,
             key=lambda x: self.rank_constraints(x[1]), reverse=True
         ))
-        return {k: lookup.get(role["type"]).pop() for k, role in roles.items() if "type" in role}
+        return {k: ensemble.pop(0) for k, role in roles.items() if "type" in role}
 
     def rewrite(self, scene, roles: dict[str, Entity]={}):
         shots = scene.tables.get(self.shot_key, [])

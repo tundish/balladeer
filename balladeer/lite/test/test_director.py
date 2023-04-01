@@ -232,7 +232,7 @@ class ConditionDirectiveTests(unittest.TestCase):
         self.assertFalse(Performer.allows(conditions[3]))
 
 
-class SelectionTests(unittest.TestCase):
+class RoleTests(unittest.TestCase):
 
     @enum.unique
     class Aggression(State, enum.Enum):
@@ -294,36 +294,37 @@ class SelectionTests(unittest.TestCase):
                 rank = d.rank_constraints(v)
                 self.assertEqual(ranks[n], rank, d.specify_role(v))
 
-    def test_select_with_required_state(self):
-        content = textwrap.dedent("""
-            [FIGHTER_1]
-            states.Aggression = ["angry"]
+    def test_role_with_required_state(self):
+        text = textwrap.dedent("""
+        [FIGHTER_1]
+        states.Aggression = ["angry"]
 
-            [FIGHTER_2]
-            states.Contentment = ["sad"]
+        [FIGHTER_2]
+        states.Contentment = ["sad"]
 
-            [WEAPON]
-            # A weapon which makes a noise in use.
-            """)
-        cast = {i.name: i for i in self.ensemble}
-        cast["Biffy"].set_state(SelectionTests.Contentment.sad)
+        [WEAPON]
+        # A weapon which makes a noise in use.
+        """)
+        entities = {i.name: i for i in self.ensemble}
+        entities["Biffy"].set_state(RoleTests.Contentment.sad)
         self.assertEqual(
-            SelectionTests.Contentment.sad,
-            cast["Biffy"].get_state(SelectionTests.Contentment)
+            RoleTests.Contentment.sad,
+            entities["Biffy"].get_state(RoleTests.Contentment)
         )
-        cast["Bashy"].set_state(SelectionTests.Aggression.angry)
+        entities["Bashy"].set_state(RoleTests.Aggression.angry)
         self.assertEqual(
-            SelectionTests.Aggression.angry,
-            cast["Bashy"].get_state(SelectionTests.Aggression)
+            RoleTests.Aggression.angry,
+            entities["Bashy"].get_state(RoleTests.Aggression)
         )
-        script = SceneScript("inline", doc=SceneScript.read(content))
-        rv = list(script.select(ensemble).values())
-        self.assertEqual(cast["Biffy"], rv[1])
-        self.assertEqual(cast["Bashy"], rv[0])
+        sm = SpeechMark()
+        scene = sm.loads(text)
+        director = Director(None)
+        rv = director.roles(scene, self.ensemble)
+        self.assertEqual(entities["Biffy"], rv[1])
+        self.assertEqual(entities["Bashy"], rv[0])
 
-    def test_select_with_hierarchical_state(self):
-
-        content = textwrap.dedent("""
+    def test_role_with_hierarchical_state(self):
+        text = textwrap.dedent("""
         [FIGHTER_1]
         states.Location = ["pub_bar", "pub_toilets"]
 
@@ -333,36 +334,39 @@ class SelectionTests(unittest.TestCase):
         [WEAPON]
         # A weapon which makes a noise in use.
         """).strip()
-        cast = {i.name: i for i in self.ensemble}
-        cast["Biffy"].set_state(SelectionTests.Location.pub_bar)
+        entities = {i.name: i for i in self.ensemble}
+        entities["Biffy"].set_state(RoleTests.Location.pub_bar)
         self.assertEqual(
-            SelectionTests.Location.pub_bar,
-            cast["Biffy"].get_state(SelectionTests.Location)
+            RoleTests.Location.pub_bar,
+            entities["Biffy"].get_state(RoleTests.Location)
         )
-        cast["Bashy"].set_state(SelectionTests.Location.pub_toilets)
+        entities["Bashy"].set_state(RoleTests.Location.pub_toilets)
         self.assertEqual(
-            SelectionTests.Location.pub_toilets,
-            cast["Bashy"].get_state(SelectionTests.Location)
+            RoleTests.Location.pub_toilets,
+            entities["Bashy"].get_state(RoleTests.Location)
         )
-        director = Director(None)
-        script = SceneScript("inline", doc=SceneScript.read(content))
-        rv = list(script.select(ensemble).values())
-        self.assertEqual(self.cast["Biffy"], rv[0])
-        self.assertEqual(cast["Bashy"], rv[1])
 
-    def test_select_with_two_roles(self):
-        content = textwrap.dedent("""
+        sm = SpeechMark()
+        scene = sm.loads(text)
+        director = Director(None)
+        rv = director.roles(scene, self.ensemble)
+        self.assertEqual(entities["Biffy"], rv[0])
+        self.assertEqual(entities["Bashy"], rv[1])
+
+    def test_role_with_two_roles(self):
+        text = textwrap.dedent("""
         [CHARACTER_1]
         roles = ["CHARACTER_2"]
 
         [CHARACTER_2]
 
         """).strip()
-        ensemble = copy.deepcopy(PropertyDirectiveTests.personae[0:1])
-        script = SceneScript("inline", doc=SceneScript.read(content))
-        rv = list(script.select(ensemble, roles=2).values())
-        self.assertEqual(ensemble[0], rv[0])
-        self.assertEqual(ensemble[0], rv[1])
+        sm = SpeechMark()
+        scene = sm.loads(text)
+        director = Director(None)
+        rv = director.roles(scene, self.ensemble)
+        self.assertEqual(self.ensemble[0], rv[0])
+        self.assertEqual(self.ensemble[0], rv[1])
 
 
 @unittest.skip("not yet")
