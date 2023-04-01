@@ -80,8 +80,8 @@ class Director:
     def words(self, html5: str) -> list:
         return " ".join(self.lines(html5)).split(" ")
 
-    def edit(self, html5: str, selection: dict) -> str:
-        self.cast = selection.copy()
+    def edit(self, html5: str, roles: dict) -> str:
+        self.cast = roles.copy()
         html5 = self.cite_matcher.sub(self.edit_cite, html5)
         return self.fmtr.format(html5, **self.cast)
 
@@ -109,9 +109,9 @@ class Director:
                 lookup[entity.type].add(entity) # Lite
 
         for scene in scripts:
-            cast = self.roles(scene, lookup)
-            if cast:
-                return scene, cast
+            roles = self.roles(scene, lookup)
+            if roles:
+                return scene, roles
 
     def roles(self, scene, lookup):
         roles = dict(sorted(
@@ -120,11 +120,11 @@ class Director:
         ))
         return {k: lookup.get(role["type"]).pop() for k, role in roles.items() if "type" in role}
 
-    def rewrite(self, scene, selection: dict[str, Entity]={}):
+    def rewrite(self, scene, roles: dict[str, Entity]={}):
         shots = scene.tables.get(self.shot_key, [])
         for shot in shots:
             dialogue = shot.get(self.dlg_key, "")
-            shot[self.dlg_key] = self.edit(dialogue, selection)
+            shot[self.dlg_key] = self.edit(dialogue, roles)
             yield shot
 
     def allows(self, shot):
