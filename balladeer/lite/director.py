@@ -53,7 +53,7 @@ class Director:
         try:
             key, value = spec["state"].split(".")
             states.setdefault(key, set()).add(value)
-        except  (KeyError,):
+        except (KeyError, ValueError):
             pass
 
         return roles, states, types
@@ -117,16 +117,12 @@ class Director:
         pool = {i: set(specs.keys()) for i in ensemble}
         for role, spec in specs.items():
             roles, states, types = self.specify_role(spec)
-            try:
-                entity = next((
-                    i for i, j in pool.items() if i.types.intersection(types)
-                    and all(i.get_state(k) in v for k, v in states.items())
-                    and role in j
-                ))
-                pool[entity] = roles
-                yield role, entity
-            except StopIteration:
-                continue
+            for entity, jobs in pool.items():
+                if role in jobs:
+                    if entity.types.intersection(types):
+                        if all(entity.get_state(k).name in v for k, v in states.items()):
+                            pool[entity] = roles
+                            yield role, entity
 
     def rewrite(self, scene, roles: dict[str, Entity]={}):
         shots = scene.tables.get(self.shot_key, [])
