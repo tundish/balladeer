@@ -110,11 +110,23 @@ class Director:
                 return scene, roles
 
     def roles(self, specs: dict, ensemble: list[Entity]) -> dict:
-        roles = dict(sorted(
-            specs,
+        specs = dict(sorted(
+            specs.items(),
             key=lambda x: self.rank_constraints(x[1]), reverse=True
         ))
-        return {k: ensemble.pop(0) for k, role in roles.items() if "type" in role}
+        pool = set(ensemble)
+        for role, spec in specs.items():
+            roles, states, types = self.specify_role(spec)
+            entity = next(
+            (
+                i for i in pool if i.types.intersection(types)
+                and all(i.get_state(k) in v for k, v in states.items())
+                # and not roles or role in roles
+            ), None)
+            if entity:
+                if not roles:
+                    pool.discard(entity)
+                yield role, entity
 
     def rewrite(self, scene, roles: dict[str, Entity]={}):
         shots = scene.tables.get(self.shot_key, [])

@@ -30,11 +30,11 @@ class TestNamesAndTypes(unittest.TestCase):
 
     def test_string_type(self):
         e = Entity(type="Thing")
-        self.assertEqual(["Thing"], e.types)
+        self.assertEqual({"Thing"}, e.types)
 
     def test_declared_type(self):
         e = Entity(type=TestNamesAndTypes.Thing)
-        self.assertEqual(["Thing"], e.types)
+        self.assertEqual({"Thing"}, e.types)
 
 
 class TestEnumStates(unittest.TestCase):

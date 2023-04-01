@@ -32,7 +32,7 @@ class Entity:
     names: list = dataclasses.field(default_factory=list, compare=False)
 
     type: dataclasses.InitVar = ""
-    types: list = dataclasses.field(default_factory=list, compare=False)
+    types: set = dataclasses.field(default_factory=set, compare=False)
 
     states: dict = dataclasses.field(default_factory=dict, compare=False)
 
@@ -41,9 +41,9 @@ class Entity:
             self.names.insert(0, name)
         if type:
             try:
-                self.types.append(type.__name__)
+                self.types.add(type.__name__)
             except AttributeError:
-                self.types.append(type)
+                self.types.add(type)
 
     @property
     def name(self):

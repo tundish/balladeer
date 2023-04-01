@@ -21,6 +21,7 @@ import copy
 import enum
 import textwrap
 import unittest
+import tomllib
 
 from speechmark import SpeechMark
 
@@ -254,8 +255,8 @@ class RoleTests(unittest.TestCase):
 
     def setUp(self):
         self.ensemble = [
-            Entity(name="Biffy", types=["Animal", "Canine"]),
-            Entity(name="Bashy", types=["Animal", "Feline"]),
+            Entity(name="Biffy", types={"Animal", "Canine"}),
+            Entity(name="Bashy", types={"Animal", "Feline"}),
             Entity(name="Rusty", type="Weapon"),
         ]
 
@@ -319,10 +320,12 @@ class RoleTests(unittest.TestCase):
             RoleTests.Aggression.angry,
             entities["Bashy"].get_state(RoleTests.Aggression)
         )
-        sm = SpeechMark()
-        scene = sm.loads(text)
+        scene = tomllib.loads(text)
+        self.assertIsInstance(scene, dict)
+
         director = Director(None)
         rv = dict(director.roles(scene, self.ensemble))
+        self.assertEqual(2, len(rv), rv)
         self.assertEqual(entities["Biffy"], rv[1])
         self.assertEqual(entities["Bashy"], rv[0])
 
@@ -349,10 +352,12 @@ class RoleTests(unittest.TestCase):
             entities["Bashy"].get_state(RoleTests.Location)
         )
 
-        sm = SpeechMark()
-        scene = sm.loads(text)
+        scene = tomllib.loads(text)
+        self.assertIsInstance(scene, dict)
+
         director = Director(None)
         rv = dict(director.roles(scene, self.ensemble))
+        self.assertEqual(2, len(rv), rv)
         self.assertEqual(entities["Biffy"], rv[0])
         self.assertEqual(entities["Bashy"], rv[1])
 
@@ -364,10 +369,12 @@ class RoleTests(unittest.TestCase):
         [CHARACTER_2]
 
         """).strip()
-        sm = SpeechMark()
-        scene = sm.loads(text)
+        scene = tomllib.loads(text)
+        self.assertIsInstance(scene, dict)
+
         director = Director(None)
         rv = dict(director.roles(scene, self.ensemble))
+        self.assertEqual(2, len(rv), rv)
         self.assertEqual(self.ensemble[0], rv[0])
         self.assertEqual(self.ensemble[0], rv[1])
 
