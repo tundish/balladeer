@@ -264,15 +264,34 @@ class SelectionTests(unittest.TestCase):
             "A": {
             },
             "B": {
+            "state": "Switched.On",
             },
             "C": {
+            "states": ["Switched.On", "Spinning.clockwise"],
             },
             "D": {
+            "state": "Switched.On",
+            "type": "Torch",
+            },
+            "D": {
+            "state": "Switched.On",
+            "types": ["Torch", "Desklight"],
+            },
+            "E": {
+            "state": "Switched.On",
+            "types": ["Desklight"],
+            },
+            "F": {
+            "state": "Switched.On",
+            "types": ["Torch", "Desklight"],
+            "roles": ["B", "D"]
             },
         }
-        for k, v in roles.items():
+        ranks = [0, 1, 2, 2, 3, 2, 1]
+        for n, (k, v) in enumerate(roles.items()):
             with self.subTest(role=k, spec=v):
-                self.fail(Director.rank_constraints(v))
+                rank = Director.rank_constraints(v)
+                self.assertEqual(ranks[n], rank)
 
     def test_select_with_required_state(self):
         content = textwrap.dedent("""
