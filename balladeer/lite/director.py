@@ -58,7 +58,7 @@ class Director:
 
         return roles, states, types
 
-    def specify_condition(self, shot: dict) -> tuple:
+    def specify_conditions(self, shot: dict) -> tuple:
         # conditions(scene)
         for role, guard in shot.get("if", {}).items():
             yield role, self.specify_role(guard)
@@ -147,8 +147,7 @@ class Director:
                 yield self.edit(html5, roles)
 
     def allows(self, shot, roles: dict[str, Entity]={}):
-        print(shot)
-        criteria = dict(self.specify_condition(shot))
+        criteria = dict(self.specify_conditions(shot))
         for role, (roles, states, types) in criteria.items():
             print(role, states)
 
