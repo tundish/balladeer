@@ -210,7 +210,10 @@ class ConditionDirectiveTests(unittest.TestCase):
         director = Director(None)
         shot = next(iter(scene.get(director.shot_key)))
         conditions = dict(director.specify_conditions(shot))
-        self.fail(conditions)
+        self.assertIn("WEATHER", conditions)
+        roles, states, types = conditions["WEATHER"]
+        self.assertIn("Weather", states)
+        self.assertIn("stormy", states["Weather"])
 
     def test_guard_conditions_multiple_states(self):
         content = textwrap.dedent("""
@@ -222,7 +225,11 @@ class ConditionDirectiveTests(unittest.TestCase):
         director = Director(None)
         shot = next(iter(scene.get(director.shot_key)))
         conditions = dict(director.specify_conditions(shot))
-        self.fail(conditions)
+        self.assertIn("WEATHER", conditions)
+        roles, states, types = conditions["WEATHER"]
+        self.assertIn("Weather", states)
+        self.assertIn("stormy", states["Weather"])
+        self.assertIn("misty", states["Weather"])
 
     def test_condition_evaluation_one(self):
         effects = [
