@@ -209,8 +209,8 @@ class ConditionDirectiveTests(unittest.TestCase):
         scene = tomllib.loads(content)
         director = Director(None)
         shot = next(iter(scene.get(director.shot_key)))
-        guard = dict(director.specify_shot(shot, self.ensemble))
-        self.fail(guard)
+        conditions = dict(director.specify_condition(shot, self.ensemble))
+        self.fail(conditions)
 
     def test_guard_conditions_multiple_states(self):
         content = textwrap.dedent("""
@@ -221,8 +221,8 @@ class ConditionDirectiveTests(unittest.TestCase):
         scene = tomllib.loads(content)
         director = Director(None)
         shot = next(iter(scene.get(director.shot_key)))
-        guard = dict(director.specify_shot(shot, self.ensemble))
-        self.fail(guard)
+        conditions = dict(director.specify_condition(shot, self.ensemble))
+        self.fail(conditions)
 
     def test_condition_evaluation_one(self):
         effects = [

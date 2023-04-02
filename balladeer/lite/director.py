@@ -58,7 +58,7 @@ class Director:
 
         return roles, states, types
 
-    def specify_shot(self, shot: dict, roles: dict) -> tuple:
+    def specify_condition(self, shot: dict, roles: dict) -> tuple:
         # conditions(scene)
         for role, guard in shot.get("if", {}).items():
             yield role, self.specify_role(guard)
