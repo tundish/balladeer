@@ -151,6 +151,8 @@ class ConditionDirectiveTests(unittest.TestCase):
 
     content = textwrap.dedent(
         """
+        # Metadata at the top
+        author = "tundish"
 
         [WEATHER]
         types   =   ["Rain", "Snow"]
@@ -198,7 +200,7 @@ class ConditionDirectiveTests(unittest.TestCase):
             Entity(name="Rusty", type="Weapon"),
         ]
 
-    def test_guard_conditions_strings(self):
+    def test_guard_conditions_single_state(self):
         content = textwrap.dedent("""
         [[_]]
         if.WEATHER.state = "Weather.stormy"
@@ -207,18 +209,20 @@ class ConditionDirectiveTests(unittest.TestCase):
         scene = tomllib.loads(content)
         director = Director(None)
         shot = next(iter(scene.get(director.shot_key)))
-        rv = dict(director.specify_shot(shot, self.ensemble))
-        self.fail(rv)
+        guard = dict(director.specify_shot(shot, self.ensemble))
+        self.fail(guard)
 
-    def test_guard_conditions_regex(self):
+    def test_guard_conditions_multiple_states(self):
         content = textwrap.dedent("""
         [[_]]
-        if."(Weather.stormy)" = "{WEATHER.state}"
-        if."{WEATHER.stormy}" = "{WEATHER.state}"
+        if.WEATHER.states.Weather = ["stormy", "misty"]
 
         """).strip()
         scene = tomllib.loads(content)
-        self.fail(scene)
+        director = Director(None)
+        shot = next(iter(scene.get(director.shot_key)))
+        guard = dict(director.specify_shot(shot, self.ensemble))
+        self.fail(guard)
 
     def test_condition_evaluation_one(self):
         effects = [
