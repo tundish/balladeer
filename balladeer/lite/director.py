@@ -58,7 +58,7 @@ class Director:
 
         return roles, states, types
 
-    def specify_condition(self, shot: dict, roles: dict) -> tuple:
+    def specify_condition(self, shot: dict) -> tuple:
         # conditions(scene)
         for role, guard in shot.get("if", {}).items():
             yield role, self.specify_role(guard)
@@ -141,11 +141,17 @@ class Director:
         shots = scene.tables.get(self.shot_key, [])
         for shot in shots:
             # TODO: Evaluate conditions for shot
-            text = shot.get(self.dlg_key, "")
-            html5 = self.spmk.loads(text)
-            yield self.edit(html5, roles)
+            if self.allows(shot):
+                text = shot.get(self.dlg_key, "")
+                html5 = self.spmk.loads(text)
+                yield self.edit(html5, roles)
 
-    def allows(self, shot):
+    def allows(self, shot, roles: dict[str, Entity]={}):
+        print(shot)
+        criteria = dict(self.specify_condition(shot))
+        for role, (roles, states, types) in criteria.items():
+            print(role, states)
+
         return True
 
     def compare(self, key: str, pattern: [str, re.Pattern]):
