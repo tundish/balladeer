@@ -238,18 +238,16 @@ class ConditionDirectiveTests(unittest.TestCase):
             ConditionDirectiveTests.Snow().set_state(ConditionDirectiveTests.Weather.quiet),
         ]
 
-        script = SceneScript("inline", doc=SceneScript.read(self.content))
-        selection = script.select(effects)
-        self.assertTrue(all(selection.values()))
-        script.cast(selection)
-        model = script.run()
-        conditions = [l for s, l in model if isinstance(l, Model.Condition)]
+        scene = tomllib.loads(self.content)
+        director = Director(None)
+        shot = next(iter(scene.get(director.shot_key)))
+        conditions = dict(director.specify_conditions(shot))
         self.assertEqual(4, len(conditions))
 
-        self.assertTrue(Performer.allows(conditions[0]))
-        self.assertFalse(Performer.allows(conditions[1]))
-        self.assertFalse(Performer.allows(conditions[2]))
-        self.assertTrue(Performer.allows(conditions[3]))
+        self.assertTrue(Director.allows(conditions[0]))
+        self.assertFalse(Director.allows(conditions[1]))
+        self.assertFalse(Director.allows(conditions[2]))
+        self.assertTrue(Director.allows(conditions[3]))
 
     def test_condition_evaluation_two(self):
         effects = [
