@@ -126,17 +126,30 @@ class Director:
             specs.items(),
             key=lambda x: self.rank_constraints(x[1]), reverse=True
         ))
+        print(f"roles.specs: {specs}")
         pool = {i: set(specs.keys()) for i in ensemble}
         for role, spec in specs.items():
-            roles, states, types = self.specify_role(spec)
+            # roles, states, types = self.specify_role(spec)
+            _ = self.specify_role(spec)
+            print(f"roles._: {_}")
+            roles, states, types = _
 
             try:
                 entity = next(
                     entity
                     for entity, jobs in pool.items()
-                    if role in jobs and (not types or entity.types.intersection(types))
-                    and all(k in entity.states and entity.get_state(k).name in v for k, v in states.items())
+                    if role in jobs and (
+                        not types
+                        or entity.types.intersection(types)
+                        or getattr(entity, __name__, "") in types
+                    )
+                    and all(
+                        k in entity.states
+                        and entity.get_state(k).name in v
+                        for k, v in states.items()
+                    )
                 )
+                print(f"roles.entity: {entity}")
             except StopIteration:
                 continue
             else:
