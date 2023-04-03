@@ -241,12 +241,13 @@ class ConditionDirectiveTests(unittest.TestCase):
         d = Director(None)
         scene = tomllib.loads(self.content)
         specs = {k: v for k, v in scene.items() if k != d.shot_key}
-        shot = next(iter(scene.get(d.shot_key)))
-        roles = dict(d.roles(specs, effects))
-        print(roles)
-        conditions = dict(d.specify_conditions(shot))
-        self.assertEqual(4, len(conditions))
+        conditions = [
+            dict(d.specify_conditions(shot))
+            for shot in scene.get(d.shot_key)
+        ]
+        self.assertEqual(5, len(conditions))
 
+        roles = dict(d.roles(specs, effects))
         self.assertTrue(d.allows(conditions[0]))
         self.assertFalse(d.allows(conditions[1]))
         self.assertFalse(d.allows(conditions[2]))
