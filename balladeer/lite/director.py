@@ -110,10 +110,18 @@ class Director:
 
     def selection(self, scripts, ensemble: list[Entity]=[], roles=1):
         for scene in scripts:
-            specs = {k: v for k, v in scene.tables.items() if k != self.shot_key}
+            specs = self.specifications(scene.tables)
             roles = dict(self.roles(specs, ensemble))
             if len(roles) == len(specs):
                 return scene, roles
+
+    def specifications(self, toml):
+        return {
+            k: v
+            for k, v in toml.items()
+            if isinstance(v, dict)
+            and k != self.shot_key
+        }
 
     def roles(self, specs: dict, ensemble: list[Entity]) -> dict:
         specs = dict(sorted(
