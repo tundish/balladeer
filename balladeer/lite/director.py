@@ -59,10 +59,8 @@ class Director:
         return roles, states, types
 
     def specify_conditions(self, shot: dict) -> tuple:
-        # conditions(scene)
         for role, guard in shot.get("if", {}).items():
             yield role, self.specify_role(guard)
-        #roles = dict(self.roles(specs, ensemble))
 
     def __init__(self, story, shot_key="_", dlg_key="s"):
         self.spmk = SpeechMark()
@@ -115,7 +113,7 @@ class Director:
             if len(roles) == len(specs):
                 return scene, roles
 
-    def specifications(self, toml):
+    def specifications(self, toml: dict):
         return {
             k: v
             for k, v in toml.items()

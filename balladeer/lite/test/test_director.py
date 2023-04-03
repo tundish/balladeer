@@ -245,10 +245,13 @@ class ConditionDirectiveTests(unittest.TestCase):
             for shot in scene.get(d.shot_key)
         ]
         self.assertEqual(5, len(conditions))
+        print(f"Conditions: {conditions}")
 
-        roles = dict(
-            d.roles(d.specifications(scene), effects)
-        )
+        specs = d.specifications(scene)
+        print(f"Specs: {specs}")
+
+        roles = dict(d.roles(specs, effects))
+        print(f"Roles: {roles}")
         self.assertTrue(d.allows(conditions[0], roles))
         self.assertFalse(d.allows(conditions[1], roles))
         self.assertFalse(d.allows(conditions[2], roles))
