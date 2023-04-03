@@ -134,6 +134,24 @@ class Director:
             print(f"roles._: {_}")
             roles, states, types = _
 
+            state_fits = {
+                entity: all(
+                    k in entity.states
+                    and entity.get_state(k).name in v
+                    for k, v in states.items()
+                )
+                for entity, jobs in pool.items()
+            }
+            print(f"roles.state_fits: {state_fits}")
+
+            type_fit = (
+                not types
+                or entity.types.intersection(types)
+                or getattr(entity, __name__, "") in types
+                for entity, jobs in pool.items()
+            )
+            print(f"roles.type_fit: {type_fit}")
+
             try:
                 entity = next(
                     entity
