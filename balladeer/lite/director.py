@@ -130,28 +130,7 @@ class Director:
         pool = {i: set(specs.keys()) for i in ensemble}
         for role, spec in specs.items():
             # roles, states, types = self.specify_role(spec)
-            _ = self.specify_role(spec)
-            print(f"roles._: {_}")
-            roles, states, types = _
-
-            state_fits = {
-                entity: all(
-                    k in entity.states
-                    and entity.get_state(k).name in v
-                    for k, v in states.items()
-                )
-                for entity, jobs in pool.items()
-            }
-            print(f"roles.state_fits: {state_fits}")
-
-            type_fit = (
-                not types
-                or entity.types.intersection(types)
-                or getattr(entity, __name__, "") in types
-                for entity, jobs in pool.items()
-            )
-            print(f"roles.type_fit: {type_fit}")
-
+            roles, states, types = self.specify_role(spec)
             try:
                 entity = next(
                     entity
@@ -159,7 +138,7 @@ class Director:
                     if role in jobs and (
                         not types
                         or entity.types.intersection(types)
-                        or getattr(entity, __name__, "") in types
+                        or getattr(entity, "__name__", "") in types
                     )
                     and all(
                         k in entity.states
@@ -167,7 +146,7 @@ class Director:
                         for k, v in states.items()
                     )
                 )
-                print(f"roles.entity: {entity}")
+                print(f"roles.entity: {entity} is {role}")
             except StopIteration:
                 continue
             else:

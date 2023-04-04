@@ -263,6 +263,7 @@ class ConditionDirectiveTests(unittest.TestCase):
             ConditionDirectiveTests.Sleet().set_state(ConditionDirectiveTests.Weather.stormy),
             ConditionDirectiveTests.Snow().set_state(ConditionDirectiveTests.Weather.stormy),
         ]
+        print(*effects, sep="\n")
 
         script = SceneScript("inline", doc=SceneScript.read(self.content))
         selection = script.select(effects)
