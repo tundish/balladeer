@@ -126,10 +126,8 @@ class Director:
             specs.items(),
             key=lambda x: self.rank_constraints(x[1]), reverse=True
         ))
-        print(f"roles.specs: {specs}")
         pool = {i: set(specs.keys()) for i in ensemble}
         for role, spec in specs.items():
-            # roles, states, types = self.specify_role(spec)
             roles, states, types = self.specify_role(spec)
             try:
                 entity = next(
@@ -146,7 +144,6 @@ class Director:
                         for k, v in states.items()
                     )
                 )
-                print(f"roles.entity: {entity} is {role}")
             except StopIteration:
                 continue
             else:

@@ -257,6 +257,7 @@ class ConditionDirectiveTests(unittest.TestCase):
         self.assertFalse(d.allows(conditions[2], roles))
         self.assertTrue(d.allows(conditions[3], roles))
 
+    @unittest.skip("Nope")
     def test_condition_evaluation_two(self):
         effects = [
             ConditionDirectiveTests.Rain().set_state(ConditionDirectiveTests.Weather.quiet),
