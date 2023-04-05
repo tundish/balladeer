@@ -202,39 +202,38 @@ class ConditionTests(unittest.TestCase):
             for shot in scene.get(d.shot_key)
         ]
         self.assertEqual(5, len(conditions))
-        print(f"Conditions: {conditions}")
-        print(f"Ensemble: {self.ensemble}")
-        print(getattr(self.ensemble[0].__class__, "__name__"))
 
         specs = d.specifications(scene)
-        print(f"Specs: {specs}")
 
         roles = dict(d.roles(specs, self.ensemble))
-        print(f"Roles: {roles}")
         self.assertTrue(d.allows(conditions[0], roles))
-        self.assertTrue(d.allows(conditions[1], roles), conditions[1])
+        self.assertTrue(d.allows(conditions[1], roles))
         self.assertFalse(d.allows(conditions[2], roles))
         self.assertFalse(d.allows(conditions[3], roles))
         self.assertTrue(d.allows(conditions[4], roles))
 
-    @unittest.skip("Nope")
     def test_condition_evaluation_two(self):
         self.ensemble[0].set_state(self.Weather.quiet)
         self.ensemble[1].set_state(self.Weather.stormy)
         self.ensemble[2].set_state(self.Weather.stormy)
 
-        script = SceneScript("inline", doc=SceneScript.read(self.content))
-        selection = script.select(effects)
-        self.assertTrue(all(selection.values()))
-        script.cast(selection)
-        model = script.run()
-        conditions = [l for s, l in model if isinstance(l, Model.Condition)]
-        self.assertEqual(4, len(conditions))
+        d = Director(None)
+        scene = tomllib.loads(self.content)
+        conditions = [
+            dict(d.specify_conditions(shot))
+            for shot in scene.get(d.shot_key)
+        ]
+        self.assertEqual(5, len(conditions))
 
-        self.assertTrue(Performer.allows(conditions[0]))
-        self.assertFalse(Performer.allows(conditions[1]))
-        self.assertTrue(Performer.allows(conditions[2]))
-        self.assertFalse(Performer.allows(conditions[3]))
+        specs = d.specifications(scene)
+
+        roles = dict(d.roles(specs, self.ensemble))
+        self.assertTrue(roles, (self.ensemble, specs))
+        self.assertTrue(d.allows(conditions[0], roles))
+        self.assertTrue(d.allows(conditions[1], roles))
+        self.assertFalse(d.allows(conditions[2], roles))
+        self.assertTrue(d.allows(conditions[3], roles))
+        self.assertFalse(d.allows(conditions[4], roles))
 
     def test_guard_conditions_single_state(self):
         content = textwrap.dedent("""
