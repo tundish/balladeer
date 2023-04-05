@@ -212,9 +212,10 @@ class ConditionTests(unittest.TestCase):
         roles = dict(d.roles(specs, self.ensemble))
         print(f"Roles: {roles}")
         self.assertTrue(d.allows(conditions[0], roles))
-        self.assertFalse(d.allows(conditions[1], roles))
+        self.assertTrue(d.allows(conditions[1], roles), conditions[1])
         self.assertFalse(d.allows(conditions[2], roles))
-        self.assertTrue(d.allows(conditions[3], roles))
+        self.assertFalse(d.allows(conditions[3], roles))
+        self.assertTrue(d.allows(conditions[4], roles))
 
     @unittest.skip("Nope")
     def test_condition_evaluation_two(self):

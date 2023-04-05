@@ -160,13 +160,11 @@ class Director:
                 html5 = self.spmk.loads(text)
                 yield self.edit(html5, roles)
 
-    def allows(self, shot, roles: dict[str, Entity]={}):
-        criteria = dict(self.specify_conditions(shot))
-        print(f"Criteria {criteria}")
-        for role, (roles, states, types) in criteria.items():
-            entity = roles[role]
+    def allows(self, conditions: dict, cast: dict[str, Entity]={}):
+        for role, (roles, states, types) in conditions.items():
+            entity = cast[role]
             print(f"Entity: {entity} Role: {role} states:  {states}, types: {types}")
-            if types and not types.issubset(entity.types):
+            if types and not types.issubset(entity.types) and entity.__class__.__name__ not in types:
                 return False
             for state, values in states.items():
                 if entity.get_state(state).name not in values:
