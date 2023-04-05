@@ -139,7 +139,7 @@ class EditTests(unittest.TestCase):
         self.assertIn(">Bashy</cite>", edit)
 
 
-class ConditionDirectiveTests(unittest.TestCase):
+class ConditionTests(unittest.TestCase):
 
     class Rain(Entity): pass
     class Sleet(Entity): pass
@@ -187,18 +187,53 @@ class ConditionDirectiveTests(unittest.TestCase):
 
         """).strip()
 
-    effects = [
-        Rain().set_state(Weather.stormy),
-        Sleet().set_state(Weather.stormy),
-        Snow().set_state(Weather.quiet),
-    ]
-
     def setUp(self):
         self.ensemble = [
-            Entity(name="Biffy", types={"Animal", "Canine"}),
-            Entity(name="Bashy", types={"Animal", "Feline"}),
-            Entity(name="Rusty", type="Weapon"),
+            self.Rain().set_state(self.Weather.stormy),
+            self.Sleet().set_state(self.Weather.stormy),
+            self.Snow().set_state(self.Weather.quiet),
         ]
+
+    def test_condition_evaluation_one(self):
+        d = Director(None)
+        scene = tomllib.loads(self.content)
+        conditions = [
+            dict(d.specify_conditions(shot))
+            for shot in scene.get(d.shot_key)
+        ]
+        self.assertEqual(5, len(conditions))
+        print(f"Conditions: {conditions}")
+        print(f"Ensemble: {self.ensemble}")
+        print(getattr(self.ensemble[0].__class__, "__name__"))
+
+        specs = d.specifications(scene)
+        print(f"Specs: {specs}")
+
+        roles = dict(d.roles(specs, self.ensemble))
+        print(f"Roles: {roles}")
+        self.assertTrue(d.allows(conditions[0], roles))
+        self.assertFalse(d.allows(conditions[1], roles))
+        self.assertFalse(d.allows(conditions[2], roles))
+        self.assertTrue(d.allows(conditions[3], roles))
+
+    @unittest.skip("Nope")
+    def test_condition_evaluation_two(self):
+        self.ensemble[0].set_state(self.Weather.quiet)
+        self.ensemble[1].set_state(self.Weather.stormy)
+        self.ensemble[2].set_state(self.Weather.stormy)
+
+        script = SceneScript("inline", doc=SceneScript.read(self.content))
+        selection = script.select(effects)
+        self.assertTrue(all(selection.values()))
+        script.cast(selection)
+        model = script.run()
+        conditions = [l for s, l in model if isinstance(l, Model.Condition)]
+        self.assertEqual(4, len(conditions))
+
+        self.assertTrue(Performer.allows(conditions[0]))
+        self.assertFalse(Performer.allows(conditions[1]))
+        self.assertTrue(Performer.allows(conditions[2]))
+        self.assertFalse(Performer.allows(conditions[3]))
 
     def test_guard_conditions_single_state(self):
         content = textwrap.dedent("""
@@ -230,54 +265,6 @@ class ConditionDirectiveTests(unittest.TestCase):
         self.assertIn("Weather", states)
         self.assertIn("stormy", states["Weather"])
         self.assertIn("misty", states["Weather"])
-
-    def test_condition_evaluation_one(self):
-        effects = [
-            ConditionDirectiveTests.Rain().set_state(ConditionDirectiveTests.Weather.stormy),
-            ConditionDirectiveTests.Sleet().set_state(ConditionDirectiveTests.Weather.stormy),
-            ConditionDirectiveTests.Snow().set_state(ConditionDirectiveTests.Weather.quiet),
-        ]
-
-        d = Director(None)
-        scene = tomllib.loads(self.content)
-        conditions = [
-            dict(d.specify_conditions(shot))
-            for shot in scene.get(d.shot_key)
-        ]
-        self.assertEqual(5, len(conditions))
-        print(f"Conditions: {conditions}")
-
-        specs = d.specifications(scene)
-        print(f"Specs: {specs}")
-
-        roles = dict(d.roles(specs, effects))
-        print(f"Roles: {roles}")
-        self.assertTrue(d.allows(conditions[0], roles))
-        self.assertFalse(d.allows(conditions[1], roles))
-        self.assertFalse(d.allows(conditions[2], roles))
-        self.assertTrue(d.allows(conditions[3], roles))
-
-    @unittest.skip("Nope")
-    def test_condition_evaluation_two(self):
-        effects = [
-            ConditionDirectiveTests.Rain().set_state(ConditionDirectiveTests.Weather.quiet),
-            ConditionDirectiveTests.Sleet().set_state(ConditionDirectiveTests.Weather.stormy),
-            ConditionDirectiveTests.Snow().set_state(ConditionDirectiveTests.Weather.stormy),
-        ]
-        print(*effects, sep="\n")
-
-        script = SceneScript("inline", doc=SceneScript.read(self.content))
-        selection = script.select(effects)
-        self.assertTrue(all(selection.values()))
-        script.cast(selection)
-        model = script.run()
-        conditions = [l for s, l in model if isinstance(l, Model.Condition)]
-        self.assertEqual(4, len(conditions))
-
-        self.assertTrue(Performer.allows(conditions[0]))
-        self.assertFalse(Performer.allows(conditions[1]))
-        self.assertTrue(Performer.allows(conditions[2]))
-        self.assertFalse(Performer.allows(conditions[3]))
 
 
 class RoleTests(unittest.TestCase):

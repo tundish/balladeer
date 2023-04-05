@@ -60,6 +60,7 @@ class Director:
 
     def specify_conditions(self, shot: dict) -> tuple:
         for role, guard in shot.get("if", {}).items():
+            print(f"Role: {role}, G: {guard} => {self.specify_role(guard)}")
             yield role, self.specify_role(guard)
 
     def __init__(self, story, shot_key="_", dlg_key="s"):
@@ -136,7 +137,7 @@ class Director:
                     if role in jobs and (
                         not types
                         or entity.types.intersection(types)
-                        or getattr(entity, "__name__", "") in types
+                        or entity.__class__.__name__ in types
                     )
                     and all(
                         k in entity.states
@@ -161,8 +162,16 @@ class Director:
 
     def allows(self, shot, roles: dict[str, Entity]={}):
         criteria = dict(self.specify_conditions(shot))
+        print(f"Criteria {criteria}")
         for role, (roles, states, types) in criteria.items():
-            print(role, states)
+            entity = roles[role]
+            print(f"Entity: {entity} Role: {role} states:  {states}, types: {types}")
+            if types and not types.issubset(entity.types):
+                return False
+            for state, values in states.items():
+                if entity.get_state(state).name not in values:
+                    return False
+                
 
         return True
 
