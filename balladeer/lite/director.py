@@ -128,6 +128,7 @@ class Director:
             key=lambda x: self.rank_constraints(x[1]), reverse=True
         ))
         pool = {i: set(specs.keys()) for i in ensemble}
+        print(f"Pool: {pool}")
         for role, spec in specs.items():
             roles, states, types = self.specify_role(spec)
             try:

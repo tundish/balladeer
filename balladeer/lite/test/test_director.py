@@ -141,6 +141,7 @@ class EditTests(unittest.TestCase):
 
 class ConditionTests(unittest.TestCase):
 
+    # FIXME: Entities compare equal
     class Rain(Entity): pass
     class Sleet(Entity): pass
     class Snow(Entity): pass
@@ -227,6 +228,7 @@ class ConditionTests(unittest.TestCase):
 
         specs = d.specifications(scene)
 
+        self.assertEqual(3, len(self.ensemble))
         roles = dict(d.roles(specs, self.ensemble))
         self.assertTrue(roles, (self.ensemble, specs))
         self.assertTrue(d.allows(conditions[0], roles))
