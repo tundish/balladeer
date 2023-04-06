@@ -446,26 +446,36 @@ class RoleTests(unittest.TestCase):
 class LoopTests(unittest.TestCase):
     def setUp(self):
         self.script = textwrap.dedent(
-            """
+        """
         [GUEST]
 
+        [[_]]
+        s='''
         <GUEST#!>
 
             + This, or
             + This, or
             + This, or
-
+        '''
         """
         ).strip()
         self.ensemble = [Entity()]
 
-    def test_adlib_off(self):
-        director = Director(story=None)
-        self.assertEqual(5, len(director.lines(self.html)))
+    def test_bang_loop(self):
+        d = Director(story=None)
 
-    def test_adlib_on(self):
-        director = Director(story=None)
-        self.assertEqual(5, len(director.lines(self.html)))
+        scene = tomllib.loads(self.script)
+        specs = d.specifications(scene)
+        roles = dict(d.roles(specs, self.ensemble))
+
+        shot = next(iter(scene.get(d.shot_key, [])))
+        text = shot.get(d.dlg_key, "")
+
+        sm = SpeechMark()
+        html5 = sm.loads(text)
+
+        rv = d.edit(html5, roles)
+        self.assertEqual(5, len(d.lines(self.html)))
 
 
 @unittest.skip("not yet")
