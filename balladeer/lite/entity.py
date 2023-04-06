@@ -21,6 +21,7 @@ import dataclasses
 import enum
 import random
 import re
+import uuid
 
 from balladeer.lite.types import State
 
@@ -35,6 +36,7 @@ class Entity:
     types: set = dataclasses.field(default_factory=set, compare=False)
 
     states: dict = dataclasses.field(default_factory=dict, compare=False)
+    uid: uuid.UUID = dataclasses.field(default_factory=uuid.uuid4)
 
     def __post_init__(self, name, type):
         if name:

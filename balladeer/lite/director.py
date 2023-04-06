@@ -60,7 +60,6 @@ class Director:
 
     def specify_conditions(self, shot: dict) -> tuple:
         for role, guard in shot.get("if", {}).items():
-            print(f"Role: {role}, G: {guard} => {self.specify_role(guard)}")
             yield role, self.specify_role(guard)
 
     def __init__(self, story, shot_key="_", dlg_key="s"):
@@ -128,7 +127,6 @@ class Director:
             key=lambda x: self.rank_constraints(x[1]), reverse=True
         ))
         pool = {i: set(specs.keys()) for i in ensemble}
-        print(f"Pool: {pool}")
         for role, spec in specs.items():
             roles, states, types = self.specify_role(spec)
             try:
@@ -164,7 +162,6 @@ class Director:
     def allows(self, conditions: dict, cast: dict[str, Entity]={}):
         for role, (roles, states, types) in conditions.items():
             entity = cast[role]
-            print(f"Entity: {entity} Role: {role} states:  {states}, types: {types}")
             if types and not types.issubset(entity.types) and entity.__class__.__name__ not in types:
                 return False
             for state, values in states.items():

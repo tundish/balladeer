@@ -25,6 +25,14 @@ from balladeer.lite.types import Entity
 
 class TestComparisons(unittest.TestCase):
 
+    def test_identity(self):
+        bag = set([
+            Entity(),
+            Entity(),
+            Entity(),
+        ])
+        self.assertEqual(3, len(bag))
+
     def test_quality(self):
         a = Entity(name="a")
         b = Entity(name="a")
