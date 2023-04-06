@@ -449,7 +449,7 @@ class LoopTests(unittest.TestCase):
             """
         [GUEST]
 
-        <GUEST#!loop>
+        <GUEST#!>
 
             + This, or
             + This, or
