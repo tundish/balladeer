@@ -443,11 +443,13 @@ class RoleTests(unittest.TestCase):
         self.assertEqual(entities["Biffy"], rv["CHARACTER_2"])
 
 
-class AdLibTests(unittest.TestCase):
+class LoopTests(unittest.TestCase):
     def setUp(self):
-        text = textwrap.dedent(
+        self.script = textwrap.dedent(
             """
-        <GUEST>
+        [GUEST]
+
+        <GUEST#!loop>
 
             + This, or
             + This, or
@@ -455,15 +457,14 @@ class AdLibTests(unittest.TestCase):
 
         """
         ).strip()
-        sm = SpeechMark()
-        self.html = sm.loads(text)
+        self.ensemble = [Entity()]
 
     def test_adlib_off(self):
-        director = Director(story=None, ad_lib=False)
+        director = Director(story=None)
         self.assertEqual(5, len(director.lines(self.html)))
 
     def test_adlib_on(self):
-        director = Director(story=None, ad_lib=True)
+        director = Director(story=None)
         self.assertEqual(5, len(director.lines(self.html)))
 
 

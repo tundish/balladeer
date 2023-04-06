@@ -21,11 +21,13 @@
 from collections.abc import Generator
 from collections import defaultdict
 import html
+import pathlib
 import re
 import string
 
 from speechmark import SpeechMark
 
+from balladeer.lite.loader import Loader
 from balladeer.lite.types import Entity
 
 
@@ -89,7 +91,7 @@ class Director:
     def words(self, html5: str) -> list[str]:
         return " ".join(self.lines(html5)).split(" ")
 
-    def edit(self, html5: str, roles: dict) -> str:
+    def edit(self, html5: str, roles: dict, path: pathlib.Path | str=None, index:int=0) -> str:
         self.cast = roles.copy()
         html5 = self.cite_matcher.sub(self.edit_cite, html5)
         return self.fmtr.format(html5, **self.cast)
@@ -149,12 +151,12 @@ class Director:
 
     def rewrite(self, scene, roles: dict[str, Entity] = {}):
         shots = scene.tables.get(self.shot_key, [])
-        for shot in shots:
-            # TODO: Evaluate conditions for shot
-            if self.allows(shot):
+        for n, shot in enumerate(shots):
+            conditions = self.specify_conditions(shot)
+            if self.allows(conditions, roles):
                 text = shot.get(self.dlg_key, "")
                 html5 = self.spmk.loads(text)
-                yield self.edit(html5, roles)
+                return self.edit(html5, roles, path=scene.path, index=n)
 
     def allows(self, conditions: dict, cast: dict[str, Entity] = {}) -> bool:
         for role, (roles, states, types) in conditions.items():
