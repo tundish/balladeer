@@ -32,9 +32,9 @@ from balladeer.lite.types import EnumFactory
 from balladeer.lite.types import Stateful
 from balladeer.lite.types import Player
 
+
 @unittest.skip("Reference only.")
 class SceneTests(unittest.TestCase):
-
     def test_one_scene(self):
         content = textwrap.dedent(
             """
@@ -45,7 +45,8 @@ class SceneTests(unittest.TestCase):
             ----
 
             Text
-        """)
+        """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         script.cast(script.select([]))
         model = list(script.run())
@@ -71,7 +72,8 @@ class SceneTests(unittest.TestCase):
             ------
 
             Text
-        """)
+        """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         script.cast(script.select([]))
         model = list(script.run())
@@ -97,7 +99,8 @@ class SceneTests(unittest.TestCase):
             ----
 
             Text
-        """)
+        """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         script.cast(script.select([]))
         model = list(script.run())
@@ -123,7 +126,8 @@ class SceneTests(unittest.TestCase):
             ------
 
             Text
-        """)
+        """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         script.cast(script.select([]))
         model = list(script.run())
@@ -149,7 +153,8 @@ class SceneTests(unittest.TestCase):
             -------
 
             Text
-        """)
+        """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         script.cast(script.select([]))
         model = list(script.run())
@@ -159,12 +164,11 @@ class SceneTests(unittest.TestCase):
 
 
 class PropertyDirectiveTests(unittest.TestCase):
-
     personae = [
         Player(name="Prof William Fuzzer Q.A Testfixture"),
         Player(name="Ms Anna Conda"),
         Player(name="A Big Hammer"),
-        object()
+        object(),
     ]
 
     def test_dialogue_at_level_0(self):
@@ -177,16 +181,15 @@ class PropertyDirectiveTests(unittest.TestCase):
                 You can call me |P_NICKNAME|.
 
             .. |P_NICKNAME| property:: P.nickname
-            """)
+            """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         script.cast(script.select([self.personae[0]]))
         model = list(script.run())
         shot, line = next(iter(model))
         self.assertIs(None, shot.scene)
         self.assertIs(None, shot.name)
-        self.assertIn(line.text, (
-            "You can call me Fuzzer.",
-            "You can call me Q.A."))
+        self.assertIn(line.text, ("You can call me Fuzzer.", "You can call me Q.A."))
 
     def test_dialogue_at_level_1(self):
         content = textwrap.dedent(
@@ -201,14 +204,16 @@ class PropertyDirectiveTests(unittest.TestCase):
                 You can call me |P_NICKNAME|.
 
             .. |P_NICKNAME| property:: P.nickname
-            """)
+            """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         script.cast(script.select([self.personae[0]]))
         model = list(script.run())
         self.assertFalse(model)
 
     def test_speaker_reset_by_shot(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             .. entity:: P
 
             Scene
@@ -225,7 +230,8 @@ class PropertyDirectiveTests(unittest.TestCase):
             ---
 
             Not any more.
-            """)
+            """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         script.cast(script.select([self.personae[0]]))
         model = script.run()
@@ -234,7 +240,8 @@ class PropertyDirectiveTests(unittest.TestCase):
         self.assertIsNone(two[1].persona)
 
     def test_speaker_reset_by_dedent(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             .. entity:: P
 
             Scene
@@ -250,7 +257,8 @@ class PropertyDirectiveTests(unittest.TestCase):
                 Still speaking.
 
             Not any more.
-            """)
+            """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         script.cast(script.select([self.personae[0]]))
         model = script.run()
@@ -260,7 +268,8 @@ class PropertyDirectiveTests(unittest.TestCase):
         self.assertIsNone(three[1].persona, three)
 
     def test_property_getter(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             .. entity:: P
 
             Scene
@@ -277,7 +286,8 @@ class PropertyDirectiveTests(unittest.TestCase):
 
             .. |P_FIRSTNAME| property:: P.name.firstname
             .. |P_SURNAME| property:: P.name.surname
-            """)
+            """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         script.cast(script.select([self.personae[0]]))
         model = iter(script.run())
@@ -289,7 +299,8 @@ class PropertyDirectiveTests(unittest.TestCase):
         self.assertFalse(line.persona, line)
 
     def test_property_getter_format(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             .. entity:: P
 
             Scene
@@ -306,7 +317,8 @@ class PropertyDirectiveTests(unittest.TestCase):
 
             .. |P_FIRSTNAME| property:: P.name.firstname[0]
             .. |P_SURNAME| property:: P.name.surname
-            """)
+            """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         script.cast(script.select([self.personae[0]]))
         model = iter(script.run())
@@ -318,7 +330,8 @@ class PropertyDirectiveTests(unittest.TestCase):
         self.assertFalse(line.persona, line)
 
     def test_property_getter_indent(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             .. entity:: P
 
             Scene
@@ -335,7 +348,8 @@ class PropertyDirectiveTests(unittest.TestCase):
 
             .. |P_FIRSTNAME| property:: P.name.firstname
             .. |P_SURNAME| property:: P.name.surname
-            """)
+            """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         script.cast(script.select([self.personae[0]]))
         model = iter(script.run())
@@ -348,13 +362,15 @@ class PropertyDirectiveTests(unittest.TestCase):
         self.assertTrue(line.persona, line)
 
     def test_property_getter_fields(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             .. |VERSION| property:: turberfield.dialogue.__version__
 
             :copyright: 2017
             :version: |VERSION|
 
-            """)
+            """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         script.cast(script.select([self.personae[0]]))
         model = script.run()
@@ -379,19 +395,19 @@ class PropertyDirectiveTests(unittest.TestCase):
                 You can call me |P_NICKNAME|.
 
             .. |P_NICKNAME| property:: P.nickname
-            """)
+            """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         script.cast(script.select([self.personae[0]]))
         model = list(script.run())
         shot, line = next(iter(model))
         self.assertEqual("scene", shot.scene)
         self.assertEqual("shot", shot.name)
-        self.assertIn(line.text, (
-            "You can call me Fuzzer.",
-            "You can call me Q.A."))
+        self.assertIn(line.text, ("You can call me Fuzzer.", "You can call me Q.A."))
 
     def test_property_setter_enum(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             .. entity:: P
 
             Scene
@@ -402,7 +418,8 @@ class PropertyDirectiveTests(unittest.TestCase):
 
             .. property:: P.state turberfield.dialogue.test.test_model.SelectTests.Aggression.calm
 
-            """)
+            """
+        )
         ensemble = copy.deepcopy(PropertyDirectiveTests.personae)
         script = SceneScript("inline", doc=SceneScript.read(content))
         script.cast(script.select([ensemble[0]]))
@@ -413,7 +430,8 @@ class PropertyDirectiveTests(unittest.TestCase):
         setattr(p.object, p.attr, p.val)
 
     def test_property_setter_integer(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             .. entity:: P
 
             Scene
@@ -424,7 +442,8 @@ class PropertyDirectiveTests(unittest.TestCase):
 
             .. property:: P.state 3
 
-            """)
+            """
+        )
         ensemble = copy.deepcopy(PropertyDirectiveTests.personae)
         script = SceneScript("inline", doc=SceneScript.read(content))
         script.cast(script.select([ensemble[0]]))
@@ -446,7 +465,8 @@ class PropertyDirectiveTests(unittest.TestCase):
 
             .. property:: P.state |S_ID|
 
-            """)
+            """
+        )
         ensemble = copy.deepcopy(PropertyDirectiveTests.personae)
         script = SceneScript("inline", doc=SceneScript.read(content))
         script.cast(script.select([ensemble[0]]))
@@ -471,7 +491,8 @@ class PropertyDirectiveTests(unittest.TestCase):
 
             .. property:: P.state |S_ID|
 
-            """)
+            """
+        )
         ensemble = copy.deepcopy(PropertyDirectiveTests.personae)
         script = SceneScript("inline", doc=SceneScript.read(content))
         script.cast(script.select(ensemble))
@@ -494,7 +515,8 @@ class PropertyDirectiveTests(unittest.TestCase):
 
             .. property:: P.id S.id
 
-            """)
+            """
+        )
         ensemble = copy.deepcopy(PropertyDirectiveTests.personae)
         script = SceneScript("inline", doc=SceneScript.read(content))
         script.cast(script.select(ensemble))
@@ -508,14 +530,20 @@ class PropertyDirectiveTests(unittest.TestCase):
 
 @unittest.skipIf(
     "discover" in sys.argv,
-    ("Testing condition directive: "
-    "Needs ~/py3.5/bin/python -m unittest turberfield.dialogue.test.test_model")
+    (
+        "Testing condition directive: "
+        "Needs ~/py3.5/bin/python -m unittest turberfield.dialogue.test.test_model"
+    ),
 )
 class ConditionDirectiveTests(unittest.TestCase):
+    class Rain(Stateful):
+        pass
 
-    class Rain(Stateful): pass
-    class Sleet(Stateful): pass
-    class Snow(Stateful): pass
+    class Sleet(Stateful):
+        pass
+
+    class Snow(Stateful):
+        pass
 
     class Weather(EnumFactory, enum.Enum):
         quiet = 0
@@ -571,7 +599,8 @@ class ConditionDirectiveTests(unittest.TestCase):
         [WEATHER]_
 
             Pitter patter.
-        """)
+        """
+    )
 
     effects = [
         Rain().set_state(Weather.stormy),
@@ -581,9 +610,15 @@ class ConditionDirectiveTests(unittest.TestCase):
 
     def test_condition_evaluation_one(self):
         effects = [
-            ConditionDirectiveTests.Rain().set_state(ConditionDirectiveTests.Weather.stormy),
-            ConditionDirectiveTests.Sleet().set_state(ConditionDirectiveTests.Weather.stormy),
-            ConditionDirectiveTests.Snow().set_state(ConditionDirectiveTests.Weather.quiet),
+            ConditionDirectiveTests.Rain().set_state(
+                ConditionDirectiveTests.Weather.stormy
+            ),
+            ConditionDirectiveTests.Sleet().set_state(
+                ConditionDirectiveTests.Weather.stormy
+            ),
+            ConditionDirectiveTests.Snow().set_state(
+                ConditionDirectiveTests.Weather.quiet
+            ),
         ]
 
         script = SceneScript("inline", doc=SceneScript.read(self.content))
@@ -601,9 +636,15 @@ class ConditionDirectiveTests(unittest.TestCase):
 
     def test_condition_evaluation_two(self):
         effects = [
-            ConditionDirectiveTests.Rain().set_state(ConditionDirectiveTests.Weather.quiet),
-            ConditionDirectiveTests.Sleet().set_state(ConditionDirectiveTests.Weather.stormy),
-            ConditionDirectiveTests.Snow().set_state(ConditionDirectiveTests.Weather.stormy),
+            ConditionDirectiveTests.Rain().set_state(
+                ConditionDirectiveTests.Weather.quiet
+            ),
+            ConditionDirectiveTests.Sleet().set_state(
+                ConditionDirectiveTests.Weather.stormy
+            ),
+            ConditionDirectiveTests.Snow().set_state(
+                ConditionDirectiveTests.Weather.stormy
+            ),
         ]
 
         script = SceneScript("inline", doc=SceneScript.read(self.content))
@@ -621,9 +662,9 @@ class ConditionDirectiveTests(unittest.TestCase):
 
 
 class ConditionSyntaxTests(unittest.TestCase):
-
     def test_exact_matching(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             .. entity:: WHATEVER
 
             Test exact
@@ -643,7 +684,8 @@ class ConditionSyntaxTests(unittest.TestCase):
 
             Two.
 
-        """)
+        """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         selection = script.select([DataObject(value=1)])
         self.assertTrue(all(selection.values()))
@@ -656,7 +698,8 @@ class ConditionSyntaxTests(unittest.TestCase):
         self.assertFalse(Performer.allows(conditions[1]))
 
     def test_regex_matching_attribute(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             .. entity:: WHATEVER
 
             Test exact
@@ -676,7 +719,8 @@ class ConditionSyntaxTests(unittest.TestCase):
 
             Even.
 
-        """)
+        """
+        )
         obj = DataObject(value=1)
         script = SceneScript("inline", doc=SceneScript.read(content))
         selection = script.select([obj])
@@ -694,7 +738,8 @@ class ConditionSyntaxTests(unittest.TestCase):
         self.assertTrue(Performer.allows(conditions[1]))
 
     def test_regex_matching_state(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             .. entity:: WHATEVER
 
             Test exact
@@ -714,7 +759,8 @@ class ConditionSyntaxTests(unittest.TestCase):
 
             Odd.
 
-        """)
+        """
+        )
         obj = Stateful()
         script = SceneScript("inline", doc=SceneScript.read(content))
         selection = script.select([obj])
@@ -733,7 +779,6 @@ class ConditionSyntaxTests(unittest.TestCase):
 
 
 class SelectTests(unittest.TestCase):
-
     @enum.unique
     class Aggression(EnumFactory, enum.Enum):
         calm = 0
@@ -753,8 +798,8 @@ class SelectTests(unittest.TestCase):
         pub_toilets = 4
 
     def test_select_with_required_state(self):
-
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             .. entity:: FIGHTER_1
                :states: turberfield.dialogue.test.test_model.SelectTests.Aggression.angry
 
@@ -764,17 +809,16 @@ class SelectTests(unittest.TestCase):
             .. entity:: WEAPON
 
                A weapon which makes a noise in use. 
-            """)
+            """
+        )
         ensemble = copy.deepcopy(PropertyDirectiveTests.personae)
         ensemble[0].set_state(SelectTests.Contentment.sad)
         self.assertEqual(
-            SelectTests.Contentment.sad,
-            ensemble[0].get_state(SelectTests.Contentment)
+            SelectTests.Contentment.sad, ensemble[0].get_state(SelectTests.Contentment)
         )
         ensemble[1].set_state(SelectTests.Aggression.angry)
         self.assertEqual(
-            SelectTests.Aggression.angry,
-            ensemble[1].get_state(SelectTests.Aggression)
+            SelectTests.Aggression.angry, ensemble[1].get_state(SelectTests.Aggression)
         )
         script = SceneScript("inline", doc=SceneScript.read(content))
         rv = list(script.select(ensemble).values())
@@ -782,8 +826,8 @@ class SelectTests(unittest.TestCase):
         self.assertEqual(ensemble[1], rv[0])
 
     def test_select_with_hierarchical_state(self):
-
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             .. entity:: FIGHTER_1
                :states: turberfield.dialogue.test.test_model.SelectTests.Location.pub
 
@@ -793,17 +837,17 @@ class SelectTests(unittest.TestCase):
             .. entity:: WEAPON
 
                A weapon which makes a noise in use. 
-            """)
+            """
+        )
         ensemble = copy.deepcopy(PropertyDirectiveTests.personae)
         ensemble[0].set_state(SelectTests.Location.pub_bar)
         self.assertEqual(
-            SelectTests.Location.pub_bar,
-            ensemble[0].get_state(SelectTests.Location)
+            SelectTests.Location.pub_bar, ensemble[0].get_state(SelectTests.Location)
         )
         ensemble[1].set_state(SelectTests.Location.pub_toilets)
         self.assertEqual(
             SelectTests.Location.pub_toilets,
-            ensemble[1].get_state(SelectTests.Location)
+            ensemble[1].get_state(SelectTests.Location),
         )
         script = SceneScript("inline", doc=SceneScript.read(content))
         rv = list(script.select(ensemble).values())
@@ -811,8 +855,8 @@ class SelectTests(unittest.TestCase):
         self.assertEqual(ensemble[1], rv[1])
 
     def test_select_with_integer_state(self):
-
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             .. entity:: FIGHTER_1
                :states: 1
 
@@ -822,7 +866,8 @@ class SelectTests(unittest.TestCase):
             .. entity:: WEAPON
 
                A weapon which makes a noise in use.
-            """)
+            """
+        )
         ensemble = copy.deepcopy(PropertyDirectiveTests.personae)
         ensemble[0].set_state(2)
         self.assertEqual(2, ensemble[0].get_state())
@@ -834,8 +879,8 @@ class SelectTests(unittest.TestCase):
         self.assertEqual(ensemble[1], rv[0])
 
     def test_select_with_herarchical_integer_state(self):
-
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             .. entity:: FIGHTER_1
                :states: 3
 
@@ -845,7 +890,8 @@ class SelectTests(unittest.TestCase):
             .. entity:: WEAPON
 
                A weapon which makes a noise in use.
-            """)
+            """
+        )
         ensemble = copy.deepcopy(PropertyDirectiveTests.personae)
         ensemble[0].set_state(31)
         self.assertEqual(31, ensemble[0].get_state())
@@ -857,8 +903,8 @@ class SelectTests(unittest.TestCase):
         self.assertEqual(ensemble[1], rv[1])
 
     def test_select_with_unfulfilled_state(self):
-
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             .. entity:: FIGHTER_1
                :states: turberfield.dialogue.test.test_model.SelectTests.Aggression.angry
 
@@ -868,17 +914,16 @@ class SelectTests(unittest.TestCase):
             .. entity:: WEAPON
 
                A weapon which makes a noise in use. 
-            """)
+            """
+        )
         ensemble = copy.deepcopy(PropertyDirectiveTests.personae)
         ensemble[0].set_state(SelectTests.Contentment.sad)
         self.assertEqual(
-            SelectTests.Contentment.sad,
-            ensemble[0].get_state(SelectTests.Contentment)
+            SelectTests.Contentment.sad, ensemble[0].get_state(SelectTests.Contentment)
         )
         ensemble[1].set_state(SelectTests.Contentment.sad)
         self.assertEqual(
-            SelectTests.Contentment.sad,
-            ensemble[1].get_state(SelectTests.Contentment)
+            SelectTests.Contentment.sad, ensemble[1].get_state(SelectTests.Contentment)
         )
         script = SceneScript("inline", doc=SceneScript.read(content))
         rv = list(script.select(ensemble).values())
@@ -886,14 +931,15 @@ class SelectTests(unittest.TestCase):
         self.assertEqual(ensemble[0], rv[1])
 
     def test_select_with_two_roles(self):
-
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             .. entity:: CHARACTER_1
                :roles: CHARACTER_2
 
             .. entity:: CHARACTER_2
 
-            """)
+            """
+        )
         ensemble = copy.deepcopy(PropertyDirectiveTests.personae[0:1])
         script = SceneScript("inline", doc=SceneScript.read(content))
         rv = list(script.select(ensemble, roles=2).values())
@@ -902,9 +948,9 @@ class SelectTests(unittest.TestCase):
 
 
 class HTMLEscapingTests(unittest.TestCase):
-
     def test_escape_ampersand(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             Characters
             ==========
 
@@ -913,14 +959,16 @@ class HTMLEscapingTests(unittest.TestCase):
 
             Three pints of M&B please.
 
-        """)
+        """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         model = script.run()
         line = model.shots[0].items[0]
         self.assertIn("M&amp;B", line.html)
 
     def test_escape_brackets(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             Characters
             ==========
 
@@ -934,7 +982,8 @@ class HTMLEscapingTests(unittest.TestCase):
 
             1 < 3
 
-        """)
+        """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         model = script.run()
         for n, shot in enumerate(model.shots):
@@ -945,7 +994,8 @@ class HTMLEscapingTests(unittest.TestCase):
                     self.assertIn("3 &gt; 1", shot.items[0].html)
 
     def test_noescape_common_characters(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             Characters
             ==========
 
@@ -954,14 +1004,16 @@ class HTMLEscapingTests(unittest.TestCase):
 
             !"*()+-:;'.,@#{}=~
 
-        """)
+        """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         model = script.run()
         line = model.shots[0].items[0]
         self.assertNotIn("&", line.html)
 
     def test_escape_common_characters(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             Characters
             ==========
 
@@ -970,7 +1022,8 @@ class HTMLEscapingTests(unittest.TestCase):
 
             $%^©£
 
-        """)
+        """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         model = script.run()
         line = model.shots[0].items[0]
@@ -978,9 +1031,9 @@ class HTMLEscapingTests(unittest.TestCase):
 
 
 class RstFeatureTests(unittest.TestCase):
-
     def test_bullet_lists(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             Scene
             =====
 
@@ -993,15 +1046,19 @@ class RstFeatureTests(unittest.TestCase):
             * Be
             * Closing
 
-        """)
+        """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         model = script.run()
-        self.assertEqual(["Always", "Be", "Closing"], model.shots[-1].items[-1].text.splitlines())
+        self.assertEqual(
+            ["Always", "Be", "Closing"], model.shots[-1].items[-1].text.splitlines()
+        )
         self.assertEqual(2, model.shots[-1].items[-1].html.count("ul>"))
         self.assertEqual(6, model.shots[-1].items[-1].html.count("li>"))
 
     def test_markup_body_text(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             Markup
             ======
 
@@ -1025,7 +1082,8 @@ class RstFeatureTests(unittest.TestCase):
             I ``keep`` telling you.
 
             I :literal:`keep` telling you.
-        """)
+        """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         model = script.run()
         for shot in model.shots:
@@ -1033,17 +1091,26 @@ class RstFeatureTests(unittest.TestCase):
                 self.assertTrue(all("keep" in line.text for line in shot.items))
                 self.assertFalse(any("  " in line.text for line in shot.items), shot)
                 if shot.name.startswith("em"):
-                    self.assertTrue(all('<em class="text">' in line.html for line in shot.items)) 
-                    self.assertTrue(all("</em>" in line.html for line in shot.items)) 
+                    self.assertTrue(
+                        all('<em class="text">' in line.html for line in shot.items)
+                    )
+                    self.assertTrue(all("</em>" in line.html for line in shot.items))
                 elif shot.name.startswith("strong"):
-                    self.assertTrue(all('<strong class="text">' in line.html for line in shot.items)) 
-                    self.assertTrue(all("</strong>" in line.html for line in shot.items)) 
+                    self.assertTrue(
+                        all('<strong class="text">' in line.html for line in shot.items)
+                    )
+                    self.assertTrue(
+                        all("</strong>" in line.html for line in shot.items)
+                    )
                 elif shot.name.startswith("pre"):
-                    self.assertTrue(all('<pre class="text">' in line.html for line in shot.items)) 
+                    self.assertTrue(
+                        all('<pre class="text">' in line.html for line in shot.items)
+                    )
                     self.assertTrue(all("</pre>" in line.html for line in shot.items))
 
     def test_hyperlink_body_text(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             Hyperlinks
             ==========
 
@@ -1064,16 +1131,23 @@ class RstFeatureTests(unittest.TestCase):
 
             .. _Python home page: http://www.python.org
 
-        """)
+        """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         model = script.run()
         for shot in model.shots:
             with self.subTest(shot_name=shot.name):
                 self.assertFalse(any("  " in line.text for line in shot.items))
-                self.assertTrue(all('<a href="http://www.python.org">' in i.html for i in shot.items), shot)
+                self.assertTrue(
+                    all(
+                        '<a href="http://www.python.org">' in i.html for i in shot.items
+                    ),
+                    shot,
+                )
 
     def test_raw_html(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             Scene
             =====
 
@@ -1085,7 +1159,8 @@ class RstFeatureTests(unittest.TestCase):
             .. raw:: html
 
                 <marquee>Puppies die when you do bad design</marquee>
-        """)
+        """
+        )
         script = SceneScript("inline", doc=SceneScript.read(content))
         model = script.run()
         self.assertEqual(2, model.shots[-1].items[-1].html.count("marquee"))

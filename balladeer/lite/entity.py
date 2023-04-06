@@ -28,7 +28,6 @@ from balladeer.lite.types import State
 
 @dataclasses.dataclass(unsafe_hash=True)
 class Entity:
-
     name: dataclasses.InitVar = ""
     names: list = dataclasses.field(default_factory=list, compare=False)
 
@@ -67,11 +66,10 @@ class Entity:
             self.states[type(arg).__name__] = arg
         return self
 
-    def get_state(self, typ: State=None):
+    def get_state(self, typ: State = None):
         try:
             return self.states.get(typ.__name__)
         except AttributeError:
             return self.states.get(typ)
         else:
             return None
-

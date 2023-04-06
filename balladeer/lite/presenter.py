@@ -37,6 +37,9 @@ from balladeer.lite.types import Thing
 
 
 class Presenter:
+    #   TODO: Presenter detects media files for preload, prefetch.
+    #   Think of hex grid map. Get resources for neighbours.
+    #   So every Entity declares resources to a Stage?
     """
     Wrap xhtml with animation div.
     """
@@ -44,17 +47,20 @@ class Presenter:
 
 
 class Prompter:
-
     @staticmethod
     def object_type_name(obj):
         return f"{obj.__class__.__module__}.{obj.__class__.__name__}"
 
-    def select(asset: Loader.Asset, ensemble: list=None, shot_key="_", dlg_key="-"):
+    def select(asset: Loader.Asset, ensemble: list = None, shot_key="_", dlg_key="-"):
         "From turberfield.dialogue.model.SceneScript"
         ensemble = ensemble or []
         entities = dict((k, t) for k, t in asset.tables.items() if k != shot_key)
 
-        pool = {Prompter.object_type_name(v[0]): v for t, v in group_by_type(ensemble).items() if v}
+        pool = {
+            Prompter.object_type_name(v[0]): v
+            for t, v in group_by_type(ensemble).items()
+            if v
+        }
         print(pool)
         return {}
 
@@ -71,9 +77,7 @@ class Prompter:
 assets = Loader.discover("balladeer.lite")
 
 
-ensemble = [
-    Thing(name="thing").set_state(0)
-]
+ensemble = [Thing(name="thing").set_state(0)]
 
 if __name__ == "__main__":
     for i in ensemble:

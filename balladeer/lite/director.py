@@ -18,6 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+from collections.abc import Generator
 from collections import defaultdict
 import html
 import re
@@ -29,24 +30,19 @@ from balladeer.lite.types import Entity
 
 
 class Director:
-    #   TODO: Director detects media files for preload, prefetch.
-    #   Think of hex grid map. Get resources for neighbours.
-    #   So every Entity declares resources to a Stage?
-
     class Formatter(string.Formatter):
-
         def __init__(self, spmk, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.spmk = spmk
 
-        def convert_field(self, value, conversion):
+        def convert_field(self, value: str, conversion: str) -> str:
             if conversion != "a":
                 return super().convert_field(value, conversion)
             else:
                 return value.translate(self.spmk.escape_table)
 
     @staticmethod
-    def specify_role(spec: dict) -> tuple:
+    def specify_role(spec: dict) -> tuple[set, set, dict]:
         roles = set(filter(None, spec.get("roles", []) + [spec.get("role")]))
         types = set(filter(None, spec.get("types", []) + [spec.get("type")]))
         states = {k: set(v) for k, v in spec.get("states", {}).items()}
@@ -58,11 +54,13 @@ class Director:
 
         return roles, states, types
 
-    def specify_conditions(self, shot: dict) -> tuple:
+    def specify_conditions(
+        self, shot: dict
+    ) -> Generator[tuple[str, tuple[set, set, dict]]]:
         for role, guard in shot.get("if", {}).items():
             yield role, self.specify_role(guard)
 
-    def __init__(self, story, shot_key="_", dlg_key="s"):
+    def __init__(self, story, shot_key: str = "_", dlg_key: str = "s"):
         self.spmk = SpeechMark()
         self.fmtr = self.Formatter(self.spmk)
 
@@ -71,23 +69,24 @@ class Director:
         self.dlg_key = dlg_key
         self.tag_matcher = re.compile("<[^>]+?>")
         self.cite_matcher = re.compile(
-        """
-        (?P<head><cite.*?data-role=")   # Up until role attribute
-        (?P<role>[^"]+?)                # Role attribute
-        (?P<tail>"[^>]*?>)              # Until end of opening tag
-        .*?</cite>                      # Text and closing tag
-        """, re.VERBOSE
+            """
+            (?P<head><cite.*?data-role=")   # Up until role attribute
+            (?P<role>[^"]+?)                # Role attribute
+            (?P<tail>"[^>]*?>)              # Until end of opening tag
+            .*?</cite>                      # Text and closing tag
+            """,
+            re.VERBOSE,
         )
 
     def rank_constraints(self, spec: dict) -> int:
         roles, states, types = Director.specify_role(spec)
         return sum(1 / len(v) for v in states.values()) + len(types) - len(roles)
 
-    def lines(self, html5: str) -> list:
+    def lines(self, html5: str) -> list[str]:
         text = self.tag_matcher.sub("", html5)
         return list(filter(None, (i.strip() for i in text.splitlines())))
 
-    def words(self, html5: str) -> list:
+    def words(self, html5: str) -> list[str]:
         return " ".join(self.lines(html5)).split(" ")
 
     def edit(self, html5: str, roles: dict) -> str:
@@ -95,7 +94,7 @@ class Director:
         html5 = self.cite_matcher.sub(self.edit_cite, html5)
         return self.fmtr.format(html5, **self.cast)
 
-    def edit_cite(self, match: re.Match):
+    def edit_cite(self, match: re.Match) -> tuple[...]:
         head, role, tail = [match.group(i) for i in ("head", "role", "tail")]
         try:
             entity = self.cast[role]
@@ -106,7 +105,7 @@ class Director:
         text = entity.names[0].translate(self.spmk.escape_table)
         return f"{head}{role}{attr}{tail}{text}</cite>"
 
-    def selection(self, scripts, ensemble: list[Entity]=[], roles=1):
+    def selection(self, scripts, ensemble: list[Entity] = [], roles=1):
         for scene in scripts:
             specs = self.specifications(scene.tables)
             roles = dict(self.roles(specs, ensemble))
@@ -115,17 +114,15 @@ class Director:
 
     def specifications(self, toml: dict):
         return {
-            k: v
-            for k, v in toml.items()
-            if isinstance(v, dict)
-            and k != self.shot_key
+            k: v for k, v in toml.items() if isinstance(v, dict) and k != self.shot_key
         }
 
-    def roles(self, specs: dict, ensemble: list[Entity]) -> dict:
-        specs = dict(sorted(
-            specs.items(),
-            key=lambda x: self.rank_constraints(x[1]), reverse=True
-        ))
+    def roles(self, specs: dict, ensemble: list[Entity]) -> dict[str, Entity]:
+        specs = dict(
+            sorted(
+                specs.items(), key=lambda x: self.rank_constraints(x[1]), reverse=True
+            )
+        )
         pool = {i: set(specs.keys()) for i in ensemble}
         for role, spec in specs.items():
             roles, states, types = self.specify_role(spec)
@@ -133,14 +130,14 @@ class Director:
                 entity = next(
                     entity
                     for entity, jobs in pool.items()
-                    if role in jobs and (
+                    if role in jobs
+                    and (
                         not types
                         or entity.types.intersection(types)
                         or entity.__class__.__name__ in types
                     )
                     and all(
-                        k in entity.states
-                        and entity.get_state(k).name in v
+                        k in entity.states and entity.get_state(k).name in v
                         for k, v in states.items()
                     )
                 )
@@ -150,7 +147,7 @@ class Director:
                 pool[entity] = roles
                 yield role, entity
 
-    def rewrite(self, scene, roles: dict[str, Entity]={}):
+    def rewrite(self, scene, roles: dict[str, Entity] = {}):
         shots = scene.tables.get(self.shot_key, [])
         for shot in shots:
             # TODO: Evaluate conditions for shot
@@ -159,17 +156,17 @@ class Director:
                 html5 = self.spmk.loads(text)
                 yield self.edit(html5, roles)
 
-    def allows(self, conditions: dict, cast: dict[str, Entity]={}):
+    def allows(self, conditions: dict, cast: dict[str, Entity] = {}) -> bool:
         for role, (roles, states, types) in conditions.items():
             entity = cast[role]
-            if types and not types.issubset(entity.types) and entity.__class__.__name__ not in types:
+            if (
+                types
+                and not types.issubset(entity.types)
+                and entity.__class__.__name__ not in types
+            ):
                 return False
             for state, values in states.items():
                 if entity.get_state(state).name not in values:
                     return False
-                
 
         return True
-
-    def compare(self, key: str, pattern: [str, re.Pattern]):
-        pass

@@ -40,7 +40,6 @@ Exit = None
 
 
 class State:
-
     @classmethod
     def factory(cls, name=None, **kwargs):
         return cls[name]
@@ -62,7 +61,6 @@ class Transit(Entity):
 
 # TODO: Reconcile with balladeer.cartography.Map
 class MapBuilder:
-
     def __init__(self, spots):
         global Into, Spot, Exit
         self.into = Into = enum.Enum("Into", spots, type=State)
@@ -75,7 +73,6 @@ class MapBuilder:
 
 
 class WorldBuilder:
-
     def __init__(self, config, map=None):
         self.config = config
         self.map = map
@@ -84,9 +81,8 @@ class WorldBuilder:
     def build(self):
         raise NotImplementedError
 
- 
-class Drama:
 
+class Drama:
     def __init__(self, config):
         self.config = config
 
@@ -98,7 +94,6 @@ class Drama:
 
 
 class Story:
-
     def __init__(self, config=None, world=None, drama=[]):
         self.uid = uuid.uuid4()
         self.config = config
@@ -108,4 +103,3 @@ class Story:
     @property
     def context(self):
         return self.drama[0]
-

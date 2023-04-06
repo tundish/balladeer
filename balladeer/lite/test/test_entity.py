@@ -24,13 +24,14 @@ from balladeer.lite.types import Entity
 
 
 class TestComparisons(unittest.TestCase):
-
     def test_identity(self):
-        bag = set([
-            Entity(),
-            Entity(),
-            Entity(),
-        ])
+        bag = set(
+            [
+                Entity(),
+                Entity(),
+                Entity(),
+            ]
+        )
         self.assertEqual(3, len(bag))
 
     def test_quality(self):
@@ -45,7 +46,6 @@ class TestComparisons(unittest.TestCase):
 
 
 class TestNamesAndTypes(unittest.TestCase):
-
     class Thing(Entity):
         pass
 
@@ -59,7 +59,6 @@ class TestNamesAndTypes(unittest.TestCase):
 
 
 class TestEnumStates(unittest.TestCase):
-
     class Colour(enum.Enum):
         red = "ff0000"
         green = "00ff00"
@@ -68,14 +67,8 @@ class TestEnumStates(unittest.TestCase):
     def test_state_as_enum(self):
         s = Entity()
         s.set_state(TestEnumStates.Colour.red)
-        self.assertEqual(
-            TestEnumStates.Colour.red,
-            s.get_state(TestEnumStates.Colour)
-        )
-        self.assertEqual(
-            {"Colour": TestEnumStates.Colour.red},
-            s.states
-        )
+        self.assertEqual(TestEnumStates.Colour.red, s.get_state(TestEnumStates.Colour))
+        self.assertEqual({"Colour": TestEnumStates.Colour.red}, s.states)
 
     def test_state_as_enum_twice(self):
         s = Entity()
@@ -83,14 +76,8 @@ class TestEnumStates(unittest.TestCase):
             TestEnumStates.Colour.red,
             TestEnumStates.Colour.red,
         )
-        self.assertEqual(
-            TestEnumStates.Colour.red,
-            s.get_state(TestEnumStates.Colour)
-        )
-        self.assertEqual(
-            {"Colour": TestEnumStates.Colour.red},
-            s.states
-        )
+        self.assertEqual(TestEnumStates.Colour.red, s.get_state(TestEnumStates.Colour))
+        self.assertEqual({"Colour": TestEnumStates.Colour.red}, s.states)
 
     def test_state_as_enum_args(self):
         s = Entity()
@@ -99,17 +86,12 @@ class TestEnumStates(unittest.TestCase):
             TestEnumStates.Colour.green,
         )
         self.assertEqual(
-            TestEnumStates.Colour.green,
-            s.get_state(TestEnumStates.Colour)
+            TestEnumStates.Colour.green, s.get_state(TestEnumStates.Colour)
         )
-        self.assertEqual(
-            {"Colour": TestEnumStates.Colour.green},
-            s.states
-        )
+        self.assertEqual({"Colour": TestEnumStates.Colour.green}, s.states)
 
 
 class TestStringStates(unittest.TestCase):
-
     class Colour(enum.Enum):
         red = "ff0000"
         green = "00ff00"

@@ -26,9 +26,14 @@ import xml.etree.ElementTree as ET
 
 
 class Loader:
-
-    Asset = namedtuple("Asset", ["resource", "path", "mimetype", "stats"], defaults=[None, None])
-    Scene = namedtuple("Scene", ["text", "tables", "resource", "path", "stats"], defaults=[None, None, None])
+    Asset = namedtuple(
+        "Asset", ["resource", "path", "mimetype", "stats"], defaults=[None, None]
+    )
+    Scene = namedtuple(
+        "Scene",
+        ["text", "tables", "resource", "path", "stats"],
+        defaults=[None, None, None],
+    )
 
     @staticmethod
     def discover(package, resource=".", suffixes=[".dlg.toml"]):
