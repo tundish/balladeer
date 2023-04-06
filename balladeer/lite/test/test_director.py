@@ -475,7 +475,7 @@ class LoopTests(unittest.TestCase):
         html5 = sm.loads(text)
 
         rv = d.edit(html5, roles)
-        self.assertEqual(5, len(d.lines(self.html)))
+        self.assertEqual(5, len(d.lines(rv)))
 
 
 @unittest.skip("not yet")
