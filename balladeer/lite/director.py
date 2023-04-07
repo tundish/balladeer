@@ -71,6 +71,7 @@ class Director:
         self.story = story
         self.shot_key = shot_key
         self.dlg_key = dlg_key
+        self.bq_matcher = re.compile("<blockquote.*?<\\/blockquote>", re.DOTALL)
         self.tag_matcher = re.compile("<[^>]+?>")
         self.cite_matcher = re.compile(
             """
@@ -83,6 +84,7 @@ class Director:
         )
         self.attr_matcher = re.compile('data-([^=]+)=[^"]*"([^"]*)"')
         self.ul_matcher = re.compile("<ul>.*?<\\/ul>", re.DOTALL)
+        self.li_matcher = re.compile("<li>.*?<\\/li>", re.DOTALL)
 
     def attributes(self, text: str) -> dict[str, str]:
         return dict(self.attr_matcher.findall(text))
@@ -98,23 +100,22 @@ class Director:
     def words(self, html5: str) -> list[str]:
         return " ".join(self.lines(html5)).split(" ")
 
-    def edit(self, html5: str, roles: dict, path: pathlib.Path | str=None, index:int=0) -> str:
+    def edit(self, html5: str, roles: dict, path: pathlib.Path | str=None, index:int=0) -> Generator[str]:
         self.cast = roles.copy()
-        html5 = self.cite_matcher.sub(self.edit_cite, html5)
+        for block in self.bq_matcher.findall(html5):
+            html5 = self.cite_matcher.sub(self.edit_cite, block)
 
-        # TODO: Avoid overwrites by multiple cite tags
-        attrs = self.attributes(html5)
+            attrs = self.attributes(html5)
 
-        # TODO: Dispatch to handlers
-        if attrs.get("fragments", "").endswith("!"):
-            # TODO: <ul> block matcher
-            ordinal = self.counts[(path, index)] % html5.count("<li>")
-            m = self.ul_matcher.search(html5)
-            print(f"O: {m.group()}")
+            # TODO: Dispatch to handlers
+            if attrs.get("fragments", "").endswith("!"):
+                # TODO: <ul> block matcher
+                ordinal = self.counts[(path, index)] % html5.count("<li>")
+                m = self.ul_matcher.search(html5)
 
-        return self.fmtr.format(html5, **self.cast)
+            yield self.fmtr.format(html5, **self.cast)
 
-    def edit_cite(self, match: re.Match) -> tuple[...]:
+    def edit_cite(self, match: re.Match) -> str:
         head, role, tail = [match.group(i) for i in ("head", "role", "tail")]
         try:
             entity = self.cast[role]

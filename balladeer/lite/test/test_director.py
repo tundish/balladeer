@@ -65,7 +65,7 @@ class EditTests(unittest.TestCase):
 
         sm = SpeechMark()
         html = sm.loads(text)
-        edit = director.edit(html, selection)
+        edit = "\n".join(director.edit(html, selection))
         self.assertIn('data-role="FIGHTER_1"', edit)
         self.assertIn('data-entity="Biffy"', edit, html)
         self.assertIn(">Biffy</cite>", edit)
@@ -88,7 +88,7 @@ class EditTests(unittest.TestCase):
 
         sm = SpeechMark()
         html = sm.loads(text)
-        edit = director.edit(html, selection)
+        edit = "\n".join(director.edit(html, selection))
         self.assertIn('data-role="FIGHTER_1"', edit)
         self.assertIn('data-entity="Bîffy"', edit)
         self.assertIn("B&icirc;ffy</cite>", edit)
@@ -111,7 +111,7 @@ class EditTests(unittest.TestCase):
 
         sm = SpeechMark()
         html = sm.loads(text)
-        edit = director.edit(html, selection)
+        edit = "\n".join(director.edit(html, selection))
         self.assertIn('data-role="FIGHTER_1"', edit)
         self.assertIn('data-entity="Bîffy"', edit)
         self.assertIn("B&icirc;ffy</cite>", edit)
@@ -138,7 +138,7 @@ class EditTests(unittest.TestCase):
 
         sm = SpeechMark()
         html = sm.loads(text)
-        edit = director.edit(html, selection)
+        edit = "\n".join(director.edit(html, selection))
         self.assertIn('data-role="WEAPON"', edit)
         self.assertIn('data-entity="Rusty"', edit, html)
         self.assertIn(">Rusty</cite>", edit)
@@ -482,7 +482,7 @@ class LoopTests(unittest.TestCase):
         sm = SpeechMark()
         html5 = sm.loads(text)
 
-        rv = d.edit(html5, roles)
+        rv = "\n".join(d.edit(html5, roles))
         self.assertEqual(1, rv.count("<li>"), rv)
         self.assertEqual(1, rv.count("</li>"))
 
