@@ -82,6 +82,7 @@ class Director:
             re.VERBOSE,
         )
         self.attr_matcher = re.compile('data-([^=]+)=[^"]*"([^"]*)"')
+        self.ul_matcher = re.compile("<ul>.*?<\\/ul>", re.DOTALL)
 
     def attributes(self, text: str) -> dict[str, str]:
         return dict(self.attr_matcher.findall(text))
@@ -108,7 +109,8 @@ class Director:
         if attrs.get("fragments", "").endswith("!"):
             # TODO: <ul> block matcher
             ordinal = self.counts[(path, index)] % html5.count("<li>")
-            print(f"O: {ordinal}")
+            m = self.ul_matcher.search(html5)
+            print(f"O: {m.group()}")
 
         return self.fmtr.format(html5, **self.cast)
 
