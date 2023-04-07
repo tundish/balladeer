@@ -70,7 +70,8 @@ class Director:
         shot_key: str = "_",
         dlg_key: str = "s",
         pause: float = 1,
-        dwell: float = 0.3,
+        dwell: float = 0.1,
+        delay: float = 0,
     ):
         self.spmk = SpeechMark()
         self.fmtr = self.Formatter(self.spmk)
@@ -81,6 +82,7 @@ class Director:
         self.dlg_key = dlg_key
         self.pause = pause
         self.dwell = dwell
+        self.delay = delay
 
         self.bq_matcher = re.compile("<blockquote.*?<\\/blockquote>", re.DOTALL)
         self.tag_matcher = re.compile("<[^>]+?>")
@@ -105,7 +107,8 @@ class Director:
         params = urllib.parse.parse_qs(html.unescape(attrs.get("parameters", "").lstrip("?")))
         return {
             "pause": float(params.get("pause", [self.pause])[0]),
-            "dwell": float(params.get("dwell", [self.dwell])[0])
+            "dwell": float(params.get("dwell", [self.dwell])[0]),
+            "delay": float(params.get("delay", [self.dwell])[0]),
         }
 
     def rank_constraints(self, spec: dict) -> int:
@@ -167,7 +170,10 @@ class Director:
             return ""
 
         words = self.words(content)
-        return content and f"<p>{content}</p>"
+        delay = self.delay + self.pause
+        duration = self.dwell * len(words)
+        self.delay = delay + duration
+        return f'<p style="animation-delay: {delay:.2f}s; animation-duration: {duration:.2f}s">{content}</p>'
 
     def selection(self, scripts, ensemble: list[Entity] = [], roles=1):
         for scene in scripts:
@@ -219,6 +225,7 @@ class Director:
                 text = shot.get(self.dlg_key, "")
                 html5 = self.spmk.loads(text)
                 edit = "\n".join(self.edit(html5, roles, path=scene.path, index=n))
+                self.delay = 0
                 return "\n".join(i for i in edit.splitlines() if i.strip())
         else:
             return ""
