@@ -107,11 +107,14 @@ class Director:
 
             attrs = self.attributes(html5)
 
-            # TODO: Dispatch to handlers
+            # TODO: Dispatch to a handler for fragment?
             if attrs.get("fragments", "").endswith("!"):
-                # TODO: <ul> block matcher
-                ordinal = self.counts[(path, index)] % html5.count("<li>")
-                m = self.ul_matcher.search(html5)
+                list_block = self.ul_matcher.search(html5)
+                list_items = list(self.li_matcher.findall(list_block.group()))
+                ordinal = self.counts[(path, index)] % len(list_items)
+                choice = list_items[ordinal].replace("<li>", "").replace("</li>", "")
+                html5 = self.ul_matcher.sub(choice, html5)
+                self.counts[(path, index)] += 1
 
             yield self.fmtr.format(html5, **self.cast)
 

@@ -149,7 +149,6 @@ class EditTests(unittest.TestCase):
 
 
 class ConditionTests(unittest.TestCase):
-    # FIXME: Entities compare equal
     class Rain(Entity):
         pass
 
@@ -483,8 +482,9 @@ class LoopTests(unittest.TestCase):
         html5 = sm.loads(text)
 
         rv = "\n".join(d.edit(html5, roles))
-        self.assertEqual(1, rv.count("<li>"), rv)
-        self.assertEqual(1, rv.count("</li>"))
+        self.assertEqual(0, rv.count("<li>"), rv)
+        self.assertEqual(0, rv.count("</li>"))
+        self.assertEqual(1, rv.count("This, or"))
 
 
 @unittest.skip("not yet")
