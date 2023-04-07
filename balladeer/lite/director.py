@@ -83,7 +83,7 @@ class Director:
         )
         self.attr_matcher = re.compile('data-([^=]+)=[^"]*"([^"]*)"')
 
-    def attributes(self, text: str) -> list[tuple[str, str]]:
+    def attributes(self, text: str) -> dict[str, str]:
         return dict(self.attr_matcher.findall(text))
 
     def rank_constraints(self, spec: dict) -> int:
@@ -100,6 +100,16 @@ class Director:
     def edit(self, html5: str, roles: dict, path: pathlib.Path | str=None, index:int=0) -> str:
         self.cast = roles.copy()
         html5 = self.cite_matcher.sub(self.edit_cite, html5)
+
+        # TODO: Avoid overwrites by multiple cite tags
+        attrs = self.attributes(html5)
+
+        # TODO: Dispatch to handlers
+        if attrs.get("fragments", "").endswith("!"):
+            # TODO: <ul> block matcher
+            ordinal = self.counts[(path, index)] % html5.count("<li>")
+            print(f"O: {ordinal}")
+
         return self.fmtr.format(html5, **self.cast)
 
     def edit_cite(self, match: re.Match) -> tuple[...]:
