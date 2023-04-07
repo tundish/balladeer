@@ -464,7 +464,7 @@ class LoopTests(unittest.TestCase):
     def test_attr_matcher(self):
         text = '<cite data-role="GUEST" data-fragments="#!">'
         d = Director(story=None)
-        attrs = dict(d.attributes(text))
+        attrs = d.attributes(text)
         self.assertIn("role", attrs)
         self.assertEqual("GUEST", attrs["role"], attrs)
         self.assertEqual("#!", attrs["fragments"])
@@ -483,8 +483,6 @@ class LoopTests(unittest.TestCase):
         html5 = sm.loads(text)
 
         rv = d.edit(html5, roles)
-        m = d.attr_matcher.match(rv)
-        print(m)
         self.assertEqual(1, rv.count("<li>"), rv)
         self.assertEqual(1, rv.count("</li>"))
 
