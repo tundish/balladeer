@@ -464,9 +464,10 @@ class LoopTests(unittest.TestCase):
     def test_attr_matcher(self):
         text = '<cite data-role="GUEST" data-fragments="#!">'
         d = Director(story=None)
-        m = d.attr_matcher.match(text)
-        self.assertTrue(m, d.attr_matcher.pattern)
-        self.fail(m.groups())
+        attrs = dict(d.attributes(text))
+        self.assertIn("role", attrs)
+        self.assertEqual("GUEST", attrs["role"], attrs)
+        self.assertEqual("#!", attrs["fragments"])
 
     def test_bang_loop(self):
         d = Director(story=None)

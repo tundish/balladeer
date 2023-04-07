@@ -81,7 +81,11 @@ class Director:
             """,
             re.VERBOSE,
         )
-        self.attr_matcher = re.compile('<cite.*?(data-[^"]+)("[^"]*")[^>]+>')
+        self.attr_matcher = re.compile('(data-[^"]+)("[^"]*")')
+
+    def attributes(self, text: str) -> list[tuple[str, str]]:
+        pairs = self.attr_matcher.findall(text)
+        return [(k.replace("data-", "").strip("="), v.strip('"')) for k, v in pairs]
 
     def rank_constraints(self, spec: dict) -> int:
         roles, states, types = Director.specify_role(spec)
