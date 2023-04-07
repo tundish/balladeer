@@ -38,7 +38,7 @@ class Entity:
     uid: uuid.UUID = dataclasses.field(default_factory=uuid.uuid4)
 
     def __post_init__(self, name, type):
-        if name:
+        if not isinstance(name, property):
             self.names.insert(0, name)
         if type:
             try:
