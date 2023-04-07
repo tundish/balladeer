@@ -446,7 +446,6 @@ class RoleTests(unittest.TestCase):
 
 
 class ParametersTests(unittest.TestCase):
-
     def test__paragraph_reveal(self):
         text = textwrap.dedent(
             """
@@ -473,7 +472,7 @@ class ParametersTests(unittest.TestCase):
 class LoopTests(unittest.TestCase):
     def setUp(self):
         self.script = textwrap.dedent(
-        """
+            """
         [GUEST]
 
         [[_]]

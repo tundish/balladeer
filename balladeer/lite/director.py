@@ -25,6 +25,7 @@ import html
 import pathlib
 import re
 import string
+import urllib.parse
 
 from speechmark import SpeechMark
 
@@ -63,7 +64,14 @@ class Director:
         for role, guard in shot.get("if", {}).items():
             yield role, self.specify_role(guard)
 
-    def __init__(self, story, shot_key: str = "_", dlg_key: str = "s"):
+    def __init__(
+        self,
+        story,
+        shot_key: str = "_",
+        dlg_key: str = "s",
+        pause: float = 1,
+        dwell: float = 0.3,
+    ):
         self.spmk = SpeechMark()
         self.fmtr = self.Formatter(self.spmk)
         self.counts = Counter()
@@ -71,6 +79,9 @@ class Director:
         self.story = story
         self.shot_key = shot_key
         self.dlg_key = dlg_key
+        self.pause = pause
+        self.dwell = dwell
+
         self.bq_matcher = re.compile("<blockquote.*?<\\/blockquote>", re.DOTALL)
         self.tag_matcher = re.compile("<[^>]+?>")
         self.cite_matcher = re.compile(
@@ -90,6 +101,13 @@ class Director:
     def attributes(self, text: str) -> dict[str, str]:
         return dict(self.attr_matcher.findall(text))
 
+    def parameters(self, attrs: dict) -> dict:
+        params = urllib.parse.parse_qs(html.unescape(attrs.get("parameters", "").lstrip("?")))
+        return {
+            "pause": float(params.get("pause", [self.pause])[0]),
+            "dwell": float(params.get("dwell", [self.dwell])[0])
+        }
+
     def rank_constraints(self, spec: dict) -> int:
         roles, states, types = Director.specify_role(spec)
         return sum(1 / len(v) for v in states.values()) + len(types) - len(roles)
@@ -101,12 +119,21 @@ class Director:
     def words(self, html5: str) -> list[str]:
         return " ".join(self.lines(html5)).split(" ")
 
-    def edit(self, html5: str, roles: dict={}, path: pathlib.Path | str=None, index:int=0) -> Generator[str]:
+    def edit(
+        self,
+        html5: str,
+        roles: dict = {},
+        path: pathlib.Path | str = None,
+        index: int = 0,
+    ) -> Generator[str]:
         self.cast = roles.copy()
         for block in self.bq_matcher.findall(html5):
             html5 = self.cite_matcher.sub(self.edit_cite, block)
 
             attrs = self.attributes(html5)
+            params = self.parameters(attrs)
+            self.pause = params["pause"]
+            self.dwell = params["dwell"]
 
             # TODO: Dispatch to a handler for fragment?
             if attrs.get("fragments", "").endswith("!"):
@@ -136,6 +163,10 @@ class Director:
 
     def edit_para(self, match: re.Match) -> str:
         content = match.group(1).strip()
+        if not content:
+            return ""
+
+        words = self.words(content)
         return content and f"<p>{content}</p>"
 
     def selection(self, scripts, ensemble: list[Entity] = [], roles=1):
