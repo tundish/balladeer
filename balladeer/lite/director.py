@@ -147,6 +147,9 @@ class Director:
                 html5 = self.ul_matcher.sub(choice, html5)
                 self.counts[(path, index)] += 1
 
+            # TODO: images -> figure with reveal
+            # TODO: media -> video, audio with reveal
+
             html5 = self.pp_matcher.sub(self.edit_para, html5)
             yield self.fmtr.format(html5, **self.cast)
 
