@@ -19,6 +19,7 @@
 
 
 from collections.abc import Generator
+from collections import Counter
 from collections import defaultdict
 import html
 import pathlib
@@ -65,6 +66,7 @@ class Director:
     def __init__(self, story, shot_key: str = "_", dlg_key: str = "s"):
         self.spmk = SpeechMark()
         self.fmtr = self.Formatter(self.spmk)
+        self.counts = Counter()
 
         self.story = story
         self.shot_key = shot_key
@@ -79,6 +81,7 @@ class Director:
             """,
             re.VERBOSE,
         )
+        self.attr_matcher = re.compile('<cite.*?(data-[^"]+)("[^"]*")[^>]+>')
 
     def rank_constraints(self, spec: dict) -> int:
         roles, states, types = Director.specify_role(spec)

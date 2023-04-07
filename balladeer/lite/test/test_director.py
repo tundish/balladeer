@@ -461,6 +461,13 @@ class LoopTests(unittest.TestCase):
         ).strip()
         self.ensemble = [Entity()]
 
+    def test_attr_matcher(self):
+        text = '<cite data-role="GUEST" data-fragments="#!">'
+        d = Director(story=None)
+        m = d.attr_matcher.match(text)
+        self.assertTrue(m, d.attr_matcher.pattern)
+        self.fail(m.groups())
+
     def test_bang_loop(self):
         d = Director(story=None)
 
@@ -475,7 +482,10 @@ class LoopTests(unittest.TestCase):
         html5 = sm.loads(text)
 
         rv = d.edit(html5, roles)
-        self.assertEqual(5, len(d.lines(rv)), rv)
+        m = d.attr_matcher.match(rv)
+        print(m)
+        self.assertEqual(1, rv.count("<li>"), rv)
+        self.assertEqual(1, rv.count("</li>"))
 
 
 @unittest.skip("not yet")
