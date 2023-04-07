@@ -515,10 +515,44 @@ class LoopTests(unittest.TestCase):
         self.assertEqual(1, d.counts[(None, 0)])
 
 
-@unittest.skip("not yet")
 class DirectiveTests(unittest.TestCase):
     def test_directive_handling(self):
-        """
-        <PHONE.announcing@GUEST,STAFF> Ring riiing!
-        """
-        # TODO: Mock Drama methods.
+        script = textwrap.dedent(
+            """
+            [GUEST]
+
+            [STAFF]
+
+            [PHONE]
+
+            [[_]]
+
+            s='''
+            <PHONE.announcing@GUEST,STAFF> Ring riiing!
+            '''
+            """
+        ).strip()
+
+        scene = tomllib.loads(script)
+        ensemble = [Entity(), Entity(), Entity()]
+
+        d = Director(None)
+        specs = d.specifications(scene)
+        roles = dict(d.roles(specs, ensemble))
+
+        sm = SpeechMark()
+        shot = next(iter(scene.get(d.shot_key, [])))
+        text = shot.get(d.dlg_key, "")
+        html5 = sm.loads(text)
+
+        rv = "\n".join(d.edit(html5, roles))
+
+        self.assertIn("delay", d.notes)
+        self.assertEqual(1.2, d.notes["delay"])
+
+        self.assertIn("directives", d.notes)
+        self.assertEqual(
+            [("announcing", roles["PHONE"], (roles["GUEST"], roles["STAFF"]))],
+            d.notes["directives"]
+        )
+

@@ -76,6 +76,7 @@ class Director:
         self.spmk = SpeechMark()
         self.fmtr = self.Formatter(self.spmk)
         self.counts = Counter()
+        self.notes = defaultdict(list)  # TODO: Capture directives in 'offstage'
 
         self.story = story
         self.shot_key = shot_key
@@ -151,6 +152,7 @@ class Director:
             # TODO: media -> video, audio with reveal
 
             html5 = self.pp_matcher.sub(self.edit_para, html5)
+            self.notes["delay"] = self.delay
             yield self.fmtr.format(html5, **self.cast)
 
     def edit_cite(self, match: re.Match) -> str:
