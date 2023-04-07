@@ -42,11 +42,14 @@ class EditTests(unittest.TestCase):
         """
         ).strip()
         sm = SpeechMark()
-        html = sm.loads(text)
+        html5 = sm.loads(text)
 
         director = Director(story=None)
-        self.assertEqual(5, len(director.lines(html)))
-        self.assertEqual(24, len(director.words(html)))
+        self.assertEqual(5, len(director.lines(html5)))
+        self.assertEqual(24, len(director.words(html5)))
+
+        rv = "\n".join(director.edit(html5))
+        self.assertFalse("<p>\n\n</p>" in rv, rv)
 
     def test_rewriter_single_blocks(self):
         text = textwrap.dedent(
@@ -485,6 +488,7 @@ class LoopTests(unittest.TestCase):
         self.assertEqual(0, rv.count("<li>"), rv)
         self.assertEqual(0, rv.count("</li>"))
         self.assertEqual(1, rv.count("This, or"))
+        self.assertEqual(1, d.counts[(None, 0)])
 
 
 @unittest.skip("not yet")

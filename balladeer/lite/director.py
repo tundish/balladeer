@@ -85,6 +85,7 @@ class Director:
         self.attr_matcher = re.compile('data-([^=]+)=[^"]*"([^"]*)"')
         self.ul_matcher = re.compile("<ul>.*?<\\/ul>", re.DOTALL)
         self.li_matcher = re.compile("<li>.*?<\\/li>", re.DOTALL)
+        self.pp_matcher = re.compile("<p>\\s*?<\\/p>", re.DOTALL)
 
     def attributes(self, text: str) -> dict[str, str]:
         return dict(self.attr_matcher.findall(text))
@@ -100,7 +101,7 @@ class Director:
     def words(self, html5: str) -> list[str]:
         return " ".join(self.lines(html5)).split(" ")
 
-    def edit(self, html5: str, roles: dict, path: pathlib.Path | str=None, index:int=0) -> Generator[str]:
+    def edit(self, html5: str, roles: dict={}, path: pathlib.Path | str=None, index:int=0) -> Generator[str]:
         self.cast = roles.copy()
         for block in self.bq_matcher.findall(html5):
             html5 = self.cite_matcher.sub(self.edit_cite, block)
@@ -116,6 +117,7 @@ class Director:
                 html5 = self.ul_matcher.sub(choice, html5)
                 self.counts[(path, index)] += 1
 
+            html5 = self.pp_matcher.sub("", html5)
             yield self.fmtr.format(html5, **self.cast)
 
     def edit_cite(self, match: re.Match) -> str:
@@ -174,14 +176,17 @@ class Director:
                 pool[entity] = roles
                 yield role, entity
 
-    def rewrite(self, scene, roles: dict[str, Entity] = {}):
+    def rewrite(self, scene, roles: dict[str, Entity] = {}) -> str:
         shots = scene.tables.get(self.shot_key, [])
         for n, shot in enumerate(shots):
-            conditions = self.specify_conditions(shot)
+            conditions = dict(self.specify_conditions(shot))
             if self.allows(conditions, roles):
                 text = shot.get(self.dlg_key, "")
                 html5 = self.spmk.loads(text)
-                return self.edit(html5, roles, path=scene.path, index=n)
+                edit = "\n".join(self.edit(html5, roles, path=scene.path, index=n))
+                return "\n".join(i for i in edit.splitlines() if i.strip())
+        else:
+            return ""
 
     def allows(self, conditions: dict, cast: dict[str, Entity] = {}) -> bool:
         for role, (roles, states, types) in conditions.items():

@@ -182,7 +182,7 @@ class Session(HTTPEndpoint):
 
         director = Director(story)
         scene, roles = director.selection(scripts, ensemble)
-        html5 = next(director.rewrite(scene, roles))
+        html5 = director.rewrite(scene, roles)
         print(f"{len(director.words(html5))} words")
 
         page = Page()
