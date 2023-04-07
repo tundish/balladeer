@@ -85,7 +85,7 @@ class Director:
         self.attr_matcher = re.compile('data-([^=]+)=[^"]*"([^"]*)"')
         self.ul_matcher = re.compile("<ul>.*?<\\/ul>", re.DOTALL)
         self.li_matcher = re.compile("<li>.*?<\\/li>", re.DOTALL)
-        self.pp_matcher = re.compile("<p>\\s*?<\\/p>", re.DOTALL)
+        self.pp_matcher = re.compile("<p>(.*?)<\\/p>", re.DOTALL)
 
     def attributes(self, text: str) -> dict[str, str]:
         return dict(self.attr_matcher.findall(text))
@@ -117,7 +117,7 @@ class Director:
                 html5 = self.ul_matcher.sub(choice, html5)
                 self.counts[(path, index)] += 1
 
-            html5 = self.pp_matcher.sub("", html5)
+            html5 = self.pp_matcher.sub(self.edit_para, html5)
             yield self.fmtr.format(html5, **self.cast)
 
     def edit_cite(self, match: re.Match) -> str:
@@ -133,6 +133,10 @@ class Director:
             return f"{head}{role}{attr}{tail}{text}</cite>"
         except IndexError:
             return match.group()
+
+    def edit_para(self, match: re.Match) -> str:
+        content = match.group(1).strip()
+        return content and f"<p>{content}</p>"
 
     def selection(self, scripts, ensemble: list[Entity] = [], roles=1):
         for scene in scripts:

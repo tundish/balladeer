@@ -445,6 +445,31 @@ class RoleTests(unittest.TestCase):
         self.assertEqual(entities["Biffy"], rv["CHARACTER_2"])
 
 
+class ParametersTests(unittest.TestCase):
+
+    def test__paragraph_reveal(self):
+        text = textwrap.dedent(
+            """
+            <?pause=3&dwell=0.4>
+
+            Above, there is the sound of footsteps.
+
+            Of snagging on a threadbare carpet.
+
+            Then shuffling down the ancient stairs.
+
+            """
+        ).strip()
+
+        sm = SpeechMark()
+        html5 = sm.loads(text)
+
+        d = Director(None)
+        rv = "\n".join(d.edit(html5))
+        self.assertEqual(3, rv.count("animation-delay"), rv)
+        self.assertEqual(3, rv.count("animation-duration"), rv)
+
+
 class LoopTests(unittest.TestCase):
     def setUp(self):
         self.script = textwrap.dedent(
