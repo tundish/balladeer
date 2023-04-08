@@ -556,3 +556,30 @@ class DirectiveTests(unittest.TestCase):
             d.notes["directives"]
         )
 
+
+class ModeTests(unittest.TestCase):
+    def test_audio_media_in_multiple_blocks(self):
+        text = textwrap.dedent(
+            """
+        <WEAPON.attacking@FIGHTER_2:shouts/slapwhack>
+
+            _Whack!_
+
+        <FIGHTER_2>
+
+            Uuurrggh!
+
+        """
+        ).strip()
+        d= Director(story=None)
+        selection = {
+            "WEAPON": Entity(name="Rusty"),
+            "FIGHTER_2": Entity(name="Bashy"),
+        }
+
+        sm = SpeechMark()
+        html5 = sm.loads(text)
+        edit = "\n".join(d.edit(html5, selection))
+        self.assertIn("media", d.notes)
+        self.assertEqual("slapwhack", d.notes["media"])
+
