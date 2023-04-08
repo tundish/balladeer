@@ -12,7 +12,7 @@ Change Log
 This is a transitional release towards Balladeer *lite*.
 
 I have adopted `TOML <https://toml.io/en/>`_ as the new format for scene files.
-Character dialogue uses 'SpeechMark <https://pypi.org/project/speechmark/>`_.
+Character dialogue uses `SpeechMark <https://pypi.org/project/speechmark/>`_.
 
 Documentation refers to the *classic* format.
 This will be corrected in further releases over the next few weeks.
