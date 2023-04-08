@@ -149,6 +149,11 @@ class Director:
                 self.notes["media"].append(item)
         return html5
 
+    def handle_parameters(self, html5, parameters: dict, path: pathlib.Path | str, index: int):
+        self.pause = parameters["pause"]
+        self.dwell = parameters["dwell"]
+        return html5
+
     def rank_constraints(self, spec: dict) -> int:
         roles, states, types = self.specify_role(spec)
         return sum(1 / len(v) for v in states.values()) + len(types) - len(roles)
@@ -172,9 +177,9 @@ class Director:
             html5 = self.cite_matcher.sub(self.edit_cite, block)
 
             attrs = self.attributes(html5)
-            params = self.parameters(attrs)
-            self.pause = params["pause"]
-            self.dwell = params["dwell"]
+
+            parameters = self.parameters(attrs)
+            html5 = self.handle_parameters(html5, parameters, path, index)
 
             fragments = self.fragments(attrs)
             html5 = self.handle_fragments(html5, fragments, path, index)
@@ -187,6 +192,7 @@ class Director:
 
             html5 = self.pp_matcher.sub(self.edit_para, html5)
             self.notes["delay"] = self.delay
+
             yield self.fmtr.format(html5, **self.cast)
 
     def edit_cite(self, match: re.Match) -> str:
