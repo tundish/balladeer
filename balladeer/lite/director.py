@@ -104,6 +104,19 @@ class Director:
     def attributes(self, text: str) -> dict[str, str]:
         return dict(self.attr_matcher.findall(text))
 
+    def fragments(self, attrs: dict) -> str:
+        # NOTE: Sunject to change
+        return html.unescape(attrs.get("fragments", "")).lstrip("#")
+
+    def directives(self, attrs: dict) -> dict:
+        lhs, _, rhs = html.unescape(attrs.get("directives", "")).partition("@")
+        print(lhs, rhs)
+        return {
+            "pause": float(params.get("pause", [self.pause])[0]),
+            "dwell": float(params.get("dwell", [self.dwell])[0]),
+            "delay": float(params.get("delay", [self.dwell])[0]),
+        }
+
     def parameters(self, attrs: dict) -> dict:
         params = urllib.parse.parse_qs(html.unescape(attrs.get("parameters", "").lstrip("?")))
         return {
@@ -111,6 +124,16 @@ class Director:
             "dwell": float(params.get("dwell", [self.dwell])[0]),
             "delay": float(params.get("delay", [self.dwell])[0]),
         }
+
+    def handle_fragments(self, html5, fragments: str, path: pathlib.Path | str, index: int):
+        if fragments.endswith("!"):
+            list_block = self.ul_matcher.search(html5)
+            list_items = list(self.li_matcher.findall(list_block.group()))
+            ordinal = self.counts[(path, index)] % len(list_items)
+            choice = list_items[ordinal].replace("<li>", "").replace("</li>", "")
+            html5 = self.ul_matcher.sub(choice, html5)
+            self.counts[(path, index)] += 1
+        return html5
 
     def rank_constraints(self, spec: dict) -> int:
         roles, states, types = Director.specify_role(spec)
@@ -139,17 +162,8 @@ class Director:
             self.pause = params["pause"]
             self.dwell = params["dwell"]
 
-            # TODO: Dispatch to a handler for fragment?
-            if attrs.get("fragments", "").endswith("!"):
-                list_block = self.ul_matcher.search(html5)
-                list_items = list(self.li_matcher.findall(list_block.group()))
-                ordinal = self.counts[(path, index)] % len(list_items)
-                choice = list_items[ordinal].replace("<li>", "").replace("</li>", "")
-                html5 = self.ul_matcher.sub(choice, html5)
-                self.counts[(path, index)] += 1
-
-            # TODO: images -> figure with reveal
-            # TODO: media -> video, audio with reveal
+            fragments = self.fragments(attrs)
+            html5 = self.handle_fragments(html5, fragments, path, index)
 
             html5 = self.pp_matcher.sub(self.edit_para, html5)
             self.notes["delay"] = self.delay
