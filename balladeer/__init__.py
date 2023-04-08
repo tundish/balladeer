@@ -1,4 +1,16 @@
-__version__ = "0.28.0"
+import datetime
+import importlib.metadata
+
+try:
+    import tomllib
+except ImportError:
+    import tomli as tomllib
+
+
+try:
+    __version__ = importlib.metadata.version("balladeer")
+except importlib.metadata.PackageNotFoundError:
+    __version__ = datetime.date.today().strftime("%Y.%m.%d") + "+local_repository"
 
 from balladeer.classic.drama import Drama
 from balladeer.classic.gesture import Gesture

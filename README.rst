@@ -26,7 +26,7 @@ Packages
 
 #. Install (or update) Balladeer::
 
-    ~/balladeer-app/bin/pip install -U balladeer
+    ~/balladeer-app/bin/pip install -U balladeer[classic]
 
 Examples
 ========

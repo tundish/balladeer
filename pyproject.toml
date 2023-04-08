@@ -1,0 +1,55 @@
+[project]
+name = "balladeer"
+version = "0.28.0"
+description = "Web-enabled interactive fiction in Python."
+readme = "README.rst"
+requires-python = ">=3.11"
+license = {file = "LICENSE"}
+keywords = ["markup"]
+authors = [
+    {name = "Tundish", email = "tundish@gigeconomy.org.uk"}
+]
+maintainers = [
+    {name = "Tundish", email = "tundish@gigeconomy.org.uk"}
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.11",
+]
+dependencies = [
+    "speechmark >= 0.10.0",
+    "tomli >= 2.0.0; python_version < '3.11'"
+]
+
+[project.optional-dependencies]
+classic = [
+    "docutils==0.18.1",
+    "turberfield-catchphrase==0.25.0",
+    "turberfield-dialogue==0.47.0",
+    "turberfield-utils==0.47.0",
+]
+
+[project.scripts]
+
+[build-system]
+requires = [
+    "black >= 23.3.0",
+    "setuptools",
+    "wheel"
+]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = [
+    "balladeer",
+    "balladeer.lite",
+    "balladeer.lite.test",
+    "balladeer.classic",
+    "balladeer.classic.test",
+]
+
+[tool.black]
+line-length = 96
+target-version = ["py311"]
+
