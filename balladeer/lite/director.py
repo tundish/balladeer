@@ -85,6 +85,9 @@ class Director:
         self.dwell = dwell
         self.delay = delay
 
+        self.cast = None
+        self.role = None
+
         self.bq_matcher = re.compile("<blockquote.*?<\\/blockquote>", re.DOTALL)
         self.tag_matcher = re.compile("<[^>]+?>")
         self.cite_matcher = re.compile(
@@ -133,7 +136,7 @@ class Director:
     def handle_directives(self, html5, directives: dict, path: pathlib.Path | str, index: int):
         for directive, roles in directives.items():
             self.notes["directives"].append(
-                (directive, None, tuple(filter(None, (self.cast.get(r) for r in roles))))
+                (directive, self.cast.get(self.role), tuple(filter(None, (self.cast.get(r) for r in roles))))
             )
         return html5
 
@@ -175,16 +178,16 @@ class Director:
             yield self.fmtr.format(html5, **self.cast)
 
     def edit_cite(self, match: re.Match) -> str:
-        head, role, tail = [match.group(i) for i in ("head", "role", "tail")]
+        head, self.role, tail = [match.group(i) for i in ("head", "role", "tail")]
         try:
-            entity = self.cast[role]
+            entity = self.cast[self.role]
         except KeyError:
             return match.group()
 
         try:
             attr = f'" data-entity="{entity.names[0]}'
             text = entity.names[0].translate(self.spmk.escape_table)
-            return f"{head}{role}{attr}{tail}{text}</cite>"
+            return f"{head}{self.role}{attr}{tail}{text}</cite>"
         except IndexError:
             return match.group()
 
