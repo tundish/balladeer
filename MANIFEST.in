@@ -1,3 +1,5 @@
 include LICENSE
 recursive-include . *.rst
-recursive-include balladeer *.cfg *.css *.html *.jpg *.js *.png *.rst *.txt
+recursive-include . *.toml
+recursive-include balladeer *.cfg *.css *.html *.jpg *.js *.png *.rst *.toml *.txt
+recursive-include balladeer *.mp3 *.woff *.woff2

@@ -1,0 +1,30 @@
+[FIGHTER_1]
+roles = ["WEAPON"]
+
+[FIGHTER_2]
+type = "Animal"
+
+[WEAPON]
+type = "Weapon"
+
+[[_]]
+
+s="""
+<FIGHTER_1>
+
+    I don't like the way you use me, {FIGHTER_2.name}!
+
+"""
+
+[[_]]
+
+s="""
+<WEAPON.attacking@FIGHTER_2:shouts/slapwhack>
+
+    _Whack!_
+
+<FIGHTER_2>
+
+    Uuurrggh!
+
+"""
