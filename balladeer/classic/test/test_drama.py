@@ -20,8 +20,9 @@
 import textwrap
 import unittest
 
+from turberfield.catchphrase.presenter import Presenter
+
 from balladeer import Drama
-from balladeer import Presenter
 
 
 class DramaTests(unittest.TestCase):

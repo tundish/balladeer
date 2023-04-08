@@ -25,7 +25,7 @@ from turberfield.dialogue.types import DataObject
 from turberfield.dialogue.types import EnumFactory
 from turberfield.utils.misc import group_by_type
 
-from balladeer.speech import Name
+from balladeer.classic.speech import Name
 
 
 class Fruition(EnumFactory, enum.Enum):

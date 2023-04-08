@@ -22,7 +22,7 @@ import unittest
 
 from turberfield.dialogue.model import SceneScript
 
-from balladeer.folio import Folio
+from balladeer.classic.folio import Folio
 
 
 class SpacingTests(unittest.TestCase):

@@ -24,7 +24,7 @@ import random
 from turberfield.dialogue.types import DataObject
 from turberfield.dialogue.types import Stateful
 
-from balladeer.types import Fruition
+from balladeer.classic.types import Fruition
 
 
 Head = namedtuple(

@@ -20,11 +20,11 @@
 import enum
 import unittest
 
-from balladeer.cartography import Compass
-from balladeer.cartography import Map
-from balladeer.cartography import Transit
-from balladeer.cartography import Via
-from balladeer.cartography import Waypoint
+from balladeer.classic.cartography import Compass
+from balladeer.classic.cartography import Map
+from balladeer.classic.cartography import Transit
+from balladeer.classic.cartography import Via
+from balladeer.classic.cartography import Waypoint
 
 
 class CompassTests(unittest.TestCase):
