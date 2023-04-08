@@ -110,12 +110,7 @@ class Director:
 
     def directives(self, attrs: dict) -> dict:
         lhs, _, rhs = html.unescape(attrs.get("directives", "")).partition("@")
-        print(lhs, rhs)
-        return {
-            "pause": float(params.get("pause", [self.pause])[0]),
-            "dwell": float(params.get("dwell", [self.dwell])[0]),
-            "delay": float(params.get("delay", [self.dwell])[0]),
-        }
+        return {d: [i for i in rhs.split(",") if i] for d in lhs.split(".") if d}
 
     def parameters(self, attrs: dict) -> dict:
         params = urllib.parse.parse_qs(html.unescape(attrs.get("parameters", "").lstrip("?")))
@@ -135,8 +130,15 @@ class Director:
             self.counts[(path, index)] += 1
         return html5
 
+    def handle_directives(self, html5, directives: dict, path: pathlib.Path | str, index: int):
+        for directive, roles in directives.items():
+            self.notes["directives"].append(
+                (directive, None, tuple(filter(None, (self.cast.get(r) for r in roles))))
+            )
+        return html5
+
     def rank_constraints(self, spec: dict) -> int:
-        roles, states, types = Director.specify_role(spec)
+        roles, states, types = self.specify_role(spec)
         return sum(1 / len(v) for v in states.values()) + len(types) - len(roles)
 
     def lines(self, html5: str) -> list[str]:
@@ -164,6 +166,9 @@ class Director:
 
             fragments = self.fragments(attrs)
             html5 = self.handle_fragments(html5, fragments, path, index)
+
+            directives = self.directives(attrs)
+            html5 = self.handle_directives(html5, directives, path, index)
 
             html5 = self.pp_matcher.sub(self.edit_para, html5)
             self.notes["delay"] = self.delay

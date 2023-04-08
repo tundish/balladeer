@@ -47,7 +47,10 @@ class Entity:
                 self.types.add(type)
 
     def __eq__(self, other):
-        return set(self.names).union(self.types) == set(other.names).union(other.types)
+        try:
+            return set(self.names).union(self.types) == set(other.names).union(other.types)
+        except AttributeError:
+            return False
 
     @property
     def name(self):
