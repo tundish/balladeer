@@ -23,33 +23,26 @@ from turberfield.dialogue.types import DataObject
 from turberfield.dialogue.types import Stateful
 
 
-Article = namedtuple(
-    "Article",
-    ("definite", "indefinite"),
-    defaults=("the", "a")
-)
+Article = namedtuple("Article", ("definite", "indefinite"), defaults=("the", "a"))
 
 
 Pronoun = namedtuple(
     "Pronoun",
     ("subject", "object", "reflexive", "genitive"),
-    defaults=("it", "it", "itself", "its")
+    defaults=("it", "it", "itself", "its"),
 )
 
 
-Name = namedtuple(
-    "Name",
-    ("noun", "article", "pronoun"),
-    defaults=("", Article(), Pronoun())
-)
+Name = namedtuple("Name", ("noun", "article", "pronoun"), defaults=("", Article(), Pronoun()))
 
 
 Tensed = namedtuple("Tensed", ("simple", "progressive", "perfect", "imperative"))
 
 
 class Verb(Tensed):
-
-    def __new__(cls, root, simple="{0}s", progressive="is {0}ing", perfect="{0}ed", imperative="{0}"):
+    def __new__(
+        cls, root, simple="{0}s", progressive="is {0}ing", perfect="{0}ed", imperative="{0}"
+    ):
         l = locals()
         return super().__new__(cls, *(l[i].format(root) for i in super()._fields))
 

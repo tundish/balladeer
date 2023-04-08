@@ -26,7 +26,6 @@ from turberfield.dialogue.types import DataObject
 
 
 class Story(Renderer, DataObject):
-
     def __init__(self, cfg=None, context=None, **kwargs):
         super().__init__(**kwargs)
 
@@ -47,9 +46,13 @@ class Story(Renderer, DataObject):
     @property
     def actions(self):
         yield Action(
-            "cmd", None, "/{0.id.hex}/cmd/", [self], "post",
+            "cmd",
+            None,
+            "/{0.id.hex}/cmd/",
+            [self],
+            "post",
             [Parameter("cmd", False, self.context.validator, [self.context.prompt], ">")],
-            "Enter"
+            "Enter",
         )
 
     @property
@@ -67,16 +70,16 @@ class Story(Renderer, DataObject):
 
     def represent(self, *args, facts=None, previous=None, factory=Presenter, **kwargs):
         rv = self.context.interlude(
-            self.context.folder,
-            previous and previous.index,
-            previous and previous.ensemble
+            self.context.folder, previous and previous.index, previous and previous.ensemble
         )
         presenter = factory.build_presenter(
-            self.context.folder, *args, facts=facts or rv,
+            self.context.folder,
+            *args,
+            facts=facts or rv,
             ensemble=self.context.ensemble + [self.context, self.settings],
-            **kwargs
+            **kwargs,
         )
-        if presenter and not(presenter.dwell or presenter.pause):
+        if presenter and not (presenter.dwell or presenter.pause):
             setattr(self.settings, "catchphrase-reveal-extends", "none")
             setattr(self.settings, "catchphrase-states-scrolls", "scroll")
         else:

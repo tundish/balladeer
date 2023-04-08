@@ -26,7 +26,6 @@ from balladeer import Drama
 
 
 class DramaTests(unittest.TestCase):
-
     def test_next_states_single(self):
         text = textwrap.dedent("""
         .. entity:: DRAMA

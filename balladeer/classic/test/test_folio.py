@@ -26,7 +26,6 @@ from balladeer import Verb
 
 
 class NamedTests(unittest.TestCase):
-
     def test_simple(self):
         mug = Named(names=[Name("Cup"), Name("Mug")])
         self.assertIn("Cup", str(mug))
@@ -35,7 +34,6 @@ class NamedTests(unittest.TestCase):
 
 
 class VerbTests(unittest.TestCase):
-
     def test_simple(self):
         v = Verb("show")
         self.assertEqual("shows", v.simple)

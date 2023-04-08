@@ -26,7 +26,6 @@ from turberfield.dialogue.types import Stateful
 
 
 class Drama(Stateful, Mediator):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.validator = re.compile("[\\w ]+")
@@ -56,12 +55,17 @@ class Drama(Stateful, Mediator):
 
     def find_valid_states(self, presenter):
         return sorted(
-            c.value for f in presenter.frames for c in f[Model.Condition]
+            c.value
+            for f in presenter.frames
+            for c in f[Model.Condition]
             if c.object is self and c.format == "state" and isinstance(c.value, int)
         ) or [0]
 
     def next_states(self, n=1):
-        fwd = min(bisect.bisect_right(self.valid_states, self.state) + n - 1, len(self.valid_states) - 1)
+        fwd = min(
+            bisect.bisect_right(self.valid_states, self.state) + n - 1,
+            len(self.valid_states) - 1,
+        )
         bck = max(0, bisect.bisect_left(self.valid_states, self.state) - n)
         rv = (self.valid_states[bck], self.valid_states[fwd])
         return rv
@@ -71,6 +75,8 @@ class Drama(Stateful, Mediator):
 
     def deliver(self, cmd, presenter):
         self.input_text = cmd
-        fn, args, kwargs = self.interpret(self.match(cmd, context=presenter, ensemble=self.ensemble))
+        fn, args, kwargs = self.interpret(
+            self.match(cmd, context=presenter, ensemble=self.ensemble)
+        )
         fn = fn or self.default_fn
         return fn and self(fn, *args, **kwargs)

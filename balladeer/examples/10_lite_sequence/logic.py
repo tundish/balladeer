@@ -22,7 +22,6 @@ from balladeer.lite.types import WorldBuilder
 
 
 class World(WorldBuilder):
-
     def build(self):
         yield from [
             Entity(name="Biffy", type="Animal"),

@@ -52,7 +52,6 @@ import textwrap
 
 
 class Folio(Story):
-
     static_style = textwrap.dedent("""
         @page {
             size: 5in 7.75in;
@@ -327,20 +326,18 @@ class Folio(Story):
 
     @staticmethod
     def single_space(html):
-        return re.sub(
-            "[ ]+",
-            " ",
-            html.replace("\n", " ").replace("&NewLine;", " ")
-        ).replace("> <", "><").rstrip()
+        return (
+            re.sub("[ ]+", " ", html.replace("\n", " ").replace("&NewLine;", " "))
+            .replace("> <", "><")
+            .rstrip()
+        )
 
     def __init__(self, dwell, pause, **kwargs):
         super().__init__(**kwargs)
         self.dwell = dwell
         self.pause = pause
         self.chapters = []
-        self.metadata = {
-            "print": datetime.date.today()
-        }
+        self.metadata = {"print": datetime.date.today()}
         self.sections = []
         self.seconds = 0
         self.log = LogManager().get_logger("main").clone("folio")
@@ -349,7 +346,10 @@ class Folio(Story):
         name = getattr(anim.element.persona, "name", anim.element.persona)
         name = "{0.firstname} {0.surname}".format(name) if hasattr(name, "firstname") else name
         delay = self.seconds
-        yield f'<div class="line" style="animation-delay: {delay:.2f}s; animation-duration: {anim.duration:.2f}s">'
+        yield (
+            f'<div class="line" style="animation-delay: {delay:.2f}s; animation-duration:'
+            f' {anim.duration:.2f}s">'
+        )
         if name:
             yield "<blockquote>"
             yield f"<header>{name}</header>"
@@ -361,8 +361,12 @@ class Folio(Story):
         self.seconds += anim.duration
 
     def render_animated_frame_to_html(self, frame, controls=[], **kwargs):
-        witness = next((i.element for v in frame.values() for i in v if hasattr(i, "element")), None)
-        dialogue = "".join(i for l in frame[Model.Line] for i in self.animated_line_to_html(l, **kwargs))
+        witness = next(
+            (i.element for v in frame.values() for i in v if hasattr(i, "element")), None
+        )
+        dialogue = "".join(
+            i for l in frame[Model.Line] for i in self.animated_line_to_html(l, **kwargs)
+        )
         stills = "\n".join(self.animated_still_to_html(i, **kwargs) for i in frame[Model.Still])
         spoken = any(anim.element.persona for anim in frame[Model.Line])
         chapter = ([i.get("chapter", 0) for i in self.chapters] or [0])[-1]
@@ -425,7 +429,7 @@ class Folio(Story):
                 yield from (f"<dd>{i}</dd>" for i in v)
             else:
                 yield f"<dd>{v}</dd>"
-            yield  "</div>"
+            yield "</div>"
         yield "</dl>"
         yield "</section>"
 
@@ -457,9 +461,12 @@ class Folio(Story):
     @property
     def css(self):
         settings = dict(
-            {f"balladeer-metadata-{k}": next(iter(v if isinstance(v, list) else [v]))
-            for k, v in self.metadata.items() if v},
-            **vars(self.settings)
+            {
+                f"balladeer-metadata-{k}": next(iter(v if isinstance(v, list) else [v]))
+                for k, v in self.metadata.items()
+                if v
+            },
+            **vars(self.settings),
         )
 
         # Awful hack to avoid errors from weasyprint, which is otherwise awesome
@@ -467,20 +474,23 @@ class Folio(Story):
         for k, v in settings.items():
             static_style = static_style.replace(f"var(--{k})", f'"{v!s}"')
 
-        return  "\n".join((
-            self.render_dict_to_css(settings),
-            static_style,
-        ))
+        return "\n".join(
+            (
+                self.render_dict_to_css(settings),
+                static_style,
+            )
+        )
 
     def render_html(self, links=[], style="", sections=[]):
-        title = next(iter(self.metadata.get("title", [self.__class__.__name__])), self.__class__.__name__)
+        title = next(
+            iter(self.metadata.get("title", [self.__class__.__name__])), self.__class__.__name__
+        )
         return self.render_body_html(title=title, base_style="").format(
             "\n".join(links), style, "\n".join(sections)
         )
 
 
 class TypeGetter:
-
     def __init__(self, paths):
         self.paths = [i for p in paths for i in (p.iterdir() if p.is_dir() else [p])]
         self.log = LogManager().get_logger("main").clone("getter")
@@ -536,22 +546,16 @@ def main(args):
 
 
 def parser():
-    rv = add_performance_options(
-        add_common_options(
-            argparse.ArgumentParser()
-        )
-    )
+    rv = add_performance_options(add_common_options(argparse.ArgumentParser()))
     rv.add_argument(
-        "--css", default=False, action="store_true",
-        help="Emit internal styles as CSS."
+        "--css", default=False, action="store_true", help="Emit internal styles as CSS."
     )
+    rv.add_argument("--tag", default=None, help="Supply a version tag for use as metadata.")
     rv.add_argument(
-        "--tag", default=None,
-        help="Supply a version tag for use as metadata."
-    )
-    rv.add_argument(
-        "paths", nargs="*", type=pathlib.Path,
-        help="Supply one or more paths to dialogue files."
+        "paths",
+        nargs="*",
+        type=pathlib.Path,
+        help="Supply one or more paths to dialogue files.",
     )
     return rv
 

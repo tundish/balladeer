@@ -26,7 +26,6 @@ from balladeer.classic.folio import Folio
 
 
 class SpacingTests(unittest.TestCase):
-
     def test_simple(self):
         rv = Folio.single_space("a  b   c")
         self.assertEqual("a b c", rv)
@@ -38,7 +37,4 @@ class SpacingTests(unittest.TestCase):
         script = SceneScript("inline", doc=SceneScript.read(content))
         script.cast(script.select([]))
         model = list(script.run())
-        self.assertFalse(
-            any("\n" in Folio.single_space(l.html) for s, l in model),
-            model
-        )
+        self.assertFalse(any("\n" in Folio.single_space(l.html) for s, l in model), model)

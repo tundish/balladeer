@@ -7,7 +7,6 @@ from balladeer import Story
 
 
 class Bottles(Drama):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.population = [
@@ -60,10 +59,13 @@ while True:
     stop = not drama.count
     presenter = story.represent(text, previous=presenter)
 
-    for animation in filter(None, (presenter.animate(
-        frame, dwell=presenter.dwell, pause=presenter.pause
-    ) for frame in presenter.frames)):
-
+    for animation in filter(
+        None,
+        (
+            presenter.animate(frame, dwell=presenter.dwell, pause=presenter.pause)
+            for frame in presenter.frames
+        ),
+    ):
         for line, duration in story.render_frame_to_terminal(animation):
             print(line, "\n")
             time.sleep(duration)

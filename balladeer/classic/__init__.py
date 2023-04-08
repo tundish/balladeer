@@ -15,4 +15,3 @@ from turberfield.dialogue.types import EnumFactory
 from turberfield.dialogue.types import Stateful
 
 from turberfield.utils.assembly import Assembly
-

@@ -65,30 +65,29 @@ themes = {
 
 
 class Page:
-
     @enum.unique
     class Zone(enum.Enum):
-        xml     =   enum.auto()
-        doc     =   enum.auto()
-        html    =   enum.auto()
-        head    =   enum.auto()
-        title   =   enum.auto()
-        rdf     =   enum.auto()
-        meta    =   enum.auto()
-        link    =   enum.auto()
-        css     =   enum.auto()
-        theme   =   enum.auto()
-        style   =   enum.auto()
-        body    =   enum.auto()
-        app     =   enum.auto()
-        nav     =   enum.auto()
-        main    =   enum.auto()
-        asides  =   enum.auto()
-        inputs  =   enum.auto()
-        svg     =   enum.auto()
-        iframe  =   enum.auto()
-        script  =   enum.auto()
-        end     =   enum.auto()
+        xml = enum.auto()
+        doc = enum.auto()
+        html = enum.auto()
+        head = enum.auto()
+        title = enum.auto()
+        rdf = enum.auto()
+        meta = enum.auto()
+        link = enum.auto()
+        css = enum.auto()
+        theme = enum.auto()
+        style = enum.auto()
+        body = enum.auto()
+        app = enum.auto()
+        nav = enum.auto()
+        main = enum.auto()
+        asides = enum.auto()
+        inputs = enum.auto()
+        svg = enum.auto()
+        iframe = enum.auto()
+        script = enum.auto()
+        end = enum.auto()
 
     def __init__(self, zone=Zone):
         self.zone = zone
@@ -128,14 +127,17 @@ class Page:
 
 class About(HTTPEndpoint):
     async def get(self, request):
-        return PlainTextResponse("\n".join((
-            f"Balladeer {balladeer.__version__}",
-            "Example 10",
-        )))
+        return PlainTextResponse(
+            "\n".join(
+                (
+                    f"Balladeer {balladeer.__version__}",
+                    "Example 10",
+                )
+            )
+        )
 
 
 class Home(HTTPEndpoint):
-
     meta = textwrap.dedent("""
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -162,16 +164,12 @@ class Home(HTTPEndpoint):
 class Start(HTTPEndpoint):
     async def post(self, request):
         sessions = request.app.state.sessions
-        key , val = await session_factory(request.app.state.config)
+        key, val = await session_factory(request.app.state.config)
         sessions[key] = val
-        return RedirectResponse(
-            url=request.url_for("session", session_id=key),
-            status_code=303
-        )
+        return RedirectResponse(url=request.url_for("session", session_id=key), status_code=303)
 
 
 class Session(HTTPEndpoint):
-
     async def get(self, request):
         session_id = request.path_params["session_id"]
         state = request.app.state
@@ -223,16 +221,10 @@ if __name__ == "__main__":
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
-    assets = list(
-        Loader.discover(balladeer.examples, "10_lite_sequence")
+    assets = list(Loader.discover(balladeer.examples, "10_lite_sequence"))
+    app = loop.run_until_complete(
+        app_factory(static=assets[0].path.parent, loop=loop, assets=assets, sessions={})
     )
-    app = loop.run_until_complete(app_factory(
-        static=assets[0].path.parent, loop=loop,
-        assets=assets, sessions={}
-    ))
-    settings = hypercorn.Config.from_mapping(
-        {"bind": "localhost:8080", "errorlog": "-"}
-    )
+    settings = hypercorn.Config.from_mapping({"bind": "localhost:8080", "errorlog": "-"})
 
     loop.run_until_complete(serve(app, settings))
-

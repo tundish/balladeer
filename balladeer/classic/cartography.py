@@ -28,27 +28,26 @@ from turberfield.utils.homogeneous import vector
 
 
 class Compass(EnumFactory, enum.Enum):
-
-    N   = vector(+0, +1)
-    NE  = vector(+1, +1)
-    E   = vector(+1, +0)
-    SE  = vector(+1, -1)
-    S   = vector(+0, -1)
-    SW  = vector(-1, -1)
-    W   = vector(-1, +0)
-    NW  = vector(-1, -1)
+    N = vector(+0, +1)
+    NE = vector(+1, +1)
+    E = vector(+1, +0)
+    SE = vector(+1, -1)
+    S = vector(+0, -1)
+    SW = vector(-1, -1)
+    W = vector(-1, +0)
+    NW = vector(-1, -1)
 
     @property
     def back(self):
         return {
-            "N":  Compass.S,
+            "N": Compass.S,
             "NE": Compass.SW,
-            "E":  Compass.W,
+            "E": Compass.W,
             "SE": Compass.NW,
-            "S":  Compass.N,
+            "S": Compass.N,
             "SW": Compass.NE,
-            "W":  Compass.E,
-            "NW": Compass.SE
+            "W": Compass.E,
+            "NW": Compass.SE,
         }.get(self.name)
 
     @property
@@ -66,7 +65,6 @@ class Compass(EnumFactory, enum.Enum):
 
 
 class Waypoint:
-
     @property
     def label(self):
         return self.value[0]
@@ -83,12 +81,12 @@ class Via(EnumFactory, enum.Enum):
     bidir = 3
 
 
-class Transit(DataObject, Stateful): pass
+class Transit(DataObject, Stateful):
+    pass
 
 
 class Map:
-
-    def __init__(self, exit:type, into:type, **kwargs):
+    def __init__(self, exit: type, into: type, **kwargs):
         self.exit = exit or getattr(self, "Exit")
         self.into = into or getattr(self, "Into")
         self.transits = []

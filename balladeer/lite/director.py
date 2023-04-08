@@ -58,9 +58,7 @@ class Director:
 
         return roles, states, types
 
-    def specify_conditions(
-        self, shot: dict
-    ) -> Generator[tuple[str, tuple[set, set, dict]]]:
+    def specify_conditions(self, shot: dict) -> Generator[tuple[str, tuple[set, set, dict]]]:
         for role, guard in shot.get("if", {}).items():
             yield role, self.specify_role(guard)
 
@@ -116,7 +114,9 @@ class Director:
         return {d: [i for i in rhs.split(",") if i] for d in lhs.split(".") if d}
 
     def mode(self, attrs: dict) -> tuple[str]:
-        return tuple(i for i in html.unescape(attrs.get("mode", "")).lstrip(":").split("/") if i)
+        return tuple(
+            i for i in html.unescape(attrs.get("mode", "")).lstrip(":").split("/") if i
+        )
 
     def parameters(self, attrs: dict) -> dict:
         params = urllib.parse.parse_qs(html.unescape(attrs.get("parameters", "").lstrip("?")))
@@ -139,7 +139,11 @@ class Director:
     def handle_directives(self, html5, directives: dict, path: pathlib.Path | str, index: int):
         for directive, roles in directives.items():
             self.notes["directives"].append(
-                (directive, self.cast.get(self.role), tuple(filter(None, (self.cast.get(r) for r in roles))))
+                (
+                    directive,
+                    self.cast.get(self.role),
+                    tuple(filter(None, (self.cast.get(r) for r in roles))),
+                )
             )
         return html5
 
@@ -218,7 +222,10 @@ class Director:
         delay = self.delay + self.pause
         duration = self.dwell * len(words)
         self.delay = delay + duration
-        return f'<p style="animation-delay: {delay:.2f}s; animation-duration: {duration:.2f}s">{content}</p>'
+        return (
+            f'<p style="animation-delay: {delay:.2f}s; animation-duration:'
+            f' {duration:.2f}s">{content}</p>'
+        )
 
     def selection(self, scripts, ensemble: list[Entity] = [], roles=1):
         for scene in scripts:
@@ -228,15 +235,11 @@ class Director:
                 return scene, roles
 
     def specifications(self, toml: dict):
-        return {
-            k: v for k, v in toml.items() if isinstance(v, dict) and k != self.shot_key
-        }
+        return {k: v for k, v in toml.items() if isinstance(v, dict) and k != self.shot_key}
 
     def roles(self, specs: dict, ensemble: list[Entity]) -> dict[str, Entity]:
         specs = dict(
-            sorted(
-                specs.items(), key=lambda x: self.rank_constraints(x[1]), reverse=True
-            )
+            sorted(specs.items(), key=lambda x: self.rank_constraints(x[1]), reverse=True)
         )
         pool = {i: set(specs.keys()) for i in ensemble}
         for role, spec in specs.items():

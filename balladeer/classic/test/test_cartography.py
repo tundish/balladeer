@@ -28,7 +28,6 @@ from balladeer.classic.cartography import Waypoint
 
 
 class CompassTests(unittest.TestCase):
-
     def test_nearing(self):
         self.assertEqual(0, Compass.N.bearing)
         self.assertEqual(180, Compass.S.bearing)
@@ -42,15 +41,13 @@ class CompassTests(unittest.TestCase):
 
 
 class MapTests(unittest.TestCase):
-
     class SimpleMap(Map):
-
         spots = {
-            "bedroom":  ["bedroom"],
-            "hall":  ["hall", "hallway"],
-            "kitchen":  ["kitchen"],
-            "stairs":  ["stairs", "stairway", "up", "up stairs", "upstairs"],
-            "inventory":  None
+            "bedroom": ["bedroom"],
+            "hall": ["hall", "hallway"],
+            "kitchen": ["kitchen"],
+            "stairs": ["stairs", "stairway", "up", "up stairs", "upstairs"],
+            "inventory": None,
         }
 
         Into = enum.Enum("Into", spots, type=Waypoint)
@@ -64,7 +61,9 @@ class MapTests(unittest.TestCase):
             self.transits = [
                 Transit(label="bedroom door").set_state(exit.bedroom, into.hall, Via.bidir),
                 Transit().set_state(exit.hall, Compass.N, into.stairs, Via.bidir),
-                Transit(label="kitchen door").set_state(exit.kitchen, Compass.SW, into.hall, Via.bidir),
+                Transit(label="kitchen door").set_state(
+                    exit.kitchen, Compass.SW, into.hall, Via.bidir
+                ),
             ]
 
     def test_simple_options(self):

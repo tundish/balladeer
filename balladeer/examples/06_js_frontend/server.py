@@ -20,21 +20,22 @@ from balladeer import Stateful
 from balladeer import Story as StoryType
 
 
-class Bottle(DataObject, Stateful): pass
+class Bottle(DataObject, Stateful):
+    pass
 
 
 class Story(StoryType):
-
     def render_animated_frame_to_html(self, frame, controls=[], **kwargs):
-        return "\n".join([
-            '<div id="app"><diorama v-bind:population="population"></diorama></div>',
-            StoryType.render_animated_frame_to_html(frame, controls, **kwargs),
-            '<script src="/js/bottles.js"></script>',
-        ])
+        return "\n".join(
+            [
+                '<div id="app"><diorama v-bind:population="population"></diorama></div>',
+                StoryType.render_animated_frame_to_html(frame, controls, **kwargs),
+                '<script src="/js/bottles.js"></script>',
+            ]
+        )
 
 
 class Bottles(Drama):
-
     colours = ["#00BB00", "#008800", "#005500"]
 
     def __init__(self, *args, **kwargs):
@@ -101,8 +102,7 @@ async def get_assembly(request):
     uid = uuid.UUID(hex=request.match_info["session"])
     story = request.app["sessions"][uid]
     return web.Response(
-        text=Assembly.dumps(story.context.population),
-        content_type="application/json"
+        text=Assembly.dumps(story.context.population), content_type="application/json"
     )
 
 
@@ -110,9 +110,17 @@ async def get_session(request):
     uid = uuid.UUID(hex=request.match_info["session"])
     story = request.app["sessions"][uid]
 
-    animation = next(filter(None, (story.presenter.animate(
-        frame, dwell=story.presenter.dwell, pause=story.presenter.pause
-    ) for frame in story.presenter.frames)))
+    animation = next(
+        filter(
+            None,
+            (
+                story.presenter.animate(
+                    frame, dwell=story.presenter.dwell, pause=story.presenter.pause
+                )
+                for frame in story.presenter.frames
+            ),
+        )
+    )
 
     title = story.presenter.metadata.get("project")[0]
     controls = [
@@ -123,7 +131,7 @@ async def get_session(request):
     rv = story.render_body_html(title=title).format(
         '<script src="https://unpkg.com/vue@3"></script>',
         story.render_dict_to_css(vars(story.settings)),
-        story.render_animated_frame_to_html(animation, controls)
+        story.render_animated_frame_to_html(animation, controls),
     )
 
     return web.Response(text=rv, content_type="text/html")
@@ -138,21 +146,28 @@ async def post_command(request):
         raise web.HTTPUnauthorized(reason="User sent invalid command.")
     else:
         text = story.context.deliver(cmd, presenter=story.presenter)
-        story.presenter = story.represent(text, facts=story.context.facts, previous=story.presenter)
+        story.presenter = story.represent(
+            text, facts=story.context.facts, previous=story.presenter
+        )
     raise web.HTTPFound("/{0.hex}".format(uid))
 
 
 def build_app(args):
     app = web.Application()
-    app.add_routes([
-        web.get("/", get_root),
-        web.get("/{{session:{0}}}".format(VALIDATION["session"].pattern), get_session),
-        web.get("/{{session:{0}}}/assembly".format(VALIDATION["session"].pattern), get_assembly),
-        web.post("/{{session:{0}}}/cmd/".format(VALIDATION["session"].pattern), post_command),
-    ])
+    app.add_routes(
+        [
+            web.get("/", get_root),
+            web.get("/{{session:{0}}}".format(VALIDATION["session"].pattern), get_session),
+            web.get(
+                "/{{session:{0}}}/assembly".format(VALIDATION["session"].pattern), get_assembly
+            ),
+            web.post(
+                "/{{session:{0}}}/cmd/".format(VALIDATION["session"].pattern), post_command
+            ),
+        ]
+    )
     app.router.add_static(
-        "/css/base/",
-        pkg_resources.resource_filename("turberfield.catchphrase", "css")
+        "/css/base/", pkg_resources.resource_filename("turberfield.catchphrase", "css")
     )
     app.router.add_static("/js/", pathlib.Path(__file__).parent)
     app["sessions"] = {}
@@ -168,14 +183,8 @@ def main(args):
 
 def parser(description=__doc__):
     rv = argparse.ArgumentParser(description)
-    rv.add_argument(
-        "--host", default="127.0.0.1",
-        help="Set an interface on which to serve."
-    )
-    rv.add_argument(
-        "--port", default=8080, type=int,
-        help="Set a port on which to serve."
-    )
+    rv.add_argument("--host", default="127.0.0.1", help="Set an interface on which to serve.")
+    rv.add_argument("--port", default=8080, type=int, help="Set a port on which to serve.")
     return rv
 
 

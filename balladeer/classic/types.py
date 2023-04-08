@@ -41,7 +41,6 @@ class Fruition(EnumFactory, enum.Enum):
 
 
 class Grouping(defaultdict):
-
     @property
     def all(self):
         return [i for s in self.values() for i in s]
@@ -52,7 +51,6 @@ class Grouping(defaultdict):
 
 
 class Named(DataObject):
-
     @property
     def name(self):
         name = random.choice(getattr(self, "names", [Name()]))
@@ -64,7 +62,6 @@ class Named(DataObject):
 
 
 class Operation(enum.Enum):
-
     begins = enum.auto()
     frames = enum.auto()
     paused = enum.auto()
@@ -74,7 +71,6 @@ class Operation(enum.Enum):
 
 
 class World:
-
     def __init__(self, *args, **kwargs):
         self.lookup = Grouping(list)
         for item in self.build():

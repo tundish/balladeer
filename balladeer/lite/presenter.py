@@ -57,9 +57,7 @@ class Prompter:
         entities = dict((k, t) for k, t in asset.tables.items() if k != shot_key)
 
         pool = {
-            Prompter.object_type_name(v[0]): v
-            for t, v in group_by_type(ensemble).items()
-            if v
+            Prompter.object_type_name(v[0]): v for t, v in group_by_type(ensemble).items() if v
         }
         print(pool)
         return {}

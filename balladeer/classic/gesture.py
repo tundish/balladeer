@@ -30,19 +30,18 @@ from balladeer.classic.types import Fruition
 Head = namedtuple(
     "Head",
     ("propose", "confirm", "counter", "abandon", "condemn", "declare"),
-    defaults=(tuple(), tuple(), tuple(), tuple(), tuple(), tuple())
+    defaults=(tuple(), tuple(), tuple(), tuple(), tuple(), tuple()),
 )
 
 
 Hand = namedtuple(
     "Hand",
     ("decline", "suggest", "promise", "disavow", "deliver"),
-    defaults=(tuple(), tuple(), tuple(), tuple(), tuple())
+    defaults=(tuple(), tuple(), tuple(), tuple(), tuple()),
 )
 
 
 class ChainStore:
-
     def __init__(self, *args, **kwargs):
         object.__setattr__(self, "_chain", ChainMap(kwargs, *args))
 
@@ -60,7 +59,6 @@ class ChainStore:
 
 
 class Gesture(Stateful, ChainStore):
-
     def __init__(self, label, head=None, hand=None, **kwargs):
         head = head or Head()
         hand = hand or Hand()
@@ -86,9 +84,7 @@ class Gesture(Stateful, ChainStore):
     @property
     def transitions(self):
         if self.get_state(Fruition) == Fruition.inception:
-            return [
-                (self.propose, Fruition.elaboration)
-            ]
+            return [(self.propose, Fruition.elaboration)]
         elif self.get_state(Fruition) == Fruition.elaboration:
             return [
                 (self.promise, Fruition.construction),
@@ -126,4 +122,3 @@ class Gesture(Stateful, ChainStore):
 
     def __str__(self):
         return self.label
-

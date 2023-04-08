@@ -85,9 +85,7 @@ class TestEnumStates(unittest.TestCase):
             TestEnumStates.Colour.red,
             TestEnumStates.Colour.green,
         )
-        self.assertEqual(
-            TestEnumStates.Colour.green, s.get_state(TestEnumStates.Colour)
-        )
+        self.assertEqual(TestEnumStates.Colour.green, s.get_state(TestEnumStates.Colour))
         self.assertEqual({"Colour": TestEnumStates.Colour.green}, s.states)
 
 

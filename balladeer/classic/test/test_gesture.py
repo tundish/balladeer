@@ -30,12 +30,12 @@ from balladeer import Verb
 
 
 class Brew(Gesture):
-
     @staticmethod
     def create_mugs(a, b):
         return Gesture(
             "mugs",
-            a=a, b=b,
+            a=a,
+            b=b,
             head=Head(
                 propose=["Can you get the mugs for me?"],
                 confirm=["OK, fine."],
@@ -57,13 +57,18 @@ class Brew(Gesture):
     @staticmethod
     def strategy(options):
         return random.choice(
-            [(e, s) for e, s in options
-            if s not in (Fruition.cancelled, Fruition.defaulted, Fruition.withdrawn)]
+            [
+                (e, s)
+                for e, s in options
+                if s not in (Fruition.cancelled, Fruition.defaulted, Fruition.withdrawn)
+            ]
         )
 
     def __init__(self, *args, mugs=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.mugs = mugs or self.create_mugs(a=getattr(self, "b", None), b=getattr(self, "a", None))
+        self.mugs = mugs or self.create_mugs(
+            a=getattr(self, "b", None), b=getattr(self, "a", None)
+        )
 
     def __call__(self, strategy=None, **kwargs):
         if self.mugs.failed:
@@ -79,12 +84,12 @@ class Brew(Gesture):
 
 
 class GestureTests(unittest.TestCase):
-
     @staticmethod
     def create_brew():
         return Brew(
             "brew",
-            a="Louise", b="Sophie",
+            a="Louise",
+            b="Sophie",
             head=Head(
                 propose=["Stick the kettle on, would you?"],
                 confirm=["Whatever, fine."],
@@ -110,19 +115,29 @@ class GestureTests(unittest.TestCase):
         self.assertIs(a.propose, b.propose)  # Lest we forget
 
     def test_simple(self):
-        g = Gesture("simple", head=Head([
-            Phrase(Verb("make"), Name("tea")),
-            Phrase(Verb("make"), Name("brew")),
-        ]))
+        g = Gesture(
+            "simple",
+            head=Head(
+                [
+                    Phrase(Verb("make"), Name("tea")),
+                    Phrase(Verb("make"), Name("brew")),
+                ]
+            ),
+        )
         self.assertEqual("simple", str(g))
         self.assertEqual("make", g.head.propose[0].verb.imperative)
         self.assertEqual("tea", g.head.propose[0].name.noun)
 
     def test_simple(self):
-        g = Gesture("simple", head=Head([
-            Phrase(Verb("make"), Name("tea")),
-            Phrase(Verb("make"), Name("brew")),
-        ]))
+        g = Gesture(
+            "simple",
+            head=Head(
+                [
+                    Phrase(Verb("make"), Name("tea")),
+                    Phrase(Verb("make"), Name("brew")),
+                ]
+            ),
+        )
         g.propose = "Fancy a brew?"
         self.assertEqual("Fancy a brew?", g.propose)
         self.assertEqual("make", g.head.propose[0].verb.imperative)
