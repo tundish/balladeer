@@ -49,6 +49,9 @@ packages = [
     "balladeer.classic.test",
 ]
 
+[tool.setuptools.package-data]
+balladeer = ["examples"]
+
 [tool.black]
 line-length = 96
 target-version = ["py311"]
