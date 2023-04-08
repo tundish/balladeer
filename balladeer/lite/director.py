@@ -111,9 +111,12 @@ class Director:
         # NOTE: Sunject to change
         return html.unescape(attrs.get("fragments", "")).lstrip("#")
 
-    def directives(self, attrs: dict) -> dict:
+    def directives(self, attrs: dict) -> dict[str, list[str]]:
         lhs, _, rhs = html.unescape(attrs.get("directives", "")).partition("@")
         return {d: [i for i in rhs.split(",") if i] for d in lhs.split(".") if d}
+
+    def mode(self, attrs: dict) -> tuple[str]:
+        return tuple(i for i in html.unescape(attrs.get("mode", "")).lstrip(":").split("/") if i)
 
     def parameters(self, attrs: dict) -> dict:
         params = urllib.parse.parse_qs(html.unescape(attrs.get("parameters", "").lstrip("?")))
@@ -138,6 +141,12 @@ class Director:
             self.notes["directives"].append(
                 (directive, self.cast.get(self.role), tuple(filter(None, (self.cast.get(r) for r in roles))))
             )
+        return html5
+
+    def handle_mode(self, html5, mode: list[str], path: pathlib.Path | str, index: int):
+        for n, item in enumerate(mode):
+            if n:
+                self.notes["media"].append(item)
         return html5
 
     def rank_constraints(self, spec: dict) -> int:
@@ -169,6 +178,9 @@ class Director:
 
             fragments = self.fragments(attrs)
             html5 = self.handle_fragments(html5, fragments, path, index)
+
+            mode = self.mode(attrs)
+            html5 = self.handle_mode(html5, mode, path, index)
 
             directives = self.directives(attrs)
             html5 = self.handle_directives(html5, directives, path, index)

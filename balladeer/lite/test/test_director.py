@@ -581,5 +581,5 @@ class ModeTests(unittest.TestCase):
         html5 = sm.loads(text)
         edit = "\n".join(d.edit(html5, selection))
         self.assertIn("media", d.notes)
-        self.assertEqual("slapwhack", d.notes["media"])
+        self.assertEqual(["slapwhack"], d.notes["media"])
 
