@@ -190,8 +190,15 @@ class Session(HTTPEndpoint):
         page.paste(page.zone.meta, Home.meta)
         page.paste(page.zone.css, Home.css)
         page.paste(page.zone.body, html5)
+
+        if director.notes["offer"] == 0:
+            print(director.notes["wait"])
+            print("Yay")
         return HTMLResponse(page.html)
 
+    def refresh():
+        # {'<meta http-equiv="refresh" content="{0};{1}">'.format(refresh, next_) if refresh and next_ else ''}
+        pass
 
 async def session_factory(config):
     world = World(config)
