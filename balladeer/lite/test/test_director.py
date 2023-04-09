@@ -420,7 +420,7 @@ class RoleTests(unittest.TestCase):
 
 
 class ParametersTests(unittest.TestCase):
-    def test__paragraph_reveal(self):
+    def test_paragraph_reveal(self):
         text = textwrap.dedent("""
             <?pause=3&dwell=0.4>
 
@@ -439,6 +439,27 @@ class ParametersTests(unittest.TestCase):
         rv = "\n".join(d.edit(html5))
         self.assertEqual(3, rv.count("animation-delay"), rv)
         self.assertEqual(3, rv.count("animation-duration"), rv)
+
+    def test_offer_refresh(self):
+        text = textwrap.dedent("""
+            <?offer=12#2>
+
+            Which way? You have only a few seconds to decide.
+
+            1. Go North
+            2. Go East (default)
+
+            """).strip()
+
+        sm = SpeechMark()
+        html5 = sm.loads(text)
+
+        d = Director(None)
+        rv = "\n".join(d.edit(html5))
+        self.assertIn("offer", d.notes)
+        self.assertEqual(12, d.notes["offer"])
+        self.assertIn("option", d.notes)
+        self.assertEqual(2, d.notes["option"])
 
 
 class LoopTests(unittest.TestCase):
@@ -515,8 +536,8 @@ class DirectiveTests(unittest.TestCase):
 
         rv = "\n".join(d.edit(html5, roles))
 
-        self.assertIn("delay", d.notes)
-        self.assertEqual(1.2, d.notes["delay"])
+        self.assertIn("wait", d.notes)
+        self.assertEqual(1.2, d.notes["wait"])
 
         self.assertIn("directives", d.notes)
         self.assertEqual(

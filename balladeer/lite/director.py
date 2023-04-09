@@ -70,6 +70,7 @@ class Director:
         pause: float = 1,
         dwell: float = 0.1,
         delay: float = 0,
+        offer: float = None,
     ):
         self.spmk = SpeechMark()
         self.fmtr = self.Formatter(self.spmk)
@@ -82,6 +83,7 @@ class Director:
         self.pause = pause
         self.dwell = dwell
         self.delay = delay
+        self.offer = offer
 
         self.cast = None
         self.role = None
@@ -120,20 +122,33 @@ class Director:
 
     def parameters(self, attrs: dict) -> dict:
         params = urllib.parse.parse_qs(html.unescape(attrs.get("parameters", "").lstrip("?")))
+        try:
+            offer = float(params["offer"][0])
+        except (IndexError, KeyError):
+            offer = self.offer
+        except TypeError:
+            offer = None
+
         return {
             "pause": float(params.get("pause", [self.pause])[0]),
             "dwell": float(params.get("dwell", [self.dwell])[0]),
-            "delay": float(params.get("delay", [self.dwell])[0]),
+            "delay": float(params.get("delay", [self.delay])[0]),
+            "offer": offer,
         }
 
     def handle_fragments(self, html5, fragments: str, path: pathlib.Path | str, index: int):
-        if fragments.endswith("!"):
+        if not fragments:
+            return html5
+        elif fragments.isdigit():
+            self.notes["option"] = int(fragments)
+        elif fragments.endswith("!"):
             list_block = self.ul_matcher.search(html5)
             list_items = list(self.li_matcher.findall(list_block.group()))
             ordinal = self.counts[(path, index)] % len(list_items)
             choice = list_items[ordinal].replace("<li>", "").replace("</li>", "")
             html5 = self.ul_matcher.sub(choice, html5)
             self.counts[(path, index)] += 1
+
         return html5
 
     def handle_directives(self, html5, directives: dict, path: pathlib.Path | str, index: int):
@@ -156,6 +171,8 @@ class Director:
     def handle_parameters(self, html5, parameters: dict, path: pathlib.Path | str, index: int):
         self.pause = parameters["pause"]
         self.dwell = parameters["dwell"]
+        self.offer = parameters["offer"]
+        self.notes["offer"] = self.offer
         return html5
 
     def rank_constraints(self, spec: dict) -> int:
@@ -195,7 +212,6 @@ class Director:
             html5 = self.handle_directives(html5, directives, path, index)
 
             html5 = self.pp_matcher.sub(self.edit_para, html5)
-            self.notes["delay"] = self.delay
 
             yield self.fmtr.format(html5, **self.cast)
 
@@ -222,6 +238,7 @@ class Director:
         delay = self.delay + self.pause
         duration = self.dwell * len(words)
         self.delay = delay + duration
+        self.notes["wait"] = self.delay
         return (
             f'<p style="animation-delay: {delay:.2f}s; animation-duration:'
             f' {duration:.2f}s">{content}</p>'
