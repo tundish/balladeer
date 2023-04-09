@@ -10,19 +10,19 @@ type = "Weapon"
 [[_]]
 
 s="""
-<FIGHTER_1?offer=0>
+<FIGHTER_1?>
 
     I don't like the way you use me, {FIGHTER_2.name}!
+
+<WEAPON.attacking@FIGHTER_2:shouts/slapwhack?offer=1>
+
+    _Whack!_
 
 """
 
 [[_]]
 
 s="""
-<WEAPON.attacking@FIGHTER_2?offer=:shouts/slapwhack>
-
-    _Whack!_
-
 <FIGHTER_2>
 
     Uuurrggh!

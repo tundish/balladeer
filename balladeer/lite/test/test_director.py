@@ -461,9 +461,10 @@ class ParametersTests(unittest.TestCase):
         self.assertIn("wait", d.notes)
         self.assertAlmostEqual(2.4, d.notes["wait"])
 
-    def test_offer_empty(self):
+    def test_offer_negative(self):
         text = textwrap.dedent("""
-            <?offer=>
+            <?offer=1>
+            <?offer=-1>
 
             Which way? Take your time.
 

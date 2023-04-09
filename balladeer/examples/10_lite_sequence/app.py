@@ -113,7 +113,7 @@ class Page:
         return rv
 
     def paste(self, zone, *args):
-        self.structure[zone].extend(args)
+        self.structure[zone].extend(filter(None, args))
         return self
 
     @property
@@ -178,27 +178,25 @@ class Session(HTTPEndpoint):
         ensemble = story.context.ensemble(story.world)
         scripts = story.context.scripts(state.assets)
         media = story.context.media(state.assets)
-        print(media)
 
         director = Director(story)
         scene, roles = director.selection(scripts, ensemble)
         html5 = director.rewrite(scene, roles)
-        print(f"{len(director.words(html5))} words")
 
         page = Page()
         page.paste(page.zone.title, "<title>Example</title>")
         page.paste(page.zone.meta, Home.meta)
+        page.paste(page.zone.meta, self.refresh(request.url, director.notes))
         page.paste(page.zone.css, Home.css)
         page.paste(page.zone.body, html5)
-
-        if director.notes["offer"] == 0:
-            print(director.notes["wait"])
-            print("Yay")
         return HTMLResponse(page.html)
 
-    def refresh():
-        # {'<meta http-equiv="refresh" content="{0};{1}">'.format(refresh, next_) if refresh and next_ else ''}
-        pass
+    def refresh(self, url, notes: dict = {}) -> str:
+        try:
+            delay = notes.get("wait", 0) + notes.get("offer", 0)
+            return f'<meta http-equiv="refresh" content="{delay:.2f};{url}">'
+        except TypeError:
+            return ""
 
 async def session_factory(config):
     world = World(config)

@@ -123,9 +123,8 @@ class Director:
     def parameters(self, attrs: dict) -> dict:
         params = urllib.parse.parse_qs(html.unescape(attrs.get("parameters", "").lstrip("?")))
         try:
-            offer = float(params["offer"][0])
-        except (IndexError, KeyError):
-            offer = self.offer
+            offer = float(params.get("offer", [self.offer])[0])
+            if offer < 0: offer = None
         except TypeError:
             offer = None
 
