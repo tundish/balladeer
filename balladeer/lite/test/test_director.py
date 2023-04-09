@@ -440,7 +440,49 @@ class ParametersTests(unittest.TestCase):
         self.assertEqual(3, rv.count("animation-delay"), rv)
         self.assertEqual(3, rv.count("animation-duration"), rv)
 
-    def test_offer_refresh(self):
+    def test_offer_empty_before_param(self):
+        text = textwrap.dedent("""
+            <?offer=&pause=0.5>
+
+            Which way? Take your time.
+
+            1. Go North
+            2. Go East
+
+            """).strip()
+
+        sm = SpeechMark()
+        html5 = sm.loads(text)
+
+        d = Director(None)
+        rv = "\n".join(d.edit(html5))
+        self.assertIn("offer", d.notes)
+        self.assertEqual(None, d.notes["offer"])
+        self.assertIn("wait", d.notes)
+        self.assertAlmostEqual(2.4, d.notes["wait"])
+
+    def test_offer_empty(self):
+        text = textwrap.dedent("""
+            <?offer=>
+
+            Which way? Take your time.
+
+            1. Go North
+            2. Go East
+
+            """).strip()
+
+        sm = SpeechMark()
+        html5 = sm.loads(text)
+
+        d = Director(None)
+        rv = "\n".join(d.edit(html5))
+        self.assertIn("offer", d.notes)
+        self.assertEqual(None, d.notes["offer"])
+        self.assertIn("wait", d.notes)
+        self.assertAlmostEqual(3.9, d.notes["wait"])
+
+    def test_offer_value(self):
         text = textwrap.dedent("""
             <?offer=12#2>
 
