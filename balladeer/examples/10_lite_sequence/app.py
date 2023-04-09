@@ -177,6 +177,8 @@ class Session(HTTPEndpoint):
 
         ensemble = story.context.ensemble(story.world)
         scripts = story.context.scripts(state.assets)
+        media = story.context.media(state.assets)
+        print(media)
 
         director = Director(story)
         scene, roles = director.selection(scripts, ensemble)
@@ -222,8 +224,6 @@ if __name__ == "__main__":
     asyncio.set_event_loop(loop)
 
     assets = list(Loader.discover(balladeer.examples, "10_lite_sequence"))
-    # TODO: Store assets for reference from director notes.
-    print(assets)
     app = loop.run_until_complete(
         app_factory(static=assets[0].path.parent, loop=loop, assets=assets, sessions={})
     )

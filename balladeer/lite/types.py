@@ -92,6 +92,9 @@ class Drama:
     def scripts(self, assets):
         return [i for i in assets if isinstance(i, Loader.Scene)]
 
+    def media(self, assets):
+        return {i.path: i for i in assets if isinstance(i, Loader.Asset)}
+
 
 class Story:
     def __init__(self, config=None, world=None, drama=[]):
