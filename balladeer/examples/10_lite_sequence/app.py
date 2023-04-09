@@ -189,6 +189,7 @@ class Session(HTTPEndpoint):
         page.paste(page.zone.meta, self.refresh(request.url, director.notes))
         page.paste(page.zone.css, Home.css)
         page.paste(page.zone.body, html5)
+        print(director.notes)
         return HTMLResponse(page.html)
 
     def refresh(self, url, notes: dict = {}) -> str:
