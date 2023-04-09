@@ -19,7 +19,7 @@ s="""
 [[_]]
 
 s="""
-<WEAPON.attacking@FIGHTER_2:shouts/slapwhack>
+<WEAPON.attacking@FIGHTER_2?offer=:shouts/slapwhack>
 
     _Whack!_
 
