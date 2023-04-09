@@ -10,7 +10,7 @@ type = "Weapon"
 [[_]]
 
 s="""
-<FIGHTER_1>
+<FIGHTER_1?offer=0>
 
     I don't like the way you use me, {FIGHTER_2.name}!
 
