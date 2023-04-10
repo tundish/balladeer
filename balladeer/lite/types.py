@@ -61,22 +61,24 @@ class Transit(Entity):
 
 
 # TODO: Reconcile with balladeer.cartography.Map
-class MapBuilder:
-    def __init__(self, spots):
+class MapMaker:
+    def __init__(self, spots, config=None):
+        self.config = config
         global Into, Spot, Exit
         self.into = Into = enum.Enum("Into", spots, type=State)
         self.exit = Exit = enum.Enum("Exit", spots, type=State)
         self.spot = Spot = enum.Enum("Spot", spots, type=State)
-        self.transits = list(self.build())
+        self.transits = list(self.make())
 
-    def build(self):
+    def make(self):
         raise NotImplementedError
 
 
 class WorldBuilder:
-    def __init__(self, config, map=None):
-        self.config = config
+    def __init__(self, map, config=None):
         self.map = map
+        self.config = config
+        # TODO: Grouper by type or name of type?
         self.entities = list(self.build())
 
     def build(self):
@@ -84,11 +86,13 @@ class WorldBuilder:
 
 
 class Drama:
-    def __init__(self, config):
+    def __init__(self, world, config=None):
+        self.world = world
         self.config = config
 
-    def ensemble(self, world):
-        return world.entities
+    @property
+    def ensemble(self):
+        return self.world.entities
 
     def scripts(self, assets):
         return [i for i in assets if isinstance(i, Loader.Scene)]
@@ -113,9 +117,9 @@ class StoryBuilder:
     def build(self):
         drama_classes = Drama.__subclasses__()
         if not drama_classes:
-            yield Drama(self.config)
+            yield Drama(self.world, config=self.config)
         else:
-            yield from (d(self.config) for d in drama_classes)
+            yield from (d(self.world, config=self.config) for d in drama_classes)
 
     @property
     def context(self):

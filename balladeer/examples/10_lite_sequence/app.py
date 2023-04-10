@@ -174,12 +174,11 @@ class Session(HTTPEndpoint):
         state = request.app.state
         story = state.sessions[session_id]
 
-        ensemble = story.context.ensemble(story.world)
         scripts = story.context.scripts(state.assets)
         media = story.context.media(state.assets)
 
         director = Director(story)
-        scene, roles = director.selection(scripts, ensemble)
+        scene, roles = director.selection(scripts, story.context.ensemble)
         html5 = director.rewrite(scene, roles)
 
         page = Page()
