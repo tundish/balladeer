@@ -69,7 +69,6 @@ class Director:
 
     def __init__(
         self,
-        story,
         shot_key: str = "_",
         dlg_key: str = "s",
         pause: float = 1,
@@ -82,7 +81,6 @@ class Director:
         self.counts = Counter()
         self.notes = defaultdict(list)  # TODO: Capture directives in 'offstage'
 
-        self.story = story
         self.shot_key = shot_key
         self.dlg_key = dlg_key
         self.pause = pause

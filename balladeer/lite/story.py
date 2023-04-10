@@ -21,12 +21,13 @@ from collections import deque
 from collections.abc import Callable
 import uuid
 
+from balladeer.lite.director import Director 
 from balladeer.lite.types import Drama
 from balladeer.lite.types import WorldBuilder 
 
 
 class StoryBuilder:
-    def __init__(self, config, world: WorldBuilder = None, drama: [list | deque] = None):
+    def __init__(self, config, world: WorldBuilder = None, drama: [list | deque] = None, **kwargs):
         self.uid = uuid.uuid4()
         self.config = config
         if not world:
@@ -37,6 +38,8 @@ class StoryBuilder:
 
         self.drama = drama or deque([])
         self.drama.extend(self.build())
+
+        self.director = Director(**kwargs)
 
     def build(self):
         drama_classes = Drama.__subclasses__()
@@ -53,5 +56,5 @@ class StoryBuilder:
         for action, entity, entities in directives:
             method = getattr(self.context, f"{prefix}{action}")
             if isinstance(method, Callable):
-                print(method)
-        yield from directives
+                # TODO: Log errors
+                yield method(entity, *entities, **kwargs)

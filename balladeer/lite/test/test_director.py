@@ -42,7 +42,7 @@ class EditTests(unittest.TestCase):
         sm = SpeechMark()
         html5 = sm.loads(text)
 
-        director = Director(story=None)
+        director = Director()
         self.assertEqual(5, len(director.lines(html5)))
         self.assertEqual(24, len(director.words(html5)))
 
@@ -56,7 +56,7 @@ class EditTests(unittest.TestCase):
             I don't like the way you use me, {FIGHTER_2.name}!
 
         """).strip()
-        director = Director(story=None)
+        director = Director()
         selection = {
             "FIGHTER_1": Entity(name="Biffy"),
             "FIGHTER_2": Entity(name="Bashy"),
@@ -77,7 +77,7 @@ class EditTests(unittest.TestCase):
             I don't like the way you use me, {FIGHTER_2.name}!
 
         """).strip()
-        director = Director(story=None)
+        director = Director()
         selection = {
             "FIGHTER_1": Entity(name="Bîffy"),
             "FIGHTER_2": Entity(name="Båshy"),
@@ -98,7 +98,7 @@ class EditTests(unittest.TestCase):
             I don't like the way you use me, {FIGHTER_2.name!a}!
 
         """).strip()
-        director = Director(story=None)
+        director = Director()
         selection = {
             "FIGHTER_1": Entity(name="Bîffy"),
             "FIGHTER_2": Entity(name="Båshy"),
@@ -123,7 +123,7 @@ class EditTests(unittest.TestCase):
             Uuurrggh!
 
         """).strip()
-        director = Director(story=None)
+        director = Director()
         selection = {
             "WEAPON": Entity(name="Rusty"),
             "FIGHTER_2": Entity(name="Bashy"),
@@ -156,7 +156,7 @@ class IntegerConditionTests(unittest.TestCase):
 
         """).strip()
 
-        d = Director(None)
+        d = Director()
         scene = tomllib.loads(content)
         conditions = [dict(d.specify_conditions(shot)) for shot in scene.get(d.shot_key)]
         self.assertEqual(2, len(conditions))
@@ -180,7 +180,7 @@ class IntegerConditionTests(unittest.TestCase):
 
         """).strip()
 
-        d = Director(None)
+        d = Director()
         scene = tomllib.loads(content)
         conditions = [dict(d.specify_conditions(shot)) for shot in scene.get(d.shot_key)]
         self.assertEqual(2, len(conditions))
@@ -204,7 +204,7 @@ class IntegerConditionTests(unittest.TestCase):
 
         """).strip()
 
-        d = Director(None)
+        d = Director()
         scene = tomllib.loads(content)
         conditions = [dict(d.specify_conditions(shot)) for shot in scene.get(d.shot_key)]
         self.assertEqual(2, len(conditions))
@@ -274,7 +274,7 @@ class EnumConditionTests(unittest.TestCase):
         ]
 
     def test_condition_evaluation_one(self):
-        d = Director(None)
+        d = Director()
         scene = tomllib.loads(self.content)
         conditions = [dict(d.specify_conditions(shot)) for shot in scene.get(d.shot_key)]
         self.assertEqual(5, len(conditions))
@@ -293,7 +293,7 @@ class EnumConditionTests(unittest.TestCase):
         self.ensemble[1].set_state(self.Weather.stormy)
         self.ensemble[2].set_state(self.Weather.stormy)
 
-        d = Director(None)
+        d = Director()
         scene = tomllib.loads(self.content)
         conditions = [dict(d.specify_conditions(shot)) for shot in scene.get(d.shot_key)]
         self.assertEqual(5, len(conditions))
@@ -316,7 +316,7 @@ class EnumConditionTests(unittest.TestCase):
 
         """).strip()
         scene = tomllib.loads(content)
-        director = Director(None)
+        director = Director()
         shot = next(iter(scene.get(director.shot_key)))
         conditions = dict(director.specify_conditions(shot))
         self.assertIn("WEATHER", conditions)
@@ -331,7 +331,7 @@ class EnumConditionTests(unittest.TestCase):
 
         """).strip()
         scene = tomllib.loads(content)
-        director = Director(None)
+        director = Director()
         shot = next(iter(scene.get(director.shot_key)))
         conditions = dict(director.specify_conditions(shot))
         self.assertIn("WEATHER", conditions)
@@ -403,7 +403,7 @@ class RoleTests(unittest.TestCase):
             },
         }
         ranks = [0, 1, 0.5, 2, 2, 3, 2, 1]
-        d = Director(None)
+        d = Director()
         for n, (k, v) in enumerate(roles.items()):
             with self.subTest(role=k, spec=v):
                 rank = d.rank_constraints(v)
@@ -434,7 +434,7 @@ class RoleTests(unittest.TestCase):
         scene = tomllib.loads(text)
         self.assertIsInstance(scene, dict)
 
-        director = Director(None)
+        director = Director()
         rv = dict(director.roles(scene, self.ensemble))
         self.assertEqual(3, len(rv), rv)
         self.assertEqual(entities["Bashy"], rv["FIGHTER_1"])
@@ -466,7 +466,7 @@ class RoleTests(unittest.TestCase):
         scene = tomllib.loads(text)
         self.assertIsInstance(scene, dict)
 
-        director = Director(None)
+        director = Director()
         rv = dict(director.roles(scene, self.ensemble))
         self.assertEqual(3, len(rv), rv)
         self.assertEqual(entities["Bashy"], rv["FIGHTER_1"])
@@ -486,7 +486,7 @@ class RoleTests(unittest.TestCase):
 
         entities = {i.name: i for i in self.ensemble}
 
-        director = Director(None)
+        director = Director()
         rv = dict(director.roles(scene, self.ensemble))
         self.assertEqual(2, len(rv), rv)
         self.assertEqual(entities["Bashy"], rv["CHARACTER_1"])
@@ -509,7 +509,7 @@ class ParametersTests(unittest.TestCase):
         sm = SpeechMark()
         html5 = sm.loads(text)
 
-        d = Director(None)
+        d = Director()
         rv = "\n".join(d.edit(html5))
         self.assertEqual(3, rv.count("animation-delay"), rv)
         self.assertEqual(3, rv.count("animation-duration"), rv)
@@ -528,7 +528,7 @@ class ParametersTests(unittest.TestCase):
         sm = SpeechMark()
         html5 = sm.loads(text)
 
-        d = Director(None)
+        d = Director()
         rv = "\n".join(d.edit(html5))
         self.assertIn("offer", d.notes)
         self.assertEqual(None, d.notes["offer"])
@@ -550,7 +550,7 @@ class ParametersTests(unittest.TestCase):
         sm = SpeechMark()
         html5 = sm.loads(text)
 
-        d = Director(None)
+        d = Director()
         rv = "\n".join(d.edit(html5))
         self.assertIn("offer", d.notes)
         self.assertEqual(None, d.notes["offer"])
@@ -571,7 +571,7 @@ class ParametersTests(unittest.TestCase):
         sm = SpeechMark()
         html5 = sm.loads(text)
 
-        d = Director(None)
+        d = Director()
         rv = "\n".join(d.edit(html5))
         self.assertIn("offer", d.notes)
         self.assertEqual(12, d.notes["offer"])
@@ -597,14 +597,14 @@ class LoopTests(unittest.TestCase):
 
     def test_attr_matcher(self):
         text = '<cite data-role="GUEST" data-fragments="#!">'
-        d = Director(story=None)
+        d = Director()
         attrs = d.attributes(text)
         self.assertIn("role", attrs)
         self.assertEqual("GUEST", attrs["role"], attrs)
         self.assertEqual("#!", attrs["fragments"])
 
     def test_bang_loop(self):
-        d = Director(story=None)
+        d = Director()
 
         scene = tomllib.loads(self.script)
         specs = d.specifications(scene)
@@ -642,7 +642,7 @@ class DirectiveTests(unittest.TestCase):
         scene = tomllib.loads(script)
         ensemble = [Entity(), Entity(), Entity()]
 
-        d = Director(None)
+        d = Director()
         specs = d.specifications(scene)
         roles = dict(d.roles(specs, ensemble))
 
@@ -675,7 +675,7 @@ class ModeTests(unittest.TestCase):
             Uuurrggh!
 
         """).strip()
-        d = Director(story=None)
+        d = Director()
         selection = {
             "WEAPON": Entity(name="Rusty"),
             "FIGHTER_2": Entity(name="Bashy"),

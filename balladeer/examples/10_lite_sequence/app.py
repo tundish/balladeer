@@ -163,7 +163,6 @@ class Start(HTTPEndpoint):
     async def post(self, request):
         story = request.app.state.builder(request.app.state.config)
         request.app.state.sessions[story.uid] = story
-        print(f"World: {story.context.world}")
         return RedirectResponse(
             url=request.url_for("session", session_id=story.uid), status_code=303
         )
@@ -174,21 +173,22 @@ class Session(HTTPEndpoint):
         session_id = request.path_params["session_id"]
         state = request.app.state
         story = state.sessions[session_id]
+        list(story.action(story.director.notes["directives"]))
+        story.director.notes.clear()
 
         scripts = story.context.scripts(state.assets)
         media = story.context.media(state.assets)
 
-        director = Director(story)
-        scene, roles = director.selection(scripts, story.context.ensemble)
-        html5 = director.rewrite(scene, roles)
+        scene, roles = story.director.selection(scripts, story.context.ensemble)
+        html5 = story.director.rewrite(scene, roles)
 
         page = Page()
         page.paste(page.zone.title, "<title>Example</title>")
         page.paste(page.zone.meta, Home.meta)
-        page.paste(page.zone.meta, self.refresh(request.url, director.notes))
+        page.paste(page.zone.meta, self.refresh(request.url, story.director.notes))
         page.paste(page.zone.css, Home.css)
         page.paste(page.zone.body, html5)
-        print(director.notes)
+        print(story.director.notes)
         return HTMLResponse(page.html)
 
     def refresh(self, url, notes: dict = {}) -> str:
