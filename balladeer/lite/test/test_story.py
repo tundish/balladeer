@@ -29,7 +29,6 @@ class ExampleTests(unittest.TestCase):
     def test_cartoon_fight(self):
         content = textwrap.dedent('''
             [FIGHTER_1]
-            roles = ["WEAPON"]
             state = 1
 
             [FIGHTER_2]
@@ -38,6 +37,7 @@ class ExampleTests(unittest.TestCase):
 
             [WEAPON]
             type = "Weapon"
+            roles = ["FIGHTER_1"]
             state = 1
 
             [[_]]
@@ -66,6 +66,9 @@ class ExampleTests(unittest.TestCase):
         scene = Loader.Scene(content, tomllib.loads(content))
         story = Story(config={})
         specs = story.director.specifications(scene.tables)
+        self.assertEqual(story.director.rank_constraints(specs["FIGHTER_1"]), 1, specs)
+        self.assertEqual(story.director.rank_constraints(specs["FIGHTER_2"]), 2, specs)
+        self.assertEqual(story.director.rank_constraints(specs["WEAPON"]), 3, specs)
 
         for n in range(2):
             with self.subTest(n=n):

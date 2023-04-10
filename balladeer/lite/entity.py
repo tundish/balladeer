@@ -54,7 +54,7 @@ class Entity:
 
     @property
     def name(self):
-        return random.choice(self.names or [self.name])
+        return random.choice(self.names or [""])
 
     @property
     def state(self):

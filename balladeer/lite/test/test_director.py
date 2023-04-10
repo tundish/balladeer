@@ -459,7 +459,7 @@ class RoleTests(unittest.TestCase):
                 "roles": ["B", "D"],
             },
         }
-        ranks = [0, 1, 0.5, 2, 2, 3, 2, 1]
+        ranks = [0, 1, 0.5, 2, 2, 3, 2, 5]
         d = Director()
         for n, (k, v) in enumerate(roles.items()):
             with self.subTest(role=k, spec=v):
@@ -530,7 +530,7 @@ class RoleTests(unittest.TestCase):
         self.assertEqual(entities["Biffy"], rv["FIGHTER_2"])
         self.assertEqual(entities["Rusty"], rv["WEAPON"])
 
-    def test_roles_not_greedy(self):
+    def test_roles_are_greedy(self):
         text = textwrap.dedent("""
         [CHARACTER_1]
         roles = ["CHARACTER_2"]
@@ -546,7 +546,7 @@ class RoleTests(unittest.TestCase):
         director = Director()
         rv = dict(director.roles(scene, self.ensemble))
         self.assertEqual(2, len(rv), rv)
-        self.assertEqual(entities["Bashy"], rv["CHARACTER_1"])
+        self.assertEqual(entities["Biffy"], rv["CHARACTER_1"])
         self.assertEqual(entities["Biffy"], rv["CHARACTER_2"])
 
 

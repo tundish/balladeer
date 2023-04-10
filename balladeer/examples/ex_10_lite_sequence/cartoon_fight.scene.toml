@@ -1,5 +1,4 @@
 [FIGHTER_1]
-roles = ["WEAPON"]
 state = 1
 
 [FIGHTER_2]
@@ -8,6 +7,7 @@ state = 1
 
 [WEAPON]
 type = "Weapon"
+roles = ["FIGHTER_1"]
 state = 1
 
 [[_]]
