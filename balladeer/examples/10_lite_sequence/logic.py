@@ -17,7 +17,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from balladeer.lite.types import Drama
 from balladeer.lite.types import Entity
+from balladeer.lite.types import Story
 from balladeer.lite.types import WorldBuilder
 
 
@@ -28,3 +30,9 @@ class World(WorldBuilder):
             Entity(name="Bashy", type="Animal"),
             Entity(name="Rusty", type="Weapon"),
         ]
+
+
+def story_factory(config):
+    world = World(config)
+    story = Story(config, world)
+    return story.uid, story

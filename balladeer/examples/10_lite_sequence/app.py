@@ -41,9 +41,8 @@ from starlette.staticfiles import StaticFiles
 import balladeer
 from balladeer.lite.loader import Loader
 from balladeer.lite.director import Director
-from balladeer.lite.types import Story
 
-from .logic import World
+from .logic import story_factory
 
 
 __doc__ = """
@@ -164,7 +163,7 @@ class Home(HTTPEndpoint):
 class Start(HTTPEndpoint):
     async def post(self, request):
         sessions = request.app.state.sessions
-        key, val = await session_factory(request.app.state.config)
+        key, val = story_factory(request.app.state.config)
         sessions[key] = val
         return RedirectResponse(url=request.url_for("session", session_id=key), status_code=303)
 
@@ -198,11 +197,6 @@ class Session(HTTPEndpoint):
             return f'<meta http-equiv="refresh" content="{delay:.2f};{url}">'
         except TypeError:
             return ""
-
-async def session_factory(config):
-    world = World(config)
-    story = Story(config, world)
-    return story.uid, story
 
 
 async def app_factory(config=None, static=None, loop=None, **kwargs):
