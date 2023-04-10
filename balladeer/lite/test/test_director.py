@@ -141,7 +141,34 @@ class EditTests(unittest.TestCase):
         self.assertIn(">Bashy</cite>", edit)
 
 
-class ConditionTests(unittest.TestCase):
+class IntegerConditionTests(unittest.TestCase):
+
+    def test_single_state_condition(self):
+        ensemble = [Entity().set_state(1)]
+        content = textwrap.dedent("""
+        [ENTITY]
+
+        [[_]]
+        if.ENTITY.state = 0
+
+        [[_]]
+        if.ENTITY.state = 1
+
+        """).strip()
+
+        d = Director(None)
+        scene = tomllib.loads(content)
+        conditions = [dict(d.specify_conditions(shot)) for shot in scene.get(d.shot_key)]
+        self.assertEqual(2, len(conditions))
+
+        specs = d.specifications(scene)
+
+        roles = dict(d.roles(specs, ensemble))
+        self.assertFalse(d.allows(conditions[0], roles))
+        self.assertTrue(d.allows(conditions[1], roles))
+
+
+class EnumConditionTests(unittest.TestCase):
     class Rain(Entity):
         pass
 

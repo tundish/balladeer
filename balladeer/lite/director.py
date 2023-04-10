@@ -53,6 +53,8 @@ class Director:
         try:
             key, value = spec["state"].split(".")
             states.setdefault(key, set()).add(value)
+        except AttributeError:
+            states.setdefault("int", set()).add(spec["state"])
         except (KeyError, ValueError):
             pass
 
@@ -305,7 +307,12 @@ class Director:
             ):
                 return False
             for state, values in states.items():
-                if entity.get_state(state).name not in values:
+                try:
+                    key = entity.get_state(state).name
+                except AttributeError:
+                    key = entity.get_state(state)
+
+                if key not in values:
                     return False
 
         return True
