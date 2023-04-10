@@ -54,7 +54,10 @@ class Director:
             key, value = spec["state"].split(".")
             states.setdefault(key, set()).add(value)
         except AttributeError:
-            states.setdefault("int", set()).add(spec["state"])
+            # Special case for integer state
+            value = spec["state"]
+            values = set([value]) if isinstance(value, int) else set(value)
+            states["int"] = states.get("int", set()).union(values)
         except (KeyError, ValueError):
             pass
 
