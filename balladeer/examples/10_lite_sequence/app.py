@@ -41,8 +41,7 @@ from starlette.staticfiles import StaticFiles
 import balladeer
 from balladeer.lite.loader import Loader
 from balladeer.lite.director import Director
-
-from .logic import Story
+from balladeer.lite.types import StoryBuilder
 
 
 __doc__ = """
@@ -162,10 +161,12 @@ class Home(HTTPEndpoint):
 
 class Start(HTTPEndpoint):
     async def post(self, request):
-        sessions = request.app.state.sessions
-        story = Story(request.app.state.config)
-        sessions[story.uid] = story
-        return RedirectResponse(url=request.url_for("session", session_id=story.uid), status_code=303)
+        story = request.app.state.builder(request.app.state.config)
+        request.app.state.sessions[story.uid] = story
+        print(f"World: {story.context.world}")
+        return RedirectResponse(
+            url=request.url_for("session", session_id=story.uid), status_code=303
+        )
 
 
 class Session(HTTPEndpoint):
@@ -198,8 +199,15 @@ class Session(HTTPEndpoint):
             return ""
 
 
-async def app_factory(config=None, static=None, loop=None, **kwargs):
-    routes = [
+async def app_factory(
+    builder: StoryBuilder = None,
+    config=None,
+    routes: list = None,
+    static=None,
+    loop=None,
+    **kwargs,
+):
+    routes = routes or [
         Route("/", Home),
         Route("/about", About),
         Route("/sessions", Start, methods=["POST"], name="start"),
@@ -209,6 +217,7 @@ async def app_factory(config=None, static=None, loop=None, **kwargs):
         routes.append(Mount("/static", app=StaticFiles(directory=static), name="static"))
 
     app = Starlette(routes=routes)
+    app.state.builder = builder or next(iter(StoryBuilder.__subclasses__()), StoryBuilder)
     app.state.config = config
 
     for k, v in kwargs.items():
@@ -218,6 +227,7 @@ async def app_factory(config=None, static=None, loop=None, **kwargs):
 
 
 if __name__ == "__main__":
+    from .logic import Story
     print(HTTPEndpoint.__subclasses__())  # Register head, body generators?
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)

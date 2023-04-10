@@ -32,4 +32,5 @@ class World(WorldBuilder):
         ]
 
 
-class Story(StoryBuilder): pass
+class Story(StoryBuilder):
+    pass
