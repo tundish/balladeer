@@ -19,6 +19,7 @@
 
 from balladeer.lite.types import Drama
 from balladeer.lite.types import Entity
+from balladeer.lite.types import State
 from balladeer.lite.types import StoryBuilder
 from balladeer.lite.types import WorldBuilder
 
@@ -30,6 +31,13 @@ class World(WorldBuilder):
             Entity(name="Bashy", type="Animal"),
             Entity(name="Rusty", type="Weapon"),
         ]
+
+
+class Fight(Drama):
+
+    def on_attacking(self, entity: Entity, *args: tuple[Entity], **kwargs):
+        for enemy in args:
+            enemy.set_state()
 
 
 class Story(StoryBuilder):

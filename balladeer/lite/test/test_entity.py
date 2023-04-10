@@ -89,6 +89,30 @@ class TestEnumStates(unittest.TestCase):
         self.assertEqual({"Colour": TestEnumStates.Colour.green}, s.states)
 
 
+class TestIntegerStates(unittest.TestCase):
+
+    def test_state_as_int(self):
+        s = Entity()
+        s.set_state(3)
+        self.assertEqual(3, s.get_state(int))
+        self.assertEqual(3, s.get_state("int"))
+        self.assertEqual(3, s.state)
+
+    def test_state_as_int_twice(self):
+        s = Entity()
+        s.set_state(3, 3)
+        self.assertEqual(3, s.get_state(int))
+        self.assertEqual(3, s.get_state("int"))
+        self.assertEqual(3, s.state)
+
+    def test_state_as_int_args(self):
+        s = Entity()
+        s.set_state(3, 4, 5)
+        self.assertEqual(5, s.get_state(int))
+        self.assertEqual(5, s.get_state("int"))
+        self.assertEqual(5, s.state)
+
+
 class TestStringStates(unittest.TestCase):
     class Colour(enum.Enum):
         red = "ff0000"

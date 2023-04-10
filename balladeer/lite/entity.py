@@ -69,7 +69,7 @@ class Entity:
             self.states[type(arg).__name__] = arg
         return self
 
-    def get_state(self, typ: State = None):
+    def get_state(self, typ: State = int):
         try:
             return self.states.get(typ.__name__)
         except AttributeError:
