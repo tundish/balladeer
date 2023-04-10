@@ -180,6 +180,8 @@ class Director:
 
     def rank_constraints(self, spec: dict) -> int:
         roles, states, types = self.specify_role(spec)
+        # rv = sum(1 / len(v) for v in states.values()) + len(types) - len(roles)
+        # print(f"{roles} {states} {types} {rv}")
         return sum(1 / len(v) for v in states.values()) + len(types) - len(roles)
 
     def lines(self, html5: str) -> list[str]:
