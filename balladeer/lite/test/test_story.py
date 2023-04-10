@@ -18,16 +18,16 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import textwrap
+import tomllib
 import unittest
 
 from balladeer.examples.ex_10_lite_sequence.logic import Story
+from balladeer.lite.loader import Loader
 
 
 class ExampleTests(unittest.TestCase):
-
     def test_cartoon_fight(self):
-        content = textwrap.dedent(
-            '''
+        content = textwrap.dedent('''
             [FIGHTER_1]
             roles = ["WEAPON"]
             state = 1
@@ -61,8 +61,24 @@ class ExampleTests(unittest.TestCase):
                 Uuurrggh!
 
             """
-            '''
-        ).strip()
+            ''').strip()
 
+        scene = Loader.Scene(content, tomllib.loads(content))
         story = Story(config={})
-        self.fail(story.drama)
+        specs = story.director.specifications(scene.tables)
+
+        for n in range(2):
+            with self.subTest(n=n):
+                directives = story.director.notes["directives"]
+                actions = list(story.action(directives))
+                story.director.notes.clear()
+                if not n:
+                    self.assertFalse(directives)
+                    self.assertFalse(actions)
+                else:
+                    self.assertTrue(directives)
+                    self.assertTrue(actions)
+
+                roles = dict(story.director.roles(specs, story.context.ensemble))
+                self.assertEqual(3, len(roles), roles)
+                html5 = story.director.rewrite(scene, roles)
