@@ -275,7 +275,8 @@ class Director:
                         or entity.__class__.__name__ in types
                     )
                     and all(
-                        k in entity.states and entity.get_state(k).name in v
+                        k in entity.states
+                        and getattr(entity.get_state(k), "name", entity.get_state(k)) in v
                         for k, v in states.items()
                     )
                 )

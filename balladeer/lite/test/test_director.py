@@ -142,6 +142,24 @@ class EditTests(unittest.TestCase):
 
 
 class IntegerConditionTests(unittest.TestCase):
+    def test_single_state_selector(self):
+        ensemble = [Entity().set_state(1)]
+        content = textwrap.dedent("""
+        [ENTITY]
+        state = 1
+
+        [[_]]
+
+        """).strip()
+
+        d = Director()
+        scene = tomllib.loads(content)
+        conditions = [dict(d.specify_conditions(shot)) for shot in scene.get(d.shot_key)]
+
+        specs = d.specifications(scene)
+
+        roles = dict(d.roles(specs, ensemble))
+        self.assertTrue(d.allows(conditions[0], roles))
 
     def test_single_state_condition(self):
         ensemble = [Entity().set_state(1)]
@@ -167,6 +185,25 @@ class IntegerConditionTests(unittest.TestCase):
         self.assertFalse(d.allows(conditions[0], roles))
         self.assertTrue(d.allows(conditions[1], roles))
 
+    def test_multi_state_selector(self):
+        ensemble = [Entity().set_state(1)]
+        content = textwrap.dedent("""
+        [ENTITY]
+        states.int = [0, 2, 4, 6]
+
+        [[_]]
+
+        """).strip()
+
+        d = Director()
+        scene = tomllib.loads(content)
+        conditions = [dict(d.specify_conditions(shot)) for shot in scene.get(d.shot_key)]
+
+        specs = d.specifications(scene)
+
+        roles = dict(d.roles(specs, ensemble))
+        self.assertTrue(d.allows(conditions[0], roles))
+
     def test_multi_state_condition(self):
         ensemble = [Entity().set_state(1)]
         content = textwrap.dedent("""
@@ -191,6 +228,25 @@ class IntegerConditionTests(unittest.TestCase):
         self.assertFalse(d.allows(conditions[0], roles))
         self.assertTrue(d.allows(conditions[1], roles))
 
+    def test_multi_implicit_state_selector(self):
+        ensemble = [Entity().set_state(1)]
+        content = textwrap.dedent("""
+        [ENTITY]
+        state = [0, 2, 4, 6]
+
+        [[_]]
+
+        """).strip()
+
+        d = Director()
+        scene = tomllib.loads(content)
+        conditions = [dict(d.specify_conditions(shot)) for shot in scene.get(d.shot_key)]
+
+        specs = d.specifications(scene)
+
+        roles = dict(d.roles(specs, ensemble))
+        self.assertTrue(d.allows(conditions[0], roles))
+
     def test_multi_implicit_state_condition(self):
         ensemble = [Entity().set_state(1)]
         content = textwrap.dedent("""
@@ -214,6 +270,7 @@ class IntegerConditionTests(unittest.TestCase):
         roles = dict(d.roles(specs, ensemble))
         self.assertFalse(d.allows(conditions[0], roles))
         self.assertTrue(d.allows(conditions[1], roles))
+
 
 class EnumConditionTests(unittest.TestCase):
     class Rain(Entity):

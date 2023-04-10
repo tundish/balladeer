@@ -21,13 +21,15 @@ from collections import deque
 from collections.abc import Callable
 import uuid
 
-from balladeer.lite.director import Director 
+from balladeer.lite.director import Director
 from balladeer.lite.types import Drama
-from balladeer.lite.types import WorldBuilder 
+from balladeer.lite.types import WorldBuilder
 
 
 class StoryBuilder:
-    def __init__(self, config, world: WorldBuilder = None, drama: [list | deque] = None, **kwargs):
+    def __init__(
+        self, config, world: WorldBuilder = None, drama: [list | deque] = None, **kwargs
+    ):
         self.uid = uuid.uuid4()
         self.config = config
         if not world:

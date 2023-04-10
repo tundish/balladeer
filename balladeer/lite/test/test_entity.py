@@ -90,7 +90,6 @@ class TestEnumStates(unittest.TestCase):
 
 
 class TestIntegerStates(unittest.TestCase):
-
     def test_state_as_int(self):
         s = Entity()
         s.set_state(3)
