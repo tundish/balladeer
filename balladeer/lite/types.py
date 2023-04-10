@@ -18,7 +18,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from collections import defaultdict
-from collections import deque
 import dataclasses
 import enum
 import random
@@ -99,28 +98,3 @@ class Drama:
 
     def media(self, assets):
         return {i.path: i for i in assets if isinstance(i, Loader.Asset)}
-
-
-class StoryBuilder:
-    def __init__(self, config, world: WorldBuilder = None, drama: [list | deque] = None):
-        self.uid = uuid.uuid4()
-        self.config = config
-        if not world:
-            world_type = next(iter(WorldBuilder.__subclasses__()), WorldBuilder)
-            self.world = world_type(config)
-        else:
-            self.world = world
-
-        self.drama = drama or deque([])
-        self.drama.extend(self.build())
-
-    def build(self):
-        drama_classes = Drama.__subclasses__()
-        if not drama_classes:
-            yield Drama(self.world, config=self.config)
-        else:
-            yield from (d(self.world, config=self.config) for d in drama_classes)
-
-    @property
-    def context(self):
-        return self.drama[0]

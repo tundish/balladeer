@@ -41,7 +41,7 @@ from starlette.staticfiles import StaticFiles
 import balladeer
 from balladeer.lite.loader import Loader
 from balladeer.lite.director import Director
-from balladeer.lite.types import StoryBuilder
+from balladeer.lite.story import StoryBuilder
 
 
 __doc__ = """
