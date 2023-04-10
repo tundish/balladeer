@@ -40,4 +40,5 @@ class Fight(Drama):
 
 
 class Story(StoryBuilder):
-    pass
+    def build(self):
+        yield Fight(self.world, config=self.config)

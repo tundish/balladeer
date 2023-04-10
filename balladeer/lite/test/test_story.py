@@ -20,8 +20,7 @@
 import textwrap
 import unittest
 
-from balladeer.lite.story import StoryBuilder
-from balladeer.examples.ex_10_lite_sequence.logic import World
+from balladeer.examples.ex_10_lite_sequence.logic import Story
 
 
 class ExampleTests(unittest.TestCase):
@@ -64,5 +63,6 @@ class ExampleTests(unittest.TestCase):
             """
             '''
         ).strip()
-        story = StoryBuilder(config={})
-        self.fail(story)
+
+        story = Story(config={})
+        self.fail(story.drama)

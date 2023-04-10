@@ -232,7 +232,7 @@ if __name__ == "__main__":
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
-    assets = list(Loader.discover(balladeer.examples, "10_lite_sequence"))
+    assets = list(Loader.discover(balladeer.examples, "ex_10_lite_sequence"))
     app = loop.run_until_complete(
         app_factory(static=assets[0].path.parent, loop=loop, assets=assets, sessions={})
     )
