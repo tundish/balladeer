@@ -27,9 +27,9 @@ from balladeer.lite.types import WorldBuilder
 class World(WorldBuilder):
     def build(self):
         yield from [
-            Entity(name="Biffy", type="Animal"),
-            Entity(name="Bashy", type="Animal"),
-            Entity(name="Rusty", type="Weapon"),
+            Entity(name="Biffy", type="Animal").set_state(1),
+            Entity(name="Bashy", type="Animal").set_state(1),
+            Entity(name="Rusty", type="Weapon").set_state(1),
         ]
 
 
@@ -37,7 +37,7 @@ class Fight(Drama):
 
     def on_attacking(self, entity: Entity, *args: tuple[Entity], **kwargs):
         for enemy in args:
-            enemy.set_state()
+            enemy.set_state(0)
 
 
 class Story(StoryBuilder):
