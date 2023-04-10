@@ -6,6 +6,18 @@
 Change Log
 ::::::::::
 
+0.29.0
+======
+
+Substantial effort towards implementation of *lite* variant.
+Some key things to note:
+
+* Decision on convention for naming of scene files (`.scene.toml`).
+* Recreation of previous cartoon fight example to pin down casting priorities.
+* Decoupling of Story (organisation) from Director (presentation).
+* Some refinement around previous patterns used for World and Map.
+* Lots more unit tests. Commitment to TDD. They run fast, too.
+
 0.28.0
 ======
 
