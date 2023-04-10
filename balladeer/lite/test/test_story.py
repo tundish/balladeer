@@ -51,16 +51,11 @@ class ExampleTests(unittest.TestCase):
 
                 _Whack!_
 
-            """
-
-            [[_]]
-
-            s="""
-            <FIGHTER_2>
+            <FIGHTER_2?offer=1>
 
                 Uuurrggh!
-
             """
+
             ''').strip()
 
         scene = Loader.Scene(content, tomllib.loads(content))
@@ -70,7 +65,7 @@ class ExampleTests(unittest.TestCase):
         self.assertEqual(story.director.rank_constraints(specs["FIGHTER_2"]), 2, specs)
         self.assertEqual(story.director.rank_constraints(specs["WEAPON"]), 3, specs)
 
-        for n in range(2):
+        for n in range(3):
             with self.subTest(n=n):
                 directives = story.director.notes["directives"]
                 actions = list(story.action(directives))
@@ -83,5 +78,12 @@ class ExampleTests(unittest.TestCase):
                     self.assertTrue(actions)
 
                 roles = dict(story.director.roles(specs, story.context.ensemble))
-                self.assertEqual(3, len(roles), roles)
-                html5 = story.director.rewrite(scene, roles)
+
+                if n == 2:
+                    self.assertEqual(2, len(roles), roles)
+                    self.assertRaises(KeyError, story.director.rewrite, scene, roles)
+                else:
+                    self.assertEqual(3, len(roles), roles)
+                    html5 = story.director.rewrite(scene, roles)
+                    self.assertTrue(html5)
+

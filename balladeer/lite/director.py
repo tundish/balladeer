@@ -253,6 +253,8 @@ class Director:
             roles = dict(self.roles(specs, ensemble))
             if len(roles) == len(specs):
                 return scene, roles
+        else:
+            return {}, {}
 
     def specifications(self, toml: dict):
         return {k: v for k, v in toml.items() if isinstance(v, dict) and k != self.shot_key}

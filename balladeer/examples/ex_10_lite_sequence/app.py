@@ -180,6 +180,11 @@ class Session(HTTPEndpoint):
         media = story.context.media(state.assets)
 
         scene, roles = story.director.selection(scripts, story.context.ensemble)
+        if not (scene and roles):
+            return RedirectResponse(
+                url=request.url_for("home"), status_code=300
+            )
+
         html5 = story.director.rewrite(scene, roles)
 
         page = Page()
@@ -188,7 +193,6 @@ class Session(HTTPEndpoint):
         page.paste(page.zone.meta, self.refresh(request.url, story.director.notes))
         page.paste(page.zone.css, Home.css)
         page.paste(page.zone.body, html5)
-        print(story.director.notes)
         return HTMLResponse(page.html)
 
     def refresh(self, url, notes: dict = {}) -> str:
@@ -208,7 +212,7 @@ async def app_factory(
     **kwargs,
 ):
     routes = routes or [
-        Route("/", Home),
+        Route("/", Home, name="home"),
         Route("/about", About),
         Route("/sessions", Start, methods=["POST"], name="start"),
         Route("/session/{session_id:uuid}", Session, name="session"),
