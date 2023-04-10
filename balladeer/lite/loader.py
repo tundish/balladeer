@@ -36,7 +36,7 @@ class Loader:
     )
 
     @staticmethod
-    def discover(package, resource=".", suffixes=[".dlg.toml"]):
+    def discover(package, resource=".", suffixes=[".scene.toml"]):
         for path in importlib.resources.files(package).joinpath(resource).iterdir():
             typ, _ = mimetypes.guess_type(path)
             if typ and typ != "text/x-python":
