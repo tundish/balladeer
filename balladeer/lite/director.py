@@ -124,7 +124,8 @@ class Director:
         params = urllib.parse.parse_qs(html.unescape(attrs.get("parameters", "").lstrip("?")))
         try:
             offer = float(params.get("offer", [self.offer])[0])
-            if offer < 0: offer = None
+            if offer < 0:
+                offer = None
         except TypeError:
             offer = None
 

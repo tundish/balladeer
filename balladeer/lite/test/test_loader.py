@@ -34,13 +34,15 @@ from balladeer.lite.loader import Loader
 
 class SceneTests(unittest.TestCase):
     def test_one_scene(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             [[_]]
 
             s='''
             Text
             '''
-        """)
+        """
+        )
         scene = Loader.read(content)
         self.assertIsInstance(scene, Loader.Scene)
         self.assertEqual(1, len(scene.tables.get("_")))
@@ -48,7 +50,8 @@ class SceneTests(unittest.TestCase):
         self.assertEqual("Text\n", scene.tables["_"][0]["s"])
 
     def test_multi_scene(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
             [[_]]
 
             s='''
@@ -60,7 +63,8 @@ class SceneTests(unittest.TestCase):
             s='''
             Text
             '''
-        """)
+        """
+        )
         scene = Loader.read(content)
         self.assertIsInstance(scene, Loader.Scene)
         self.assertEqual(2, len(scene.tables.get("_")))

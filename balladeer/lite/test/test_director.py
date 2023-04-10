@@ -32,13 +32,15 @@ from balladeer.lite.types import State
 
 class EditTests(unittest.TestCase):
     def test_word_counter(self):
-        text = textwrap.dedent("""
+        text = textwrap.dedent(
+            """
         <STAFF.proposing#3> What will you have, sir? The special is fish today.
 
             1. Order the Beef Wellington
             2. Go for the Shepherd's Pie
             3. Try the Dover Sole
-        """).strip()
+        """
+        ).strip()
         sm = SpeechMark()
         html5 = sm.loads(text)
 
@@ -50,12 +52,14 @@ class EditTests(unittest.TestCase):
         self.assertFalse("<p>\n\n</p>" in rv, rv)
 
     def test_rewriter_single_blocks(self):
-        text = textwrap.dedent("""
+        text = textwrap.dedent(
+            """
         <FIGHTER_1>
 
             I don't like the way you use me, {FIGHTER_2.name}!
 
-        """).strip()
+        """
+        ).strip()
         director = Director(story=None)
         selection = {
             "FIGHTER_1": Entity(name="Biffy"),
@@ -71,12 +75,14 @@ class EditTests(unittest.TestCase):
         self.assertIn("Bashy!", edit)
 
     def test_edit_extended_characters_unescaped(self):
-        text = textwrap.dedent("""
+        text = textwrap.dedent(
+            """
         <FIGHTER_1>
 
             I don't like the way you use me, {FIGHTER_2.name}!
 
-        """).strip()
+        """
+        ).strip()
         director = Director(story=None)
         selection = {
             "FIGHTER_1": Entity(name="Bîffy"),
@@ -92,12 +98,14 @@ class EditTests(unittest.TestCase):
         self.assertIn("Båshy!", edit)
 
     def test_edit_extended_characters_escaped(self):
-        text = textwrap.dedent("""
+        text = textwrap.dedent(
+            """
         <FIGHTER_1>
 
             I don't like the way you use me, {FIGHTER_2.name!a}!
 
-        """).strip()
+        """
+        ).strip()
         director = Director(story=None)
         selection = {
             "FIGHTER_1": Entity(name="Bîffy"),
@@ -113,7 +121,8 @@ class EditTests(unittest.TestCase):
         self.assertIn("B&aring;shy!", edit)
 
     def test_edit_multiple_blocks(self):
-        text = textwrap.dedent("""
+        text = textwrap.dedent(
+            """
         <WEAPON.attacking@FIGHTER_2:shouts/slapwhack>
 
             _Whack!_
@@ -122,7 +131,8 @@ class EditTests(unittest.TestCase):
 
             Uuurrggh!
 
-        """).strip()
+        """
+        ).strip()
         director = Director(story=None)
         selection = {
             "WEAPON": Entity(name="Rusty"),
@@ -155,7 +165,8 @@ class ConditionTests(unittest.TestCase):
         quiet = 0
         stormy = 1
 
-    content = textwrap.dedent("""
+    content = textwrap.dedent(
+        """
         # Metadata at the top
         author = "tundish"
 
@@ -190,7 +201,8 @@ class ConditionTests(unittest.TestCase):
 
         s="<WEATHER> Pitter patter."
 
-        """).strip()
+        """
+    ).strip()
 
     def setUp(self):
         self.ensemble = [
@@ -236,11 +248,13 @@ class ConditionTests(unittest.TestCase):
         self.assertFalse(d.allows(conditions[4], roles))
 
     def test_guard_conditions_single_state(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
         [[_]]
         if.WEATHER.state = "Weather.stormy"
 
-        """).strip()
+        """
+        ).strip()
         scene = tomllib.loads(content)
         director = Director(None)
         shot = next(iter(scene.get(director.shot_key)))
@@ -251,11 +265,13 @@ class ConditionTests(unittest.TestCase):
         self.assertIn("stormy", states["Weather"])
 
     def test_guard_conditions_multiple_states(self):
-        content = textwrap.dedent("""
+        content = textwrap.dedent(
+            """
         [[_]]
         if.WEATHER.states.Weather = ["stormy", "misty"]
 
-        """).strip()
+        """
+        ).strip()
         scene = tomllib.loads(content)
         director = Director(None)
         shot = next(iter(scene.get(director.shot_key)))
@@ -336,7 +352,8 @@ class RoleTests(unittest.TestCase):
                 self.assertEqual(ranks[n], rank, d.specify_role(v))
 
     def test_role_with_single_required_state(self):
-        text = textwrap.dedent("""
+        text = textwrap.dedent(
+            """
         [FIGHTER_1]
         states.Aggression = ["angry"]
 
@@ -345,7 +362,8 @@ class RoleTests(unittest.TestCase):
 
         [WEAPON]
         # A weapon which makes a noise in use.
-        """)
+        """
+        )
         entities = {i.name: i for i in self.ensemble}
         entities["Biffy"].set_state(RoleTests.Contentment.sad)
         self.assertEqual(
@@ -368,7 +386,8 @@ class RoleTests(unittest.TestCase):
         self.assertEqual(entities["Rusty"], rv["WEAPON"])
 
     def test_role_with_multiple_states(self):
-        text = textwrap.dedent("""
+        text = textwrap.dedent(
+            """
         [FIGHTER_1]
         states.Location = ["pub_bar", "pub_toilets"]
 
@@ -377,7 +396,8 @@ class RoleTests(unittest.TestCase):
 
         [WEAPON]
         # A weapon which makes a noise in use.
-        """).strip()
+        """
+        ).strip()
         entities = {i.name: i for i in self.ensemble}
         entities["Biffy"].set_state(RoleTests.Location.pub_bar)
         self.assertEqual(
@@ -400,13 +420,15 @@ class RoleTests(unittest.TestCase):
         self.assertEqual(entities["Rusty"], rv["WEAPON"])
 
     def test_roles_not_greedy(self):
-        text = textwrap.dedent("""
+        text = textwrap.dedent(
+            """
         [CHARACTER_1]
         roles = ["CHARACTER_2"]
 
         [CHARACTER_2]
 
-        """).strip()
+        """
+        ).strip()
         scene = tomllib.loads(text)
         self.assertIsInstance(scene, dict)
 
@@ -421,7 +443,8 @@ class RoleTests(unittest.TestCase):
 
 class ParametersTests(unittest.TestCase):
     def test_paragraph_reveal(self):
-        text = textwrap.dedent("""
+        text = textwrap.dedent(
+            """
             <?pause=3&dwell=0.4>
 
             Above, there is the sound of footsteps.
@@ -430,7 +453,8 @@ class ParametersTests(unittest.TestCase):
 
             Then shuffling down the ancient stairs.
 
-            """).strip()
+            """
+        ).strip()
 
         sm = SpeechMark()
         html5 = sm.loads(text)
@@ -441,7 +465,8 @@ class ParametersTests(unittest.TestCase):
         self.assertEqual(3, rv.count("animation-duration"), rv)
 
     def test_offer_empty_before_param(self):
-        text = textwrap.dedent("""
+        text = textwrap.dedent(
+            """
             <?offer=&pause=0.5>
 
             Which way? Take your time.
@@ -449,7 +474,8 @@ class ParametersTests(unittest.TestCase):
             1. Go North
             2. Go East
 
-            """).strip()
+            """
+        ).strip()
 
         sm = SpeechMark()
         html5 = sm.loads(text)
@@ -462,7 +488,8 @@ class ParametersTests(unittest.TestCase):
         self.assertAlmostEqual(2.4, d.notes["wait"])
 
     def test_offer_negative(self):
-        text = textwrap.dedent("""
+        text = textwrap.dedent(
+            """
             <?offer=1>
             <?offer=-1>
 
@@ -471,7 +498,8 @@ class ParametersTests(unittest.TestCase):
             1. Go North
             2. Go East
 
-            """).strip()
+            """
+        ).strip()
 
         sm = SpeechMark()
         html5 = sm.loads(text)
@@ -484,7 +512,8 @@ class ParametersTests(unittest.TestCase):
         self.assertAlmostEqual(3.9, d.notes["wait"])
 
     def test_offer_value(self):
-        text = textwrap.dedent("""
+        text = textwrap.dedent(
+            """
             <?offer=12#2>
 
             Which way? You have only a few seconds to decide.
@@ -492,7 +521,8 @@ class ParametersTests(unittest.TestCase):
             1. Go North
             2. Go East (default)
 
-            """).strip()
+            """
+        ).strip()
 
         sm = SpeechMark()
         html5 = sm.loads(text)
@@ -507,7 +537,8 @@ class ParametersTests(unittest.TestCase):
 
 class LoopTests(unittest.TestCase):
     def setUp(self):
-        self.script = textwrap.dedent("""
+        self.script = textwrap.dedent(
+            """
         [GUEST]
 
         [[_]]
@@ -518,7 +549,8 @@ class LoopTests(unittest.TestCase):
             + This, or
             + This, or
         '''
-        """).strip()
+        """
+        ).strip()
         self.ensemble = [Entity()]
 
     def test_attr_matcher(self):
@@ -551,7 +583,8 @@ class LoopTests(unittest.TestCase):
 
 class DirectiveTests(unittest.TestCase):
     def test_directive_handling(self):
-        script = textwrap.dedent("""
+        script = textwrap.dedent(
+            """
             [GUEST]
 
             [STAFF]
@@ -563,7 +596,8 @@ class DirectiveTests(unittest.TestCase):
             s='''
             <PHONE.announcing@GUEST,STAFF> Ring riiing!
             '''
-            """).strip()
+            """
+        ).strip()
 
         scene = tomllib.loads(script)
         ensemble = [Entity(), Entity(), Entity()]
@@ -591,7 +625,8 @@ class DirectiveTests(unittest.TestCase):
 
 class ModeTests(unittest.TestCase):
     def test_audio_media_in_multiple_blocks(self):
-        text = textwrap.dedent("""
+        text = textwrap.dedent(
+            """
         <WEAPON.attacking@FIGHTER_2:shouts/slapwhack>
 
             _Whack!_
@@ -600,7 +635,8 @@ class ModeTests(unittest.TestCase):
 
             Uuurrggh!
 
-        """).strip()
+        """
+        ).strip()
         d = Director(story=None)
         selection = {
             "WEAPON": Entity(name="Rusty"),

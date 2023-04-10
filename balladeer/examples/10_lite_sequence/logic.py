@@ -19,7 +19,7 @@
 
 from balladeer.lite.types import Drama
 from balladeer.lite.types import Entity
-from balladeer.lite.types import Story
+from balladeer.lite.types import StoryBuilder
 from balladeer.lite.types import WorldBuilder
 
 
@@ -32,7 +32,4 @@ class World(WorldBuilder):
         ]
 
 
-def story_factory(config):
-    world = World(config)
-    story = Story(config, world)
-    return story.uid, story
+class Story(StoryBuilder): pass

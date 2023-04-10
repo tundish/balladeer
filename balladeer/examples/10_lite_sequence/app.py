@@ -42,7 +42,7 @@ import balladeer
 from balladeer.lite.loader import Loader
 from balladeer.lite.director import Director
 
-from .logic import story_factory
+from .logic import Story
 
 
 __doc__ = """
@@ -163,9 +163,9 @@ class Home(HTTPEndpoint):
 class Start(HTTPEndpoint):
     async def post(self, request):
         sessions = request.app.state.sessions
-        key, val = story_factory(request.app.state.config)
-        sessions[key] = val
-        return RedirectResponse(url=request.url_for("session", session_id=key), status_code=303)
+        story = Story(request.app.state.config)
+        sessions[story.uid] = story
+        return RedirectResponse(url=request.url_for("session", session_id=story.uid), status_code=303)
 
 
 class Session(HTTPEndpoint):
