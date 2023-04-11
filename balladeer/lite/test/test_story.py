@@ -69,15 +69,15 @@ class ExampleTests(unittest.TestCase):
         for n in range(3):
             with self.subTest(n=n, m=len(story.director.notes[(None, 0)].maps)):
                 notes = story.director.notes[(None, 0)]
-                directives = [t for i in (m.get("directives", []) for m in notes.maps) for t in i]
-                actions = list(story.action(directives))
-                story.director.notes.clear()
+                actions = list(story.action(story.direction))
                 if not n:
-                    self.assertFalse(directives)
+                    self.assertFalse(story.direction)
                     self.assertFalse(actions)
                 else:
-                    self.assertTrue(directives, notes)
+                    self.assertTrue(story.direction, notes)
                     self.assertTrue(actions)
+
+                story.director.notes.clear()
 
                 roles = dict(story.director.roles(specs, story.context.ensemble))
 

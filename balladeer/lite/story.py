@@ -54,6 +54,15 @@ class StoryBuilder:
     def context(self):
         return self.drama[0]
 
+    @property
+    def notes(self):
+        return list(self.director.notes.values())
+
+    @property
+    def direction(self):
+        notes = self.notes or []
+        return [t for i in (m.get("directives", []) for m in notes[-1].maps) for t in i]
+
     def action(self, directives: list = [], prefix="on_", **kwargs):
         for action, entity, entities in directives:
             method = getattr(self.context, f"{prefix}{action}")

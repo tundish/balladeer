@@ -173,7 +173,7 @@ class Session(HTTPEndpoint):
         session_id = request.path_params["session_id"]
         state = request.app.state
         story = state.sessions[session_id]
-        list(story.action(story.director.notes["directives"]))
+        list(story.action(story.direction))
         story.director.notes.clear()
 
         scripts = story.context.scripts(state.assets)
@@ -197,8 +197,8 @@ class Session(HTTPEndpoint):
 
     def refresh(self, url, notes: dict = {}) -> str:
         try:
-            delay = notes.get("wait", 0) + notes.get("offer", 0)
-            return f'<meta http-equiv="refresh" content="{delay:.2f};{url}">'
+            wait = notes.get("delay", 0) + notes.get("offer", 0)
+            return f'<meta http-equiv="refresh" content="{wait:.2f};{url}">'
         except TypeError:
             return ""
 
