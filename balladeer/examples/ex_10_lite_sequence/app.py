@@ -186,11 +186,13 @@ class Session(HTTPEndpoint):
             )
 
         html5 = story.director.rewrite(scene, roles)
+        notes = story.notes
 
         page = Page()
         page.paste(page.zone.title, "<title>Example</title>")
         page.paste(page.zone.meta, Home.meta)
-        page.paste(page.zone.meta, self.refresh(request.url, story.director.notes))
+        if notes:
+            page.paste(page.zone.meta, self.refresh(request.url, notes[-1]))
         page.paste(page.zone.css, Home.css)
         page.paste(page.zone.body, html5)
         return HTMLResponse(page.html)

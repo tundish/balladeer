@@ -60,8 +60,11 @@ class StoryBuilder:
 
     @property
     def direction(self):
-        notes = self.notes or []
-        return [t for i in (m.get("directives", []) for m in notes[-1].maps) for t in i]
+        notes = self.notes
+        if not notes:
+            return []
+        else:
+            return [t for i in (m.get("directives", []) for m in notes[-1].maps) for t in i]
 
     def action(self, directives: list = [], prefix="on_", **kwargs):
         for action, entity, entities in directives:
