@@ -587,10 +587,10 @@ class ParametersTests(unittest.TestCase):
 
         d = Director()
         rv = "\n".join(d.edit(html5))
-        self.assertIn("offer", d.notes)
-        self.assertEqual(None, d.notes["offer"])
-        self.assertIn("wait", d.notes)
-        self.assertAlmostEqual(2.4, d.notes["wait"])
+        self.assertIn("offer", d.notes[(None, 0)])
+        self.assertEqual(None, d.notes[(None, 0)]["offer"])
+        self.assertIn("delay", d.notes[(None, 0)])
+        self.assertAlmostEqual(2.4, d.notes[(None, 0)]["delay"])
 
     def test_offer_negative(self):
         text = textwrap.dedent("""
@@ -609,10 +609,10 @@ class ParametersTests(unittest.TestCase):
 
         d = Director()
         rv = "\n".join(d.edit(html5))
-        self.assertIn("offer", d.notes)
-        self.assertEqual(None, d.notes["offer"])
-        self.assertIn("wait", d.notes)
-        self.assertAlmostEqual(3.9, d.notes["wait"])
+        self.assertIn("offer", d.notes[(None, 0)])
+        self.assertEqual(None, d.notes[(None, 0)]["offer"])
+        self.assertIn("delay", d.notes[(None, 0)])
+        self.assertAlmostEqual(3.9, d.notes[(None, 0)]["delay"])
 
     def test_offer_value(self):
         text = textwrap.dedent("""
@@ -630,10 +630,10 @@ class ParametersTests(unittest.TestCase):
 
         d = Director()
         rv = "\n".join(d.edit(html5))
-        self.assertIn("offer", d.notes)
-        self.assertEqual(12, d.notes["offer"])
-        self.assertIn("option", d.notes)
-        self.assertEqual(2, d.notes["option"])
+        self.assertIn("offer", d.notes[(None, 0)])
+        self.assertEqual(12, d.notes[(None, 0)]["offer"])
+        self.assertIn("option", d.notes[(None, 0)])
+        self.assertEqual(2, d.notes[(None, 0)]["option"])
 
 
 class LoopTests(unittest.TestCase):
@@ -710,13 +710,13 @@ class DirectiveTests(unittest.TestCase):
 
         rv = "\n".join(d.edit(html5, roles))
 
-        self.assertIn("wait", d.notes)
-        self.assertEqual(1.2, d.notes["wait"])
+        self.assertIn((None, 0), d.notes)
+        self.assertEqual(1.2, d.notes[(None, 0)]["delay"])
 
-        self.assertIn("directives", d.notes)
+        self.assertIn("directives", d.notes[(None, 0)])
         self.assertEqual(
             [("announcing", roles["PHONE"], (roles["GUEST"], roles["STAFF"]))],
-            d.notes["directives"],
+            d.notes[(None, 0)]["directives"],
         )
 
 
@@ -741,5 +741,5 @@ class ModeTests(unittest.TestCase):
         sm = SpeechMark()
         html5 = sm.loads(text)
         edit = "\n".join(d.edit(html5, selection))
-        self.assertIn("media", d.notes)
-        self.assertEqual(["slapwhack"], d.notes["media"])
+        self.assertIn("media", d.notes[(None, 0)])
+        self.assertEqual(["slapwhack"], d.notes[(None, 0)]["media"])

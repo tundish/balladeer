@@ -245,8 +245,7 @@ class Director:
         self.delay = delay + duration
 
         key = list(self.notes)[-1]
-        print(f"Key: {key} Val: {self.notes[key]}")
-        self.notes[key] = self.notes[key].new_child(wait=self.delay)
+        self.notes[key] = self.notes[key].new_child(pause=self.pause, duration=duration, delay=self.delay)
         return (
             f'<p style="animation-delay: {delay:.2f}s; animation-duration:'
             f' {duration:.2f}s">{content}</p>'

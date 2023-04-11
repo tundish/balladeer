@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import itertools
 import textwrap
 import tomllib
 import unittest
@@ -66,15 +67,16 @@ class ExampleTests(unittest.TestCase):
         self.assertEqual(story.director.rank_constraints(specs["WEAPON"]), 3, specs)
 
         for n in range(3):
-            with self.subTest(n=n):
-                directives = story.director.notes["directives"]
+            with self.subTest(n=n, m=len(story.director.notes[(None, 0)].maps)):
+                notes = story.director.notes[(None, 0)]
+                directives = [t for i in (m.get("directives", []) for m in notes.maps) for t in i]
                 actions = list(story.action(directives))
                 story.director.notes.clear()
                 if not n:
                     self.assertFalse(directives)
                     self.assertFalse(actions)
                 else:
-                    self.assertTrue(directives)
+                    self.assertTrue(directives, notes)
                     self.assertTrue(actions)
 
                 roles = dict(story.director.roles(specs, story.context.ensemble))
