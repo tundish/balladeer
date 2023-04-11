@@ -19,6 +19,7 @@
 
 
 from collections.abc import Generator
+from collections import ChainMap
 from collections import Counter
 from collections import defaultdict
 import html
@@ -79,7 +80,7 @@ class Director:
         self.spmk = SpeechMark()
         self.fmtr = self.Formatter(self.spmk)
         self.counts = Counter()
-        self.notes = defaultdict(list)  # TODO: Capture directives in 'offstage'
+        self.notes = defaultdict(ChainMap)
 
         self.shot_key = shot_key
         self.dlg_key = dlg_key
@@ -143,7 +144,7 @@ class Director:
         if not fragments:
             return html5
         elif fragments.isdigit():
-            self.notes["option"] = int(fragments)
+            self.notes[(path, index)]["option"] = int(fragments)
         elif fragments.endswith("!"):
             list_block = self.ul_matcher.search(html5)
             list_items = list(self.li_matcher.findall(list_block.group()))
@@ -155,27 +156,28 @@ class Director:
         return html5
 
     def handle_directives(self, html5, directives: dict, path: pathlib.Path | str, index: int):
-        for directive, roles in directives.items():
-            self.notes["directives"].append(
-                (
-                    directive,
-                    self.cast.get(self.role),
-                    tuple(filter(None, (self.cast.get(r) for r in roles))),
-                )
+        self.notes[(path, index)]["directives"] = [
+            (
+                directive,
+                self.cast.get(self.role),
+                tuple(filter(None, (self.cast.get(r) for r in roles))),
             )
+            for directive, roles in directives.items()
+        ]
         return html5
 
     def handle_mode(self, html5, mode: list[str], path: pathlib.Path | str, index: int):
-        for n, item in enumerate(mode):
-            if n:
-                self.notes["media"].append(item)
+        if mode:
+            self.notes[(path, index)]["mode"] = mode[0]
+            self.notes[(path, index)]["media"] = [i for n, i in enumerate(mode) if n]
+
         return html5
 
     def handle_parameters(self, html5, parameters: dict, path: pathlib.Path | str, index: int):
         self.pause = parameters["pause"]
         self.dwell = parameters["dwell"]
         self.offer = parameters["offer"]
-        self.notes["offer"] = self.offer
+        self.notes[(path, index)]["offer"] = self.offer
         return html5
 
     def rank_constraints(self, spec: dict) -> int:
@@ -241,7 +243,10 @@ class Director:
         delay = self.delay + self.pause
         duration = self.dwell * len(words)
         self.delay = delay + duration
-        self.notes["wait"] = self.delay
+
+        key = list(self.notes)[-1]
+        print(f"Key: {key} Val: {self.notes[key]}")
+        self.notes[key] = self.notes[key].new_child(wait=self.delay)
         return (
             f'<p style="animation-delay: {delay:.2f}s; animation-duration:'
             f' {duration:.2f}s">{content}</p>'
