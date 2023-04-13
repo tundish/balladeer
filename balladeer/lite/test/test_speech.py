@@ -18,22 +18,16 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
-from speechmark import SpeechMark
+import unittest
 
+from balladeer.lite.speech import Speech
 
-class Speech(str):
-    processor = SpeechMark()
+class SpeechTests(unittest.TestCase):
 
-    # TODO:
-    # lines
-    # words
-    #'html4 via speech,mark
-
-class Prologue(Speech):
-    "Speech before a scene."
-
-class Dialogue(Speech):
-    "Speech during a scene."
-
-class Epilogue(Speech):
-    "Speech after a scene."
+    def test_trim(self):
+        text = """ 1
+            2
+            3
+        """
+        s = Speech(text)
+        self.fail(s.trimmed)
