@@ -37,8 +37,9 @@ class Entity:
 
     states: dict = dataclasses.field(default_factory=dict, compare=False)
     uid: uuid.UUID = dataclasses.field(default_factory=uuid.uuid4)
-    aspect: Speech = dataclasses.field(default_factory=Speech, compare=False)
+
     sketch: Speech = dataclasses.field(default_factory=Speech, compare=False)
+    aspect: Speech = dataclasses.field(default_factory=Speech, compare=False)
 
     def __post_init__(self, name, type):
         if not isinstance(name, property):

@@ -179,7 +179,7 @@ class Session(HTTPEndpoint):
         scripts = story.context.scripts(state.assets)
         media = story.context.media(state.assets)
 
-        scene, roles = story.director.selection(scripts, story.context.ensemble)
+        scene, specs, roles = story.director.selection(scripts, story.context.ensemble)
         if not (scene and roles):
             return RedirectResponse(
                 url=request.url_for("home"), status_code=300
