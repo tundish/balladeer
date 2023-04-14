@@ -23,10 +23,36 @@ from types import SimpleNamespace
 import unittest
 
 from balladeer.lite.entity import Entity
-from balladeer.lite.performer import Performer
+from balladeer.lite.performance import Performance
 
 
-class PerformerTests(unittest.TestCase):
+class Trivial(Performance):
+
+    def do_this(self, this, text, context):
+        """
+        This?
+
+        """
+        yield "Yes, this."
+
+    def do_that(self, this, text, context):
+        """
+        That?
+
+        """
+        yield from ["Yes.", "That."]
+
+    def do_tother(self, this, text, context):
+        """
+        Or?
+
+        """
+        yield "Or,"
+        yield "Maybe;"
+        yield "Tother."
+
+
+class MatchingTests(unittest.TestCase):
 
     class Location(enum.Enum):
         HERE = "here"
@@ -37,11 +63,11 @@ class PerformerTests(unittest.TestCase):
     class Space(Entity): pass
 
     def test_unpack_annotation_single_enum(self):
-        rv = list(Performer.unpack_annotation("locn", PerformerTests.Location, ensemble=[]))
+        rv = list(Performance.unpack_annotation("locn", MatchingTests.Location, ensemble=[]))
         self.assertTrue(rv)
         self.assertTrue(all(isinstance(i, tuple) for i in rv), rv)
         self.assertEqual(
-            len([v for i in PerformerTests.Location for v in ([i.value] if isinstance(i.value, str) else i.value)]),
+            len([v for i in MatchingTests.Location for v in ([i.value] if isinstance(i.value, str) else i.value)]),
             len(rv),
             rv
         )
@@ -53,14 +79,14 @@ class PerformerTests(unittest.TestCase):
             autumn = "Autumn"
             winter = "Winter"
 
-        rv = list(Performer.unpack_annotation("item", [PerformerTests.Location, Season], ensemble=[]))
+        rv = list(Performance.unpack_annotation("item", [MatchingTests.Location, Season], ensemble=[]))
         self.assertTrue(rv)
         self.assertTrue(all(isinstance(i, tuple) for i in rv), rv)
         self.assertTrue(all(isinstance(i[0], str) for i in rv), rv)
         self.assertTrue(all(isinstance(i[1], enum.Enum) for i in rv), rv)
         self.assertEqual(
             len([
-                v for i in list(PerformerTests.Location) + list(Season)
+                v for i in list(MatchingTests.Location) + list(Season)
                 for v in ([i.value] if isinstance(i.value, str) else i.value)
             ]),
             len(rv),
@@ -68,20 +94,20 @@ class PerformerTests(unittest.TestCase):
         )
 
     def test_unpack_annotation_single_class(self):
-        ensemble = [PerformerTests.Liquid(), PerformerTests.Mass(), PerformerTests.Space()]
-        rv = list(Performer.unpack_annotation("item", PerformerTests.Liquid, ensemble))
+        ensemble = [MatchingTests.Liquid(), MatchingTests.Mass(), MatchingTests.Space()]
+        rv = list(Performance.unpack_annotation("item", MatchingTests.Liquid, ensemble))
         self.assertTrue(rv)
         self.assertTrue(all(isinstance(i, tuple) for i in rv), rv)
         self.assertEqual(1, len(rv), rv)
-        self.assertIsInstance(rv[0][1], PerformerTests.Liquid)
+        self.assertIsInstance(rv[0][1], MatchingTests.Liquid)
 
     def test_unpack_annotation_dataobject(self):
-        ensemble = [PerformerTests.Liquid(), PerformerTests.Mass(), PerformerTests.Space()]
-        rv = list(Performer.unpack_annotation("thing", [PerformerTests.Liquid, PerformerTests.Mass], ensemble))
+        ensemble = [MatchingTests.Liquid(), MatchingTests.Mass(), MatchingTests.Space()]
+        rv = list(Performance.unpack_annotation("thing", [MatchingTests.Liquid, MatchingTests.Mass], ensemble))
         self.assertTrue(all(isinstance(i, tuple) for i in rv), rv)
         self.assertEqual(2, len(rv), rv)
-        self.assertIsInstance(rv[0][1], PerformerTests.Liquid)
-        self.assertIsInstance(rv[1][1], PerformerTests.Mass)
+        self.assertIsInstance(rv[0][1], MatchingTests.Liquid)
+        self.assertIsInstance(rv[1][1], MatchingTests.Mass)
 
     def test_unpack_annotation_parent_attribute(self):
         class Season(enum.Enum):
@@ -98,7 +124,7 @@ class PerformerTests(unittest.TestCase):
 
         self.assertEqual(Season.summer, Season.autumn.follows)
         s = Season.autumn
-        rv = list(Performer.unpack_annotation("item", "follows", ensemble=[], parent=s))
+        rv = list(Performance.unpack_annotation("item", "follows", ensemble=[], parent=s))
         self.assertTrue(rv)
         self.assertTrue(all(isinstance(i, tuple) for i in rv), rv)
         self.assertTrue(all(isinstance(i[0], str) for i in rv), rv)
@@ -120,7 +146,7 @@ class PerformerTests(unittest.TestCase):
 
         self.assertEqual(Season.summer, Season.autumn.follows)
         obj = SimpleNamespace(s=Season.autumn)
-        rv = list(Performer.unpack_annotation("item", "s.follows", ensemble=[], parent=obj))
+        rv = list(Performance.unpack_annotation("item", "s.follows", ensemble=[], parent=obj))
         self.assertTrue(rv)
         self.assertTrue(all(isinstance(i, tuple) for i in rv), rv)
         self.assertTrue(all(isinstance(i[0], str) for i in rv), rv)
@@ -129,7 +155,7 @@ class PerformerTests(unittest.TestCase):
 
     def test_unpack_annotation_parent_attribute_mixed(self):
         obj = SimpleNamespace(one=SimpleNamespace(two={"three": 3}))
-        rv = list(Performer.unpack_annotation("item", "one.two[three]", ensemble=[], parent=obj))
+        rv = list(Performance.unpack_annotation("item", "one.two[three]", ensemble=[], parent=obj))
         self.assertEqual(("item", 3), rv[0])
 
     def test_expand_commands_no_preserver(self):
@@ -141,7 +167,7 @@ class PerformerTests(unittest.TestCase):
             pick up a {obj.name}
             """
 
-        rv = dict(Performer.expand_commands(func, ensemble=[thing]))
+        rv = dict(Performance.expand_commands(func, ensemble=[thing]))
         self.assertIn("pick up thing", rv)
 
     def test_expand_commands_sequence_with_preserver(self):
@@ -153,7 +179,7 @@ class PerformerTests(unittest.TestCase):
             pick up a {obj.names[0]}.
             """
 
-        rv = dict(Performer.expand_commands(func, ensemble=[thing]))
+        rv = dict(Performance.expand_commands(func, ensemble=[thing]))
         self.assertIn("pick up a thing", rv)
 
     def test_expand_commands_sequence_no_preserver(self):
@@ -165,7 +191,7 @@ class PerformerTests(unittest.TestCase):
             pick up a {obj.names[0]}
             """
 
-        rv = dict(Performer.expand_commands(func, ensemble=[thing]))
+        rv = dict(Performance.expand_commands(func, ensemble=[thing]))
         self.assertIn("pick up thing", rv)
 
     def test_expand_commands_sequence_synonyms_no_preserver(self):
@@ -179,7 +205,7 @@ class PerformerTests(unittest.TestCase):
             pick up a {obj.names[1]} | grab a {obj.names[1]}
             """
 
-        rv = dict(Performer.expand_commands(func, ensemble=[idea, thing, idea]))
+        rv = dict(Performance.expand_commands(func, ensemble=[idea, thing, idea]))
         self.assertIn("pick up thing", rv)
         self.assertIn("pick up doobrey", rv)
         self.assertIn("grab thing", rv)
@@ -194,7 +220,7 @@ class PerformerTests(unittest.TestCase):
             pick up a {obj.name}.
             """
 
-        rv = dict(Performer.expand_commands(func, ensemble=[thing]))
+        rv = dict(Performance.expand_commands(func, ensemble=[thing]))
         self.assertIn("pick up a thing", rv)
 
     def test_expand_commands_discrimminator(self):
@@ -209,9 +235,63 @@ class PerformerTests(unittest.TestCase):
             pick up a {obj.aspect} {obj.names[0]}
             """
 
-        rv = dict(Performer.expand_commands(func, ensemble=ensemble))
+        rv = dict(Performance.expand_commands(func, ensemble=ensemble))
         self.assertIn("pick up blue thing", rv)
         self.assertEqual("blue", rv["pick up blue thing"][1]["obj"].aspect)
         self.assertIn("pick up red thing", rv)
         self.assertEqual("red", rv["pick up red thing"][1]["obj"].aspect)
 
+
+class PerformanceMatchTests(unittest.TestCase):
+
+    def setUp(self):
+        self.performance = Trivial("do_this", "do_that", "do_tother")
+
+    def test_do_that(self):
+        fn, args, kwargs = next(self.performance.match("that?"))
+        self.assertEqual(self.performance.do_that, fn)
+        self.assertEqual(["that?", None], args)
+        self.assertFalse(kwargs)
+
+    def test_mismatch(self):
+        cmd = "release the frog"
+        fn, args, kwargs = next(self.performance.match(cmd))
+        self.assertIs(None, fn)
+        self.assertEqual([cmd, None], args)
+        self.assertFalse(kwargs)
+
+
+class PerformanceTests(unittest.TestCase):
+
+    def setUp(self):
+        self.performance = Trivial("do_this", "do_that", "do_tother")
+
+    def test_do_that(self):
+        fn, args, kwargs = next(self.performance.match("that?"))
+        self.assertEqual(self.performance.do_that, fn)
+        self.assertEqual(["that?", None], args)
+        self.assertFalse(kwargs)
+
+        fn, args, kwargs = self.performance.pick([(fn, args, kwargs)])
+        self.assertEqual(self.performance.do_that, fn)
+        self.assertEqual(["that?", None], args)
+
+    def test_do_this(self):
+        fn, args, kwargs = self.performance.pick(self.performance.match("That?"))
+        data = self.performance(fn, *args, **kwargs)
+
+        fn, args, kwargs = self.performance.pick(self.performance.match("This?"))
+        data = self.performance(fn, *args, **kwargs)
+        self.assertEqual("Yes, this.", "\n".join(data))
+
+    def test_do_tother(self):
+        fn, args, kwargs = self.performance.pick(self.performance.match("That?"))
+        data = self.performance(fn, *args, **kwargs)
+
+        fn, args, kwargs = self.performance.pick(self.performance.match("This?"))
+        data = self.performance(fn, *args, **kwargs)
+
+        fn, args, kwargs = self.performance.pick(self.performance.match("Or?"))
+        data = "\n".join(self.performance(fn, *args, **kwargs))
+
+        self.assertEqual("Or,\nMaybe;\nTother.", data)

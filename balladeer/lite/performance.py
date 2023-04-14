@@ -17,13 +17,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from collections import defaultdict
+import difflib
 import enum
 import inspect
 import itertools
 import string
 
 
-class Performer:
+class Performance:
 
     discard = ("a", "an", "any", "her", "his", "my", "some", "the", "their")
 
@@ -72,15 +74,40 @@ class Performer:
         doc = method.func.__doc__ if hasattr(method, "func") else method.__doc__
         terms = list(filter(None, (i.strip() for line in doc.splitlines() for i in line.split("|"))))
         params = list(itertools.chain(
-            list(Performer.unpack_annotation(p.name, p.annotation, ensemble, parent))
+            list(Performance.unpack_annotation(p.name, p.annotation, ensemble, parent))
             for p in inspect.signature(method, follow_wrapped=True).parameters.values()
             if p.annotation != inspect.Parameter.empty
         ))
         cartesian = [dict(i) for i in itertools.product(*params)]
         for term in terms:
-            tokens = Performer.parse_tokens(term, discard=Performer.discard)
+            tokens = Performance.parse_tokens(term, discard=Performance.discard)
             for prod in cartesian:
                 try:
                     yield (" ".join(tokens).format(**prod).lower(), (method, prod))
                 except (AttributeError, IndexError, KeyError) as e:
                     continue
+
+    def __init__(self, *args, **kwargs):
+        self.active = set(filter(None, (getattr(self, i, None) for i in args)))
+
+    def __call__(self, fn, *args, **kwargs):
+        yield from fn(fn, *args, **kwargs)
+
+    def pick(self, options):
+        return next(iter(options), (None,) * 3)
+
+    def match(self, text, context=None, ensemble=[], cutoff=0.95):
+        options = defaultdict(list)
+        for fn in self.active:
+            for k, v in self.expand_commands(fn, ensemble, parent=self):
+                options[k].append(v)
+
+        tokens = self.parse_tokens(text, discard=self.discard)
+        matches = (
+            difflib.get_close_matches(" ".join(tokens), options, cutoff=cutoff)
+            or difflib.get_close_matches(text.strip(), options, cutoff=cutoff)
+        )
+        try:
+            yield from ((fn, [text, context], kwargs) for fn, kwargs in options[matches[0]])
+        except (IndexError, KeyError):
+            yield (None, [text, context], {})
