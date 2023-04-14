@@ -17,28 +17,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from balladeer.lite.story import StoryBuilder
-from balladeer.lite.drama import Drama
-from balladeer.lite.types import Entity
-from balladeer.lite.types import WorldBuilder
+
+from balladeer.lite.loader import Loader
 
 
-class World(WorldBuilder):
-    def build(self):
-        yield from [
-            Entity(name="Biffy", type="Animal").set_state(1),
-            Entity(name="Bashy", type="Animal").set_state(1),
-            Entity(name="Rusty", type="Weapon").set_state(1),
-        ]
+class Drama:
+    def __init__(self, world, config=None):
+        self.world = world
+        self.config = config
 
+    @property
+    def ensemble(self):
+        return self.world.entities
 
-class Fight(Drama):
+    def scripts(self, assets):
+        return [i for i in assets if isinstance(i, Loader.Scene)]
 
-    def on_attacking(self, entity: Entity, *args: tuple[Entity], **kwargs):
-        for enemy in args:
-            enemy.set_state(0)
-
-
-class Story(StoryBuilder):
-    def build(self):
-        yield Fight(self.world, config=self.config)
+    def media(self, assets):
+        return {i.path: i for i in assets if isinstance(i, Loader.Asset)}

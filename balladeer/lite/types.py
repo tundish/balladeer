@@ -82,19 +82,3 @@ class WorldBuilder:
 
     def build(self):
         return ()
-
-
-class Drama:
-    def __init__(self, world, config=None):
-        self.world = world
-        self.config = config
-
-    @property
-    def ensemble(self):
-        return self.world.entities
-
-    def scripts(self, assets):
-        return [i for i in assets if isinstance(i, Loader.Scene)]
-
-    def media(self, assets):
-        return {i.path: i for i in assets if isinstance(i, Loader.Asset)}
