@@ -46,11 +46,14 @@ class Speech(str):
     def words(self) -> list[str]:
         return " ".join(self.lines).split(" ")
 
+
 class Prologue(Speech):
     "Speech before a scene."
 
+
 class Dialogue(Speech):
     "Speech during a scene."
+
 
 class Epilogue(Speech):
     "Speech after a scene."

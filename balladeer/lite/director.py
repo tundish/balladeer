@@ -181,13 +181,6 @@ class Director:
         roles, states, types = self.specify_role(spec)
         return sum(1 / len(v) for v in states.values()) + len(types) + len(roles)
 
-    def lines(self, html5: str) -> list[str]:
-        text = self.tag_matcher.sub("", html5)
-        return list(filter(None, (i.strip() for i in text.splitlines())))
-
-    def words(self, html5: str) -> list[str]:
-        return " ".join(self.lines(html5)).split(" ")
-
     def edit(
         self,
         speech: Speech,
@@ -236,7 +229,7 @@ class Director:
         if not content:
             return ""
 
-        words = self.words(content)
+        words = Speech(content).words
         delay = self.delay + self.pause
         duration = self.dwell * len(words)
         self.delay = delay + duration
