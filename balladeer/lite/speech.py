@@ -18,16 +18,33 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+import functools
+import re
+import textwrap
+
 from speechmark import SpeechMark
 
 
 class Speech(str):
     processor = SpeechMark()
+    tag_matcher = re.compile("<[^>]+?>")
 
-    # TODO:
-    # lines
-    # words
-    #'html4 via speech,mark
+    @functools.cache
+    def trim(self) -> str:
+        return textwrap.dedent(self).strip()
+
+    @functools.cached_property
+    def tags(self) -> str:
+        return self.processor.loads(self.trim())
+
+    @functools.cached_property
+    def lines(self) -> list[str]:
+        text = self.tag_matcher.sub("", self.tags)
+        return list(filter(None, (i.strip() for i in text.splitlines())))
+
+    @functools.cached_property
+    def words(self) -> list[str]:
+        return " ".join(self.lines).split(" ")
 
 class Prologue(Speech):
     "Speech before a scene."

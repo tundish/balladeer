@@ -22,12 +22,63 @@ import unittest
 
 from balladeer.lite.speech import Speech
 
+
 class SpeechTests(unittest.TestCase):
 
     def test_trim(self):
-        text = """ 1
+        text = """
+            1
             2
             3
         """
         s = Speech(text)
-        self.fail(s.trimmed)
+        a = s.trim()
+        b = s.trim()
+        self.assertIs(a, b)
+        self.assertEqual(5, len(a), a)
+
+    def test_tags(self):
+        text = """
+            <> T
+
+            <>
+            1. a
+            2. b
+            3. c
+
+        """
+        s = Speech(text)
+        a = s.tags
+        b = s.tags
+        self.assertIs(a, b)
+
+    def test_line_count(self):
+        text = """
+        <STAFF.proposing#3> What will you have, sir? The special is fish today.
+
+            1. Order the Beef Wellington
+            2. Go for the Shepherd's Pie
+            3. Try the Dover Sole
+        """
+        s = Speech(text)
+
+        a = s.lines
+        b = s.lines
+        self.assertIs(a, b)
+        self.assertEqual(5, len(s.lines))
+
+    def test_word_count(self):
+        text = """
+        <STAFF.proposing#3> What will you have, sir? The special is fish today.
+
+            1. Order the Beef Wellington
+            2. Go for the Shepherd's Pie
+            3. Try the Dover Sole
+        """
+        s = Speech(text)
+
+        a = s.words
+        b = s.words
+        self.assertIs(a, b)
+        self.assertEqual(24, len(s.words))
+
