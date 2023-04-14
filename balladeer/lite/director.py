@@ -31,20 +31,17 @@ import urllib.parse
 from speechmark import SpeechMark
 
 from balladeer.lite.loader import Loader
+from balladeer.lite.speech import Speech
 from balladeer.lite.types import Entity
 
 
 class Director:
     class Formatter(string.Formatter):
-        def __init__(self, spmk, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            self.spmk = spmk
-
         def convert_field(self, value: str, conversion: str) -> str:
             if conversion != "a":
                 return super().convert_field(value, conversion)
             else:
-                return value.translate(self.spmk.escape_table)
+                return value.translate(Speech.processor.escape_table)
 
     @staticmethod
     def specify_role(spec: dict) -> tuple[set, set, dict]:
@@ -78,7 +75,7 @@ class Director:
         offer: float = None,
     ):
         self.spmk = SpeechMark()
-        self.fmtr = self.Formatter(self.spmk)
+        self.fmtr = self.Formatter()
         self.counts = Counter()
         self.notes = defaultdict(ChainMap)
 
@@ -193,13 +190,13 @@ class Director:
 
     def edit(
         self,
-        html5: str,
+        speech: Speech,
         roles: dict = {},
         path: pathlib.Path | str = None,
         index: int = 0,
     ) -> Generator[str]:
         self.cast = roles.copy()
-        for block in self.bq_matcher.findall(html5):
+        for block in self.bq_matcher.findall(speech.tags):
             html5 = self.cite_matcher.sub(self.edit_cite, block)
 
             attrs = self.attributes(html5)
@@ -298,8 +295,8 @@ class Director:
             conditions = dict(self.specify_conditions(shot))
             if self.allows(conditions, roles):
                 text = shot.get(self.dlg_key, "")
-                html5 = self.spmk.loads(text)
-                edit = "\n".join(self.edit(html5, roles, path=scene.path, index=n))
+                speech = Speech(text)
+                edit = "\n".join(self.edit(speech, roles, path=scene.path, index=n))
                 self.delay = 0
                 return "\n".join(i for i in edit.splitlines() if i.strip())
         else:

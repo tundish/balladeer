@@ -23,9 +23,8 @@ import textwrap
 import unittest
 import tomllib
 
-from speechmark import SpeechMark
-
 from balladeer.lite.director import Director
+from balladeer.lite.speech import Speech
 from balladeer.lite.types import Entity
 from balladeer.lite.types import State
 
@@ -39,14 +38,13 @@ class EditTests(unittest.TestCase):
             2. Go for the Shepherd's Pie
             3. Try the Dover Sole
         """).strip()
-        sm = SpeechMark()
-        html5 = sm.loads(text)
+        speech = Speech(text)
 
         director = Director()
-        self.assertEqual(5, len(director.lines(html5)))
-        self.assertEqual(24, len(director.words(html5)))
+        self.assertEqual(5, len(speech.lines))
+        self.assertEqual(24, len(speech.words))
 
-        rv = "\n".join(director.edit(html5))
+        rv = "\n".join(director.edit(speech))
         self.assertFalse("<p>\n\n</p>" in rv, rv)
 
     def test_rewriter_single_blocks(self):
@@ -62,11 +60,10 @@ class EditTests(unittest.TestCase):
             "FIGHTER_2": Entity(name="Bashy"),
         }
 
-        sm = SpeechMark()
-        html = sm.loads(text)
-        edit = "\n".join(director.edit(html, selection))
+        speech = Speech(text)
+        edit = "\n".join(director.edit(speech, selection))
         self.assertIn('data-role="FIGHTER_1"', edit)
-        self.assertIn('data-entity="Biffy"', edit, html)
+        self.assertIn('data-entity="Biffy"', edit, speech)
         self.assertIn(">Biffy</cite>", edit)
         self.assertIn("Bashy!", edit)
 
@@ -83,9 +80,8 @@ class EditTests(unittest.TestCase):
             "FIGHTER_2": Entity(name="Båshy"),
         }
 
-        sm = SpeechMark()
-        html = sm.loads(text)
-        edit = "\n".join(director.edit(html, selection))
+        speech = Speech(text)
+        edit = "\n".join(director.edit(speech, selection))
         self.assertIn('data-role="FIGHTER_1"', edit)
         self.assertIn('data-entity="Bîffy"', edit)
         self.assertIn("B&icirc;ffy</cite>", edit)
@@ -104,9 +100,8 @@ class EditTests(unittest.TestCase):
             "FIGHTER_2": Entity(name="Båshy"),
         }
 
-        sm = SpeechMark()
-        html = sm.loads(text)
-        edit = "\n".join(director.edit(html, selection))
+        speech = Speech(text)
+        edit = "\n".join(director.edit(speech, selection))
         self.assertIn('data-role="FIGHTER_1"', edit)
         self.assertIn('data-entity="Bîffy"', edit)
         self.assertIn("B&icirc;ffy</cite>", edit)
@@ -129,15 +124,14 @@ class EditTests(unittest.TestCase):
             "FIGHTER_2": Entity(name="Bashy"),
         }
 
-        sm = SpeechMark()
-        html = sm.loads(text)
-        edit = "\n".join(director.edit(html, selection))
+        speech = Speech(text)
+        edit = "\n".join(director.edit(speech, selection))
         self.assertIn('data-role="WEAPON"', edit)
-        self.assertIn('data-entity="Rusty"', edit, html)
+        self.assertIn('data-entity="Rusty"', edit, speech)
         self.assertIn(">Rusty</cite>", edit)
 
         self.assertIn('data-role="FIGHTER_2"', edit)
-        self.assertIn('data-entity="Bashy"', edit, html)
+        self.assertIn('data-entity="Bashy"', edit, speech)
         self.assertIn(">Bashy</cite>", edit)
 
 
@@ -563,11 +557,10 @@ class ParametersTests(unittest.TestCase):
 
             """).strip()
 
-        sm = SpeechMark()
-        html5 = sm.loads(text)
+        speech = Speech(text)
 
         d = Director()
-        rv = "\n".join(d.edit(html5))
+        rv = "\n".join(d.edit(speech))
         self.assertEqual(3, rv.count("animation-delay"), rv)
         self.assertEqual(3, rv.count("animation-duration"), rv)
 
@@ -582,11 +575,10 @@ class ParametersTests(unittest.TestCase):
 
             """).strip()
 
-        sm = SpeechMark()
-        html5 = sm.loads(text)
+        speech = Speech(text)
 
         d = Director()
-        rv = "\n".join(d.edit(html5))
+        rv = "\n".join(d.edit(speech))
         self.assertIn("offer", d.notes[(None, 0)])
         self.assertEqual(None, d.notes[(None, 0)]["offer"])
         self.assertIn("delay", d.notes[(None, 0)])
@@ -604,11 +596,10 @@ class ParametersTests(unittest.TestCase):
 
             """).strip()
 
-        sm = SpeechMark()
-        html5 = sm.loads(text)
+        speech = Speech(text)
 
         d = Director()
-        rv = "\n".join(d.edit(html5))
+        rv = "\n".join(d.edit(speech))
         self.assertIn("offer", d.notes[(None, 0)])
         self.assertEqual(None, d.notes[(None, 0)]["offer"])
         self.assertIn("delay", d.notes[(None, 0)])
@@ -625,11 +616,10 @@ class ParametersTests(unittest.TestCase):
 
             """).strip()
 
-        sm = SpeechMark()
-        html5 = sm.loads(text)
+        speech = Speech(text)
 
         d = Director()
-        rv = "\n".join(d.edit(html5))
+        rv = "\n".join(d.edit(speech))
         self.assertIn("offer", d.notes[(None, 0)])
         self.assertEqual(12, d.notes[(None, 0)]["offer"])
         self.assertIn("option", d.notes[(None, 0)])
@@ -670,10 +660,9 @@ class LoopTests(unittest.TestCase):
         shot = next(iter(scene.get(d.shot_key, [])))
         text = shot.get(d.dlg_key, "")
 
-        sm = SpeechMark()
-        html5 = sm.loads(text)
+        speech = Speech(text)
 
-        rv = "\n".join(d.edit(html5, roles))
+        rv = "\n".join(d.edit(speech, roles))
         self.assertEqual(0, rv.count("<li>"), rv)
         self.assertEqual(0, rv.count("</li>"))
         self.assertEqual(1, rv.count("This, or"))
@@ -703,12 +692,11 @@ class DirectiveTests(unittest.TestCase):
         specs = d.specifications(scene)
         roles = dict(d.roles(specs, ensemble))
 
-        sm = SpeechMark()
         shot = next(iter(scene.get(d.shot_key, [])))
         text = shot.get(d.dlg_key, "")
-        html5 = sm.loads(text)
+        speech = Speech(text)
 
-        rv = "\n".join(d.edit(html5, roles))
+        rv = "\n".join(d.edit(speech, roles))
 
         self.assertIn((None, 0), d.notes)
         self.assertEqual(1.2, d.notes[(None, 0)]["delay"])
@@ -738,8 +726,7 @@ class ModeTests(unittest.TestCase):
             "FIGHTER_2": Entity(name="Bashy"),
         }
 
-        sm = SpeechMark()
-        html5 = sm.loads(text)
-        edit = "\n".join(d.edit(html5, selection))
+        speech = Speech(text)
+        edit = "\n".join(d.edit(speech, selection))
         self.assertIn("media", d.notes[(None, 0)])
         self.assertEqual(["slapwhack"], d.notes[(None, 0)]["media"])
