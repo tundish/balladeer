@@ -66,9 +66,19 @@ class StoryBuilder:
         else:
             return [t for i in (m.get("directives", []) for m in notes[-1].maps) for t in i]
 
-    def action(self, directives: list = [], prefix="on_", **kwargs):
+    def turn(self, directives: list = [], prefix="on_", **kwargs): # -> Page
+        # TODO Generate Performance from command
+        # Call Drama interlude
+        # Director selection
+        # Entity aspects
+        # Director rewrite
+
         for action, entity, entities in directives:
             method = getattr(self.context, f"{prefix}{action}")
             if isinstance(method, Callable):
                 # TODO: Log errors
                 yield method(entity, *entities, **kwargs)
+
+        # TODO:
+        # Generate parser options
+        # Build page

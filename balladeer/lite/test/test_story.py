@@ -69,7 +69,7 @@ class ExampleTests(unittest.TestCase):
         for n in range(3):
             with self.subTest(n=n, m=len(story.director.notes[(None, 0)].maps)):
                 notes = story.director.notes[(None, 0)]
-                actions = list(story.action(story.direction))
+                actions = list(story.turn(story.direction))
                 if not n:
                     self.assertFalse(story.direction)
                     self.assertFalse(actions)
