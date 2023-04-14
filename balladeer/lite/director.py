@@ -28,11 +28,10 @@ import re
 import string
 import urllib.parse
 
-from speechmark import SpeechMark
 
+from balladeer.lite.entity import Entity
 from balladeer.lite.loader import Loader
 from balladeer.lite.speech import Speech
-from balladeer.lite.types import Entity
 
 
 class Director:
@@ -74,7 +73,6 @@ class Director:
         delay: float = 0,
         offer: float = None,
     ):
-        self.spmk = SpeechMark()
         self.fmtr = self.Formatter()
         self.counts = Counter()
         self.notes = defaultdict(ChainMap)
@@ -219,7 +217,7 @@ class Director:
 
         try:
             attr = f'" data-entity="{entity.names[0]}'
-            text = entity.names[0].translate(self.spmk.escape_table)
+            text = entity.names[0].translate(Speech.processor.escape_table)
             return f"{head}{self.role}{attr}{tail}{text}</cite>"
         except IndexError:
             return match.group()

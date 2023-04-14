@@ -20,7 +20,7 @@
 import enum
 import unittest
 
-from balladeer.lite.types import Entity
+from balladeer.lite.entity import Entity
 
 
 class TestComparisons(unittest.TestCase):

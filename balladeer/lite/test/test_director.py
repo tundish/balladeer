@@ -24,8 +24,8 @@ import unittest
 import tomllib
 
 from balladeer.lite.director import Director
+from balladeer.lite.entity import Entity
 from balladeer.lite.speech import Speech
-from balladeer.lite.types import Entity
 from balladeer.lite.types import State
 
 

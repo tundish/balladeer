@@ -26,7 +26,7 @@ import textwrap
 import unittest
 import uuid
 
-from balladeer.lite.types import Entity
+from balladeer.lite.entity import Entity
 from balladeer.lite.types import State
 
 from balladeer.lite.loader import Loader

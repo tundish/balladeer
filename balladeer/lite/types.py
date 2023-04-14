@@ -23,8 +23,6 @@ import enum
 import random
 import uuid
 
-from balladeer.lite.loader import Loader
-
 
 # turberfield.utils.misc
 def group_by_type(items):
@@ -45,9 +43,6 @@ class State:
         return cls[name]
 
 
-from balladeer.lite.entity import Entity
-
-
 class Traffic(State, enum.Enum):
     blocked = enum.auto()
     forward = enum.auto()
@@ -55,9 +50,10 @@ class Traffic(State, enum.Enum):
     flowing = enum.auto()
 
 
+"""
 class Transit(Entity):
     pass
-
+"""
 
 # TODO: Reconcile with balladeer.cartography.Map
 class MapMaker:
