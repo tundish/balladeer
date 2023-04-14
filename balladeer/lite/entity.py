@@ -23,6 +23,7 @@ import random
 import re
 import uuid
 
+from balladeer.lite.speech import Speech
 from balladeer.lite.types import State
 
 
@@ -36,6 +37,8 @@ class Entity:
 
     states: dict = dataclasses.field(default_factory=dict, compare=False)
     uid: uuid.UUID = dataclasses.field(default_factory=uuid.uuid4)
+    aspect: Speech = dataclasses.field(default_factory=Speech, compare=False)
+    sketch: Speech = dataclasses.field(default_factory=Speech, compare=False)
 
     def __post_init__(self, name, type):
         if not isinstance(name, property):
@@ -47,6 +50,9 @@ class Entity:
                 self.types.add(type)
 
     def __eq__(self, other):
+        if not self.names:
+            return self.uid == other.uid
+
         try:
             return set(self.names).union(self.types) == set(other.names).union(other.types)
         except AttributeError:

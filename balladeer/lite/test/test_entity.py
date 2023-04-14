@@ -45,6 +45,17 @@ class TestComparisons(unittest.TestCase):
         self.assertNotEqual(a, b)
 
 
+class TestAttributes(unittest.TestCase):
+    def test_aspect(self):
+        a = Entity(aspect="whistling")
+        b = Entity(aspect="whistling")
+        self.assertNotEqual(a, b)
+
+    def test_sketch(self):
+        a = Entity(sketch="athletic")
+        b = Entity(sketch="athletic")
+        self.assertNotEqual(a, b)
+
 class TestNamesAndTypes(unittest.TestCase):
     class Thing(Entity):
         pass
