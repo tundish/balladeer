@@ -1,0 +1,26 @@
+project = "Balladeer JS frontend example"
+
+[BOTTLE]
+type = "Bottle"
+state = 1
+
+[[_]]
+# Many bottles
+s="""
+<>  |BOTTLES| green bottles, hanging on the wall.
+"""
+
+[[_]]
+# One bottle
+s="""
+<>  |BOTTLES| [green bottle](https://www.onegreenbottle.com/), hanging on the wall.
+"""
+
+[[_]]
+# All cases
+s="""
+<>  And if one green bottle should *accidentally* fall,
+    There'll be...
+"""
+
+# DRAMA.prompt Type 'look' to check
