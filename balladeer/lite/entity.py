@@ -27,7 +27,7 @@ from balladeer.lite.speech import Speech
 from balladeer.lite.types import State
 
 
-@dataclasses.dataclass(unsafe_hash=True)
+@dataclasses.dataclass(kw_only=True, unsafe_hash=True)
 class Entity:
     name: dataclasses.InitVar = ""
     names: list = dataclasses.field(default_factory=list, compare=False)

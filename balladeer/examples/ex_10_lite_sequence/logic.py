@@ -41,4 +41,4 @@ class Fight(Drama):
 
 class Story(StoryBuilder):
     def build(self):
-        yield Fight(self.world, config=self.config)
+        yield Fight(world=self.world, config=self.config)
