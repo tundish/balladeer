@@ -20,6 +20,7 @@
 import asyncio
 from collections import defaultdict
 import enum
+import random
 import sys
 import textwrap
 import uuid
@@ -41,8 +42,12 @@ from starlette.staticfiles import StaticFiles
 import balladeer
 from balladeer.lite.loader import Loader
 from balladeer.lite.director import Director
+from balladeer.lite.drama import Drama
+from balladeer.lite.entity import Entity
 from balladeer.lite.story import StoryBuilder
+from balladeer.lite.types import State
 from balladeer.lite.types import Page
+from balladeer.lite.world import WorldBuilder
 
 
 __doc__ = """
@@ -163,10 +168,41 @@ async def app_factory(
 
 # BEGIN
 
+class Bottle(Entity):
+    pass
 
+
+class Green(State, enum.Enum):
+    dark = "#005500"
+    mint = "#008800"
+    lime = "#00BB00"
+
+
+class World(WorldBuilder):
+    def build(self):
+        yield from [
+            Bottle.set_state(random.choice(list(Green)), 1),
+            Bottle.set_state(random.choice(list(Green)), 1),
+            Bottle.set_state(random.choice(list(Green)), 1),
+            Bottle.set_state(random.choice(list(Green)), 1),
+            Bottle.set_state(random.choice(list(Green)), 1),
+            Bottle.set_state(random.choice(list(Green)), 1),
+            Bottle.set_state(random.choice(list(Green)), 1),
+            Bottle.set_state(random.choice(list(Green)), 1),
+            Bottle.set_state(random.choice(list(Green)), 1),
+            Bottle.set_state(random.choice(list(Green)), 1),
+        ]
+
+
+class Bottles(Drama):
+    pass
+
+
+class Story(StoryBuilder):
+    def build(self):
+        yield Bottles(self.world, config=self.config)
 
 if __name__ == "__main__":
-    from .logic import Story
     print(HTTPEndpoint.__subclasses__())  # Register head, body generators?
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
