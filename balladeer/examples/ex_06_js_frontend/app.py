@@ -33,6 +33,7 @@ from speechmark import SpeechMark
 from starlette.applications import Starlette
 from starlette.endpoints import HTTPEndpoint
 from starlette.responses import HTMLResponse
+from starlette.responses import JSONResponse
 from starlette.responses import PlainTextResponse
 from starlette.responses import RedirectResponse
 from starlette.routing import Mount
@@ -138,6 +139,25 @@ class Session(HTTPEndpoint):
             return ""
 
 
+class Command(HTTPEndpoint):
+    async def post(self, request):
+        async with request.form() as form:
+            print(form)
+        story = request.app.state.builder(request.app.state.config)
+        request.app.state.sessions[story.uid] = story
+        return RedirectResponse(
+            url=request.url_for("session", session_id=story.uid), status_code=303
+        )
+
+
+class Assembly(HTTPEndpoint):
+    async def get(self, request):
+        session_id = request.path_params["session_id"]
+        state = request.app.state
+        story = state.sessions[session_id]
+        return JSONResponse({})
+
+
 async def app_factory(
     builder: StoryBuilder = None,
     config=None,
@@ -153,6 +173,8 @@ async def app_factory(
         Route("/about", About),
         Route("/sessions", Start, methods=["POST"], name="start"),
         Route("/session/{session_id:uuid}", Session, name="session"),
+        Route("/session/{session_id:uuid}/assembly", Assembly, name="assembly"),
+        Route("/session/{session_id:uuid}/command", Command, methods=["POST"], name="command"),
     ]
     if static:
         routes.append(Mount("/static", app=StaticFiles(directory=static), name="static"))
