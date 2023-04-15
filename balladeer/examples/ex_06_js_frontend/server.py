@@ -12,12 +12,12 @@ import uuid
 from aiohttp import web
 import pkg_resources
 
-from balladeer import Assembly
-from balladeer import DataObject
-from balladeer import Drama
-from balladeer import Fruition
-from balladeer import Stateful
-from balladeer import Story as StoryType
+from balladeer.classic import Assembly
+from balladeer.classic import DataObject
+from balladeer.classic import Stateful
+from balladeer.classic.drama import Drama
+from balladeer.classic.story import Story as StoryType
+from balladeer.classic.types import Fruition
 
 
 class Bottle(DataObject, Stateful):
