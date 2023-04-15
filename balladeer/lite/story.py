@@ -66,17 +66,11 @@ class StoryBuilder:
         else:
             return [t for i in (m.get("directives", []) for m in notes[-1].maps) for t in i]
 
-    def turn(self, command="", directives: list = [], prefix="on_", **kwargs): # -> Page
-        # TODO Generate Performance from command
+    def turn(self, directives: list = [], prefix="on_", **kwargs): # -> Page
         # Call Drama interlude
         # Director selection
         # Entity aspects
         # Director rewrite
-        actions = list(self.context.match(command))
-        for fn, args, kwargs in self.context.pick(actions):
-            speech = list(self.context(fn, *args, **kwargs))
-            print(f"Speech: {speech}")
-
         for action, entity, entities in directives:
             method = getattr(self.context, f"{prefix}{action}")
             if isinstance(method, Callable):

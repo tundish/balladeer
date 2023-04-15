@@ -143,10 +143,19 @@ class Session(HTTPEndpoint):
 
 class Command(HTTPEndpoint):
     async def post(self, request):
+        session_id = request.path_params["session_id"]
+        state = request.app.state
+        story = state.sessions[session_id]
+
         async with request.form() as form:
             print(form)
-        story = request.app.state.builder(request.app.state.config)
-        request.app.state.sessions[story.uid] = story
+
+        # TODO Generate Performance from command
+        actions = list(story.context.match(command))
+        for fn, args, kwargs in story.context.pick(actions):
+            speech = list(story.context(fn, *args, **kwargs))
+            print(f"Speech: {speech}")
+
         return RedirectResponse(
             url=request.url_for("session", session_id=story.uid), status_code=303
         )
