@@ -230,7 +230,7 @@ class Song(Drama):
 
 class Story(StoryBuilder):
     def build(self):
-        yield Song(self.world, config=self.config)
+        yield Song(world=self.world, config=self.config)
 
 if __name__ == "__main__":
     print(HTTPEndpoint.__subclasses__())  # Register head, body generators?
