@@ -192,9 +192,6 @@ async def app_factory(
 
 # BEGIN
 
-class Bottle(Entity):
-    pass
-
 
 class Green(State, enum.Enum):
     dark = "#005500"
@@ -205,16 +202,16 @@ class Green(State, enum.Enum):
 class World(WorldBuilder):
     def build(self):
         yield from [
-            Bottle().set_state(random.choice(list(Green)), 1),
-            Bottle().set_state(random.choice(list(Green)), 1),
-            Bottle().set_state(random.choice(list(Green)), 1),
-            Bottle().set_state(random.choice(list(Green)), 1),
-            Bottle().set_state(random.choice(list(Green)), 1),
-            Bottle().set_state(random.choice(list(Green)), 1),
-            Bottle().set_state(random.choice(list(Green)), 1),
-            Bottle().set_state(random.choice(list(Green)), 1),
-            Bottle().set_state(random.choice(list(Green)), 1),
-            Bottle().set_state(random.choice(list(Green)), 1),
+            Entity(type="Bottle").set_state(random.choice(list(Green)), 1),
+            Entity(type="Bottle").set_state(random.choice(list(Green)), 1),
+            Entity(type="Bottle").set_state(random.choice(list(Green)), 1),
+            Entity(type="Bottle").set_state(random.choice(list(Green)), 1),
+            Entity(type="Bottle").set_state(random.choice(list(Green)), 1),
+            Entity(type="Bottle").set_state(random.choice(list(Green)), 1),
+            Entity(type="Bottle").set_state(random.choice(list(Green)), 1),
+            Entity(type="Bottle").set_state(random.choice(list(Green)), 1),
+            Entity(type="Bottle").set_state(random.choice(list(Green)), 1),
+            Entity(type="Bottle").set_state(random.choice(list(Green)), 1),
         ]
 
 
