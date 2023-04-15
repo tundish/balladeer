@@ -18,11 +18,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+from balladeer.lite.entity import Entity
 from balladeer.lite.loader import Loader
 from balladeer.lite.performance import Performance
 
 
-class Drama(Performance):
+class Drama(Entity, Performance):
     def __init__(self, world, config=None, **kwargs):
         super().__init__(*kwargs)
         self.world = world
@@ -30,7 +31,7 @@ class Drama(Performance):
 
     @property
     def ensemble(self):
-        return self.world.entities
+        return self.world.entities + [self]
 
     def scripts(self, assets):
         return [i for i in assets if isinstance(i, Loader.Scene)]

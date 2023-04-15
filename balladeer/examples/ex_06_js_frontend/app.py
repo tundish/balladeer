@@ -115,7 +115,7 @@ class Session(HTTPEndpoint):
 
         scene, specs, roles = story.director.selection(scripts, story.context.ensemble)
         if not (scene and roles):
-            warnings.warn("No cast!")
+            warnings.warn(f"Uncast {story.context.ensemble}")
             return RedirectResponse(
                 url=request.url_for("home"), status_code=300
             )
@@ -215,13 +215,13 @@ class World(WorldBuilder):
         ]
 
 
-class Bottles(Drama):
+class Song(Drama):
     pass
 
 
 class Story(StoryBuilder):
     def build(self):
-        yield Bottles(self.world, config=self.config)
+        yield Song(self.world, config=self.config)
 
 if __name__ == "__main__":
     print(HTTPEndpoint.__subclasses__())  # Register head, body generators?

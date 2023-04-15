@@ -1,17 +1,10 @@
-:project:   Balladeer JS frontend example
-:pause:     0
-:dwell:     0.4
+[PERFORMANCE]
+type = "Song"
 
-.. entity:: DRAMA
-    :types: balladeer.Drama
+[[_]]
+if.PERFORMANCE.state = 0
 
-End
-===
-
-None
-----
-
-.. condition:: DRAMA.count 0
-
-**No** green bottles hanging on the wall!
+s="""
+<> **No** green bottles hanging on the wall!
+"""
 
