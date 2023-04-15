@@ -42,86 +42,13 @@ import balladeer
 from balladeer.lite.loader import Loader
 from balladeer.lite.director import Director
 from balladeer.lite.story import StoryBuilder
+from balladeer.lite.types import Page
 
 
 __doc__ = """
 ~/py3.11-dev/bin/python -m balladeer.examples.10_lite_sequence.logic
 
 """
-
-themes = {
-    "default": {
-        "ballad-ink-gravity": "hsl(293.33, 96.92%, 12.75%)",
-        "ballad-ink-shadows": "hsl(202.86, 100%, 4.12%)",
-        "ballad-ink-lolight": "hsl(203.39, 96.72%, 11.96%)",
-        "ballad-ink-midtone": "hsl(203.39, 96.72%, 11.96%)",
-        "ballad-ink-hilight": "hsl(203.06, 97.3%, 56.47%)",
-        "ballad-ink-washout": "hsl(50, 0%, 100%, 1.0)",
-        "ballad-ink-glamour": "hsl(353.33, 96.92%, 12.75%)",
-    },
-}
-
-
-class Page:
-    @enum.unique
-    class Zone(enum.Enum):
-        xml = enum.auto()
-        doc = enum.auto()
-        html = enum.auto()
-        head = enum.auto()
-        title = enum.auto()
-        rdf = enum.auto()
-        meta = enum.auto()
-        link = enum.auto()
-        css = enum.auto()
-        theme = enum.auto()
-        style = enum.auto()
-        body = enum.auto()
-        app = enum.auto()
-        nav = enum.auto()
-        main = enum.auto()
-        asides = enum.auto()
-        inputs = enum.auto()
-        svg = enum.auto()
-        iframe = enum.auto()
-        script = enum.auto()
-        end = enum.auto()
-
-    def __init__(self, zone=Zone):
-        self.zone = zone
-        self.structure = self.setup(zone)
-
-    def setup(self, zone):
-        rv = {z: list() for z in zone}
-        rv[zone.doc].append("<!DOCTYPE html>")
-        rv[zone.html].append("<html>")
-        rv[zone.head].append("<head>")
-        rv[zone.body].extend(["</head>", "<body>"])
-        # Sort links by type, eg: css, js, font, etc
-        # <link
-        #   rel="preload"
-        #   href="fonts/zantroke-webfont.woff2"
-        #   as="font"
-        #   type="font/woff2"
-        #   crossorigin />
-
-        # NB: Prefetch gets resources for the next page.
-        # Stateful Presenter needs lookahead.
-        rv[zone.end].extend(["</body>", "</html>"])
-        return rv
-
-    def paste(self, zone, *args):
-        self.structure[zone].extend(filter(None, args))
-        return self
-
-    @property
-    def html(self):
-        return "\n".join(
-            gen if isinstance(gen, str) else "\n".join(gen)
-            for seq in self.structure.values()
-            for gen in seq
-        )
-
 
 class About(HTTPEndpoint):
     async def get(self, request):
@@ -173,7 +100,7 @@ class Session(HTTPEndpoint):
         session_id = request.path_params["session_id"]
         state = request.app.state
         story = state.sessions[session_id]
-        list(story.action(story.direction))
+        list(story.turn(story.direction))
         story.director.notes.clear()
 
         scripts = story.context.scripts(state.assets)
@@ -214,6 +141,8 @@ async def app_factory(
     loop=None,
     **kwargs,
 ):
+
+    # TODO: Create new endpoint types on the fly with metadata from kwargs?
     routes = routes or [
         Route("/", Home, name="home"),
         Route("/about", About),

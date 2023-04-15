@@ -173,7 +173,7 @@ class Session(HTTPEndpoint):
         session_id = request.path_params["session_id"]
         state = request.app.state
         story = state.sessions[session_id]
-        list(story.action(story.direction))
+        list(story.turn(story.direction))
         story.director.notes.clear()
 
         scripts = story.context.scripts(state.assets)

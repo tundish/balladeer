@@ -24,6 +24,80 @@ import random
 import uuid
 
 
+
+class Page:
+
+    themes = {
+        "default": {
+            "ballad-ink-gravity": "hsl(293.33, 96.92%, 12.75%)",
+            "ballad-ink-shadows": "hsl(202.86, 100%, 4.12%)",
+            "ballad-ink-lolight": "hsl(203.39, 96.72%, 11.96%)",
+            "ballad-ink-midtone": "hsl(203.39, 96.72%, 11.96%)",
+            "ballad-ink-hilight": "hsl(203.06, 97.3%, 56.47%)",
+            "ballad-ink-washout": "hsl(50, 0%, 100%, 1.0)",
+            "ballad-ink-glamour": "hsl(353.33, 96.92%, 12.75%)",
+        },
+    }
+
+    @enum.unique
+    class Zone(enum.Enum):
+        xml = enum.auto()
+        doc = enum.auto()
+        html = enum.auto()
+        head = enum.auto()
+        title = enum.auto()
+        rdf = enum.auto()
+        meta = enum.auto()
+        link = enum.auto()
+        css = enum.auto()
+        theme = enum.auto()
+        style = enum.auto()
+        body = enum.auto()
+        app = enum.auto()
+        nav = enum.auto()
+        main = enum.auto()
+        asides = enum.auto()
+        inputs = enum.auto()
+        svg = enum.auto()
+        iframe = enum.auto()
+        script = enum.auto()
+        end = enum.auto()
+
+    def __init__(self, zone=Zone):
+        self.zone = zone
+        self.structure = self.setup(zone)
+
+    def setup(self, zone):
+        rv = {z: list() for z in zone}
+        rv[zone.doc].append("<!DOCTYPE html>")
+        rv[zone.html].append("<html>")
+        rv[zone.head].append("<head>")
+        rv[zone.body].extend(["</head>", "<body>"])
+        # Sort links by type, eg: css, js, font, etc
+        # <link
+        #   rel="preload"
+        #   href="fonts/zantroke-webfont.woff2"
+        #   as="font"
+        #   type="font/woff2"
+        #   crossorigin />
+
+        # NB: Prefetch gets resources for the next page.
+        # Stateful Presenter needs lookahead.
+        rv[zone.end].extend(["</body>", "</html>"])
+        return rv
+
+    def paste(self, zone, *args):
+        self.structure[zone].extend(filter(None, args))
+        return self
+
+    @property
+    def html(self):
+        return "\n".join(
+            gen if isinstance(gen, str) else "\n".join(gen)
+            for seq in self.structure.values()
+            for gen in seq
+        )
+
 # turberfield.utils.misc
 def group_by_type(items):
     rv = defaultdict(list)
