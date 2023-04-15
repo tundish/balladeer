@@ -244,7 +244,6 @@ class Director:
             specs = self.specifications(scene.tables)
             roles = dict(self.roles(specs, ensemble))
             if len(roles) == len(specs):
-                # TODO: Check there is dialogue
                 return scene, specs, roles
         else:
             return {}, {}, {}

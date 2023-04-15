@@ -23,9 +23,9 @@ from balladeer.lite.loader import Loader
 from balladeer.lite.performance import Performance
 
 
-class Drama(Entity, Performance):
-    def __init__(self, world, config=None, **kwargs):
-        super().__init__(*kwargs)
+class Drama(Performance, Entity):
+    def __init__(self, world, config, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.world = world
         self.config = config
 
