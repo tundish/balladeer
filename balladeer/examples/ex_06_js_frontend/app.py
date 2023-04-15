@@ -24,6 +24,7 @@ import random
 import sys
 import textwrap
 import uuid
+import warnings
 
 import hypercorn
 from hypercorn.asyncio import serve
@@ -114,6 +115,7 @@ class Session(HTTPEndpoint):
 
         scene, specs, roles = story.director.selection(scripts, story.context.ensemble)
         if not (scene and roles):
+            warnings.warn("No cast!")
             return RedirectResponse(
                 url=request.url_for("home"), status_code=300
             )
@@ -203,16 +205,16 @@ class Green(State, enum.Enum):
 class World(WorldBuilder):
     def build(self):
         yield from [
-            Bottle.set_state(random.choice(list(Green)), 1),
-            Bottle.set_state(random.choice(list(Green)), 1),
-            Bottle.set_state(random.choice(list(Green)), 1),
-            Bottle.set_state(random.choice(list(Green)), 1),
-            Bottle.set_state(random.choice(list(Green)), 1),
-            Bottle.set_state(random.choice(list(Green)), 1),
-            Bottle.set_state(random.choice(list(Green)), 1),
-            Bottle.set_state(random.choice(list(Green)), 1),
-            Bottle.set_state(random.choice(list(Green)), 1),
-            Bottle.set_state(random.choice(list(Green)), 1),
+            Bottle().set_state(random.choice(list(Green)), 1),
+            Bottle().set_state(random.choice(list(Green)), 1),
+            Bottle().set_state(random.choice(list(Green)), 1),
+            Bottle().set_state(random.choice(list(Green)), 1),
+            Bottle().set_state(random.choice(list(Green)), 1),
+            Bottle().set_state(random.choice(list(Green)), 1),
+            Bottle().set_state(random.choice(list(Green)), 1),
+            Bottle().set_state(random.choice(list(Green)), 1),
+            Bottle().set_state(random.choice(list(Green)), 1),
+            Bottle().set_state(random.choice(list(Green)), 1),
         ]
 
 
@@ -229,7 +231,7 @@ if __name__ == "__main__":
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
-    assets = list(Loader.discover(balladeer.examples, "ex_10_lite_sequence"))
+    assets = list(Loader.discover(balladeer.examples, "ex_06_js_frontend"))
     # TODO: Group assets by type
     app = loop.run_until_complete(
         app_factory(static=assets[0].path.parent, loop=loop, assets=assets, sessions={})
