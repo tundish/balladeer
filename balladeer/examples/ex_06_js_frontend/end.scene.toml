@@ -1,8 +1,8 @@
 [PERFORMANCE]
 type = "Song"
+state = 0
 
 [[_]]
-if.PERFORMANCE.state = 0
 
 s="""
 <> **No** green bottles hanging on the wall!
