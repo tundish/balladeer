@@ -23,7 +23,7 @@ import uuid
 
 from balladeer.lite.director import Director
 from balladeer.lite.drama import Drama
-from balladeer.lite.types import WorldBuilder
+from balladeer.lite.world import WorldBuilder
 
 
 class StoryBuilder:

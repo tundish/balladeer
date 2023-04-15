@@ -17,12 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-from collections import defaultdict
-import dataclasses
 import enum
-import random
-import uuid
-
+from collections import defaultdict
 
 
 class Page:
@@ -98,18 +94,6 @@ class Page:
             for gen in seq
         )
 
-# turberfield.utils.misc
-def group_by_type(items):
-    rv = defaultdict(list)
-    for i in items:
-        rv[type(i)].append(i)
-    return rv
-
-
-Into = None
-Spot = None
-Exit = None
-
 
 class State:
     @classmethod
@@ -117,38 +101,33 @@ class State:
         return cls[name]
 
 
-class Traffic(State, enum.Enum):
-    blocked = enum.auto()
-    forward = enum.auto()
-    reverse = enum.auto()
-    flowing = enum.auto()
+class Fruition(State, enum.IntEnum):
+    inception = 1
+    elaboration = 2
+    construction = 3
+    transition = 4
+    completion = 5
+    discussion = 6
+    defaulted = 7
+    withdrawn = 8
+    cancelled = 9
 
 
-"""
-class Transit(Entity):
-    pass
-"""
+class Grouping(defaultdict):
 
-# TODO: Reconcile with balladeer.cartography.Map
-class MapMaker:
-    def __init__(self, spots, config=None):
-        self.config = config
-        global Into, Spot, Exit
-        self.into = Into = enum.Enum("Into", spots, type=State)
-        self.exit = Exit = enum.Enum("Exit", spots, type=State)
-        self.spot = Spot = enum.Enum("Spot", spots, type=State)
-        self.transits = list(self.make())
+    @classmethod
+    def typewise(cls, items):
+        # TODO: inspect 'type' attribute
+        rv = cls(list)
+        for i in items:
+            rv[type(i)].append(i)
+        return rv
 
-    def make(self):
-        raise NotImplementedError
+    @property
+    def all(self):
+        return [i for s in self.values() for i in s]
 
+    @property
+    def each(self):
+        return list(set(self.all))
 
-class WorldBuilder:
-    def __init__(self, map, config=None):
-        self.map = map
-        self.config = config
-        # TODO: Grouper by type or name of type?
-        self.entities = list(self.build())
-
-    def build(self):
-        return ()

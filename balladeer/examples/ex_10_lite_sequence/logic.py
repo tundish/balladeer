@@ -20,7 +20,7 @@
 from balladeer.lite.story import StoryBuilder
 from balladeer.lite.drama import Drama
 from balladeer.lite.entity import Entity
-from balladeer.lite.types import WorldBuilder
+from balladeer.lite.world import WorldBuilder
 
 
 class World(WorldBuilder):
