@@ -129,7 +129,11 @@ class Session(HTTPEndpoint):
         session_id = request.path_params["session_id"]
         state = request.app.state
         story = state.sessions[session_id]
-        list(story.turn(directives=story.direction))
+
+        page = Page()
+
+        # Pass in page to Story?
+        list(story.integrate(directives=story.direction))
         story.director.notes.clear()
 
         scripts = story.context.scripts(state.assets)
@@ -144,7 +148,6 @@ class Session(HTTPEndpoint):
 
         html5 = story.director.rewrite(scene, roles)
 
-        page = Page()
         page.paste(page.zone.title, "<title>Example</title>")
         page.paste(page.zone.meta, Home.meta)
         if story.notes:
