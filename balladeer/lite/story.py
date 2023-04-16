@@ -76,6 +76,7 @@ class StoryBuilder:
 
     def turn(self, directives: list = [], prefix="on_", **kwargs): # -> Page
         # Call Drama interlude
+        speech = self.context.interlude(**kwargs)
         # Director selection
         # Entity aspects
         # Director rewrite
