@@ -20,6 +20,7 @@
 from collections import deque
 from collections.abc import Callable
 import uuid
+import warnings
 
 from balladeer.lite.director import Director
 from balladeer.lite.drama import Drama
@@ -65,6 +66,13 @@ class StoryBuilder:
             return []
         else:
             return [t for i in (m.get("directives", []) for m in notes[-1].maps) for t in i]
+
+    def influence(self, text: str):
+        performance = self.context
+        actions = performance.matches(text)
+        fn, args, kwargs = performance.pick(actions)
+        # TODO: Handle exceptions
+        performance(fn, *args, **kwargs)
 
     def turn(self, directives: list = [], prefix="on_", **kwargs): # -> Page
         # Call Drama interlude

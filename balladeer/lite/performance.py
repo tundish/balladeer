@@ -94,7 +94,7 @@ class Performance:
     def pick(self, options):
         return next(iter(options), (None,) * 3)
 
-    def match(self, text, context=None, ensemble=[], prefix="do_", cutoff=0.95):
+    def matches(self, text, context=None, ensemble=[], prefix="do_", cutoff=0.95):
         if not hasattr(self, "active"):
             self.active = set(filter(
                 lambda x: isinstance(x, Callable),

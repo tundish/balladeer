@@ -171,11 +171,7 @@ class Command(HTTPEndpoint):
         async with request.form() as form:
             command = form["text"]
 
-        # TODO Generate Performance from command
-        actions = list(story.context.match(command))
-        for fn, args, kwargs in story.context.pick(actions):
-            speech = list(story.context(fn, *args, **kwargs))
-            print(f"Speech: {speech}")
+        story.influence(command)
 
         return RedirectResponse(
             url=request.url_for("session", session_id=story.uid), status_code=303
