@@ -102,6 +102,12 @@ class State:
 
 
 class Fruition(State, enum.IntEnum):
+    """
+    Adapted from 'Understanding Computers and Cognition'
+    by Terry Winograd and Fernando Flores,
+    fig 5.1: The basic conversation for action.
+
+    """
     inception = 1
     elaboration = 2
     construction = 3
