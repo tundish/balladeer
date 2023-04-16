@@ -245,7 +245,7 @@ class MatchingTests(unittest.TestCase):
 class PerformanceMatchTests(unittest.TestCase):
 
     def setUp(self):
-        self.performance = Trivial("do_this", "do_that", "do_tother")
+        self.performance = Trivial()
 
     def test_do_that(self):
         fn, args, kwargs = next(self.performance.match("that?"))
@@ -264,7 +264,7 @@ class PerformanceMatchTests(unittest.TestCase):
 class PerformanceTests(unittest.TestCase):
 
     def setUp(self):
-        self.performance = Trivial("do_this", "do_that", "do_tother")
+        self.performance = Trivial()
 
     def test_do_that(self):
         fn, args, kwargs = next(self.performance.match("that?"))

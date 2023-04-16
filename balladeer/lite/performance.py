@@ -18,6 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from collections import defaultdict
+from collections.abc import Callable
 import difflib
 import enum
 import inspect
@@ -33,7 +34,7 @@ class Performance:
     def unpack_annotation(name, annotation, ensemble, parent=None):
         if isinstance(annotation, str) and parent:
             f = string.Formatter()
-            annotation, _ = f.get_field("0." + annotation, [parent], {})
+            annotation, _ = f.get_field(f"0.{annotation}", [parent], {})
 
         if not isinstance(annotation, list):
             terms = [annotation]
@@ -87,16 +88,19 @@ class Performance:
                 except (AttributeError, IndexError, KeyError) as e:
                     continue
 
-    def __init__(self, *args, **kwargs):
-        self.active = set(filter(None, (getattr(self, i, None) for i in args)))
-
     def __call__(self, fn, *args, **kwargs):
         yield from fn(fn, *args, **kwargs)
 
     def pick(self, options):
         return next(iter(options), (None,) * 3)
 
-    def match(self, text, context=None, ensemble=[], cutoff=0.95):
+    def match(self, text, context=None, ensemble=[], prefix="do_", cutoff=0.95):
+        if not hasattr(self, "active"):
+            self.active = set(filter(
+                lambda x: isinstance(x, Callable),
+                (getattr(self, name) for name in dir(self) if name.startswith(prefix))
+            ))
+
         options = defaultdict(list)
         for fn in self.active:
             for k, v in self.expand_commands(fn, ensemble, parent=self):

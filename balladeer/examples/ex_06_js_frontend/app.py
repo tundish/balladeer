@@ -169,7 +169,7 @@ class Command(HTTPEndpoint):
         story = state.sessions[session_id]
 
         async with request.form() as form:
-            print(form)
+            command = form["text"]
 
         # TODO Generate Performance from command
         actions = list(story.context.match(command))
