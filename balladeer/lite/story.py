@@ -67,7 +67,7 @@ class StoryBuilder:
         else:
             return [t for i in (m.get("directives", []) for m in notes[-1].maps) for t in i]
 
-    def influence(self, text: str):
+    def influence(self, text: str, *args, **kwargs):
         performance = self.context
         actions = performance.matches(text)
         fn, args, kwargs = performance.pick(actions)
