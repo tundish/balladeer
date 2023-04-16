@@ -103,6 +103,28 @@ class Start(HTTPEndpoint):
 
 
 class Session(HTTPEndpoint):
+
+    @staticmethod
+    def to_command(request, story):
+        url = request.url_for("command", session_id=story.uid)
+        return textwrap.dedent(f"""
+            <form role="form" action="{url}" method="post" name="ballad-control-text">
+            <fieldset>
+            <label for="input-command-text" id="input-command-text-tip">&gt;</label>
+
+            <input
+            name="text"
+            placeholder="?"
+            pattern="[\w ]+"
+            autofocus="autofocus"
+            type="text"
+            title="&gt;"
+            />
+            <button type="submit">Enter</button>
+            </fieldset>
+            </form>
+        """)
+
     async def get(self, request):
         session_id = request.path_params["session_id"]
         state = request.app.state
@@ -129,8 +151,7 @@ class Session(HTTPEndpoint):
             page.paste(page.zone.meta, self.refresh(request.url, story.notes[-1]))
         page.paste(page.zone.css, Home.css)
         page.paste(page.zone.body, html5)
-        # TODO:
-        # page.paste(page.zone.inputs, controls)
+        page.paste(page.zone.inputs, self.to_command(request, story))
         return HTMLResponse(page.html)
 
     def refresh(self, url, notes: dict = {}) -> str:
