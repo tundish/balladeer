@@ -83,9 +83,10 @@ class ExampleTests(unittest.TestCase):
 
                 if n == 2:
                     self.assertEqual(2, len(roles), roles)
-                    self.assertRaises(KeyError, story.director.rewrite, scene, roles)
+                    rewriter = story.director.rewrite(scene, roles)
+                    self.assertRaises(KeyError, list, rewriter)
                 else:
                     self.assertEqual(3, len(roles), roles)
-                    html5 = story.director.rewrite(scene, roles)
+                    html5 = "\n".join(story.director.rewrite(scene, roles))
                     self.assertTrue(html5)
 

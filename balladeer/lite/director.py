@@ -32,6 +32,9 @@ import urllib.parse
 from balladeer.lite.entity import Entity
 from balladeer.lite.loader import Loader
 from balladeer.lite.speech import Speech
+from balladeer.lite.speech import Prologue
+from balladeer.lite.speech import Dialogue
+from balladeer.lite.speech import Epilogue
 
 
 class Director:
@@ -280,7 +283,12 @@ class Director:
                 pool[entity] = roles
                 yield role, entity
 
-    def rewrite(self, scene, roles: dict[str, Entity] = {}) -> str:
+    def rewrite(
+            self,
+            scene,
+            roles: dict[str, Entity] = {},
+            speech: list[Speech] = [],
+        ) -> Generator[str]:
         shots = scene.tables.get(self.shot_key, [])
         for n, shot in enumerate(shots):
             conditions = dict(self.specify_conditions(shot))
@@ -289,9 +297,7 @@ class Director:
                 speech = Speech(text)
                 edit = "\n".join(self.edit(speech, roles, path=scene.path, index=n))
                 self.delay = 0
-                return "\n".join(i for i in edit.splitlines() if i.strip())
-        else:
-            return ""
+                yield "\n".join(i for i in edit.splitlines() if i.strip())
 
     def allows(self, conditions: dict, cast: dict[str, Entity] = {}) -> bool:
         for role, (roles, states, types) in conditions.items():

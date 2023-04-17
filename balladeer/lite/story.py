@@ -74,7 +74,7 @@ class StoryBuilder:
 
         # Entity aspects
         # Director rewrite
-        html5 = story.director.rewrite(scene, roles, speech)
+        html5 = self.director.rewrite(scene, roles, speech)
 
         for action, entity, entities in self.direction:
             method = getattr(self.context, f"{prefix}{action}")

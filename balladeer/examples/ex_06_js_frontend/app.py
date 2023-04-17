@@ -95,8 +95,9 @@ class Home(HTTPEndpoint):
 
 class Start(HTTPEndpoint):
     async def post(self, request):
-        story = request.app.state.builder(request.app.state.config)
-        request.app.state.sessions[story.uid] = story
+        state = request.app.state
+        story = state.builder(state.config, assets=state.assets)
+        state.sessions[story.uid] = story
         return RedirectResponse(
             url=request.url_for("session", session_id=story.uid), status_code=303
         )
@@ -135,8 +136,6 @@ class Session(HTTPEndpoint):
         with story as turn:
             if turn.notes:
                 page.paste(page.zone.meta, self.refresh(request.url, turn.notes[-1]))
-
-        scripts = story.context.scripts(state.assets)
 
         if html5 is None:
             warnings.warn(f"Uncast {story.context.ensemble}")
