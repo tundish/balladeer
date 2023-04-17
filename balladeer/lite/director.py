@@ -35,6 +35,7 @@ from balladeer.lite.speech import Speech
 from balladeer.lite.speech import Prologue
 from balladeer.lite.speech import Dialogue
 from balladeer.lite.speech import Epilogue
+from balladeer.lite.types import Grouping
 
 
 class Director:
@@ -289,14 +290,19 @@ class Director:
             roles: dict[str, Entity] = {},
             speech: list[Speech] = [],
         ) -> Generator[str]:
+
+        spoken = Grouping.typewise(speech)
         shots = scene.tables.get(self.shot_key, [])
+
+        #TODO: interleave with spoken[Dialogue]
         for n, shot in enumerate(shots):
             conditions = dict(self.specify_conditions(shot))
             if self.allows(conditions, roles):
                 text = shot.get(self.dlg_key, "")
-                speech = Speech(text)
+                speech = Dialogue(text)
                 edit = "\n".join(self.edit(speech, roles, path=scene.path, index=n))
                 self.delay = 0
+                # TODO: insert to spoken[Dialogue]
                 yield "\n".join(i for i in edit.splitlines() if i.strip())
 
     def allows(self, conditions: dict, cast: dict[str, Entity] = {}) -> bool:
