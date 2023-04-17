@@ -28,6 +28,7 @@ class Drama(Entity, Performance):
         super().__init__(*args, **kwargs)
         self.world = world
         self.config = config
+        self.speech = []
 
     @property
     def ensemble(self):
@@ -39,6 +40,6 @@ class Drama(Entity, Performance):
     def media(self, assets):
         return {i.path: i for i in assets if isinstance(i, Loader.Asset)}
 
-    def interlude(self, *args, **kwargs):
-        yield from ()
+    def interlude(self):
+        yield from self.speech
 

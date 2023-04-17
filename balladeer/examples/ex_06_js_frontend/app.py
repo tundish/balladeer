@@ -132,18 +132,11 @@ class Session(HTTPEndpoint):
 
         page = Page()
 
-        # TODO: Move to Story.__enter__
-        list(story.integrate(directives=story.direction))
-        story.director.notes.clear()
+        with story as turn:
+            if turn.notes:
+                page.paste(page.zone.meta, self.refresh(request.url, turn.notes[-1]))
 
         scripts = story.context.scripts(state.assets)
-        media = story.context.media(state.assets)
-
-        scene, specs, roles = story.director.selection(scripts, story.context.ensemble)
-
-        html5 = story.director.rewrite(scene, roles)
-        if story.notes:
-            page.paste(page.zone.meta, self.refresh(request.url, story.notes[-1]))
 
         if html5 is None:
             warnings.warn(f"Uncast {story.context.ensemble}")

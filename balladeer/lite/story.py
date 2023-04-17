@@ -29,10 +29,13 @@ from balladeer.lite.world import WorldBuilder
 
 class StoryBuilder:
     def __init__(
-        self, config, world: WorldBuilder = None, drama: [list | deque] = None, **kwargs
+        self, config, assets: list = [],
+        world: WorldBuilder = None, drama: [list | deque] = None,
+        **kwargs
     ):
         self.uid = uuid.uuid4()
         self.config = config
+        self.assets = assets.copy()
         if not world:
             world_type = next(iter(WorldBuilder.__subclasses__()), WorldBuilder)
             self.world = world_type(config)
@@ -60,9 +63,29 @@ class StoryBuilder:
         return list(self.director.notes.values())
 
     def __enter__(self):
-        pass
+        drama = self.context
+
+        # Call Drama interlude
+        speech = drama.interlude()
+
+        # Director selection
+        scripts = drama.scripts(self.assets)
+        scene, specs, roles = self.director.selection(scripts, drama.ensemble)
+
+        # Entity aspects
+        # Director rewrite
+        html5 = story.director.rewrite(scene, roles, speech)
+
+        for action, entity, entities in self.direction:
+            method = getattr(self.context, f"{prefix}{action}")
+            if isinstance(method, Callable):
+                # TODO: Log errors
+                method(entity, *entities, **kwargs)
+
+        return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        self.director.notes.clear()
         return False
 
     @property
@@ -74,14 +97,14 @@ class StoryBuilder:
             return [t for i in (m.get("directives", []) for m in notes[-1].maps) for t in i]
 
     def action(self, text: str, *args, **kwargs):
-        performance = self.context
-        actions = performance.matches(text)
-        fn, args, kwargs = performance.pick(actions)
+        drama = self.context
+        actions = drama.actions(text)
+        fn, args, kwargs = drama.pick(actions)
         if not fn:
             return None
 
         try:
-            performance(fn, *args, **kwargs)
+            drama.speech = drama(fn, *args, **kwargs)
         except Exception as e:
             warnings.warn(e)
 

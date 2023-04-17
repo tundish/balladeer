@@ -248,14 +248,14 @@ class PerformanceMatchTests(unittest.TestCase):
         self.performance = Trivial()
 
     def test_do_that(self):
-        fn, args, kwargs = next(self.performance.matches("that?"))
+        fn, args, kwargs = next(self.performance.actions("that?"))
         self.assertEqual(self.performance.do_that, fn)
         self.assertEqual(["that?", None], args)
         self.assertFalse(kwargs)
 
     def test_mismatch(self):
         cmd = "release the frog"
-        fn, args, kwargs = next(self.performance.matches(cmd))
+        fn, args, kwargs = next(self.performance.actions(cmd))
         self.assertIs(None, fn)
         self.assertEqual([cmd, None], args)
         self.assertFalse(kwargs)
@@ -267,7 +267,7 @@ class PerformanceTests(unittest.TestCase):
         self.performance = Trivial()
 
     def test_do_that(self):
-        fn, args, kwargs = next(self.performance.matches("that?"))
+        fn, args, kwargs = next(self.performance.actions("that?"))
         self.assertEqual(self.performance.do_that, fn)
         self.assertEqual(["that?", None], args)
         self.assertFalse(kwargs)
@@ -277,21 +277,21 @@ class PerformanceTests(unittest.TestCase):
         self.assertEqual(["that?", None], args)
 
     def test_do_this(self):
-        fn, args, kwargs = self.performance.pick(self.performance.matches("That?"))
+        fn, args, kwargs = self.performance.pick(self.performance.actions("That?"))
         data = self.performance(fn, *args, **kwargs)
 
-        fn, args, kwargs = self.performance.pick(self.performance.matches("This?"))
+        fn, args, kwargs = self.performance.pick(self.performance.actions("This?"))
         data = self.performance(fn, *args, **kwargs)
         self.assertEqual("Yes, this.", "\n".join(data))
 
     def test_do_tother(self):
-        fn, args, kwargs = self.performance.pick(self.performance.matches("That?"))
+        fn, args, kwargs = self.performance.pick(self.performance.actions("That?"))
         data = self.performance(fn, *args, **kwargs)
 
-        fn, args, kwargs = self.performance.pick(self.performance.matches("This?"))
+        fn, args, kwargs = self.performance.pick(self.performance.actions("This?"))
         data = self.performance(fn, *args, **kwargs)
 
-        fn, args, kwargs = self.performance.pick(self.performance.matches("Or?"))
+        fn, args, kwargs = self.performance.pick(self.performance.actions("Or?"))
         data = "\n".join(self.performance(fn, *args, **kwargs))
 
         self.assertEqual("Or,\nMaybe;\nTother.", data)
