@@ -174,7 +174,7 @@ class Command(HTTPEndpoint):
         async with request.form() as form:
             command = form["text"]
 
-        story.influence(command)
+        story.action(command)
 
         return RedirectResponse(
             url=request.url_for("session", session_id=story.uid), status_code=303

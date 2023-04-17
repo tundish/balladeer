@@ -59,6 +59,12 @@ class StoryBuilder:
     def notes(self):
         return list(self.director.notes.values())
 
+    def __enter__(self):
+        pass
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        return False
+
     @property
     def direction(self):
         notes = self.notes
@@ -67,13 +73,21 @@ class StoryBuilder:
         else:
             return [t for i in (m.get("directives", []) for m in notes[-1].maps) for t in i]
 
-    def influence(self, text: str, *args, **kwargs):
+    def action(self, text: str, *args, **kwargs):
         performance = self.context
         actions = performance.matches(text)
         fn, args, kwargs = performance.pick(actions)
-        # TODO: Handle exceptions
-        performance(fn, *args, **kwargs)
+        if not fn:
+            return None
 
+        try:
+            performance(fn, *args, **kwargs)
+        except Exception as e:
+            warnings.warn(e)
+
+        return fn, args, kwargs
+
+    # TODO: Move to __enter__
     def integrate(self, directives: list = [], prefix="on_", **kwargs): # -> Page
         # Call Drama interlude
         speech = self.context.interlude(**kwargs)
