@@ -133,20 +133,23 @@ class Session(HTTPEndpoint):
 
         page = Page()
 
-        with story as turn:
-            if turn.notes:
-                page.paste(page.zone.meta, self.refresh(request.url, turn.notes[-1]))
+        with story.turn() as turn:
+            if story.notes:
+                page.paste(page.zone.meta, self.refresh(request.url, story.notes[-1]))
 
-        if html5 is None:
-            warnings.warn(f"Uncast {story.context.ensemble}")
+        # TODO: turn.blocks is a Grouping: Speech: [html5]
+        if not turn.blocks:
+            warnings.warn(f"Unable to cast {story.context.ensemble}")
             return RedirectResponse(
                 url=request.url_for("home"), status_code=300
             )
+        else:
+            html = "\n".join(turn.blocks.all())
 
         page.paste(page.zone.title, "<title>Example</title>")
         page.paste(page.zone.meta, Home.meta)
         page.paste(page.zone.css, Home.css)
-        page.paste(page.zone.body, html5)
+        page.paste(page.zone.body, turn.html5)
         page.paste(page.zone.inputs, self.to_command(request, story))
         return HTMLResponse(page.html)
 

@@ -18,6 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from collections import deque
+from collections import namedtuple
 from collections.abc import Callable
 import uuid
 import warnings
@@ -28,6 +29,13 @@ from balladeer.lite.world import WorldBuilder
 
 
 class StoryBuilder:
+
+    Turn = namedtuple(
+        "Turn",
+        ["scene", "specs", "roles", "speech", "blocks"],
+        defaults=(None,)
+    )
+
     def __init__(
         self, config, assets: list = [],
         world: WorldBuilder = None, drama: [list | deque] = None,
@@ -62,6 +70,9 @@ class StoryBuilder:
     def notes(self):
         return list(self.director.notes.values())
 
+    def turn(self, *args, **kwargs):
+        return self
+
     def __enter__(self):
         drama = self.context
 
@@ -82,7 +93,7 @@ class StoryBuilder:
                 # TODO: Log errors
                 method(entity, *entities, **kwargs)
 
-        return self
+        return self.Turn(scene, specs, roles, speech)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.director.notes.clear()
