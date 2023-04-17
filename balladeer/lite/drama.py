@@ -21,6 +21,7 @@
 from balladeer.lite.entity import Entity
 from balladeer.lite.loader import Loader
 from balladeer.lite.performance import Performance
+from balladeer.lite.speech import Speech
 
 
 class Drama(Entity, Performance):
@@ -40,6 +41,6 @@ class Drama(Entity, Performance):
     def media(self, assets):
         return {i.path: i for i in assets if isinstance(i, Loader.Asset)}
 
-    def interlude(self):
-        yield from self.speech
+    def interlude(self, *args, **kwargs) -> list[Speech]:
+        return self.speech.copy()
 

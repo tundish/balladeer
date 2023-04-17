@@ -143,13 +143,13 @@ class Session(HTTPEndpoint):
             return RedirectResponse(
                 url=request.url_for("home"), status_code=300
             )
-        else:
-            html = "\n".join(turn.blocks.all())
+
+        html5 = "\n".join(turn.blocks.all)
 
         page.paste(page.zone.title, "<title>Example</title>")
         page.paste(page.zone.meta, Home.meta)
         page.paste(page.zone.css, Home.css)
-        page.paste(page.zone.body, turn.html5)
+        page.paste(page.zone.body, html5)
         page.paste(page.zone.inputs, self.to_command(request, story))
         return HTMLResponse(page.html)
 

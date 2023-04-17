@@ -25,6 +25,7 @@ import warnings
 
 from balladeer.lite.director import Director
 from balladeer.lite.drama import Drama
+from balladeer.lite.types import Grouping
 from balladeer.lite.world import WorldBuilder
 
 
@@ -71,13 +72,11 @@ class StoryBuilder:
         return list(self.director.notes.values())
 
     def turn(self, *args, **kwargs):
+        self.context.speech = self.context.interlude(*args, **kwargs)
         return self
 
     def __enter__(self):
         drama = self.context
-
-        # Call Drama interlude
-        speech = drama.interlude()
 
         # Director selection
         scripts = drama.scripts(self.assets)
@@ -85,15 +84,15 @@ class StoryBuilder:
 
         # Entity aspects
         # Director rewrite
-        html5 = self.director.rewrite(scene, roles, speech)
+        blocks = Grouping.typewise(self.director.rewrite(scene, roles, drama.speech))
 
         for action, entity, entities in self.direction:
-            method = getattr(self.context, f"{prefix}{action}")
+            method = getattr(drama, f"{prefix}{action}")
             if isinstance(method, Callable):
                 # TODO: Log errors
                 method(entity, *entities, **kwargs)
 
-        return self.Turn(scene, specs, roles, speech)
+        return self.Turn(scene, specs, roles, drama.speech, blocks)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.director.notes.clear()
