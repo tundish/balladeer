@@ -137,7 +137,6 @@ class Session(HTTPEndpoint):
             if story.notes:
                 page.paste(page.zone.meta, self.refresh(request.url, story.notes[-1]))
 
-        # TODO: turn.blocks is a Grouping: Speech: [html5]
         if not turn.blocks:
             warnings.warn(f"Unable to cast {story.context.ensemble}")
             return RedirectResponse(

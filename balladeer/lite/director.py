@@ -65,10 +65,6 @@ class Director:
 
         return roles, states, types
 
-    def specify_conditions(self, shot: dict) -> Generator[tuple[str, tuple[set, set, dict]]]:
-        for role, guard in shot.get("if", {}).items():
-            yield role, self.specify_role(guard)
-
     def __init__(
         self,
         shot_key: str = "_",
@@ -244,18 +240,6 @@ class Director:
             f' {duration:.2f}s">{content}</p>'
         )
 
-    def selection(self, scripts, ensemble: list[Entity] = [], roles=1):
-        for scene in scripts:
-            specs = self.specifications(scene.tables)
-            roles = dict(self.roles(specs, ensemble))
-            if len(roles) == len(specs):
-                return scene, specs, roles
-        else:
-            return {}, {}, {}
-
-    def specifications(self, toml: dict):
-        return {k: v for k, v in toml.items() if isinstance(v, dict) and k != self.shot_key}
-
     def roles(self, specs: dict, ensemble: list[Entity]) -> dict[str, Entity]:
         specs = dict(
             sorted(specs.items(), key=lambda x: self.rank_constraints(x[1]), reverse=True)
@@ -285,6 +269,42 @@ class Director:
                 pool[entity] = roles
                 yield role, entity
 
+    def specifications(self, toml: dict):
+        return {k: v for k, v in toml.items() if isinstance(v, dict) and k != self.shot_key}
+
+    def selection(self, scripts, ensemble: list[Entity] = [], roles=1):
+        for scene in scripts:
+            specs = self.specifications(scene.tables)
+            roles = dict(self.roles(specs, ensemble))
+            if len(roles) == len(specs):
+                return scene, specs, roles
+        else:
+            return {}, {}, {}
+
+    def allows(self, conditions: dict, cast: dict[str, Entity] = {}) -> bool:
+        for role, (roles, states, types) in conditions.items():
+            entity = cast[role]
+            if (
+                types
+                and not types.issubset(entity.types)
+                and entity.__class__.__name__ not in types
+            ):
+                return False
+            for state, values in states.items():
+                try:
+                    key = entity.get_state(state).name
+                except AttributeError:
+                    key = entity.get_state(state)
+
+                if key not in values:
+                    return False
+
+        return True
+
+    def specify_conditions(self, shot: dict) -> Generator[tuple[str, tuple[set, set, dict]]]:
+        for role, guard in shot.get("if", {}).items():
+            yield role, self.specify_role(guard)
+
     def dialogue(self, scene: Loader.Scene, roles: dict) -> tuple[int, Dialogue]:
         shots = scene.tables.get(self.shot_key, [])
         for n, shot in enumerate(shots):
@@ -295,7 +315,7 @@ class Director:
 
     def rewrite(
             self,
-            scene=None,
+            scene = None,
             roles: dict[str, Entity] = {},
             speech: list[Speech] = [],
         ) -> Generator[str]:
@@ -318,23 +338,3 @@ class Director:
         yield from filter(None, spoken.get(Prologue, []))
         yield from filter(None, spoken.get(Dialogue, []))
         yield from filter(None, spoken.get(Epilogue, []))
-
-    def allows(self, conditions: dict, cast: dict[str, Entity] = {}) -> bool:
-        for role, (roles, states, types) in conditions.items():
-            entity = cast[role]
-            if (
-                types
-                and not types.issubset(entity.types)
-                and entity.__class__.__name__ not in types
-            ):
-                return False
-            for state, values in states.items():
-                try:
-                    key = entity.get_state(state).name
-                except AttributeError:
-                    key = entity.get_state(state)
-
-                if key not in values:
-                    return False
-
-        return True
