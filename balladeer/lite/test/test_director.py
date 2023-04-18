@@ -756,6 +756,28 @@ class RewriteTests(unittest.TestCase):
         self.assertEqual(1, len(rv))
         self.assertIn('data-entity="Alan">Alan</cite>', rv[0])
 
+    def test_multi_speech_rewrite(self):
+        d = Director()
+        rv = list(
+            d.rewrite(
+                roles=self.roles,
+                speech=[
+                    Dialogue("<GUEST> I'd like to order a taxi, please."),
+                    Epilogue("<STAFF> Certainly. Going to?"),
+                    Prologue("<STAFF> Can I help you, sir?"),
+                ]
+            )
+        )
+        self.assertEqual(3, len(rv))
+        self.assertIn('data-entity="Beth">Beth</cite>', rv[0])
+        self.assertIn("help", rv[0])
+
+        self.assertIn('data-entity="Alan">Alan</cite>', rv[1])
+        self.assertIn("taxi", rv[1])
+
+        self.assertIn('data-entity="Beth">Beth</cite>', rv[2])
+        self.assertIn("Going", rv[2])
+
     def test_no_scene(self):
         d = Director()
         roles = {
