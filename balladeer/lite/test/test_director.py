@@ -777,13 +777,3 @@ class RewriteTests(unittest.TestCase):
 
         self.assertIn('data-entity="Beth">Beth</cite>', rv[2])
         self.assertIn("Going", rv[2])
-
-    def test_no_scene(self):
-        d = Director()
-        roles = {
-            "GUEST": Entity(),
-            "STAFF": Entity(),
-        }
-
-        rv = d.rewrite()
-        # self.fail(list(rv))
