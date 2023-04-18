@@ -26,6 +26,9 @@ import tomllib
 from balladeer.lite.director import Director
 from balladeer.lite.entity import Entity
 from balladeer.lite.speech import Speech
+from balladeer.lite.speech import Prologue
+from balladeer.lite.speech import Dialogue
+from balladeer.lite.speech import Epilogue
 from balladeer.lite.types import State
 
 
@@ -47,7 +50,7 @@ class EditTests(unittest.TestCase):
         rv = "\n".join(director.edit(speech))
         self.assertFalse("<p>\n\n</p>" in rv, rv)
 
-    def test_rewriter_single_blocks(self):
+    def test_edit_single_blocks(self):
         text = textwrap.dedent("""
         <FIGHTER_1>
 
@@ -730,3 +733,35 @@ class ModeTests(unittest.TestCase):
         edit = "\n".join(d.edit(speech, selection))
         self.assertIn("media", d.notes[(None, 0)])
         self.assertEqual(["slapwhack"], d.notes[(None, 0)]["media"])
+
+
+class RewriteTests(unittest.TestCase):
+
+    def setUp(self):
+        self.roles = {
+            "GUEST": Entity(name="Alan"),
+            "STAFF": Entity(name="Beth"),
+        }
+
+    def test_empty_rewrite(self):
+        d = Director()
+        rv = list(d.rewrite())
+        self.assertFalse(rv)
+
+    def test_speech_rewrite(self):
+        d = Director()
+        rv = list(
+            d.rewrite(roles=self.roles, speech=[Prologue("<GUEST> I'd like to order a taxi.")])
+        )
+        self.assertEqual(1, len(rv))
+        self.assertIn('data-entity="Alan">Alan</cite>', rv[0])
+
+    def test_no_scene(self):
+        d = Director()
+        roles = {
+            "GUEST": Entity(),
+            "STAFF": Entity(),
+        }
+
+        rv = d.rewrite()
+        # self.fail(list(rv))

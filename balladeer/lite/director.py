@@ -23,6 +23,7 @@ from collections import ChainMap
 from collections import Counter
 from collections import defaultdict
 import html
+import itertools
 import pathlib
 import re
 import string
@@ -284,26 +285,38 @@ class Director:
                 pool[entity] = roles
                 yield role, entity
 
+    def dialogue(self, scene: Loader.Scene, roles: dict):
+        shots = scene.tables.get(self.shot_key, [])
+        for shot in shots:
+            conditions = dict(self.specify_conditions(shot))
+            if self.allows(conditions, roles):
+                text = shot.get(self.dlg_key, "")
+                yield Dialogue(text)
+
     def rewrite(
             self,
-            scene,
+            scene=None,
             roles: dict[str, Entity] = {},
             speech: list[Speech] = [],
         ) -> Generator[str]:
 
-        spoken = Grouping.typewise(speech)
-        shots = scene.tables.get(self.shot_key, [])
+        spoken = {
+            k: self.edit(s, roles, path=None, index=n)
+            for k, v in Grouping.typewise(speech).items()
+            for n, s in enumerate(v)
+        }
+        if scene:
+            spoken[Dialogue] = list(itertools.chain.from_iterable(itertools.zip_longest(
+                spoken.setdefault(Dialogue, []),
+                [
+                    self.edit(d, roles, path=scene.path, index=n)
+                    for n, d in enumerate(self.dialogue(scene, roles))
+                ]
+            )))
 
-        #TODO: interleave with spoken[Dialogue]
-        for n, shot in enumerate(shots):
-            conditions = dict(self.specify_conditions(shot))
-            if self.allows(conditions, roles):
-                text = shot.get(self.dlg_key, "")
-                speech = Dialogue(text)
-                edit = "\n".join(self.edit(speech, roles, path=scene.path, index=n))
-                self.delay = 0
-                # TODO: insert to spoken[Dialogue]
-                yield "\n".join(i for i in edit.splitlines() if i.strip())
+        yield from spoken.get(Prologue, [])
+        yield from spoken.get(Dialogue, [])
+        yield from spoken.get(Epilogue, [])
 
     def allows(self, conditions: dict, cast: dict[str, Entity] = {}) -> bool:
         for role, (roles, states, types) in conditions.items():
