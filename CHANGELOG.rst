@@ -6,6 +6,26 @@
 Change Log
 ::::::::::
 
+0.30.0
+======
+
+Full steam ahead with the *lite* variant. Extensive refactoring to implement these key features:
+
+* Standardised on `Grouping.typewise` wherever appropriate.
+* Added `sketch` and `aspect` to Entity.
+* Director keeps notes as a lossless ChainMap.
+* Clarified concepts of scene/shot/speech.
+* Clarified Drama interfaces to actions/interlude/directions.
+* Drama adopts Prologue/Dialogue/Epilogue as return types.
+* Drama owns `prompt`.
+* Director rewrite can re-order Prologue/Dialogue/Epilogue.
+* Story is now a context manager and has return type `Turn`.
+
+The following examples have been converted to use the *lite* API:
+
+* ex_06_js_frontend
+* ex_10_lite_sequence
+
 0.29.0
 ======
 
