@@ -42,9 +42,10 @@ class Entity:
     aspect: Speech = dataclasses.field(default_factory=Speech, compare=False)
 
     def __post_init__(self, name, type):
-        if not isinstance(name, property):
+        # Unfortunately the builtin 'type' can't be used here
+        if name and not isinstance(name, property):
             self.names.insert(0, name)
-        if type:
+        if type and not isinstance(type, property):
             try:
                 self.types.add(type.__name__)
             except AttributeError:
@@ -87,6 +88,7 @@ class Entity:
             return self.states.get(typ)
         else:
             return None
+
     @property
     def state(self):
         return self.get_state()

@@ -62,7 +62,7 @@ class GroupingTests(unittest.TestCase):
     def test_grouping_by_multiple_type(self):
         items = [
             Entity(type="A"),
-            Entity(types=["A", "B"]),
+            Entity(types={"A", "B"}),
         ]
 
         g = Grouping.typewise(items)
@@ -76,5 +76,5 @@ class GroupingTests(unittest.TestCase):
         self.assertIn("B", g)
         self.assertEqual(1, len(g["B"]))
 
-        self.assertEqual(5, len(g.all))
+        self.assertEqual(5, len(g.all), g.all)
         self.assertEqual(2, len(g.each))
