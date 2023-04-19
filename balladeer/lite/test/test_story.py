@@ -69,18 +69,14 @@ class ExampleTests(unittest.TestCase):
         for n in range(3):
             with self.subTest(n=n, m=len(story.director.notes[(None, 0)].maps)):
                 notes = story.director.notes[(None, 0)]
-                actions = list(story.integrate(directives=story.direction))
-                if not n:
-                    self.assertFalse(story.direction)
-                    self.assertFalse(actions)
-                else:
-                    self.assertTrue(story.direction, notes)
-                    self.assertTrue(actions)
 
-                story.director.notes.clear()
+                with story.turn() as turn:
+                    if not n:
+                        self.assertFalse(story.direction)
+                    else:
+                        self.assertTrue(story.direction, notes)
 
                 roles = dict(story.director.roles(specs, story.context.ensemble))
-
                 if n == 2:
                     self.assertEqual(2, len(roles), roles)
                     rewriter = story.director.rewrite(scene, roles)

@@ -82,15 +82,15 @@ class StoryBuilder:
         scripts = drama.scripts(self.assets)
         scene, specs, roles = self.director.selection(scripts, drama.ensemble)
 
-        # Entity aspects
+        # TODO: Entity aspects
         # Director rewrite
         blocks = Grouping.typewise(self.director.rewrite(scene, roles, drama.speech))
 
         for action, entity, entities in self.direction:
-            method = getattr(drama, f"{prefix}{action}")
+            method = getattr(drama, f"{drama.prefixes[1]}{action}")
             if isinstance(method, Callable):
                 # TODO: Log errors
-                method(entity, *entities, **kwargs)
+                method(entity, *entities)
 
         return self.Turn(scene, specs, roles, drama.speech, blocks)
 
@@ -119,20 +119,3 @@ class StoryBuilder:
             warnings.warn(e)
 
         return fn, args, kwargs
-
-    # TODO: Move to __enter__
-    def integrate(self, directives: list = [], prefix="on_", **kwargs): # -> Page
-        # Call Drama interlude
-        speech = self.context.interlude(**kwargs)
-        # Director selection
-        # Entity aspects
-        # Director rewrite
-        for action, entity, entities in directives:
-            method = getattr(self.context, f"{prefix}{action}")
-            if isinstance(method, Callable):
-                # TODO: Log errors
-                yield method(entity, *entities, **kwargs)
-
-        # TODO:
-        # Generate parser options
-        # Build page
