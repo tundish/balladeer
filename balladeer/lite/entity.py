@@ -64,6 +64,30 @@ class Entity:
         return random.choice(self.names or [""])
 
     @property
+    def type(self):
+        return sorted(self.types)[0] if self.types else type(self)
+
+    @property
+    def state(self):
+        return self.get_state()
+
+    @state.setter
+    def state(self, value):
+        return self.set_state(value)
+
+    def set_state(self, *args):
+        for arg in args:
+            self.states[type(arg).__name__] = arg
+        return self
+
+    def get_state(self, typ: State = int):
+        try:
+            return self.states.get(typ.__name__)
+        except AttributeError:
+            return self.states.get(typ)
+        else:
+            return None
+    @property
     def state(self):
         return self.get_state()
 

@@ -85,8 +85,8 @@ class StoryBuilder:
         # TODO: Entity aspects
 
         # Director rewrite
-        blocks = Grouping.typewise(self.director.rewrite(scene, roles, drama.speech))
-        drama.speech.clear()
+        speech = drama.speech.copy()
+        blocks = Grouping.typewise(self.director.rewrite(scene, roles, speech))
 
         for action, entity, entities in self.direction:
             method = getattr(drama, f"{drama.prefixes[1]}{action}")
@@ -96,7 +96,8 @@ class StoryBuilder:
                 except Exception as e:
                     warnings.warn(e)
 
-        return self.Turn(scene, specs, roles, drama.speech, blocks)
+        drama.speech.clear()
+        return self.Turn(scene, specs, roles, speech, blocks)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.director.notes.clear()

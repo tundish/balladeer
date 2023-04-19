@@ -6,24 +6,20 @@ state = 1
 
 [PERFORMANCE]
 type = "Song"
+prompt = "Type 'look', 'bottle', or 'break'"
 
 [[_]]
 # Many bottles
+if.PERFORMANCE.state = [2, 3, 4, 5, 6, 7, 8, 9, 10]
 s="""
-<>  {PERFORMANCE} green bottles, hanging on the wall.
+<>  {PERFORMANCE.state} green bottles, hanging on the wall.
+
 """
 
 [[_]]
 # One bottle
+if.PERFORMANCE.state = 1
 s="""
-<>  {PERFORMANCE} [green bottle](https://www.onegreenbottle.com/), hanging on the wall.
-"""
+<>  {PERFORMANCE.state} [green bottle](https://www.onegreenbottle.com/), hanging on the wall.
 
-[[_]]
-# All cases
-s="""
-<>  And if one green bottle should *accidentally* fall,
-    There'll be...
 """
-
-# DRAMA.prompt Type 'look' to check

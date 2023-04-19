@@ -29,8 +29,6 @@ import warnings
 import hypercorn
 from hypercorn.asyncio import serve
 
-from speechmark import SpeechMark
-
 from starlette.applications import Starlette
 from starlette.endpoints import HTTPEndpoint
 from starlette.responses import HTMLResponse
@@ -47,6 +45,7 @@ from balladeer.lite.director import Director
 from balladeer.lite.drama import Drama
 from balladeer.lite.entity import Entity
 from balladeer.lite.speech import Dialogue
+from balladeer.lite.speech import Speech
 from balladeer.lite.story import StoryBuilder
 from balladeer.lite.types import State
 from balladeer.lite.types import Page
@@ -57,6 +56,7 @@ __doc__ = """
 ~/py3.11-dev/bin/python -m balladeer.examples.10_lite_sequence.logic
 
 """
+
 
 class About(HTTPEndpoint):
     async def get(self, request):
@@ -71,19 +71,23 @@ class About(HTTPEndpoint):
 
 
 class Home(HTTPEndpoint):
-    meta = textwrap.dedent("""
+    meta = textwrap.dedent(
+        """
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    """).strip()
+    """
+    ).strip()
 
     css = """<link rel="stylesheet" href="/static/styles.css" />"""
 
-    body = textwrap.dedent("""
+    body = textwrap.dedent(
+        """
     <form role="form" action="/sessions" method="POST" name="ballad-form-start">
     <button action="submit">Begin</button>
     </form>
-    """).strip()
+    """
+    ).strip()
 
     async def get(self, request):
         page = Page()
@@ -105,11 +109,11 @@ class Start(HTTPEndpoint):
 
 
 class Session(HTTPEndpoint):
-
     @staticmethod
     def to_command(request, story):
         url = request.url_for("command", session_id=story.uid)
-        return textwrap.dedent(f"""
+        return textwrap.dedent(
+            f"""
             <form role="form" action="{url}" method="post" name="ballad-control-text">
             <fieldset>
             <label for="input-command-text" id="input-command-text-tip">&gt;</label>
@@ -125,7 +129,8 @@ class Session(HTTPEndpoint):
             <button type="submit">Enter</button>
             </fieldset>
             </form>
-        """)
+        """
+        )
 
     async def get(self, request):
         session_id = request.path_params["session_id"]
@@ -140,9 +145,7 @@ class Session(HTTPEndpoint):
 
         if not turn.blocks:
             warnings.warn(f"Unable to cast {story.context.ensemble}")
-            return RedirectResponse(
-                url=request.url_for("home"), status_code=300
-            )
+            return RedirectResponse(url=request.url_for("home"), status_code=300)
 
         options = story.context.options(story.context.ensemble)
         html5 = "\n".join(turn.blocks.all)
@@ -194,7 +197,6 @@ async def app_factory(
     loop=None,
     **kwargs,
 ):
-
     # TODO: Create new endpoint types on the fly with metadata from kwargs?
     routes = routes or [
         Route("/", Home, name="home"),
@@ -215,6 +217,7 @@ async def app_factory(
         setattr(app.state, k, v)
 
     return app
+
 
 # BEGIN
 
@@ -242,12 +245,11 @@ class World(WorldBuilder):
 
 
 class Song(Drama):
-
     @property
     def unbroken(self):
-        return [i for i in self.ensemble if i.state == 1]
+        return [i for i in self.ensemble if i.type == "Bottle" and i.state == 1]
 
-    def do_bottle(self, this, text, presenter, *args, **kwargs):
+    def do_bottle(self, this, text, director, *args, **kwargs):
         """
         bottle
         break
@@ -255,20 +257,32 @@ class Song(Drama):
         """
         try:
             random.choice(self.unbroken).state = 0
+            yield Dialogue(
+                """
+                <>  And if one green bottle should *accidentally* fall,
+                There'll be...
+                """
+            )
+
         except IndexError:
             pass
 
-    def do_look(self, this, text, presenter, *args, **kwargs):
+    def do_look(self, this, text, director, *args, **kwargs):
         """
         look
 
         """
-        yield Dialogue("<> So he looked, and he saw...")
+        yield Dialogue("<> Singing...")
+
+    def interlude(self, *args, **kwargs) -> list[Speech]:
+        self.state = len(self.unbroken)
+        return self.speech.copy()
 
 
 class Story(StoryBuilder):
     def build(self):
         yield Song(world=self.world, config=self.config)
+
 
 if __name__ == "__main__":
     print(HTTPEndpoint.__subclasses__())  # Register head, body generators?
