@@ -25,6 +25,9 @@ import inspect
 import itertools
 import string
 
+from balladeer.lite.entity import Entity
+from balladeer.lite.types import Grouping
+
 
 class Performance:
 
@@ -91,6 +94,13 @@ class Performance:
     def __call__(self, fn, *args, **kwargs):
         yield from fn(fn, *args, **kwargs)
 
+    def options(self, ensemble: list[Entity]) -> Grouping[str, list[tuple[Callable, dict[str, Entity]]]]:
+        rv = Grouping(list)
+        for fn in self.active:
+            for k, v in self.expand_commands(fn, ensemble, parent=self):
+                rv[k].append(v)
+        return rv
+
     def pick(self, options):
         return next(iter(options), (None,) * 3)
 
@@ -101,10 +111,7 @@ class Performance:
                 (getattr(self, name) for name in dir(self) if name.startswith(prefix))
             ))
 
-        options = defaultdict(list)
-        for fn in self.active:
-            for k, v in self.expand_commands(fn, ensemble, parent=self):
-                options[k].append(v)
+        options = self.options(ensemble)
 
         tokens = self.parse_tokens(text, discard=self.discard)
         matches = (

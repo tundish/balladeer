@@ -30,6 +30,7 @@ class Drama(Entity, Performance):
         self.world = world
         self.config = config
         self.speech = []
+        self.prompt = "?"
 
     @property
     def ensemble(self):

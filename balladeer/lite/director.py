@@ -68,7 +68,7 @@ class Director:
     def __init__(
         self,
         shot_key: str = "_",
-        dlg_key: str = "s",
+        dialogue_key: str = "s",
         pause: float = 1,
         dwell: float = 0.1,
         delay: float = 0,
@@ -79,7 +79,7 @@ class Director:
         self.notes = defaultdict(ChainMap)
 
         self.shot_key = shot_key
-        self.dlg_key = dlg_key
+        self.dialogue_key = dialogue_key
         self.pause = pause
         self.dwell = dwell
         self.delay = delay
@@ -310,7 +310,7 @@ class Director:
         for n, shot in enumerate(shots):
             conditions = dict(self.specify_conditions(shot))
             if self.allows(conditions, roles):
-                text = shot.get(self.dlg_key, "")
+                text = shot.get(self.dialogue_key, "")
                 yield n, Dialogue(text)
 
     def rewrite(

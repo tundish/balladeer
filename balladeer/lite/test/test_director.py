@@ -661,7 +661,7 @@ class LoopTests(unittest.TestCase):
         roles = dict(d.roles(specs, self.ensemble))
 
         shot = next(iter(scene.get(d.shot_key, [])))
-        text = shot.get(d.dlg_key, "")
+        text = shot.get(d.dialogue_key, "")
 
         speech = Speech(text)
 
@@ -696,7 +696,7 @@ class DirectiveTests(unittest.TestCase):
         roles = dict(d.roles(specs, ensemble))
 
         shot = next(iter(scene.get(d.shot_key, [])))
-        text = shot.get(d.dlg_key, "")
+        text = shot.get(d.dialogue_key, "")
         speech = Speech(text)
 
         rv = "\n".join(d.edit(speech, roles))
