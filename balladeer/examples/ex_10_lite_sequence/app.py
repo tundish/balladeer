@@ -23,6 +23,7 @@ import enum
 import sys
 import textwrap
 import uuid
+import warnings
 
 import hypercorn
 from hypercorn.asyncio import serve
@@ -161,7 +162,8 @@ class Home(HTTPEndpoint):
 
 class Start(HTTPEndpoint):
     async def post(self, request):
-        story = request.app.state.builder(request.app.state.config)
+        state = request.app.state
+        story = state.builder(state.config, assets=state.assets)
         request.app.state.sessions[story.uid] = story
         return RedirectResponse(
             url=request.url_for("session", session_id=story.uid), status_code=303
@@ -173,25 +175,23 @@ class Session(HTTPEndpoint):
         session_id = request.path_params["session_id"]
         state = request.app.state
         story = state.sessions[session_id]
-        list(story.turn(story.direction))
-        story.director.notes.clear()
 
-        scripts = story.context.scripts(state.assets)
-        media = story.context.media(state.assets)
+        page = Page()
 
-        scene, specs, roles = story.director.selection(scripts, story.context.ensemble)
-        if not (scene and roles):
+        with story.turn() as turn:
+            if story.notes:
+                page.paste(page.zone.meta, self.refresh(request.url, story.notes[-1]))
+
+        if not turn.blocks:
+            warnings.warn(f"Unable to cast {story.context.ensemble}")
             return RedirectResponse(
                 url=request.url_for("home"), status_code=300
             )
 
-        html5 = story.director.rewrite(scene, roles)
+        html5 = "\n".join(turn.blocks.all)
 
-        page = Page()
         page.paste(page.zone.title, "<title>Example</title>")
         page.paste(page.zone.meta, Home.meta)
-        if story.notes:
-            page.paste(page.zone.meta, self.refresh(request.url, story.notes[-1]))
         page.paste(page.zone.css, Home.css)
         page.paste(page.zone.body, html5)
         return HTMLResponse(page.html)
