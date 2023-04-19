@@ -13,7 +13,7 @@ Full steam ahead with the *lite* variant. Extensive refactoring to implement the
 
 * Standardised on `Grouping.typewise` wherever appropriate.
 * Added `sketch` and `aspect` to Entity.
-* Director keeps notes as a lossless ChainMap.
+* Director keeps sequential notes in a ChainMap.
 * Clarified concepts of scene/shot/speech.
 * Clarified Drama interfaces to actions/interlude/directions.
 * Drama adopts Prologue/Dialogue/Epilogue as return types.
