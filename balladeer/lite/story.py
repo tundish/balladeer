@@ -89,8 +89,10 @@ class StoryBuilder:
         for action, entity, entities in self.direction:
             method = getattr(drama, f"{drama.prefixes[1]}{action}")
             if isinstance(method, Callable):
-                # TODO: Log errors
-                method(entity, *entities)
+                try:
+                    method(entity, *entities)
+                except Exception as e:
+                    warnings.warn(e)
 
         return self.Turn(scene, specs, roles, drama.speech, blocks)
 
@@ -108,7 +110,12 @@ class StoryBuilder:
 
     def action(self, text: str, *args, **kwargs):
         drama = self.context
-        actions = drama.actions(text)
+        actions = drama.actions(
+            text,
+            context=self.director,
+            ensemble=drama.ensemble,
+            prefix=drama.prefixes[0],
+        )
         fn, args, kwargs = drama.pick(actions)
         if not fn:
             return None
