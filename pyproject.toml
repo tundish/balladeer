@@ -1,11 +1,11 @@
 [project]
 name = "balladeer"
-version = "0.29.0"
+version = "0.30.0"
 description = "Web-enabled interactive fiction in Python."
 readme = "README.rst"
 requires-python = ">=3.11"
 license = {file = "LICENSE"}
-keywords = ["markup"]
+keywords = ["speechmark"]
 authors = [
     {name = "Tundish", email = "tundish@gigeconomy.org.uk"}
 ]
@@ -28,6 +28,7 @@ lite = [
     "python-multipart",
 ]
 classic = [
+    "aiohttp",
     "docutils==0.18.1",
     "turberfield-catchphrase==0.25.0",
     "turberfield-dialogue==0.47.0",
