@@ -123,10 +123,11 @@ class Grouping(defaultdict):
 
     @classmethod
     def typewise(cls, items):
-        # TODO: inspect 'type' attribute
         rv = cls(list)
         for i in items:
             rv[type(i)].append(i)
+            for t in getattr(i, "types", []):
+                rv[t].append(i)
         return rv
 
     @property

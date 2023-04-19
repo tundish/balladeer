@@ -35,4 +35,46 @@ class GroupingTests(unittest.TestCase):
 
         self.assertIn(B, g)
         self.assertEqual(1, len(g[B]))
+        self.assertEqual(3, len(g.all))
+        self.assertEqual(3, len(g.each))
  
+    def test_grouping_by_type(self):
+        items = [
+            Entity(type="A"),
+            Entity(type="B"),
+            Entity(type="A"),
+        ]
+
+        g = Grouping.typewise(items)
+
+        self.assertIn(Entity, g)
+        self.assertEqual(3, len(g[Entity]))
+
+        self.assertIn("A", g)
+        self.assertEqual(2, len(g["A"]))
+
+        self.assertIn("B", g)
+        self.assertEqual(1, len(g["B"]))
+
+        self.assertEqual(6, len(g.all))
+        self.assertEqual(3, len(g.each))
+
+    def test_grouping_by_multiple_type(self):
+        items = [
+            Entity(type="A"),
+            Entity(types=["A", "B"]),
+        ]
+
+        g = Grouping.typewise(items)
+
+        self.assertIn(Entity, g)
+        self.assertEqual(2, len(g[Entity]))
+
+        self.assertIn("A", g)
+        self.assertEqual(2, len(g["A"]))
+
+        self.assertIn("B", g)
+        self.assertEqual(1, len(g["B"]))
+
+        self.assertEqual(5, len(g.all))
+        self.assertEqual(2, len(g.each))
