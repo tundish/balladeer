@@ -143,6 +143,8 @@ class Session(HTTPEndpoint):
                 url=request.url_for("home"), status_code=300
             )
 
+        options = story.context.options(story.context.ensemble)
+        print(f"Options: {options}")
         html5 = "\n".join(turn.blocks.all)
 
         page.paste(page.zone.title, "<title>Example</title>")

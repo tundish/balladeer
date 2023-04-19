@@ -94,7 +94,13 @@ class Performance:
     def __call__(self, fn, *args, **kwargs):
         yield from fn(fn, *args, **kwargs)
 
-    def options(self, ensemble: list[Entity]) -> Grouping[str, list[tuple[Callable, dict[str, Entity]]]]:
+    def options(self, ensemble: list[Entity], prefix="do_") -> Grouping[str, list[tuple[Callable, dict[str, Entity]]]]:
+        if not hasattr(self, "active"):
+            self.active = set(filter(
+                lambda x: isinstance(x, Callable),
+                (getattr(self, name) for name in dir(self) if name.startswith(prefix))
+            ))
+
         rv = Grouping(list)
         for fn in self.active:
             for k, v in self.expand_commands(fn, ensemble, parent=self):
@@ -105,13 +111,8 @@ class Performance:
         return next(iter(options), (None,) * 3)
 
     def actions(self, text, context=None, ensemble=[], prefix="do_", cutoff=0.95):
-        if not hasattr(self, "active"):
-            self.active = set(filter(
-                lambda x: isinstance(x, Callable),
-                (getattr(self, name) for name in dir(self) if name.startswith(prefix))
-            ))
 
-        options = self.options(ensemble)
+        options = self.options(ensemble, prefix=prefix)
 
         tokens = self.parse_tokens(text, discard=self.discard)
         matches = (
