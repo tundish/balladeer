@@ -72,7 +72,7 @@ class StoryBuilder:
         return list(self.director.notes.values())
 
     def turn(self, *args, **kwargs):
-        self.context.speech = self.context.interlude(*args, **kwargs)
+        self.context.speech = list(self.context.interlude(*args, **kwargs))
         return self
 
     def __enter__(self):
@@ -83,8 +83,10 @@ class StoryBuilder:
         scene, specs, roles = self.director.selection(scripts, drama.ensemble)
 
         # TODO: Entity aspects
+
         # Director rewrite
         blocks = Grouping.typewise(self.director.rewrite(scene, roles, drama.speech))
+        drama.speech.clear()
 
         for action, entity, entities in self.direction:
             method = getattr(drama, f"{drama.prefixes[1]}{action}")
@@ -121,7 +123,7 @@ class StoryBuilder:
             return None
 
         try:
-            drama.speech = drama(fn, *args, **kwargs)
+            drama.speech = list(drama(fn, *args, **kwargs))
         except Exception as e:
             warnings.warn(e)
 

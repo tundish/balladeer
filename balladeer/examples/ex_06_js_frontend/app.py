@@ -46,6 +46,7 @@ from balladeer.lite.loader import Loader
 from balladeer.lite.director import Director
 from balladeer.lite.drama import Drama
 from balladeer.lite.entity import Entity
+from balladeer.lite.speech import Dialogue
 from balladeer.lite.story import StoryBuilder
 from balladeer.lite.types import State
 from balladeer.lite.types import Page
@@ -115,7 +116,7 @@ class Session(HTTPEndpoint):
 
             <input
             name="text"
-            placeholder="?"
+            placeholder="{story.context.prompt}"
             pattern="[\w ]+"
             autofocus="autofocus"
             type="text"
@@ -144,7 +145,6 @@ class Session(HTTPEndpoint):
             )
 
         options = story.context.options(story.context.ensemble)
-        print(f"Options: {options}")
         html5 = "\n".join(turn.blocks.all)
 
         page.paste(page.zone.title, "<title>Example</title>")
@@ -242,7 +242,28 @@ class World(WorldBuilder):
 
 
 class Song(Drama):
-    pass
+
+    @property
+    def unbroken(self):
+        return [i for i in self.ensemble if i.state == 1]
+
+    def do_bottle(self, this, text, presenter, *args, **kwargs):
+        """
+        bottle
+        break
+
+        """
+        try:
+            random.choice(self.unbroken).state = 0
+        except IndexError:
+            pass
+
+    def do_look(self, this, text, presenter, *args, **kwargs):
+        """
+        look
+
+        """
+        yield Dialogue("<> So he looked, and he saw...")
 
 
 class Story(StoryBuilder):
