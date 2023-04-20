@@ -99,4 +99,4 @@ class Story(StoryBuilder):
 
 
 if __name__ == "__main__":
-    quick_start(balladeer.examples, "ex_06_js_frontend")
+    quick_start(balladeer.examples.ex_06_js_frontend)

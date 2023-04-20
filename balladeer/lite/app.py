@@ -207,7 +207,7 @@ async def app_factory(
     return app
 
 
-def quick_start(module, resource):
+def quick_start(module, resource=""):
     print(HTTPEndpoint.__subclasses__())  # Register head, body generators?
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
