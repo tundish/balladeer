@@ -72,7 +72,7 @@ class StoryBuilder:
         return list(self.director.notes.values())
 
     def turn(self, *args, **kwargs):
-        self.context.speech = list(self.context.interlude(*args, **kwargs))
+        self.context.speech = list(filter(None, self.context.interlude(*args, **kwargs)))
         return self
 
     def __enter__(self):
