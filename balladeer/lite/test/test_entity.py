@@ -70,7 +70,6 @@ class TestNamesAndTypes(unittest.TestCase):
         e = Entity(type=TestNamesAndTypes.Thing)
         self.assertEqual({"Thing"}, e.types)
         j = Entity.Encoder().encode(e)
-        print(j)
         self.assertTrue(j)
 
 
@@ -85,6 +84,8 @@ class TestEnumStates(unittest.TestCase):
         s.set_state(TestEnumStates.Colour.red)
         self.assertEqual(TestEnumStates.Colour.red, s.get_state(TestEnumStates.Colour))
         self.assertEqual({"Colour": TestEnumStates.Colour.red}, s.states)
+        j = Entity.Encoder().encode(s)
+        self.assertTrue(j)
 
     def test_state_as_enum_twice(self):
         s = Entity()

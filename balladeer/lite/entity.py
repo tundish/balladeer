@@ -63,7 +63,13 @@ class Entity:
 
     class Encoder(json.JSONEncoder):
         def default(self, obj):
-            return super().default(obj)
+            if isinstance(obj, enum.Enum):
+                return {"name": obj.name, "value": obj.value}
+
+            data = dataclasses.asdict(obj)
+            data["uid"] = str(data["uid"])
+            data["types"] = sorted(data.get("types", []))
+            return data
 
     @property
     def name(self):
