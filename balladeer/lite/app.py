@@ -35,6 +35,7 @@ from starlette.routing import Route
 from starlette.staticfiles import StaticFiles
 
 import balladeer
+from balladeer.lite.entity import Entity
 from balladeer.lite.loader import Loader
 from balladeer.lite.story import StoryBuilder
 from balladeer.lite.types import Page
@@ -175,7 +176,7 @@ class Assembly(HTTPEndpoint):
         state = request.app.state
         story = state.sessions[session_id]
         encoder = Entity.Encoder()
-        assembly = {"ensemble"=[encoder.encode(i) for i in story.context.ensemble]}
+        assembly = dict(ensemble=[encoder.encode(i) for i in story.context.ensemble])
         return JSONResponse(assembly)
 
 
