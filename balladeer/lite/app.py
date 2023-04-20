@@ -174,7 +174,9 @@ class Assembly(HTTPEndpoint):
         session_id = request.path_params["session_id"]
         state = request.app.state
         story = state.sessions[session_id]
-        return JSONResponse({})
+        encoder = Entity.Encoder()
+        assembly = {"ensemble"=[encoder.encode(i) for i in story.context.ensemble]}
+        return JSONResponse(assembly)
 
 
 async def app_factory(

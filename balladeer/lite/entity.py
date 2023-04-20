@@ -19,6 +19,7 @@
 
 import dataclasses
 import enum
+import json
 import random
 import re
 import uuid
@@ -59,6 +60,10 @@ class Entity:
             return set(self.names).union(self.types) == set(other.names).union(other.types)
         except AttributeError:
             return False
+
+    class Encoder(json.JSONEncoder):
+        def default(self, obj):
+            return super().default(obj)
 
     @property
     def name(self):

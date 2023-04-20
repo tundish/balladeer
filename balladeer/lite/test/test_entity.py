@@ -18,6 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import enum
+import json
 import unittest
 
 from balladeer.lite.entity import Entity
@@ -56,6 +57,7 @@ class TestAttributes(unittest.TestCase):
         b = Entity(sketch="athletic")
         self.assertNotEqual(a, b)
 
+
 class TestNamesAndTypes(unittest.TestCase):
     class Thing(Entity):
         pass
@@ -67,6 +69,9 @@ class TestNamesAndTypes(unittest.TestCase):
     def test_declared_type(self):
         e = Entity(type=TestNamesAndTypes.Thing)
         self.assertEqual({"Thing"}, e.types)
+        j = Entity.Encoder().encode(e)
+        print(j)
+        self.assertTrue(j)
 
 
 class TestEnumStates(unittest.TestCase):

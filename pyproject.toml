@@ -24,8 +24,9 @@ dependencies = [
 
 [project.optional-dependencies]
 lite = [
-    "starlette>=0.26.1",
     "python-multipart",
+    "starlette>=0.26.1",
+    "turberfield-utils==0.47.0",
 ]
 classic = [
     "docutils==0.18.1",
