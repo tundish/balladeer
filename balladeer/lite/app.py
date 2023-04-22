@@ -152,7 +152,11 @@ class Session(HTTPEndpoint):
 
     def render(self, request, page: Page, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Page:
 
-        page.paste(page.zone.title, f"<title>{story.title}</title>")
+        try:
+            page.paste(page.zone.title, f"<title>{story.title}</title>")
+        except AttributeError:
+            page.paste(page.zone.title, "<title>Story</title>")
+
         page.paste(page.zone.meta, Home.meta)
         page.paste(page.zone.css, Home.css)
 
