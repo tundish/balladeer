@@ -25,6 +25,7 @@ import warnings
 
 from balladeer.lite.director import Director
 from balladeer.lite.drama import Drama
+from balladeer.lite.loader import Loader
 from balladeer.lite.types import Grouping
 from balladeer.lite.world import WorldBuilder
 
@@ -38,7 +39,7 @@ class StoryBuilder:
     )
 
     def __init__(
-        self, config, assets: list = [],
+        self, config, assets: Grouping = Grouping(),
         world: WorldBuilder = None, drama: [list | deque] = None,
         **kwargs
     ):
@@ -79,7 +80,7 @@ class StoryBuilder:
         drama = self.context
 
         # Director selection
-        scripts = drama.scripts(self.assets)
+        scripts = drama.scripts(self.assets[Loader.Scene])
         scene, specs, roles = self.director.selection(scripts, drama.ensemble)
 
         # TODO: Entity aspects

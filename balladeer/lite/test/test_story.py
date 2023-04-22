@@ -24,6 +24,7 @@ import unittest
 
 from balladeer.examples.ex_10_lite_sequence.logic import Story
 from balladeer.lite.loader import Loader
+from balladeer.lite.types import Grouping
 
 
 class ExampleTests(unittest.TestCase):
@@ -59,8 +60,8 @@ class ExampleTests(unittest.TestCase):
 
             ''').strip()
 
-        scene = Loader.Scene(content, tomllib.loads(content))
-        story = Story(config={})
+        scene = Loader.read(content)
+        story = Story(config={}, assets=Grouping.typewise([scene]))
         specs = story.director.specifications(scene.tables)
         self.assertEqual(story.director.rank_constraints(specs["FIGHTER_1"]), 1, specs)
         self.assertEqual(story.director.rank_constraints(specs["FIGHTER_2"]), 2, specs)
@@ -71,18 +72,16 @@ class ExampleTests(unittest.TestCase):
                 notes = story.director.notes[(None, 0)]
 
                 with story.turn() as turn:
-                    if not n:
-                        self.assertFalse(story.direction)
-                    else:
-                        self.assertTrue(story.direction, notes)
 
-                roles = dict(story.director.roles(specs, story.context.ensemble))
-                if n == 2:
-                    self.assertEqual(2, len(roles), roles)
-                    rewriter = story.director.rewrite(scene, roles)
-                    self.assertRaises(KeyError, list, rewriter)
-                else:
-                    self.assertEqual(3, len(roles), roles)
-                    html5 = "\n".join(story.director.rewrite(scene, roles))
-                    self.assertTrue(html5)
+                    roles = dict(story.director.roles(specs, story.context.ensemble))
+                    if not n:
+                        self.assertTrue(turn.blocks, notes)
+                        self.assertEqual(3, len(roles), roles)
+                    elif n == 1:
+                        self.assertTrue(turn.blocks, notes)
+                        self.assertEqual(2, len(roles), roles)
+                        rewriter = story.director.rewrite(scene, roles)
+                        self.assertRaises(KeyError, list, rewriter)
+                    elif n == 2:
+                        self.assertFalse(turn.blocks, notes)
 
