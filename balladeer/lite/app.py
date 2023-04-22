@@ -84,7 +84,9 @@ class Home(HTTPEndpoint):
         return HTMLResponse(page.html)
 
     def render(self, request, page: Page, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Page:
-        page.paste(page.zone.title, "<title>Balladeer Example</title>")
+        # FIXME: No title
+        # FIXME: Generate css links from Loader assets.
+        page.paste(page.zone.title, "<title>Balladeer Application</title>")
         page.paste(page.zone.meta, self.meta)
         page.paste(page.zone.css, self.css)
         page.paste(page.zone.body, self.body)
