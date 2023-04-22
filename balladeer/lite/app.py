@@ -86,6 +86,7 @@ class Home(HTTPEndpoint):
     def render(self, request, page: Page, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Page:
         # FIXME: No title
         # FIXME: Generate css links from Loader assets.
+        print(self.assets)
         page.paste(page.zone.title, "<title>Balladeer Application</title>")
         page.paste(page.zone.meta, self.meta)
         page.paste(page.zone.css, self.css)
@@ -227,6 +228,9 @@ def quick_start(module, resource=""):
     asyncio.set_event_loop(loop)
 
     assets = list(Loader.discover(module, resource))
+    for cls in HTTPEndpoint.__subclasses__():
+        cls.assets = assets.copy()
+
     app = loop.run_until_complete(
         app_factory(static=assets[0].path.parent, loop=loop, assets=assets, sessions={})
     )
