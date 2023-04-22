@@ -98,8 +98,30 @@ class Start(HTTPEndpoint):
 
 
 class Session(HTTPEndpoint):
-    @staticmethod
-    def render_inputs_to_command(request, story):
+
+    async def get(self, request):
+        session_id = request.path_params["session_id"]
+        state = request.app.state
+        story = state.sessions[session_id]
+
+        page = Page()
+        with story.turn() as turn:
+            if not turn.blocks:
+                warnings.warn(f"Unable to cast {story.context.ensemble}")
+                return RedirectResponse(url=request.url_for("home"), status_code=300)
+
+            page = self.render(request, page, story, turn)
+
+        return HTMLResponse(page.html)
+
+    def render_refresh(self, url, notes: dict = {}) -> str:
+        try:
+            wait = notes.get("delay", 0) + notes.get("offer", 0)
+            return f'<meta http-equiv="refresh" content="{wait:.2f};{url}">'
+        except TypeError:
+            return ""
+
+    def render_inputs_to_command(self, request, story):
         options = story.context.options(story.context.ensemble)
         url = request.url_for("command", session_id=story.uid)
         return textwrap.dedent(
@@ -122,28 +144,6 @@ class Session(HTTPEndpoint):
         """
         )
 
-    async def get(self, request):
-        session_id = request.path_params["session_id"]
-        state = request.app.state
-        story = state.sessions[session_id]
-
-        page = Page()
-        with story.turn() as turn:
-            if not turn.blocks:
-                warnings.warn(f"Unable to cast {story.context.ensemble}")
-                return RedirectResponse(url=request.url_for("home"), status_code=300)
-
-            page = self.render(request, page, story, turn)
-
-        return HTMLResponse(page.html)
-
-    def refresh(self, url, notes: dict = {}) -> str:
-        try:
-            wait = notes.get("delay", 0) + notes.get("offer", 0)
-            return f'<meta http-equiv="refresh" content="{wait:.2f};{url}">'
-        except TypeError:
-            return ""
-
     def render(self, request, page: Page, story: StoryBuilder=None, turn: StoryBuilder.Turn=None):
 
         page.paste(page.zone.title, "<title>Example</title>")
@@ -154,7 +154,7 @@ class Session(HTTPEndpoint):
         page.paste(page.zone.body, html5)
 
         if story.notes:
-            page.paste(page.zone.meta, self.refresh(request.url, story.notes[-1]))
+            page.paste(page.zone.meta, self.render_refresh(request.url, story.notes[-1]))
 
         page.paste(page.zone.inputs, self.render_inputs_to_command(request, story))
         return page
