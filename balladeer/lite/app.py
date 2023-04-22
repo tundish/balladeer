@@ -38,6 +38,7 @@ import balladeer
 from balladeer.lite.entity import Entity
 from balladeer.lite.loader import Loader
 from balladeer.lite.story import StoryBuilder
+from balladeer.lite.types import Grouping
 from balladeer.lite.types import Page
 
 

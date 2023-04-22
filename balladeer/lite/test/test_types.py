@@ -20,6 +20,7 @@
 import unittest
 
 from balladeer.lite.entity import Entity
+from balladeer.lite.loader import Loader
 from balladeer.lite.types import Grouping
 
 
@@ -39,6 +40,21 @@ class GroupingTests(unittest.TestCase):
         self.assertEqual(3, len(g.each))
  
     def test_grouping_by_type(self):
+        types = ("audio/mpeg", "text/css", "text/javascript")
+        items = [
+            Loader.Asset(unittest, "data/slapwhack.mp4", type=types[0]),
+            Loader.Asset(unittest, "styles/style.css", type=types[1]),
+            Loader.Asset(unittest, "picker.js", type=types[2]),
+        ]
+        g = Grouping.typewise(items)
+
+        for t in types:
+            with self.subTest(t=t):
+                self.assertIn(t, g)
+                self.assertEqual(1, len(g[t]))
+                self.assertIsInstance(g[t][0], Loader.Asset)
+
+    def test_grouping_via_types(self):
         items = [
             Entity(type="A"),
             Entity(type="B"),

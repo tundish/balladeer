@@ -126,8 +126,14 @@ class Grouping(defaultdict):
         rv = cls(list)
         for i in items:
             rv[type(i)].append(i)
-            for t in getattr(i, "types", []):
-                rv[t].append(i)
+            try:
+                for t in i.types:
+                    rv[t].append(i)
+            except AttributeError:
+                try:
+                    rv[i.type].append(i)
+                except AttributeError:
+                    pass
         return rv
 
     @property

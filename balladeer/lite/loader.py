@@ -27,7 +27,7 @@ import xml.etree.ElementTree as ET
 
 class Loader:
     Asset = namedtuple(
-        "Asset", ["resource", "path", "mimetype", "stats"], defaults=[None, None]
+        "Asset", ["resource", "path", "type", "stats"], defaults=[None, None]
     )
     Scene = namedtuple(
         "Scene",
