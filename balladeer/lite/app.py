@@ -99,7 +99,8 @@ class Start(HTTPEndpoint):
 
 class Session(HTTPEndpoint):
     @staticmethod
-    def to_command(request, story):
+    def render_inputs_to_command(request, story):
+        options = story.context.options(story.context.ensemble)
         url = request.url_for("command", session_id=story.uid)
         return textwrap.dedent(
             f"""
@@ -127,23 +128,13 @@ class Session(HTTPEndpoint):
         story = state.sessions[session_id]
 
         page = Page()
-
         with story.turn() as turn:
-            if story.notes:
-                page.paste(page.zone.meta, self.refresh(request.url, story.notes[-1]))
+            if not turn.blocks:
+                warnings.warn(f"Unable to cast {story.context.ensemble}")
+                return RedirectResponse(url=request.url_for("home"), status_code=300)
 
-        if not turn.blocks:
-            warnings.warn(f"Unable to cast {story.context.ensemble}")
-            return RedirectResponse(url=request.url_for("home"), status_code=300)
+            page = self.render(request, page, story, turn)
 
-        options = story.context.options(story.context.ensemble)
-        html5 = "\n".join(turn.blocks.all)
-
-        page.paste(page.zone.title, "<title>Example</title>")
-        page.paste(page.zone.meta, Home.meta)
-        page.paste(page.zone.css, Home.css)
-        page.paste(page.zone.body, html5)
-        page.paste(page.zone.inputs, self.to_command(request, story))
         return HTMLResponse(page.html)
 
     def refresh(self, url, notes: dict = {}) -> str:
@@ -152,6 +143,21 @@ class Session(HTTPEndpoint):
             return f'<meta http-equiv="refresh" content="{wait:.2f};{url}">'
         except TypeError:
             return ""
+
+    def render(self, request, page: Page, story: StoryBuilder=None, turn: StoryBuilder.Turn=None):
+
+        page.paste(page.zone.title, "<title>Example</title>")
+        page.paste(page.zone.meta, Home.meta)
+        page.paste(page.zone.css, Home.css)
+
+        html5 = "\n".join(turn.blocks.all)
+        page.paste(page.zone.body, html5)
+
+        if story.notes:
+            page.paste(page.zone.meta, self.refresh(request.url, story.notes[-1]))
+
+        page.paste(page.zone.inputs, self.render_inputs_to_command(request, story))
+        return page
 
 
 class Command(HTTPEndpoint):
