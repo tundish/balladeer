@@ -80,12 +80,15 @@ class Home(HTTPEndpoint):
 
     async def get(self, request):
         page = Page()
-        page.paste(page.zone.title, "<title>Example</title>")
+        page = self.render(request, page)
+        return HTMLResponse(page.html)
+
+    def render(self, request, page: Page, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Page:
+        page.paste(page.zone.title, "<title>Balladeer Example</title>")
         page.paste(page.zone.meta, self.meta)
         page.paste(page.zone.css, self.css)
         page.paste(page.zone.body, self.body)
-        return HTMLResponse(page.html)
-
+        return page
 
 class Start(HTTPEndpoint):
     async def post(self, request):
@@ -144,9 +147,9 @@ class Session(HTTPEndpoint):
         """
         )
 
-    def render(self, request, page: Page, story: StoryBuilder=None, turn: StoryBuilder.Turn=None):
+    def render(self, request, page: Page, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Page:
 
-        page.paste(page.zone.title, "<title>Example</title>")
+        page.paste(page.zone.title, f"<title>{story.title}</title>")
         page.paste(page.zone.meta, Home.meta)
         page.paste(page.zone.css, Home.css)
 

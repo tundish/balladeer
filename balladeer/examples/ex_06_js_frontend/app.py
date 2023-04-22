@@ -94,6 +94,7 @@ class Song(Drama):
 
 
 class Story(StoryBuilder):
+    title = "Balladeer Example: JS integration"
     def build(self):
         yield Song(world=self.world, config=self.config)
 
