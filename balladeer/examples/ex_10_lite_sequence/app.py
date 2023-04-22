@@ -45,5 +45,6 @@ class Story(StoryBuilder):
     def build(self):
         yield Fight(world=self.world, config=self.config)
 
+
 if __name__ == "__main__":
     quick_start(balladeer.examples.ex_10_lite_sequence)
