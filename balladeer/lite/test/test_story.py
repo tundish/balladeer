@@ -22,7 +22,7 @@ import textwrap
 import tomllib
 import unittest
 
-from balladeer.examples.ex_10_lite_sequence.logic import Story
+from balladeer.examples.ex_10_lite_sequence.app import Story
 from balladeer.lite.loader import Loader
 from balladeer.lite.types import Grouping
 
