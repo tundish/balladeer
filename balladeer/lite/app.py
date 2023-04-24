@@ -18,6 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import asyncio
+from collections.abc import Generator
 import textwrap
 import warnings
 
@@ -63,8 +64,6 @@ class Home(HTTPEndpoint):
     """
     ).strip()
 
-    css = """<link rel="stylesheet" href="/static/styles.css" />"""
-
     body = textwrap.dedent(
         """
     <form role="form" action="/sessions" method="POST" name="ballad-form-start">
@@ -75,15 +74,19 @@ class Home(HTTPEndpoint):
 
     async def get(self, request):
         page = Page()
-        page = self.render(request, page)
+        page = self.compose(request, page)
         return HTMLResponse(page.html)
 
-    def render(self, request, page: Page, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Page:
-        # FIXME: No title
-        # FIXME: Generate css links from Loader assets.
-        page.paste(page.zone.title, "<title>Balladeer Application</title>")
+    @staticmethod
+    def render_css_links(request, assets: Grouping[str, list[Loader.Asset]]) -> Generator[str]:
+        for asset in assets["text/css"]:
+            yield f'<link rel="stylesheet" href="/static/{asset.path.name}" />'
+
+    def compose(self, request, page: Page, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Page:
+        assets = getattr(self, "assets", Grouping())
+
         page.paste(page.zone.meta, self.meta)
-        page.paste(page.zone.css, self.css)
+        page.paste(page.zone.css, *[line for line in self.render_css_links(request, assets)])
         page.paste(page.zone.body, self.body)
         return page
 
@@ -110,7 +113,7 @@ class Session(HTTPEndpoint):
                 warnings.warn(f"Unable to cast {story.context.ensemble}")
                 return RedirectResponse(url=request.url_for("home"), status_code=300)
 
-            page = self.render(request, page, story, turn)
+            page = self.compose(request, page, story, turn)
 
         return HTMLResponse(page.html)
 
@@ -144,7 +147,8 @@ class Session(HTTPEndpoint):
         """
         )
 
-    def render(self, request, page: Page, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Page:
+    def compose(self, request, page: Page, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Page:
+        assets = getattr(self, "assets", Grouping())
 
         try:
             page.paste(page.zone.title, f"<title>{story.title}</title>")
@@ -152,7 +156,7 @@ class Session(HTTPEndpoint):
             page.paste(page.zone.title, "<title>Story</title>")
 
         page.paste(page.zone.meta, Home.meta)
-        page.paste(page.zone.css, Home.css)
+        page.paste(page.zone.css, *[line for line in Home.render_css_links(request, assets)])
 
         html5 = "\n".join(turn.blocks.all)
         page.paste(page.zone.body, html5)
