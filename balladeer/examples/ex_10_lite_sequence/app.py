@@ -24,6 +24,11 @@ from balladeer.lite.drama import Drama
 from balladeer.lite.entity import Entity
 from balladeer.lite.world import WorldBuilder
 
+__doc__ = """
+~/py3.11-dev/bin/python -m balladeer.examples.10_lite_sequence.logic
+
+"""
+
 
 class World(WorldBuilder):
     def build(self):

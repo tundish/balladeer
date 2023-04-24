@@ -42,12 +42,6 @@ from balladeer.lite.types import Grouping
 from balladeer.lite.types import Page
 
 
-__doc__ = """
-~/py3.11-dev/bin/python -m balladeer.examples.10_lite_sequence.logic
-
-"""
-
-
 class About(HTTPEndpoint):
     async def get(self, request):
         return PlainTextResponse(
@@ -163,10 +157,12 @@ class Session(HTTPEndpoint):
         html5 = "\n".join(turn.blocks.all)
         page.paste(page.zone.body, html5)
 
-        if story.notes:
+        offer = story.notes and story.notes[-1]["offer"]
+        if offer:
             page.paste(page.zone.meta, self.render_refresh(request.url, story.notes[-1]))
+        else:
+            page.paste(page.zone.inputs, self.render_inputs_to_command(request, story))
 
-        page.paste(page.zone.inputs, self.render_inputs_to_command(request, story))
         return page
 
 
