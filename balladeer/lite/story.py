@@ -34,8 +34,8 @@ class StoryBuilder:
 
     Turn = namedtuple(
         "Turn",
-        ["scene", "specs", "roles", "speech", "blocks"],
-        defaults=(None,)
+        ["scene", "specs", "roles", "speech", "blocks", "notes"],
+        defaults=(None, None)
     )
 
     def __init__(
@@ -89,6 +89,7 @@ class StoryBuilder:
         speech = drama.speech.copy()
         blocks = Grouping.typewise(self.director.rewrite(scene, roles, speech))
 
+        # Directive handlers
         for action, entity, entities in self.direction:
             method = getattr(drama, f"{drama.prefixes[1]}{action}")
             if isinstance(method, Callable):
@@ -98,7 +99,7 @@ class StoryBuilder:
                     warnings.warn(e)
 
         drama.speech.clear()
-        return self.Turn(scene, specs, roles, speech, blocks)
+        return self.Turn(scene, specs, roles, speech, blocks, self.director.notes.copy())
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.director.notes.clear()
