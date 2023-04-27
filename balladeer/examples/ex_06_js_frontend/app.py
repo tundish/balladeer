@@ -20,6 +20,7 @@
 import enum
 import random
 import balladeer
+from balladeer.lite.app import Session
 from balladeer.lite.app import quick_start
 from balladeer.lite.drama import Drama
 from balladeer.lite.entity import Entity
@@ -58,7 +59,7 @@ class World(WorldBuilder):
         ]
 
 
-class Song(Drama):
+class Wall(Drama):
     @property
     def unbroken(self):
         return [i for i in self.ensemble if i.type == "Bottle" and i.state == 1]
@@ -96,7 +97,10 @@ class Song(Drama):
 class Story(StoryBuilder):
     title = "Balladeer Example: JS integration"
     def build(self):
-        yield Song(world=self.world, config=self.config)
+        yield Wall(world=self.world, config=self.config)
+
+
+class Song(Session): pass
 
 
 if __name__ == "__main__":

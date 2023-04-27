@@ -72,6 +72,33 @@ class StoryBuilder:
     def notes(self):
         return list(self.director.notes.values())
 
+    @property
+    def direction(self):
+        notes = self.notes
+        if not notes:
+            return []
+        else:
+            return [t for i in (m.get("directives", []) for m in notes[-1].maps) for t in i]
+
+    def action(self, text: str, *args, **kwargs):
+        drama = self.context
+        actions = drama.actions(
+            text,
+            context=self.director,
+            ensemble=drama.ensemble,
+            prefix=drama.prefixes[0],
+        )
+        fn, args, kwargs = drama.pick(actions)
+        if not fn:
+            return None
+
+        try:
+            drama.speech = list(drama(fn, *args, **kwargs))
+        except Exception as e:
+            warnings.warn(e)
+
+        return fn, args, kwargs
+
     def turn(self, *args, **kwargs):
         self.context.speech = list(filter(None, self.context.interlude(*args, **kwargs)))
         return self
@@ -104,30 +131,3 @@ class StoryBuilder:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.director.notes.clear()
         return False
-
-    @property
-    def direction(self):
-        notes = self.notes
-        if not notes:
-            return []
-        else:
-            return [t for i in (m.get("directives", []) for m in notes[-1].maps) for t in i]
-
-    def action(self, text: str, *args, **kwargs):
-        drama = self.context
-        actions = drama.actions(
-            text,
-            context=self.director,
-            ensemble=drama.ensemble,
-            prefix=drama.prefixes[0],
-        )
-        fn, args, kwargs = drama.pick(actions)
-        if not fn:
-            return None
-
-        try:
-            drama.speech = list(drama(fn, *args, **kwargs))
-        except Exception as e:
-            warnings.warn(e)
-
-        return fn, args, kwargs

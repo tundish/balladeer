@@ -19,6 +19,7 @@
 
 import asyncio
 from collections.abc import Generator
+import pathlib
 import textwrap
 import warnings
 
@@ -90,10 +91,11 @@ class Home(HTTPEndpoint):
         page.paste(page.zone.body, self.body)
         return page
 
+
 class Start(HTTPEndpoint):
     async def post(self, request):
         state = request.app.state
-        story = state.builder(state.config, assets=state.assets)
+        story = state.builder(state.config, assets=getattr(self, "assets", []))
         state.sessions[story.uid] = story
         return RedirectResponse(
             url=request.url_for("session", session_id=story.uid), status_code=303
@@ -197,46 +199,52 @@ class Assembly(HTTPEndpoint):
 
 
 async def app_factory(
+    assets: list = [],
     builder: StoryBuilder = None,
-    config=None,
+    config: dict = None,
     routes: list = None,
-    static=None,
+    static: pathlib.Path = None,
     loop=None,
     **kwargs,
 ):
-    # TODO: Create new endpoint types on the fly with metadata from kwargs?
+    endpoints = dict(
+        home=next(reversed(Home.__subclasses__()), Home),
+        about=next(reversed(About.__subclasses__()), About),
+        start=next(reversed(Start.__subclasses__()), Start),
+        session=next(reversed(Session.__subclasses__()), Session),
+        assembly=next(reversed(Assembly.__subclasses__()), Assembly),
+        command=next(reversed(Command.__subclasses__()), Command),
+        **kwargs
+    )
+    for endpt in endpoints.values():
+        endpt.assets = assets.copy()
+
     routes = routes or [
-        Route("/", Home, name="home"),
-        Route("/about", About),
-        Route("/sessions", Start, methods=["POST"], name="start"),
-        Route("/session/{session_id:uuid}", Session, name="session"),
-        Route("/session/{session_id:uuid}/assembly", Assembly, name="assembly"),
-        Route("/session/{session_id:uuid}/command", Command, methods=["POST"], name="command"),
+        Route("/", endpoints["home"], name="home"),
+        Route("/about", endpoints["about"]),
+        Route("/sessions", endpoints["start"], methods=["POST"], name="start"),
+        Route("/session/{session_id:uuid}", endpoints["session"], name="session"),
+        Route("/session/{session_id:uuid}/assembly", endpoints["assembly"], name="assembly"),
+        Route("/session/{session_id:uuid}/command", endpoints["command"], methods=["POST"], name="command"),
     ]
     if static:
         routes.append(Mount("/static", app=StaticFiles(directory=static), name="static"))
 
     app = Starlette(routes=routes)
-    app.state.builder = builder or next(iter(StoryBuilder.__subclasses__()), StoryBuilder)
+    app.state.builder = builder or next(reversed(StoryBuilder.__subclasses__()), StoryBuilder)
     app.state.config = config
-
-    for k, v in kwargs.items():
-        setattr(app.state, k, v)
+    app.state.sessions = {}
 
     return app
 
 
 def quick_start(module, resource=""):
-    print(HTTPEndpoint.__subclasses__())  # Register head, body generators?
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
     assets = Grouping.typewise(Loader.discover(module, resource))
-    for cls in HTTPEndpoint.__subclasses__():
-        cls.assets = assets.copy()
-
     app = loop.run_until_complete(
-        app_factory(static=assets.all[0].path.parent, loop=loop, assets=assets, sessions={})
+        app_factory(assets=assets, static=assets.all[0].path.parent, loop=loop)
     )
     settings = hypercorn.Config.from_mapping({"bind": "localhost:8080", "errorlog": "-"})
 
