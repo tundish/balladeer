@@ -9,7 +9,6 @@ async created() {
     const response = await fetch(url);
     const assembly = await response.json();
     this.ensemble = assembly.ensemble;
-    console.log(this.ensemble);
 },
 });
 
@@ -57,7 +56,7 @@ data() {
 },
 computed: {
     unbroken() {
-        return this.ensemble.filter(bottle => bottle.states.int.value == 1);
+        return this.ensemble.filter(bottle => bottle.states.int == 1);
     }
 },
 methods: {
