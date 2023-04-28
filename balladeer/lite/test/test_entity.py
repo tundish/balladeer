@@ -22,6 +22,7 @@ import json
 import unittest
 
 from balladeer.lite.entity import Entity
+from balladeer.lite.types import State
 
 
 class TestComparisons(unittest.TestCase):
@@ -59,6 +60,10 @@ class TestAttributes(unittest.TestCase):
 
 
 class TestNamesAndTypes(unittest.TestCase):
+    class Active(State):
+        off = 0
+        on =  1
+
     class Thing(Entity):
         pass
 
@@ -71,13 +76,14 @@ class TestNamesAndTypes(unittest.TestCase):
         self.assertEqual({"Thing"}, e.types)
 
     def test_dumps_to_json(self):
-        e = Entity(type=TestNamesAndTypes.Thing)
+        e = Entity(type=TestNamesAndTypes.Thing).set_state(3, TestNamesAndTypes.Active.on)
         self.assertEqual({"Thing"}, e.types)
 
         j = Entity.Encoder().encode(e)
         self.assertTrue(j)
 
-        j = json.dumps(e)
+        s = json.loads(j)
+        self.assertTrue(s)
 
 
 class TestEnumStates(unittest.TestCase):

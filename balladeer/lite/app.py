@@ -198,16 +198,18 @@ class Command(HTTPEndpoint):
 class Assembly(HTTPEndpoint):
 
     class EntitySerializer(JSONResponse):
+        encoder = Entity.Encoder()
+
         def render(self, content) -> bytes:
-            return json.dumps(content)
+            return self.encoder.encode(content).encode("utf-8")
+
 
     async def get(self, request):
         session_id = request.path_params["session_id"]
         state = request.app.state
         story = state.sessions[session_id]
-        encoder = Entity.Encoder()
         assembly = dict(ensemble=story.context.ensemble)
-        return EntitySerializer(assembly)
+        return self.EntitySerializer(assembly)
 
 
 async def app_factory(
