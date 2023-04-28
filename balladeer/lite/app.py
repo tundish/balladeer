@@ -19,6 +19,7 @@
 
 import asyncio
 from collections.abc import Generator
+import json
 import pathlib
 import textwrap
 import warnings
@@ -82,6 +83,11 @@ class Home(HTTPEndpoint):
     def render_css_links(request, assets: Grouping[str, list[Loader.Asset]]) -> Generator[str]:
         for asset in assets["text/css"]:
             yield f'<link rel="stylesheet" href="/static/{asset.path.name}" />'
+
+    @staticmethod
+    def render_js_links(request, assets: Grouping[str, list[Loader.Asset]]) -> Generator[str]:
+        for asset in assets["application/javascript"]:
+            yield f'<script src="/static/{asset.path.name}"></script>'
 
     def compose(self, request, page: Page, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Page:
         assets = getattr(self, "assets", Grouping())
@@ -159,6 +165,7 @@ class Session(HTTPEndpoint):
 
         page.paste(page.zone.meta, Home.meta)
         page.paste(page.zone.css, *[line for line in Home.render_css_links(request, assets)])
+        page.paste(page.zone.script, *[line for line in Home.render_js_links(request, assets)])
 
         html5 = "\n".join(turn.blocks.all)
         page.paste(page.zone.body, html5)
@@ -189,13 +196,18 @@ class Command(HTTPEndpoint):
 
 
 class Assembly(HTTPEndpoint):
+
+    class EntitySerializer(JSONResponse):
+        def render(self, content) -> bytes:
+            return json.dumps(content)
+
     async def get(self, request):
         session_id = request.path_params["session_id"]
         state = request.app.state
         story = state.sessions[session_id]
         encoder = Entity.Encoder()
-        assembly = dict(ensemble=[encoder.encode(i) for i in story.context.ensemble])
-        return JSONResponse(assembly)
+        assembly = dict(ensemble=story.context.ensemble)
+        return EntitySerializer(assembly)
 
 
 async def app_factory(

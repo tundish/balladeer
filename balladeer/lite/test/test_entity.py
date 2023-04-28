@@ -69,8 +69,15 @@ class TestNamesAndTypes(unittest.TestCase):
     def test_declared_type(self):
         e = Entity(type=TestNamesAndTypes.Thing)
         self.assertEqual({"Thing"}, e.types)
+
+    def test_dumps_to_json(self):
+        e = Entity(type=TestNamesAndTypes.Thing)
+        self.assertEqual({"Thing"}, e.types)
+
         j = Entity.Encoder().encode(e)
         self.assertTrue(j)
+
+        j = json.dumps(e)
 
 
 class TestEnumStates(unittest.TestCase):

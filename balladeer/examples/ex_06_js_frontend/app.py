@@ -27,6 +27,7 @@ from balladeer.lite.entity import Entity
 from balladeer.lite.speech import Dialogue
 from balladeer.lite.speech import Speech
 from balladeer.lite.story import StoryBuilder
+from balladeer.lite.types import Page
 from balladeer.lite.types import State
 from balladeer.lite.world import WorldBuilder
 
@@ -100,8 +101,13 @@ class Story(StoryBuilder):
         yield Wall(world=self.world, config=self.config)
 
 
-class Song(Session): pass
+class Song(Session):
 
+    def compose(self, request, page: Page, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Page:
+        page.paste(page.zone.app, '<div id="app"><diorama v-bind:ensemble="ensemble"></diorama></div>')
+        page = super().compose(request, page, story, turn)
+        page.paste(page.zone.link, '<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>')
+        return page
 
 if __name__ == "__main__":
     quick_start(balladeer.examples.ex_06_js_frontend)
