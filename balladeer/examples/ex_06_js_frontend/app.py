@@ -68,7 +68,7 @@ class Wall(Drama):
     def do_bottle(self, this, text, director, *args, **kwargs):
         """
         bottle
-        break
+        break | break bottle
 
         """
         try:
