@@ -21,16 +21,17 @@ props: {
     }
 },
 template:  `
-            <div id="product" style="display: flex; justify-content: flex-center; height: calc(30vh + 1rem);" >
-            <figure style="width: 250px;">
+            <div id="product"
+            style="display: flex; justify-content: flex-center; flex-direction: column; background-color: white" >
+            <figure style="display: block; height: 40vh; margin: auto; padding: 2rem 0 2rem 0;">
             <img v-if="this.selected" v-bind:src="this.products[this.selected.states.Green.value].image" alt="A green bottle"
-            style="height: 30vh; width: auto;"/>
-            <figcaption v-if="this.selected" style="font-family: sans-serif; margin-top: 1.6rem;">
+            style="height: 30vh"/>
+            <figcaption v-if="this.selected" style="font-family: serif">
             {{ this.products[this.selected.states.Green.value].details }}
             </figcaption>
             </figure>
             </div>
-            <ul style="display: flex; margin-left: 2rem; margin-top: 1.6rem;">
+            <ul style="display: flex; margin-top: 3rem;">
             <li v-for="bottle in unbroken" style="flex-direction: row;">
             <avatar v-bind:bottle="bottle" v-on:change-product="display_product"></avatar>
             </li>
