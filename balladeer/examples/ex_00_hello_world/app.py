@@ -17,9 +17,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from balladeer.lite.speech import Dialogue
 from balladeer.lite.story import StoryBuilder
 
 
 story = StoryBuilder()
+story.context.speech.append(Dialogue("<> Hello, World!"))
+
 with story.turn() as turn:
-    print(turn)
+    print("\n".join(turn.blocks))

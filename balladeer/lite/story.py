@@ -114,7 +114,7 @@ class StoryBuilder:
 
         # Director rewrite
         speech = drama.speech.copy()
-        blocks = Grouping.typewise(self.director.rewrite(scene, roles, speech))
+        blocks = list(self.director.rewrite(scene, roles, speech))
 
         # Directive handlers
         for action, entity, entities in self.direction:
