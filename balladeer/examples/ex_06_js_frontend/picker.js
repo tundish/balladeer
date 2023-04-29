@@ -21,14 +21,14 @@ props: {
     }
 },
 template:  `
-            <div id="product" style="display: flex; justify-content: flex-start; height: calc(30vh + 1rem);" >
-            <div style="width: 250px;">
+            <div id="product" style="display: flex; justify-content: flex-center; height: calc(30vh + 1rem);" >
+            <figure style="width: 250px;">
             <img v-if="this.selected" v-bind:src="this.products[this.selected.states.Green.value].image" alt="A green bottle"
             style="height: 30vh; width: auto;"/>
-            </div>
-            <p v-if="this.selected" style="min-width: 32rem; font-family: sans-serif; margin-top: 1.6rem;">
+            <figcaption v-if="this.selected" style="font-family: sans-serif; margin-top: 1.6rem;">
             {{ this.products[this.selected.states.Green.value].details }}
-            </p>
+            </figcaption>
+            </figure>
             </div>
             <ul style="display: flex; margin-left: 2rem; margin-top: 1.6rem;">
             <li v-for="bottle in unbroken" style="flex-direction: row;">

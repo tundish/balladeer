@@ -1,7 +1,22 @@
+* {
+box-sizing: border-box;
+border: 0;
+font: inherit;
+font-size: 100%;
+line-height: 1.2em;
+list-style-type: none;
+margin: 0;
+outline: 0;
+padding: 0;
+text-decoration: none;
+vertical-align: baseline;
+}
+
 body {
 background-color: lightgray;
 display: flex;
 flex-direction: column;
+font-family: sans-serif;
 height: 100vh;
 justify-content: space-evenly;
 margin: auto;
@@ -12,4 +27,8 @@ max-width: 42rem;
 button {
 font-size: 1.8rem;
 padding: 1.2rem 3rem 1.2rem 3rem;
+}
+
+div ul {
+list-style-type: none;
 }
