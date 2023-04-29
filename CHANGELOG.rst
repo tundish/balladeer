@@ -6,6 +6,17 @@
 Change Log
 ::::::::::
 
+0.31.0
+======
+
+Provides a well-formed example to demonstrate JS integration.
+
+* Refactored Story for easier override of page composition.
+* Director notes now accessible via Turn object.
+* Fix for Assembly endpoint.
+* Better management and distribution of discovered assets.
+* ex_06_js_frontend demonstrates integration with a JS application.
+
 0.30.0
 ======
 
