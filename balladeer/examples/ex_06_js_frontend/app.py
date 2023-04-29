@@ -109,5 +109,6 @@ class Song(Session):
         page.paste(page.zone.link, '<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>')
         return page
 
+
 if __name__ == "__main__":
     quick_start(balladeer.examples.ex_06_js_frontend)
