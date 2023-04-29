@@ -39,7 +39,7 @@ class StoryBuilder:
     )
 
     def __init__(
-        self, config, assets: Grouping = Grouping(),
+        self, config=None, assets: Grouping = Grouping(),
         world: WorldBuilder = None, drama: [list | deque] = None,
         **kwargs
     ):
@@ -60,9 +60,9 @@ class StoryBuilder:
     def build(self):
         drama_classes = Drama.__subclasses__()
         if not drama_classes:
-            yield Drama(self.world, config=self.config)
+            yield Drama(world=self.world, config=self.config)
         else:
-            yield from (d(self.world, config=self.config) for d in drama_classes)
+            yield from (d(world=self.world, config=self.config) for d in drama_classes)
 
     @property
     def context(self):
@@ -107,7 +107,7 @@ class StoryBuilder:
         drama = self.context
 
         # Director selection
-        scripts = drama.scripts(self.assets[Loader.Scene])
+        scripts = drama.scripts(self.assets.get(Loader.Scene, []))
         scene, specs, roles = self.director.selection(scripts, drama.ensemble)
 
         # TODO: Entity aspects
