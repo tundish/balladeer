@@ -95,7 +95,7 @@ class StoryBuilder:
             return None
 
         try:
-            drama.speech = list(drama(fn, *args, **kwargs))
+            drama.speech.extend(drama(fn, *args, **kwargs))
         except Exception as e:
             warnings.warn(e)
 
