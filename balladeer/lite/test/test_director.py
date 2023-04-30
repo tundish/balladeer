@@ -50,6 +50,26 @@ class EditTests(unittest.TestCase):
         rv = "\n".join(director.edit(speech))
         self.assertFalse("<p>\n\n</p>" in rv, rv)
 
+    def test_animate_cite_tag(self):
+        text = textwrap.dedent("""
+        <FIGHTER_1>
+
+            I don't like the way you use me, {FIGHTER_2.name}!
+
+        """).strip()
+        director = Director()
+        selection = {
+            "FIGHTER_1": Entity(name="Biffy"),
+            "FIGHTER_2": Entity(name="Bashy"),
+        }
+
+        speech = Speech(text)
+        edit = "\n".join(director.edit(speech, selection))
+        match = director.cite_matcher.search(edit)
+        self.assertTrue(match)
+        self.assertIn("animation-delay", match.group())
+        self.assertIn("animation-duration", match.group())
+
     def test_edit_single_blocks(self):
         text = textwrap.dedent("""
         <FIGHTER_1>
@@ -754,7 +774,8 @@ class RewriteTests(unittest.TestCase):
             d.rewrite(roles=self.roles, speech=[Prologue("<GUEST> I'd like to order a taxi.")])
         )
         self.assertEqual(1, len(rv))
-        self.assertIn('data-entity="Alan">Alan</cite>', rv[0])
+        self.assertIn('data-entity="Alan"', rv[0])
+        self.assertIn('>Alan</cite>', rv[0])
 
     def test_multi_speech_rewrite(self):
         d = Director()
@@ -769,11 +790,14 @@ class RewriteTests(unittest.TestCase):
             )
         )
         self.assertEqual(3, len(rv))
-        self.assertIn('data-entity="Beth">Beth</cite>', rv[0])
+        self.assertIn('data-entity="Beth"', rv[0])
+        self.assertIn('>Beth</cite>', rv[0])
         self.assertIn("help", rv[0])
 
-        self.assertIn('data-entity="Alan">Alan</cite>', rv[1])
+        self.assertIn('data-entity="Alan"', rv[1])
+        self.assertIn('>Alan</cite>', rv[1])
         self.assertIn("taxi", rv[1])
 
-        self.assertIn('data-entity="Beth">Beth</cite>', rv[2])
+        self.assertIn('data-entity="Beth"', rv[2])
+        self.assertIn('>Beth</cite>', rv[2])
         self.assertIn("Going", rv[2])

@@ -94,7 +94,8 @@ class Director:
             """
             (?P<head><cite.*?data-role=")   # Up until role attribute
             (?P<role>[^"]+?)                # Role attribute
-            (?P<tail>"[^>]*?>)              # Until end of opening tag
+            (?P<tail>"[^>]*?)               # Until end of opening tag
+            >                               # Close opening tag
             .*?</cite>                      # Text and closing tag
             """,
             re.VERBOSE,
@@ -216,10 +217,15 @@ class Director:
         except KeyError:
             return match.group()
 
+        delay = self.delay + self.pause
         try:
             attr = f'" data-entity="{entity.names[0]}'
             text = entity.names[0].translate(Speech.processor.escape_table)
-            return f"{head}{self.role}{attr}{tail}{text}</cite>"
+            return (
+                f'{head}{self.role}{attr}{tail}'
+                f' style="animation-delay: {delay:.2f}s; animation-duration: {self.dwell:.2f}s">'
+                f'{text}</cite>'
+            )
         except IndexError:
             return match.group()
 
@@ -334,6 +340,8 @@ class Director:
                     for html5 in self.edit(d, roles, path=scene.path, index=n)
                 ]
             )))
+
+        self.delay = 0
 
         yield from filter(None, spoken.get(Prologue, []))
         yield from filter(None, spoken.get(Dialogue, []))
