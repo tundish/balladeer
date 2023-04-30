@@ -28,7 +28,7 @@ from balladeer.lite.speech import Speech
 
 class Drama(Entity, Performance):
     def __init__(self, *args, world=None, config=None, **kwargs):
-        super().__init__(*args, **kwargs)
+        super().__init__(**kwargs)
         self.world = world
         self.config = config
         self.speech = deque(args) or list()

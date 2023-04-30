@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from collections import deque
 import itertools
 import textwrap
 import tomllib
@@ -34,6 +35,7 @@ class StoryTests(unittest.TestCase):
             "<> Knock, knock.",
             "<> Who's there?",
         )
+        self.assertIsInstance(story.context.speech, deque)
         for n in range(3):
             with (
                 self.subTest(n=n),

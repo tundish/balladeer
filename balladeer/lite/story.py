@@ -26,6 +26,7 @@ import warnings
 from balladeer.lite.director import Director
 from balladeer.lite.drama import Drama
 from balladeer.lite.loader import Loader
+from balladeer.lite.speech import Speech
 from balladeer.lite.types import Grouping
 from balladeer.lite.world import WorldBuilder
 
@@ -39,17 +40,19 @@ class StoryBuilder:
     )
 
     def __init__(
-        self, *args,
+        self,
+        *speech: tuple[Speech],
         config = None,
         assets: Grouping = Grouping(),
         world: WorldBuilder = None, drama: [list | deque] = None,
         **kwargs
     ):
         self.uid = uuid.uuid4()
+        self.speech = speech
         self.config = config
         self.assets = assets.copy()
         if not world:
-            world_type = next(iter(WorldBuilder.__subclasses__()), WorldBuilder)
+            world_type = next(reversed(WorldBuilder.__subclasses__()), WorldBuilder)
             self.world = world_type(config)
         else:
             self.world = world
@@ -61,8 +64,12 @@ class StoryBuilder:
 
     def build(self):
         drama_classes = Drama.__subclasses__()
-        if not drama_classes:
-            yield Drama(world=self.world, config=self.config)
+        if self.speech or not drama_classes:
+            yield Drama(
+                *self.speech,
+                world=self.world,
+                config=self.config
+            )
         else:
             yield from (d(world=self.world, config=self.config) for d in drama_classes)
 
