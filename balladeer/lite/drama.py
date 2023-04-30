@@ -18,6 +18,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+from collections import deque
+
 from balladeer.lite.entity import Entity
 from balladeer.lite.loader import Loader
 from balladeer.lite.performance import Performance
@@ -29,7 +31,7 @@ class Drama(Entity, Performance):
         super().__init__(*args, **kwargs)
         self.world = world
         self.config = config
-        self.speech = []
+        self.speech = deque(args) or list()
         self.prompt = "?"
         self.prefixes = ("do_", "on_")
 

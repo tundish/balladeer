@@ -115,7 +115,12 @@ class StoryBuilder:
         # TODO: Entity aspects
 
         # Director rewrite
-        speech = drama.speech.copy()
+        try:
+            speech = [drama.speech.popleft()]
+        except AttributeError:
+            speech = drama.speech.copy()
+            drama.speech.clear()
+
         blocks = list(self.director.rewrite(scene, roles, speech))
 
         # Directive handlers
@@ -127,7 +132,6 @@ class StoryBuilder:
                 except Exception as e:
                     warnings.warn(e)
 
-        drama.speech.clear()
         return self.Turn(scene, specs, roles, speech, blocks, self.director.notes.copy())
 
     def __exit__(self, exc_type, exc_val, exc_tb):
