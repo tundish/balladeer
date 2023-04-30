@@ -22,10 +22,27 @@ import textwrap
 import tomllib
 import unittest
 
-from balladeer.examples.ex_10_lite_sequence.app import Story
+from balladeer.examples.ex_10_lite_sequence.app import Story as Story_10
 from balladeer.lite.loader import Loader
+from balladeer.lite.story import StoryBuilder
 from balladeer.lite.types import Grouping
 
+
+class StoryTests(unittest.TestCase):
+    def test_simple_turns(self):
+        story = StoryBuilder(
+            "<> Knock, knock.",
+            "<> Who's there?",
+        )
+        for n in range(3):
+            with (
+                self.subTest(n=n),
+                story.turn() as turn
+            ):
+                if n < 2:
+                    self.assertTrue(turn.blocks, turn)
+                else:
+                    self.assertFalse(turn.blocks, turn)
 
 class ExampleTests(unittest.TestCase):
     def test_cartoon_fight(self):
@@ -61,7 +78,7 @@ class ExampleTests(unittest.TestCase):
             ''').strip()
 
         scene = Loader.read(content)
-        story = Story(config={}, assets=Grouping.typewise([scene]))
+        story = Story_10(config={}, assets=Grouping.typewise([scene]))
         specs = story.director.specifications(scene.tables)
         self.assertEqual(story.director.rank_constraints(specs["FIGHTER_1"]), 1, specs)
         self.assertEqual(story.director.rank_constraints(specs["FIGHTER_2"]), 2, specs)

@@ -39,7 +39,9 @@ class StoryBuilder:
     )
 
     def __init__(
-        self, config=None, assets: Grouping = Grouping(),
+        self, *args,
+        config = None,
+        assets: Grouping = Grouping(),
         world: WorldBuilder = None, drama: [list | deque] = None,
         **kwargs
     ):
