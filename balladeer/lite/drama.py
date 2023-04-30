@@ -45,6 +45,6 @@ class Drama(Entity, Performance):
     def media(self, assets):
         return {i.path: i for i in assets if isinstance(i, Loader.Asset)}
 
-    def interlude(self, *args, **kwargs) -> list[Speech]:
-        return self.speech.copy()
+    def interlude(self, *args, **kwargs) -> Entity:
+        return self
 

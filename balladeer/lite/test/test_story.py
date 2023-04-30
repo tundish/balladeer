@@ -25,6 +25,7 @@ import unittest
 
 from balladeer.examples.ex_10_lite_sequence.app import Story as Story_10
 from balladeer.lite.loader import Loader
+from balladeer.lite.speech import Dialogue
 from balladeer.lite.story import StoryBuilder
 from balladeer.lite.types import Grouping
 
@@ -32,8 +33,8 @@ from balladeer.lite.types import Grouping
 class StoryTests(unittest.TestCase):
     def test_simple_turns(self):
         story = StoryBuilder(
-            "<> Knock, knock.",
-            "<> Who's there?",
+            Dialogue("<> Knock, knock."),
+            Dialogue("<> Who's there?"),
         )
         self.assertIsInstance(story.context.speech, deque)
         for n in range(3):

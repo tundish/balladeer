@@ -109,7 +109,7 @@ class StoryBuilder:
         return fn, args, kwargs
 
     def turn(self, *args, **kwargs):
-        self.context.speech = list(filter(None, self.context.interlude(*args, **kwargs)))
+        self.context.interlude(*args, **kwargs)
         return self
 
     def __enter__(self):
@@ -121,12 +121,14 @@ class StoryBuilder:
 
         # TODO: Entity aspects
 
-        # Director rewrite
+        # Collect waiting speech
         try:
             speech = [drama.speech.popleft()]
         except AttributeError:
             speech = drama.speech.copy()
             drama.speech.clear()
+        except IndexError:
+            speech = []
 
         blocks = list(self.director.rewrite(scene, roles, speech))
 
