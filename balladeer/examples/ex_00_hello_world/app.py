@@ -21,8 +21,10 @@ from balladeer.lite.speech import Dialogue
 from balladeer.lite.story import StoryBuilder
 
 
-story = StoryBuilder()
-story.context.speech.append(Dialogue("<> Hello, World!"))
+d = Dialogue("Hello, World!")
+print(d.words)
+
+story = StoryBuilder(d)
 
 with story.turn() as turn:
     print("\n".join(turn.blocks))

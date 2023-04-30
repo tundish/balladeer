@@ -164,8 +164,8 @@ class Session(HTTPEndpoint):
             page.paste(page.zone.title, "<title>Story</title>")
 
         page.paste(page.zone.meta, Home.meta)
-        page.paste(page.zone.css, *[line for line in Home.render_css_links(request, assets)])
-        page.paste(page.zone.script, *[line for line in Home.render_js_links(request, assets)])
+        page.paste(page.zone.css, *sorted(line for line in Home.render_css_links(request, assets)))
+        page.paste(page.zone.script, *sorted(line for line in Home.render_js_links(request, assets)))
 
         html5 = "\n".join(turn.blocks)
         page.paste(page.zone.body, html5)

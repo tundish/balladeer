@@ -1,5 +1,4 @@
 body {
-background-color: lightgray;
 display: flex;
 flex-direction: column;
 height: 100vh;
@@ -9,7 +8,15 @@ text-align: center;
 max-width: 42rem;
 }
 
-button {
-font-size: 1.8rem;
+blockquote {
+padding: 2rem 0 2rem 0;
+}
+
+button, input {
 padding: 1.2rem 3rem 1.2rem 3rem;
+}
+
+cite {
+display: block;
+margin: 0.6rem 0 2.2rem 0;
 }
