@@ -6,6 +6,15 @@
 Change Log
 ::::::::::
 
+0.32.0
+======
+
+This is the 'MVP' release of the new *lite* format.
+
+* `<cite>` tags get animation timing similar to `<p>` tags.
+* Story objects now accept Speech on instantiation.
+* Fixes to layout and formatting of some examples.
+
 0.31.0
 ======
 

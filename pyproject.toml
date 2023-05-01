@@ -1,6 +1,6 @@
 [project]
 name = "balladeer"
-version = "0.31.0"
+version = "0.32.0"
 description = "Web-enabled interactive fiction in Python."
 readme = "README.rst"
 requires-python = ">=3.11"
