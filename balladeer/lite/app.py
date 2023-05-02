@@ -126,8 +126,32 @@ class Session(HTTPEndpoint):
         return HTMLResponse(page.html)
 
     def render_cues(self, request, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Generator[str]:
-        print(f"Notes: {turn.notes}")
-        yield from (html5 for n, html5 in turn.blocks)
+        for n, (index, html5) in enumerate(turn.blocks):
+            yield '<div class="ballad cue">'
+            yield html5
+            try:
+                notes = turn.notes[(turn.scene.path, index)]
+                m = notes.maps[len(turn.blocks) - n]
+                mode = m.get("mode", "")
+                media = m.get("media", [])
+                assets = {i.path.stem: i for i in self.assets[Loader.Asset]}
+                delay = m.get("delay", 0) + m.get("pause", 0)
+                if media:
+                    yield "<details>"
+                    if mode:
+                        yield f"<summary>{mode}</summary>"
+                        # TODO: separate method to resolve file types, paths, etc.
+                        for i in media:
+                            try:
+                                asset = assets[i]
+                                if asset.type == "audio/mpeg":
+                                    yield f'<audio src="/static/{asset.path.name}"></audio>'
+                            except KeyError:
+                                pass
+                    yield "</details>"
+            except (IndexError, KeyError):
+                pass
+            yield "</div>"
 
     def render_refresh(self, url, notes: dict = {}) -> str:
         try:
