@@ -125,6 +125,9 @@ class Session(HTTPEndpoint):
 
         return HTMLResponse(page.html)
 
+    def render_cues(self, request, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Generator[str]:
+        yield from turn.blocks
+
     def render_refresh(self, url, notes: dict = {}) -> str:
         try:
             wait = notes.get("delay", 0) + notes.get("offer", 0)
@@ -167,7 +170,7 @@ class Session(HTTPEndpoint):
         page.paste(page.zone.css, *sorted(line for line in Home.render_css_links(request, assets)))
         page.paste(page.zone.script, *sorted(line for line in Home.render_js_links(request, assets)))
 
-        html5 = "\n".join(turn.blocks)
+        html5 = "\n".join(self.render_cues(request, story, turn))
         page.paste(page.zone.body, html5)
 
         offer = story.notes and story.notes[-1]["offer"]
