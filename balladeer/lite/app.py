@@ -126,7 +126,8 @@ class Session(HTTPEndpoint):
         return HTMLResponse(page.html)
 
     def render_cues(self, request, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Generator[str]:
-        yield from turn.blocks
+        print(f"Notes: {turn.notes}")
+        yield from (html5 for n, html5 in turn.blocks)
 
     def render_refresh(self, url, notes: dict = {}) -> str:
         try:

@@ -324,10 +324,10 @@ class Director:
             scene = None,
             roles: dict[str, Entity] = {},
             speech: list[Speech] = [],
-        ) -> Generator[str]:
+        ) -> Generator[tuple[int | None, str]]:
 
         spoken = {
-            k: self.edit(s, roles, path=None, index=n)
+            k: [(n, h) for h in self.edit(s, roles, path=None, index=n)]
             for k, v in Grouping.typewise(speech).items()
             for n, s in enumerate(v)
         }
@@ -335,7 +335,7 @@ class Director:
             spoken[Dialogue] = list(itertools.chain.from_iterable(itertools.zip_longest(
                 spoken.setdefault(Dialogue, []),
                 [
-                    html5
+                    (n, html5)
                     for n, d in self.dialogue(scene, roles)
                     for html5 in self.edit(d, roles, path=scene.path, index=n)
                 ]
@@ -343,6 +343,7 @@ class Director:
 
         self.delay = 0
 
-        yield from filter(None, spoken.get(Prologue, []))
-        yield from filter(None, spoken.get(Dialogue, []))
-        yield from filter(None, spoken.get(Epilogue, []))
+        f = lambda x: x and x[1]
+        yield from filter(f, spoken.get(Prologue, []))
+        yield from filter(f, spoken.get(Dialogue, []))
+        yield from filter(f, spoken.get(Epilogue, []))
