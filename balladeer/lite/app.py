@@ -126,15 +126,16 @@ class Session(HTTPEndpoint):
         return HTMLResponse(page.html)
 
     def render_cues(self, request, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Generator[str]:
+        assets = {i.path.stem: i for i in self.assets[Loader.Asset]}
         for n, (index, html5) in enumerate(turn.blocks):
             yield '<div class="ballad cue">'
             yield html5
             try:
                 notes = turn.notes[(turn.scene.path, index)]
+                print(f"{len(notes.maps)} {notes.maps}")
                 m = notes.maps[len(turn.blocks) - n]
                 mode = m.get("mode", "")
                 media = m.get("media", [])
-                assets = {i.path.stem: i for i in self.assets[Loader.Asset]}
                 delay = m.get("delay", 0) + m.get("pause", 0)
                 if media:
                     # TODO: animation-delay, animation-duration
@@ -146,7 +147,7 @@ class Session(HTTPEndpoint):
                             try:
                                 asset = assets[i]
                                 if asset.type == "audio/mpeg":
-                                    # TODO: Uniwue ID
+                                    # TODO: Unique ID
                                     # TODO: JS script to trigger
                                     yield (
                                         f'<audio src="/static/{asset.path.name}" '
