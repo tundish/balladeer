@@ -326,10 +326,18 @@ class Director:
             speech: list[Speech] = [],
         ) -> Generator[tuple[int | None, str]]:
 
+        n_shots = len(scene.tables.get(self.shot_key, [])) if scene else 0
+        triple_shots = [
+            (t, n_shots + n, s)
+            for n, (t, s) in enumerate(
+                (t, s)
+                for t, v in Grouping.typewise(speech).items()
+                for s in v
+            )
+        ]
         spoken = {
-            k: [(n, h) for h in self.edit(s, roles, path=None, index=n)]
-            for k, v in Grouping.typewise(speech).items()
-            for n, s in enumerate(v)
+            t: [(n, b) for b in self.edit(s, roles, path=None, index=n)]
+            for t, n, s in triple_shots
         }
         if scene:
             spoken[Dialogue] = list(itertools.chain.from_iterable(itertools.zip_longest(
