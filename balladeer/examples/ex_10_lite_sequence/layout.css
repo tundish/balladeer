@@ -9,7 +9,7 @@ max-width: 42rem;
 }
 
 blockquote {
-padding: 2rem 0 2rem 0;
+padding: 1rem 0 2rem 0;
 }
 
 button, input {
@@ -18,5 +18,11 @@ padding: 1.2rem 3rem 1.2rem 3rem;
 
 cite {
 display: block;
-margin: 0.6rem 0 2.2rem 0;
+margin: 0.6rem 0 0 1.2rem;
+text-align: left;
+}
+
+details > summary {
+text-align: left;
+margin: 0.6rem 0 0.6rem 1.2rem;
 }

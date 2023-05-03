@@ -137,15 +137,22 @@ class Session(HTTPEndpoint):
                 assets = {i.path.stem: i for i in self.assets[Loader.Asset]}
                 delay = m.get("delay", 0) + m.get("pause", 0)
                 if media:
-                    yield "<details>"
+                    # TODO: animation-delay, animation-duration
+                    yield '<details tabindex="0">'
                     if mode:
-                        yield f"<summary>{mode}</summary>"
+                        yield f'<summary>{mode}</summary>'
                         # TODO: separate method to resolve file types, paths, etc.
                         for i in media:
                             try:
                                 asset = assets[i]
                                 if asset.type == "audio/mpeg":
-                                    yield f'<audio src="/static/{asset.path.name}"></audio>'
+                                    # TODO: Uniwue ID
+                                    # TODO: JS script to trigger
+                                    yield (
+                                        f'<audio src="/static/{asset.path.name}" '
+                                        'controls="controls" preload="auto" autoplay="autoplay"></audio>'
+                                    )
+                                    yield "<p>Placeholder</p>"
                             except KeyError:
                                 pass
                     yield "</details>"
