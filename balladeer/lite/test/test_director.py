@@ -817,9 +817,18 @@ class RewriteTests(unittest.TestCase):
             d.rewrite(
                 roles=self.roles,
                 speech=[
-                    Dialogue("<STAFF> Can I help you, sir?"),
-                    Dialogue("<GUEST> I'd like to order a taxi, please."),
-                    Dialogue("<STAFF> Certainly. Going to?"),
+                    Dialogue("""
+                        <STAFF> Can I help you, sir?
+                    """),
+                    Dialogue("""
+                        <GUEST> I'd like to order a taxi, please.
+
+                        For eight o' clock.
+
+                    """),
+                    Dialogue("""
+                        <STAFF> Certainly. Going to?
+                    """),
                 ]
             )
         )
@@ -828,7 +837,17 @@ class RewriteTests(unittest.TestCase):
 
         for n in range(len(rv)):
             with self.subTest(n=n):
-                print(d.notes)
+                note = d.notes[(None, n)]
+                maps = [i for i in note.maps if i]
+                self.assertIn("entity", maps[-1])
+                self.assertIn("role", maps[-1])
+                self.assertIn("pause", maps[-1])
+                self.assertIn("duration", maps[-1])
+                self.assertIn("delay", maps[-1])
+                if n == 1:
+                    self.assertEqual(3, len(maps))
+                else:
+                    self.assertEqual(2, len(maps))
 
         self.assertEqual(3, len(rv))
 

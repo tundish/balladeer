@@ -196,6 +196,10 @@ class Director:
     ) -> Generator[str]:
         self.cast = roles.copy()
         for block in self.bq_matcher.findall(speech.tags):
+            self.notes[(path, index)] = self.notes[(path, index)].new_child(
+                pause=self.pause, duration=self.dwell, delay=self.delay
+            )
+
             html5 = self.cite_matcher.sub(self.edit_cite, block)
 
             attrs = self.attributes(html5)
@@ -225,9 +229,12 @@ class Director:
 
         #TODO: New child for notes.
         delay = self.delay + self.pause
+        key = list(self.notes)[-1]
         try:
             attr = f'" data-entity="{entity.names[0]}'
             text = entity.names[0].translate(Speech.processor.escape_table)
+            self.notes[key]["entity"] = entity
+            self.notes[key]["role"] = self.role
             return (
                 f'{head}{self.role}{attr}{tail}'
                 f' style="animation-delay: {delay:.2f}s; animation-duration: {self.dwell:.2f}s">'
