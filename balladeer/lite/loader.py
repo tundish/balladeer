@@ -54,6 +54,6 @@ class Loader:
             tables = tomllib.loads(text)
             stats = {}
         except tomllib.TOMLDecodeError as e:
-            tables = None
+            tables = {}
             stats = e
         return Loader.Scene(text, tables, resource, path, stats)

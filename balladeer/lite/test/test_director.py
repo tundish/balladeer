@@ -810,3 +810,25 @@ class RewriteTests(unittest.TestCase):
         self.assertIn('data-entity="Beth"', rv[2][1])
         self.assertIn('>Beth</cite>', rv[2][1])
         self.assertIn("Going", rv[2][1])
+
+    def test_multi_speech_notes(self):
+        d = Director()
+        rv = list(
+            d.rewrite(
+                roles=self.roles,
+                speech=[
+                    Dialogue("<STAFF> Can I help you, sir?"),
+                    Dialogue("<GUEST> I'd like to order a taxi, please."),
+                    Dialogue("<STAFF> Certainly. Going to?"),
+                ]
+            )
+        )
+
+        self.assertEqual(3, len(d.notes))
+
+        for n in range(len(rv)):
+            with self.subTest(n=n):
+                print(d.notes)
+
+        self.assertEqual(3, len(rv))
+

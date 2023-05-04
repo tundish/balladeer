@@ -118,6 +118,7 @@ class StoryBuilder:
         # Director selection
         scripts = drama.scripts(self.assets.get(Loader.Scene, []))
         scene, specs, roles = self.director.selection(scripts, drama.ensemble)
+        assert isinstance(scene, Loader.Scene), f"{type(scene)} is not a Scene"
 
         # TODO: Entity aspects
 

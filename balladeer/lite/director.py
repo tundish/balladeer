@@ -65,6 +65,12 @@ class Director:
 
         return roles, states, types
 
+    @staticmethod
+    def paragraph_notes(notes, blocks: list[tuple[int, str]]) -> Generator[dict]:
+        return {
+            "delay": 0,
+        }
+
     def __init__(
         self,
         shot_key: str = "_",
@@ -217,6 +223,7 @@ class Director:
         except KeyError:
             return match.group()
 
+        #TODO: New child for notes.
         delay = self.delay + self.pause
         try:
             attr = f'" data-entity="{entity.names[0]}'
@@ -285,7 +292,7 @@ class Director:
             if len(roles) == len(specs):
                 return scene, specs, roles
         else:
-            return {}, {}, {}
+            return Loader.Scene("", {}), {}, {}
 
     def allows(self, conditions: dict, cast: dict[str, Entity] = {}) -> bool:
         for role, (roles, states, types) in conditions.items():
@@ -321,13 +328,13 @@ class Director:
 
     def rewrite(
             self,
-            scene = None,
+            scene: Loader.Scene = Loader.Scene("", {}),
             roles: dict[str, Entity] = {},
             speech: list[Speech] = [],
         ) -> Generator[tuple[int | None, str]]:
 
         n_shots = len(scene.tables.get(self.shot_key, [])) if scene else 0
-        triple_shots = [
+        shot_tuples = [
             (t, n_shots + n, s)
             for n, (t, s) in enumerate(
                 (t, s)
@@ -335,19 +342,19 @@ class Director:
                 for s in v
             )
         ]
-        spoken = {
-            t: [(n, b) for b in self.edit(s, roles, path=None, index=n)]
-            for t, n, s in triple_shots
-        }
-        if scene:
-            spoken[Dialogue] = list(itertools.chain.from_iterable(itertools.zip_longest(
-                spoken.setdefault(Dialogue, []),
-                [
-                    (n, html5)
-                    for n, d in self.dialogue(scene, roles)
-                    for html5 in self.edit(d, roles, path=scene.path, index=n)
-                ]
-            )))
+        spoken = Grouping(list)
+        for t, n, s in shot_tuples:
+            for b in self.edit(s, roles, path=None, index=n):
+                spoken[t].append((n, b))
+
+        spoken[Dialogue] = list(itertools.chain.from_iterable(itertools.zip_longest(
+            spoken.setdefault(Dialogue, []),
+            [
+                (n, html5)
+                for n, d in self.dialogue(scene, roles)
+                for html5 in self.edit(d, roles, path=scene.path, index=n)
+            ]
+        )))
 
         self.delay = 0
 
