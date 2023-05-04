@@ -164,8 +164,6 @@ class Session(HTTPEndpoint):
             try:
                 asset = assets[m]
                 if asset.type == "audio/mpeg":
-                    # TODO: Unique ID
-                    # TODO: JS script to trigger
                     yield (
                         f'<audio id="{index:02d}-{ordinal:02d}" src="/static/{asset.path.name}" '
                         'controls="controls" preload="auto"></audio>'
