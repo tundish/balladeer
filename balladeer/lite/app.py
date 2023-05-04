@@ -126,40 +126,43 @@ class Session(HTTPEndpoint):
         return HTMLResponse(page.html)
 
     def render_cues(self, request, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Generator[str]:
-        assets = {i.path.stem: i for i in self.assets[Loader.Asset]}
         for n, (index, html5) in enumerate(turn.blocks):
             yield '<div class="ballad cue">'
             yield html5
             try:
                 notes = turn.notes[(turn.scene.path, index)]
-                print(f"{len(notes.maps)} {notes.maps}")
-                m = notes.maps[len(turn.blocks) - n]
-                mode = m.get("mode", "")
-                media = m.get("media", [])
-                delay = m.get("delay", 0) + m.get("pause", 0)
+                cue = [m for m in reversed(notes.maps) if m.get("type") == "cue"][n]
+
+                mode = cue.get("mode", "")
+                media = cue.get("media", [])
+                delay = cue.get("delay", 0) + cue.get("pause", 0)
                 if media:
-                    # TODO: animation-delay, animation-duration
-                    yield '<details tabindex="0">'
-                    if mode:
-                        yield f'<summary>{mode}</summary>'
-                        # TODO: separate method to resolve file types, paths, etc.
-                        for i in media:
-                            try:
-                                asset = assets[i]
-                                if asset.type == "audio/mpeg":
-                                    # TODO: Unique ID
-                                    # TODO: JS script to trigger
-                                    yield (
-                                        f'<audio src="/static/{asset.path.name}" '
-                                        'controls="controls" preload="auto" autoplay="autoplay"></audio>'
-                                    )
-                                    yield "<p>Placeholder</p>"
-                            except KeyError:
-                                pass
-                    yield "</details>"
+                    yield from self.render_detail(request, mode, media, delay)
             except (IndexError, KeyError):
                 pass
             yield "</div>"
+
+    def render_detail(self, request, mode: str="", media: list[str] = [], delay: float = 0, duration: float = 1) -> Generator[str]:
+        assets = {i.path.stem: i for i in self.assets[Loader.Asset]}
+        # TODO: animation-delay, animation-duration
+        yield '<details tabindex="0">'
+        if mode:
+            yield f'<summary>{mode}</summary>'
+        # TODO: separate method to resolve file types, paths, etc.
+        for m in media:
+            try:
+                asset = assets[m]
+                if asset.type == "audio/mpeg":
+                    # TODO: Unique ID
+                    # TODO: JS script to trigger
+                    yield (
+                        f'<audio src="/static/{asset.path.name}" '
+                        'controls="controls" preload="auto" autoplay="autoplay"></audio>'
+                    )
+                    yield "<p>Placeholder</p>"
+            except KeyError:
+                pass
+        yield "</details>"
 
     def render_refresh(self, url, notes: dict = {}) -> str:
         try:

@@ -844,6 +844,7 @@ class RewriteTests(unittest.TestCase):
                 self.assertIn("pause", maps[-1])
                 self.assertIn("duration", maps[-1])
                 self.assertIn("delay", maps[-1])
+                self.assertEqual("cue", maps[-1]["type"])
                 if n == 1:
                     self.assertEqual(3, len(maps))
                 else:

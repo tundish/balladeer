@@ -65,12 +65,6 @@ class Director:
 
         return roles, states, types
 
-    @staticmethod
-    def paragraph_notes(notes, blocks: list[tuple[int, str]]) -> Generator[dict]:
-        return {
-            "delay": 0,
-        }
-
     def __init__(
         self,
         shot_key: str = "_",
@@ -221,6 +215,8 @@ class Director:
             yield self.fmtr.format(html5, **self.cast)
 
     def edit_cite(self, match: re.Match) -> str:
+        key = list(self.notes)[-1]
+        self.notes[key]["type"] = "cue"
         head, self.role, tail = [match.group(i) for i in ("head", "role", "tail")]
         try:
             entity = self.cast[self.role]
@@ -229,7 +225,6 @@ class Director:
 
         #TODO: New child for notes.
         delay = self.delay + self.pause
-        key = list(self.notes)[-1]
         try:
             attr = f'" data-entity="{entity.names[0]}'
             text = entity.names[0].translate(Speech.processor.escape_table)
