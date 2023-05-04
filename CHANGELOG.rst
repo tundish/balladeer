@@ -6,6 +6,17 @@
 Change Log
 ::::::::::
 
+0.33.0
+======
+
+Support for audio assets.
+
+* Unique index and ordinal for each rendered block.
+* Better structure for Director's notes.
+* `audio` tags are rendered inside `details`.
+* `audio` playback triggered by JS timer.
+
+
 0.32.0
 ======
 
