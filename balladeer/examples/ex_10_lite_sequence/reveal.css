@@ -35,3 +35,8 @@ p:last-of-type {
 animation-name: fadein;
 }
 
+details, cite{
+animation-name: fadein;
+animation-fill-mode: both;
+}
+

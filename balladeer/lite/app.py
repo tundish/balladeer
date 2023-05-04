@@ -137,17 +137,28 @@ class Session(HTTPEndpoint):
                 media = cue.get("media", [])
                 delay = cue.get("delay", 0) + cue.get("pause", 0)
                 if media:
-                    yield from self.render_detail(request, mode, media, delay)
+                    yield from self.render_detail(request, mode, media, delay, index=index, ordinal=n)
             except (IndexError, KeyError):
                 pass
             yield "</div>"
 
-    def render_detail(self, request, mode: str="", media: list[str] = [], delay: float = 0, duration: float = 1) -> Generator[str]:
+    def render_detail(
+        self,
+        request,
+        mode: str="",
+        media: list[str] = [],
+        delay: float = 0,
+        duration: float = 1,
+        index: int = 0,
+        ordinal: int = 0,
+    ) -> Generator[str]:
         assets = {i.path.stem: i for i in self.assets[Loader.Asset]}
-        # TODO: animation-delay, animation-duration
-        yield '<details tabindex="0">'
+
+        yield f'<details tabindex="0" style="animation-delay: {delay:.2f}s; animation-duration: {duration:.2f}s">'
+
         if mode:
             yield f'<summary>{mode}</summary>'
+
         # TODO: separate method to resolve file types, paths, etc.
         for m in media:
             try:
@@ -156,10 +167,16 @@ class Session(HTTPEndpoint):
                     # TODO: Unique ID
                     # TODO: JS script to trigger
                     yield (
-                        f'<audio src="/static/{asset.path.name}" '
-                        'controls="controls" preload="auto" autoplay="autoplay"></audio>'
+                        f'<audio id="{index:02d}-{ordinal:02d}" src="/static/{asset.path.name}" '
+                        'controls="controls" preload="auto"></audio>'
                     )
-                    yield "<p>Placeholder</p>"
+                    yield (
+                        '<script type="text/javascript">\n'
+                        '  setTimeout(function(){\n'
+                        f'   document.getElementById("{index:02d}-{ordinal:02d}").play();\n'
+                        f'  }}, {delay * 1000})\n'
+                        '</script>'
+                    )
             except KeyError:
                 pass
         yield "</details>"
