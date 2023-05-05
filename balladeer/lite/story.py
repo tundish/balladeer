@@ -48,7 +48,7 @@ class StoryBuilder:
         **kwargs
     ):
         self.uid = uuid.uuid4()
-        self.speech = speech
+        self.speech = deque(speech)
         self.config = config
         self.assets = assets.copy()
         if not world:

@@ -1,14 +1,4 @@
-from balladeer import Drama
-from balladeer import Story
+from balladeer.lite.speech import Dialogue
 
-drama = Drama()
-drama.folder = ["hello.rst"]
-story = Story(context=drama)
-
-presenter = story.represent()
-
-for frame in presenter.frames:
-    animation = presenter.animate(frame)
-
-    for line, duration in story.render_frame_to_terminal(animation):
-        print(line)
+d = Dialogue("Hello, World!")
+print(*d.words)
