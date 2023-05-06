@@ -52,6 +52,12 @@ class Entity:
             except AttributeError:
                 self.types.add(type)
 
+    def __deepcopy__(self, memo):
+        return self.__class__(
+            name=self.names.copy(), types=self.types.copy(), states=self.states.copy(),
+            sketch=self.sketch, aspect=self.aspect
+        )
+
     def __eq__(self, other):
         if not self.names:
             return self.uid == other.uid

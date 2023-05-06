@@ -53,10 +53,24 @@ class StoryTests(unittest.TestCase):
             Dialogue("<> Knock, knock."),
             Dialogue("<> Who's there?"),
         )
-        b = copy.copy(a)
+        b = copy.deepcopy(a)
         self.assertNotEqual(a.uid, b.uid, vars(a))
         self.assertNotEqual(a.director, b.director, vars(a.director))
-        self.assertNotEqual(a.world.uid, b.world.uid, vars(a.world))
+
+        # Side effect: each drama generates its active set
+        self.assertTrue([i.options([]) for i in a.drama])
+        self.assertTrue([i.options([]) for i in b.drama])
+
+        for drama in a.drama:
+            with self.subTest(a=a, b=b, drama=drama):
+                self.assertNotIn(drama, b.drama)
+                self.assertFalse(any(drama.active.intersection(i.active) for i in b.drama))
+
+        for entity in a.world.entities:
+            with self.subTest(a=a, b=b, entity=entity):
+                self.assertFalse(any(entity.names is i.names for i in b.world.entities))
+                self.assertFalse(any(entity.states is i.states for i in b.world.entities))
+                self.assertFalse(any(entity.types is i.types for i in b.world.entities))
 
         for a_d, b_d in zip(a.drama, b.drama):
             with self.subTest(a_d=a_d , b_d=b_d):

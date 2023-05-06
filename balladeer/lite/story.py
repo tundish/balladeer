@@ -20,6 +20,7 @@
 from collections import deque
 from collections import namedtuple
 from collections.abc import Callable
+import copy
 import uuid
 import warnings
 
@@ -61,6 +62,14 @@ class StoryBuilder:
         self.drama.extend(self.build())
 
         self.director = Director(**kwargs)
+
+    def __deepcopy__(self, memo):
+        rv = self.__class__(*self.speech, self.config, self.assets)
+        rv.world = copy.deepcopy(self.world, memo)
+        for drama in (d for d in rv.drama if hasattr(d, "active")):
+            del drama.active   # Will be regenerated on demand
+
+        return rv
 
     def build(self):
         drama_classes = Drama.__subclasses__()
