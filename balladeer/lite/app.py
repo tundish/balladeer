@@ -19,6 +19,7 @@
 
 import asyncio
 from collections.abc import Generator
+import copy
 import json
 import pathlib
 import textwrap
@@ -101,7 +102,11 @@ class Home(HTTPEndpoint):
 class Start(HTTPEndpoint):
     async def post(self, request):
         state = request.app.state
-        story = state.builder(state.config, assets=getattr(self, "assets", []))
+        try:
+            story = state.builder(state.config, assets=getattr(self, "assets", []))
+        except TypeError:
+            story = copy.deepcopy(state.builder)
+
         state.sessions[story.uid] = story
         return RedirectResponse(
             url=request.url_for("session", session_id=story.uid), status_code=303

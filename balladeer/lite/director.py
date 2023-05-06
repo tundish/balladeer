@@ -183,7 +183,7 @@ class Director:
 
     def edit(
         self,
-        speech: Speech,
+        speech: Speech = Speech(),
         roles: dict = {},
         path: pathlib.Path | str = None,
         index: int = 0,
@@ -341,7 +341,7 @@ class Director:
             for n, (t, s) in enumerate(
                 (t, s)
                 for t, v in Grouping.typewise(speech).items()
-                for s in v
+                for s in filter(None, v)
             )
         ]
         spoken = Grouping(list)
@@ -355,7 +355,8 @@ class Director:
                 (n, html5)
                 for n, d in self.dialogue(scene, roles)
                 for html5 in self.edit(d, roles, path=scene.path, index=n)
-            ]
+            ],
+            fillvalue=Speech()
         )))
 
         self.delay = 0
