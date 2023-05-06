@@ -1,5 +1,6 @@
 import time
 
+from balladeer.lite.app import quick_start
 from balladeer.lite.speech import Prologue
 from balladeer.lite.speech import Dialogue
 from balladeer.lite.speech import Epilogue
@@ -16,9 +17,7 @@ story = StoryBuilder(
     Epilogue("Press Ctrl-C to finish."),
 )
 
-while story.speech:
-    with story.turn() as turn:
-        for speech in turn.speech:
-            time.sleep(story.director.pause + story.director.dwell * len(speech.words))
-            print(*speech.words)
+
+if __name__ == "__main__":
+    quick_start(builder=story)
 

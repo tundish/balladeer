@@ -306,13 +306,17 @@ async def app_factory(
     return app
 
 
-def quick_start(module, resource=""):
+def quick_start(module="", resource="", builder=None):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
-    assets = Grouping.typewise(Loader.discover(module, resource))
+    try:
+        assets = Grouping.typewise(Loader.discover(module, resource))
+    except ValueError:
+        assets = Grouping(list)
+
     app = loop.run_until_complete(
-        app_factory(assets=assets, static=assets.all[0].path.parent, loop=loop)
+        app_factory(assets=assets, builder=builder, static=assets and assets.all[0].path.parent, loop=loop)
     )
     settings = hypercorn.Config.from_mapping({"bind": "localhost:8080", "errorlog": "-"})
 
