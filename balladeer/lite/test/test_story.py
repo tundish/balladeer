@@ -18,6 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from collections import deque
+import copy
 import itertools
 import textwrap
 import tomllib
@@ -46,6 +47,21 @@ class StoryTests(unittest.TestCase):
                     self.assertTrue(turn.blocks, turn)
                 else:
                     self.assertFalse(turn.blocks, turn)
+
+    def test_story_copy(self):
+        a = StoryBuilder(
+            Dialogue("<> Knock, knock."),
+            Dialogue("<> Who's there?"),
+        )
+        b = copy.copy(a)
+        self.assertNotEqual(a.uid, b.uid, vars(a))
+        self.assertNotEqual(a.director, b.director, vars(a.director))
+        self.assertNotEqual(a.world.uid, b.world.uid, vars(a.world))
+
+        for a_d, b_d in zip(a.drama, b.drama):
+            with self.subTest(a_d=a_d , b_d=b_d):
+                self.assertNotEqual(a_d.uid, b_d.uid)
+
 
 class ExampleTests(unittest.TestCase):
     def test_cartoon_fight(self):

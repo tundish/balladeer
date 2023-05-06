@@ -1,49 +1,24 @@
 import time
 
-from balladeer import Drama
-from balladeer import Stateful
-from balladeer import Story
+from balladeer.lite.speech import Prologue
+from balladeer.lite.speech import Dialogue
+from balladeer.lite.speech import Epilogue
+from balladeer.lite.story import StoryBuilder
 
 
-class Bottles(Drama):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.population = [
-            Stateful().set_state(1),
-            Stateful().set_state(1),
-            Stateful().set_state(1),
-        ]
+story = StoryBuilder(
+    Prologue("Here's a joke..."),
+    Dialogue("<ADAM> Knock, knock."),
+    Dialogue("<BETH> Who's there?"),
+    Dialogue("<ADAM> Doctor."),
+    Dialogue("<BETH> Doctor who?"),
+    Dialogue("<ADAM> You just said it."),
+    Epilogue("Press Ctrl-C to finish."),
+)
 
-    @property
-    def ensemble(self):
-        return self.population
+while story.speech:
+    with story.turn() as turn:
+        for speech in turn.speech:
+            time.sleep(story.director.pause + story.director.dwell * len(speech.words))
+            print(*speech.words)
 
-    @property
-    def count(self):
-        return len([i for i in self.population if i.state])
-
-
-drama = Bottles()
-drama.folder = ["song.rst"]
-story = Story(context=drama)
-
-while True:
-    stop = not drama.count
-    presenter = story.represent(strict=False)
-
-    animation = next(
-        filter(
-            None,
-            (
-                presenter.animate(frame, dwell=presenter.dwell, pause=presenter.pause)
-                for frame in presenter.frames
-            ),
-        )
-    )
-
-    for line, duration in story.render_frame_to_terminal(animation):
-        print(line, "\n")
-        time.sleep(duration)
-
-    if stop:
-        break
