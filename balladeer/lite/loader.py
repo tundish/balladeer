@@ -38,13 +38,19 @@ class Loader:
     )
 
     @staticmethod
-    def discover(package: [Package | Path], resource=".", suffixes=[".scene.toml"]):
+    def discover(
+        package: [Package | Path], resource=".",
+        suffixes=[".scene.toml"], ignore=["__pycache__", "node_modules"]
+    ):
         if isinstance(package, Path):
             paths = list(package.iterdir()) if package.is_dir() else [package]
         else:
             paths = list(importlib.resources.files(package).joinpath(resource).iterdir())
 
         for path in paths:
+            if path.is_dir() and path.name not in ignore:
+                yield from Loader.discover(path, resource, suffixes, ignore)
+
             typ, _ = mimetypes.guess_type(path)
             if typ and typ != "text/x-python":
                 with importlib.resources.as_file(path) as f:

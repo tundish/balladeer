@@ -269,7 +269,9 @@ class Assembly(HTTPEndpoint):
         session_id = request.path_params["session_id"]
         state = request.app.state
         story = state.sessions[session_id]
-        assembly = dict(ensemble=story.context.ensemble)
+        ensemble = story.context.ensemble
+        # assembly = dict(ensemble=ensemble, options=story.context.options(ensemble))
+        assembly = dict(ensemble=ensemble)
         return self.EntitySerializer(assembly)
 
 
@@ -326,16 +328,18 @@ def quick_start(module: [str | ModuleType] = "", resource="", builder=None):
     except ValueError:
         assets = Grouping(list)
 
+    locations = set()
     for k, v in assets.items():
         if isinstance(k, str):
             for asset in v:
-                print(f"Discovered in {asset.path.parent.name}: {asset.path.name:<24} ({k})", file=sys.stderr)
+                locations.add(asset.path.parent)
+                print(f"Discovered in {asset.path.parent.name:<24}: {asset.path.name:<36} ({k})", file=sys.stderr)
         elif k is Loader.Scene:
             for scene in v:
-                print(f"Discovered in {scene.path.parent.name}: {scene.path.name:<24} ({k.__name__})", file=sys.stderr)
+                print(f"Discovered in {scene.path.parent.name:<24}: {scene.path.name:<36} ({k.__name__})", file=sys.stderr)
 
     app = loop.run_until_complete(
-        app_factory(assets=assets, builder=builder, static=assets and assets.all[0].path.parent, loop=loop)
+        app_factory(assets=assets, builder=builder, static=locations and locations.pop(), loop=loop)
     )
     settings = hypercorn.Config.from_mapping({"bind": "localhost:8080", "errorlog": "-"})
 

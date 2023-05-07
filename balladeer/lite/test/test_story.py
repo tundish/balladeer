@@ -24,7 +24,7 @@ import textwrap
 import tomllib
 import unittest
 
-from balladeer.examples.ex_10_lite_sequence.app import Story as Story_10
+from balladeer.examples.ex_10_animate_media.main import Story as Story_10
 from balladeer.lite.loader import Loader
 from balladeer.lite.speech import Dialogue
 from balladeer.lite.story import StoryBuilder
