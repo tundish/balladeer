@@ -6,6 +6,15 @@
 Change Log
 ::::::::::
 
+0.34.0
+======
+
+All examples now converted to the *lite* format.
+
+* Loader discovery enhanced for hierarchical directories.
+* Better calculation of asset paths.
+* Command options added to assembly output.
+
 0.33.0
 ======
 
@@ -15,7 +24,6 @@ Support for audio assets.
 * Better structure for Director's notes.
 * `audio` tags are rendered inside `details`.
 * `audio` playback triggered by JS timer.
-
 
 0.32.0
 ======
