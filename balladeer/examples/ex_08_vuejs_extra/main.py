@@ -65,11 +65,11 @@ class Wall(Drama):
 
         """
         bottle.state = 0
-        bottle.aspect = "now in pieces"
+        bottle.aspect = "lies in pieces"
         self.state = len(self.unbroken)
         yield Dialogue(
-            """
-            <>  And if one green bottle should *accidentally* fall,
+            f"""
+            <>  And if one {bottle.sketch} should *accidentally* fall,
             There'll be...
             """
         )
