@@ -20,7 +20,9 @@
 
 from collections import namedtuple
 import importlib.resources
+from importlib.resources import Package
 import mimetypes
+from pathlib import Path
 import tomllib
 import xml.etree.ElementTree as ET
 
@@ -36,8 +38,13 @@ class Loader:
     )
 
     @staticmethod
-    def discover(package, resource=".", suffixes=[".scene.toml"]):
-        for path in importlib.resources.files(package).joinpath(resource).iterdir():
+    def discover(package: [Package | Path], resource=".", suffixes=[".scene.toml"]):
+        if isinstance(package, Path):
+            paths = list(package.iterdir()) if package.is_dir() else [package]
+        else:
+            paths = list(importlib.resources.files(package).joinpath(resource).iterdir())
+
+        for path in paths:
             typ, _ = mimetypes.guess_type(path)
             if typ and typ != "text/x-python":
                 with importlib.resources.as_file(path) as f:

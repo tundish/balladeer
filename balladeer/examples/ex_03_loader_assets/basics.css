@@ -1,0 +1,41 @@
+* {
+box-sizing: border-box;
+border: 0;
+font: inherit;
+font-size: 100%;
+line-height: 1.2em;
+list-style-type: none;
+margin: 0;
+outline: 0;
+padding: 0;
+text-decoration: none;
+vertical-align: baseline;
+}
+
+body {
+background-color: lightgray;
+font-family: sans-serif;
+font-size: 1.2rem;
+}
+
+blockquote {
+background-color: white;
+}
+
+button, input {
+font-size: 1.8rem;
+}
+
+input + button {
+display: none;
+}
+
+cite {
+color: grey;
+font-family: serif;
+text-transform: uppercase;
+}
+
+div ul {
+list-style-type: none;
+}

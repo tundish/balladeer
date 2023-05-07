@@ -22,7 +22,9 @@ from collections.abc import Generator
 import copy
 import json
 import pathlib
+import sys
 import textwrap
+from types import ModuleType
 import warnings
 
 import hypercorn
@@ -311,14 +313,23 @@ async def app_factory(
     return app
 
 
-def quick_start(module="", resource="", builder=None):
+def quick_start(module: [str | ModuleType] = "", resource="", builder=None):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
+
+    if isinstance(module, str):
+        module = pathlib.Path(module)
+        module = module.parent if module.is_file() else module
 
     try:
         assets = Grouping.typewise(Loader.discover(module, resource))
     except ValueError:
         assets = Grouping(list)
+
+    for k, v in assets.items():
+        if isinstance(k, str):
+            for asset in v:
+                print(f"Loaded <{k}> file: '{asset.path.name}' from {asset.path.parent.name}.", file=sys.stderr)
 
     app = loop.run_until_complete(
         app_factory(assets=assets, builder=builder, static=assets and assets.all[0].path.parent, loop=loop)
