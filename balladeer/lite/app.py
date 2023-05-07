@@ -270,8 +270,7 @@ class Assembly(HTTPEndpoint):
         state = request.app.state
         story = state.sessions[session_id]
         ensemble = story.context.ensemble
-        # assembly = dict(ensemble=ensemble, options=story.context.options(ensemble))
-        assembly = dict(ensemble=ensemble)
+        assembly = dict(ensemble=ensemble, options=list(story.context.options(ensemble).keys()))
         return self.EntitySerializer(assembly)
 
 
