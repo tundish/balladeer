@@ -330,6 +330,9 @@ def quick_start(module: [str | ModuleType] = "", resource="", builder=None):
         if isinstance(k, str):
             for asset in v:
                 print(f"Discovered in {asset.path.parent.name}: {asset.path.name:<24} ({k})", file=sys.stderr)
+        elif k is Loader.Scene:
+            for scene in v:
+                print(f"Discovered in {scene.path.parent.name}: {scene.path.name:<24} ({k.__name__})", file=sys.stderr)
 
     app = loop.run_until_complete(
         app_factory(assets=assets, builder=builder, static=assets and assets.all[0].path.parent, loop=loop)

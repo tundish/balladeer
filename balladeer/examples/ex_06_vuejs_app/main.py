@@ -19,7 +19,6 @@
 
 import enum
 import random
-import balladeer
 from balladeer.lite.app import Session
 from balladeer.lite.app import quick_start
 from balladeer.lite.drama import Drama
@@ -33,7 +32,7 @@ from balladeer.lite.world import WorldBuilder
 
 
 __doc__ = """
-python3.11 -m balladeer.examples.ex_06_js_frontend.app
+python3 -m balladeer.examples.ex_06_vuejs_app.main
 
 """
 

@@ -1,5 +1,3 @@
-import time
-
 from balladeer.lite.app import quick_start
 from balladeer.lite.speech import Dialogue
 from balladeer.lite.story import StoryBuilder

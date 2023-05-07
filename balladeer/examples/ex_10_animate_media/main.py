@@ -25,7 +25,7 @@ from balladeer.lite.entity import Entity
 from balladeer.lite.world import WorldBuilder
 
 __doc__ = """
-~/py3.11-dev/bin/python -m balladeer.examples.10_lite_sequence.logic
+python3 -m balladeer.examples.10_animate_media.main
 
 """
 
