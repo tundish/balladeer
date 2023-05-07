@@ -1,3 +1,5 @@
+import {fill_options, filter_commands} from "/static/js/typeahead.mjs";
+
 const app = Vue.createApp({
 data() {
     return {

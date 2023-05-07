@@ -84,13 +84,21 @@ class Home(HTTPEndpoint):
 
     @staticmethod
     def render_css_links(request, assets: Grouping[str, list[Loader.Asset]]) -> Generator[str]:
+        static = request.app.state.static
         for asset in assets["text/css"]:
-            yield f'<link rel="stylesheet" href="/static/{asset.path.name}" />'
+            path = asset.path.relative_to(static)
+            yield f'<link rel="stylesheet" href="/static/{path}" />'
 
     @staticmethod
     def render_js_links(request, assets: Grouping[str, list[Loader.Asset]]) -> Generator[str]:
-        for asset in assets["application/javascript"]:
-            yield f'<script src="/static/{asset.path.name}"></script>'
+        static = request.app.state.static
+        assets = sorted(assets["application/javascript"], key=lambda x: len(x.path.suffix), reverse=True)
+        for asset in assets:
+            path = asset.path.relative_to(static)
+            if asset.path.suffix == ".mjs":
+                yield f'<script src="/static/{path}" type="module"></script>'
+            else:
+                yield f'<script src="/static/{path}"></script>'
 
     def compose(self, request, page: Page, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Page:
         assets = getattr(self, "assets", Grouping())
@@ -198,12 +206,12 @@ class Session(HTTPEndpoint):
         url = request.url_for("command", session_id=story.uid)
         return textwrap.dedent(
             f"""
-            <form role="form" action="{url}" method="post" name="ballad-control-text">
+            <form role="form" action="{url}" method="post" name="ballad-control-command">
             <fieldset>
             <label for="input-command-text" id="input-command-text-tip">&gt;</label>
 
             <input
-            name="text"
+            name="ballad-control-command-text"
             placeholder="{story.context.prompt}"
             pattern="[\w ]+"
             autofocus="autofocus"
@@ -226,7 +234,7 @@ class Session(HTTPEndpoint):
 
         page.paste(page.zone.meta, Home.meta)
         page.paste(page.zone.css, *sorted(line for line in Home.render_css_links(request, assets)))
-        page.paste(page.zone.script, *sorted(line for line in Home.render_js_links(request, assets)))
+        page.paste(page.zone.script, *Home.render_js_links(request, assets))
 
         html5 = "\n".join(self.render_cues(request, story, turn))
         page.paste(page.zone.body, html5)
@@ -307,6 +315,7 @@ async def app_factory(
         routes.append(Mount("/static", app=StaticFiles(directory=static), name="static"))
 
     app = Starlette(routes=routes)
+    app.state.static = static
     app.state.builder = builder or next(reversed(StoryBuilder.__subclasses__()), StoryBuilder)
     app.state.config = config
     app.state.sessions = {}
@@ -338,7 +347,7 @@ def quick_start(module: [str | ModuleType] = "", resource="", builder=None, host
                 print(f"Discovered in {scene.path.parent.name:<24}: {scene.path.name:<36} ({k.__name__})", file=sys.stderr)
 
     app = loop.run_until_complete(
-        app_factory(assets=assets, builder=builder, static=locations and max(locations), loop=loop)
+        app_factory(assets=assets, builder=builder, static=locations and min(locations), loop=loop)
     )
     settings = hypercorn.Config.from_mapping({"bind": f"{host}:{port}", "errorlog": "-"})
 
