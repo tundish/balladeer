@@ -339,7 +339,7 @@ def quick_start(module: [str | ModuleType] = "", resource="", builder=None):
                 print(f"Discovered in {scene.path.parent.name:<24}: {scene.path.name:<36} ({k.__name__})", file=sys.stderr)
 
     app = loop.run_until_complete(
-        app_factory(assets=assets, builder=builder, static=locations and locations.pop(), loop=loop)
+        app_factory(assets=assets, builder=builder, static=locations and max(locations), loop=loop)
     )
     settings = hypercorn.Config.from_mapping({"bind": "localhost:8080", "errorlog": "-"})
 
