@@ -6,7 +6,7 @@ from balladeer.lite.story import StoryBuilder
 
 
 story = StoryBuilder(
-    Dialogue("Here's a joke..."),
+    Dialogue("<?offer=1>Here's a joke..."),
     Dialogue("<ADAM> Knock, knock."),
     Dialogue("<BETH> Who's there?"),
     Dialogue("<ADAM> Doctor."),
