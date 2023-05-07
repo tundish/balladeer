@@ -315,7 +315,7 @@ async def app_factory(
     return app
 
 
-def quick_start(module: [str | ModuleType] = "", resource="", builder=None):
+def quick_start(module: [str | ModuleType] = "", resource="", builder=None, host="localhost", port=8080):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
@@ -341,6 +341,6 @@ def quick_start(module: [str | ModuleType] = "", resource="", builder=None):
     app = loop.run_until_complete(
         app_factory(assets=assets, builder=builder, static=locations and max(locations), loop=loop)
     )
-    settings = hypercorn.Config.from_mapping({"bind": "localhost:8080", "errorlog": "-"})
+    settings = hypercorn.Config.from_mapping({"bind": f"{host}:{port}", "errorlog": "-"})
 
     loop.run_until_complete(serve(app, settings))
