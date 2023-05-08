@@ -6,6 +6,14 @@
 Change Log
 ::::::::::
 
+0.35.0
+======
+
+Bugfixes to example 8.
+
+* Loader now offers better filtering of test modules, etc.
+* Settled on a convention for naming of controls.
+
 0.34.0
 ======
 

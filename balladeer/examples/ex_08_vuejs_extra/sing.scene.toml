@@ -2,7 +2,6 @@ project = "Balladeer JS frontend example"
 
 [DRAMA]
 type = "Wall"
-prompt = "Type 'look', 'bottle', or 'break'"
 
 [[_]]
 # Many bottles
