@@ -23,6 +23,7 @@ import importlib.resources
 from importlib.resources import Package
 import mimetypes
 from pathlib import Path
+import re
 import tomllib
 import xml.etree.ElementTree as ET
 
@@ -40,7 +41,9 @@ class Loader:
     @staticmethod
     def discover(
         package: [Package | Path], resource=".",
-        suffixes=[".scene.toml"], ignore=["__pycache__", "node_modules"]
+        suffixes=[".scene.toml"],
+        avoid=["__pycache__", "node_modules"],
+        ignore=[re.compile("^test_.*")]
     ):
         if isinstance(package, Path):
             paths = list(package.iterdir()) if package.is_dir() else [package]
@@ -48,8 +51,10 @@ class Loader:
             paths = list(importlib.resources.files(package).joinpath(resource).iterdir())
 
         for path in paths:
-            if path.is_dir() and path.name not in ignore:
-                yield from Loader.discover(path, resource, suffixes, ignore)
+            if path.is_dir() and path.name not in avoid:
+                yield from Loader.discover(path, resource, suffixes, avoid, ignore)
+            elif any(i.match(path.name) for i in ignore):
+                continue
 
             typ, _ = mimetypes.guess_type(path)
             if typ and typ != "text/x-python":
