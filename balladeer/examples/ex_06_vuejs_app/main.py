@@ -19,6 +19,8 @@
 
 import enum
 import random
+
+import balladeer
 from balladeer.lite.app import Session
 from balladeer.lite.app import quick_start
 from balladeer.lite.drama import Drama
@@ -110,4 +112,4 @@ class Song(Session):
 
 
 if __name__ == "__main__":
-    quick_start(balladeer.examples.ex_06_js_frontend)
+    quick_start(balladeer.examples.ex_06_vuejs_app)
