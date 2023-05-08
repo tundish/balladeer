@@ -1,9 +1,10 @@
-import {fill_options, filter_commands} from "/static/js/typeahead.mjs";
+import {fill_options} from "/static/js/typeahead.mjs";
 
 const app = Vue.createApp({
 data() {
     return {
-        ensemble: []
+        ensemble: [],
+        options: [],
     }
 },
 async created() {
@@ -11,6 +12,18 @@ async created() {
     const response = await fetch(url);
     const assembly = await response.json();
     this.ensemble = assembly.ensemble;
+    this.options = assembly.options;
+    console.log(this.options);
+
+    let data_list = document.createElement("datalist");
+    data_list.setAttribute("id", "typeahead_data");
+
+    let form = document.querySelector("form[name=ballad-command-form]");
+    form.after(fill_options(data_list, this.options));
+
+    let input = document.querySelector("input[name=ballad-command-form-input-text][type=text]");
+    input.autocomplete = "off";
+    input.setAttribute("list", "typeahead_data");
 },
 });
 

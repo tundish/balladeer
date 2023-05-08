@@ -211,12 +211,12 @@ class Session(HTTPEndpoint):
         url = request.url_for("command", session_id=story.uid)
         return textwrap.dedent(
             f"""
-            <form role="form" action="{url}" method="post" name="ballad-control-command">
+            <form role="form" action="{url}" method="post" name="ballad-command-form">
             <fieldset>
-            <label for="input-command-text" id="input-command-text-tip">&gt;</label>
+            <label for="ballad-command-form-input-text" id="ballad-command-form-input-text-label">&gt;</label>
 
             <input
-            name="ballad-control-command-text"
+            name="ballad-command-form-input-text"
             placeholder="{story.context.prompt}"
             pattern="[\w ]+"
             autofocus="autofocus"
@@ -260,7 +260,7 @@ class Command(HTTPEndpoint):
         story = state.sessions[session_id]
 
         async with request.form() as form:
-            command = form["text"]
+            command = form["ballad-command-form-input-text"]
 
         story.action(command)
 
