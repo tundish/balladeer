@@ -128,7 +128,12 @@ class Session(HTTPEndpoint):
     async def get(self, request):
         session_id = request.path_params["session_id"]
         state = request.app.state
-        story = state.sessions[session_id]
+
+        try:
+            story = state.sessions[session_id]
+        except KeyError:
+            warnings.warn(f"No such session as {session_id}")
+            return RedirectResponse(url=request.url_for("home"), status_code=410)
 
         page = Page()
         with story.turn() as turn:

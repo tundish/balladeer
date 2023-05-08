@@ -7,7 +7,7 @@ data() {
     }
 },
 async created() {
-    url = window.location + "/assembly";
+    const url = window.location + "/assembly";
     const response = await fetch(url);
     const assembly = await response.json();
     this.ensemble = assembly.ensemble;
@@ -101,4 +101,4 @@ methods: {
 }
 });
 
-view = app.mount("#app");
+const view = app.mount("#app");
