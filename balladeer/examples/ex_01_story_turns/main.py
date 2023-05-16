@@ -14,7 +14,7 @@ story = StoryBuilder(
     Dialogue("Press Ctrl-C to finish."),
 )
 
-while story.speech:
+while True:
     with story.turn() as turn:
         for speech in turn.speech:
             time.sleep(story.director.pause + story.director.dwell * len(speech.words))
