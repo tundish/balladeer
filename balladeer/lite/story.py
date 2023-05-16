@@ -21,6 +21,7 @@ from collections import deque
 from collections import namedtuple
 from collections.abc import Callable
 import copy
+import operator
 import uuid
 import warnings
 
@@ -84,7 +85,12 @@ class StoryBuilder:
 
     @property
     def context(self):
-        return self.drama[0]
+        return next(
+            (reversed(sorted(
+                self.drama, key=operator.attrgetter("state")
+            ))),
+            None
+        )
 
     @property
     def notes(self):
