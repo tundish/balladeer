@@ -9,9 +9,10 @@ Change Log
 0.36.0-rc
 =========
 
-Minor fixes while preparing development blog
+Minor fixes while preparing development blog.
 
 * Fix to example 1
+* Better error handling during Asset discovery.
 * `Story.context` now orders drama by integer state
 
 0.35.0

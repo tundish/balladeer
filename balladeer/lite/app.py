@@ -86,15 +86,23 @@ class Home(HTTPEndpoint):
     def render_css_links(request, assets: Grouping[str, list[Loader.Asset]]) -> Generator[str]:
         static = request.app.state.static
         for asset in assets["text/css"]:
-            path = asset.path.relative_to(static)
-            yield f'<link rel="stylesheet" href="/static/{path}" />'
+            try:
+                path = asset.path.relative_to(static)
+            except ValueError:
+                continue
+            else:
+                yield f'<link rel="stylesheet" href="/static/{path}" />'
 
     @staticmethod
     def render_js_links(request, assets: Grouping[str, list[Loader.Asset]]) -> Generator[str]:
         static = request.app.state.static
         assets = sorted(assets["application/javascript"], key=lambda x: len(x.path.suffix), reverse=True)
         for asset in assets:
-            path = asset.path.relative_to(static)
+            try:
+                path = asset.path.relative_to(static)
+            except ValueError:
+                continue
+
             if asset.path.suffix == ".mjs":
                 yield f'<script src="/static/{path}" type="module"></script>'
             else:
