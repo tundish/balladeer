@@ -33,8 +33,9 @@ import pathlib
 import re
 import sys
 
-from balladeer import Drama
-from balladeer import Story
+from balladeer.classic.drama import Drama
+from balladeer.classic.story import Story
+
 from turberfield.dialogue.adapters import ColourAdapter
 from turberfield.dialogue.cli import add_common_options
 from turberfield.dialogue.cli import add_performance_options

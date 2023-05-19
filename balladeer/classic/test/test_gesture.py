@@ -20,13 +20,13 @@
 import random
 import unittest
 
-from balladeer import Fruition
-from balladeer import Gesture
-from balladeer import Hand
-from balladeer import Head
-from balladeer import Phrase
-from balladeer import Name
-from balladeer import Verb
+from balladeer.classic.gesture import Gesture
+from balladeer.classic.gesture import Hand
+from balladeer.classic.gesture import Head
+from balladeer.classic.speech import Phrase
+from balladeer.classic.speech import Name
+from balladeer.classic.speech import Verb
+from balladeer.classic.types import Fruition
 
 
 class Brew(Gesture):

@@ -22,7 +22,7 @@ import unittest
 
 from turberfield.catchphrase.presenter import Presenter
 
-from balladeer import Drama
+from balladeer.classic.drama import Drama
 
 
 class DramaTests(unittest.TestCase):
