@@ -11,9 +11,10 @@ Change Log
 
 Minor fixes while preparing development blog.
 
-* Fix to example 1
+* Fixes to examples 1 and 10.
 * Better error handling during Asset discovery.
-* `Story.context` now orders drama by integer state
+* `Story.context` now orders drama by integer state.
+* Top-level imports are now all from `balladeer.lite`.
 
 0.35.0
 ======
