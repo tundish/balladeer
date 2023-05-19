@@ -13,7 +13,7 @@ background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/s
 font-weight: normal;
 font-size: calc(1.1rem + 0.2vw);
 line-height: calc(1.6rem + 0.3vw);
-margin-left: 0.5em;
+margin-left: 0.5rem;
 }
 
 .pure-menu .pure-menu-selected a {
@@ -38,7 +38,7 @@ color: #221e59;
 }
 
 tt.literal {
-font-size: 0.8em;
+font-size: 0.8rem;
 }
 
 ul li::marker {
@@ -75,16 +75,16 @@ font-style: italic;
 }
 
 pre, table {
-margin: 1em 0.5em 2em 4em;
+margin: 1rem 0.5rem 1.6rem 2.4rem;
 }
 
 th {
-padding: 0.6em 0 0.6em 0.7em;
+padding: 0.6rem 0 0.6rem 0.7rem;
 vertical-align: middle;
 }
 
 td {
-padding: 0.6em 0 0.6em 0.7em;
+padding: 0.6rem 0 0.6rem 0.7rem;
 }
 
 .see-thru {
@@ -95,13 +95,26 @@ filter: opacity(50%) saturate(70%);
 filter: opacity(70%) saturate(50%);
 }
 
+.admonition {
+box-sizing: border-box;
+background-color: #fdf;
+border: 1px black dashed;
+border-radius: 0.6rem;
+padding: 1rem;
+}
+
+.admonition-title {
+text-transform: uppercase;
+}
+
+
 .biblio {
 box-sizing: border-box;
 background-color: #ddd;
 border: 1px black dashed;
 border-radius: 0.6rem;
-margin: 1em;
-padding: 1em;
+margin: 1rem;
+padding: 1rem;
 }
 
 dl.adr dt {
@@ -110,8 +123,8 @@ display: none;
 
 a.feedlink:before {
 content: url("/theme/img/rss.png");
-margin-right: 0.5em;
-vertical-align: -0.1em;
+margin-right: 0.5rem;
+vertical-align: -0.1rem;
 }
 
 a.muted {
@@ -148,13 +161,13 @@ float: right;
 }
 
 .shiftright-1 {
-margin-left: 1em;
+margin-left: 1rem;
 }
 
 .pad-1 {
-padding: 1em;
+padding: 1rem;
 }
 
 .pad-2 {
-padding: 2em;
+padding: 2rem;
 }

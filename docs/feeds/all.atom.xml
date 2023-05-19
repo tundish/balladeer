@@ -1,6 +1,293 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Balladeer</title><link href="https://tundish.github.io/balladeer/" rel="alternate"></link><link href="https://tundish.github.io/balladeer/feeds/all.atom.xml" rel="self"></link><id>https://tundish.github.io/balladeer/</id><updated>2021-11-17T14:00:00+00:00</updated><entry><title>Balladeer over the Web</title><link href="https://tundish.github.io/balladeer/balladeer-over-the-web.html" rel="alternate"></link><published>2021-11-17T14:00:00+00:00</published><updated>2021-11-17T14:00:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-17:/balladeer/balladeer-over-the-web.html</id><summary type="html">&lt;p class="first last"&gt;How Balladeer works over the Web.&lt;/p&gt;
-</summary><content type="html">&lt;div class="section" id="web-native"&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Balladeer</title><link href="https://tundish.github.io/balladeer/" rel="alternate"></link><link href="https://tundish.github.io/balladeer/feeds/all.atom.xml" rel="self"></link><id>https://tundish.github.io/balladeer/</id><updated>2023-05-17T20:15:00+01:00</updated><entry><title>Ready to Serve</title><link href="https://tundish.github.io/balladeer/ready-to-serve.html" rel="alternate"></link><published>2023-05-17T20:15:00+01:00</published><updated>2023-05-17T20:15:00+01:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2023-05-17:/balladeer/ready-to-serve.html</id><summary type="html">&lt;p class="first last"&gt;How to host your Story so it runs in a browser&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="back-to-the-future"&gt;
+&lt;h2&gt;Back to the future&lt;/h2&gt;
+&lt;p&gt;In the &lt;a class="reference external" href="https://tundish.github.io/balladeer/its-your-turn.html"&gt;previous article&lt;/a&gt; we flirted with the idea of recreating the old-school text experience.&lt;/p&gt;
+&lt;p&gt;Is that what the world needs in 2023? What about all the lovely Web technology there is available now?
+What if we could we make use of that instead?&lt;/p&gt;
+&lt;p&gt;Balladeer is a web-native framework. It makes it easy to host a Story so that it runs in a browser.
+The Web version of the &lt;em&gt;knock, knock&lt;/em&gt; joke has less code than the text-mode example.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="less-is-more"&gt;
+&lt;h2&gt;Less is More&lt;/h2&gt;
+&lt;p&gt;Copy the following lines into a new file called &lt;em&gt;main.py&lt;/em&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;balladeer&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Dialogue&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;balladeer&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;StoryBuilder&lt;/span&gt;
+&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;balladeer&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;quick_start&lt;/span&gt;
+
+
+&lt;span class="n"&gt;story&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;StoryBuilder&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="n"&gt;Dialogue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Here&amp;#39;s a joke...&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+    &lt;span class="n"&gt;Dialogue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;lt;ADAM&amp;gt; Knock, knock.&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+    &lt;span class="n"&gt;Dialogue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;lt;BETH&amp;gt; Who&amp;#39;s there?&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+    &lt;span class="n"&gt;Dialogue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;lt;ADAM&amp;gt; Doctor.&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+    &lt;span class="n"&gt;Dialogue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;lt;BETH&amp;gt; Doctor who?&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+    &lt;span class="n"&gt;Dialogue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;lt;ADAM&amp;gt; You just said it.&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+
+
+&lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="vm"&gt;__name__&lt;/span&gt; &lt;span class="o"&gt;==&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;__main__&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="n"&gt;quick_start&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;builder&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="the-perfect-host"&gt;
+&lt;h2&gt;The perfect host&lt;/h2&gt;
+&lt;p&gt;Go back to your terminal window.&lt;/p&gt;
+&lt;p&gt;On Linux:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+py3/bin/python -m main
+&lt;/pre&gt;
+&lt;p&gt;On Windows:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+py3\Scripts\python.exe -m main
+&lt;/pre&gt;
+&lt;p&gt;First you should see something like this:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+[2023-05-17 20:21:33 +0100] [5371] [INFO] Running on http://127.0.0.1:8080 (CTRL + C to quit)
+&lt;/pre&gt;
+&lt;p&gt;Now open a Web browser and type &lt;cite&gt;localhost:8080&lt;/cite&gt; into the location bar.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="no-points-for-style"&gt;
+&lt;h2&gt;No points for style&lt;/h2&gt;
+&lt;p&gt;Without any additional styling the results are admittedly plain.&lt;/p&gt;
+&lt;img alt="An unstyled rendering of Balladeer dialogue." class="pure-img align-center" src="https://tundish.github.io/balladeer/images/knock_knock_unstyled.png" /&gt;
+&lt;p&gt;Press the Enter key to proceed through the dialogue.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="we-re-on-our-way"&gt;
+&lt;h2&gt;We're on our way!&lt;/h2&gt;
+&lt;p&gt;The journey is about to start.
+Along the way, gently and progressively, you will practise Python, HTML5 and CSS3.
+Perhaps a little Javascript too if you want that.&lt;/p&gt;
+&lt;p&gt;You will have all the features of the Web at your disposal. The power to connect to databases,
+hook up with social media feeds, integrate with every kind of API.&lt;/p&gt;
+&lt;p&gt;You can write parser games or point-and-click puzzles.
+You can host a gallery of your art, or showcase your latest musical project.
+You can play locally, or on a network with colleagues, or serve to the entire world.&lt;/p&gt;
+&lt;p&gt;See you next time!&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Blog"></category><category term="balladeer"></category><category term="basics"></category><category term="tutorial"></category></entry><entry><title>It's your Turn</title><link href="https://tundish.github.io/balladeer/its-your-turn.html" rel="alternate"></link><published>2023-05-16T06:50:00+01:00</published><updated>2023-05-16T06:50:00+01:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2023-05-16:/balladeer/its-your-turn.html</id><summary type="html">&lt;p class="first last"&gt;A first peek under the hood of a Balladeer Story&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="old-school-adventure"&gt;
+&lt;h2&gt;Old school adventure&lt;/h2&gt;
+&lt;p&gt;Some of the very first computer programs (after &lt;a class="reference external" href="https://tundish.github.io/balladeer/hello-world.html"&gt;hello world&lt;/a&gt;) were text adventure games.
+New ones continue to appear even today.&lt;/p&gt;
+&lt;p&gt;If you haven't played a game of this type, you should &lt;a class="reference external" href="http://textadventures.co.uk/"&gt;try one out&lt;/a&gt;.
+They provide a valuable lesson in how a lot of vibe can be created with some well-crafted words.
+They succeed because they focus on the idea of telling a Story.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="building-a-story"&gt;
+&lt;h2&gt;Building a Story&lt;/h2&gt;
+&lt;p&gt;Balladeer puts the idea of Story front and centre.
+In fact the first thing you do is create a new Python file (usually &lt;cite&gt;main.py&lt;/cite&gt;)
+and add this import(ant) line:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;balladeer&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;StoryBuilder&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;As a simple exercise, why not add these lines too:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;balladeer&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Dialogue&lt;/span&gt;
+
+&lt;span class="n"&gt;story&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;StoryBuilder&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="n"&gt;Dialogue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Here&amp;#39;s a joke...&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+    &lt;span class="n"&gt;Dialogue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;lt;ADAM&amp;gt; Knock, knock.&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+    &lt;span class="n"&gt;Dialogue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;lt;BETH&amp;gt; Who&amp;#39;s there?&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+    &lt;span class="n"&gt;Dialogue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;lt;ADAM&amp;gt; Doctor.&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+    &lt;span class="n"&gt;Dialogue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;lt;BETH&amp;gt; Doctor who?&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+    &lt;span class="n"&gt;Dialogue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&amp;lt;ADAM&amp;gt; You just said it.&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+    &lt;span class="n"&gt;Dialogue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Press Ctrl-C to finish.&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+
+&lt;span class="k"&gt;while&lt;/span&gt; &lt;span class="kc"&gt;True&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+    &lt;span class="k"&gt;with&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;turn&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="k"&gt;as&lt;/span&gt; &lt;span class="n"&gt;turn&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;line&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;turn&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;speech&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
+            &lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;line&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;words&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="exercise"&gt;
+&lt;h2&gt;Exercise&lt;/h2&gt;
+&lt;p&gt;We all know that timing is the most important part of
+telling a joke.&lt;/p&gt;
+&lt;p&gt;How would you modify this code so that each line appears
+a second or two after the previous one?&lt;/p&gt;
+&lt;p&gt;Hint: take a look at Python's &lt;a class="reference external" href="https://docs.python.org/3/library/time.html#module-time"&gt;time module&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;When you run the code you'll see:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+Here's a joke...
+&lt;/pre&gt;
+&lt;p&gt;Then one by one the other lines appear:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+ADAM Knock, knock.
+BETH Who's there?
+ADAM Doctor.
+BETH Doctor who?
+ADAM You just said it.
+
+Press Ctrl-C to finish.
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="progress"&gt;
+&lt;h2&gt;Progress&lt;/h2&gt;
+&lt;p&gt;Well done if this is your first Python program. And congratulations
+if you figured out the solution.&lt;/p&gt;
+&lt;p&gt;Or maybe you found this far too simple and you want to move on to the grown-up stuff.&lt;/p&gt;
+&lt;p&gt;Well either way it looks like you're ready.&lt;/p&gt;
+&lt;p&gt;In the &lt;a class="reference external" href="https://tundish.github.io/balladeer/ready-to-serve.html"&gt;next article&lt;/a&gt;, I promise there'll be fewer lines to type.
+And I'll show you how to run this Story from your own Web Server.&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Blog"></category><category term="balladeer"></category><category term="basics"></category><category term="tutorial"></category></entry><entry><title>Hello, World!</title><link href="https://tundish.github.io/balladeer/hello-world.html" rel="alternate"></link><published>2023-05-15T18:30:00+01:00</published><updated>2023-05-15T18:30:00+01:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2023-05-15:/balladeer/hello-world.html</id><summary type="html">&lt;p class="first last"&gt;On why you should always do a 'Hello World'.&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="a-tradition"&gt;
+&lt;h2&gt;A tradition&lt;/h2&gt;
+&lt;p&gt;People have been writing 'Hello, World!' programs since about 1972.
+The object was to get a potentially complicated setup to do something simple.&lt;/p&gt;
+&lt;p&gt;When you see 'Hello, World!' on the screen, you can be reassured that you've
+figured out the correct compiler flags and now you can go and have some lunch.&lt;/p&gt;
+&lt;p&gt;Fast forward to 2023. In Python the equivalent is literally &lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;print(&amp;quot;Hello,&lt;/span&gt; &lt;span class="pre"&gt;World!&amp;quot;)&lt;/span&gt;&lt;/tt&gt;.
+But it is worth starting here. After this quick exercise, you'll have achieved these
+important steps:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference internal" href="#install-python"&gt;Install Python&lt;/a&gt; on your computer&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="#create-a-virtual-environment"&gt;Create a virtual environment&lt;/a&gt; for packages&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="#install-balladeer"&gt;Install Balladeer&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Write your very &lt;a class="reference internal" href="#first-line-of-dialogue"&gt;first line of dialogue&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference internal" href="#execute-your-code"&gt;Execute your code&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div class="section" id="install-python"&gt;
+&lt;h2&gt;Install Python&lt;/h2&gt;
+&lt;div class="section" id="on-linux"&gt;
+&lt;h3&gt;On Linux&lt;/h3&gt;
+&lt;p&gt;Use the software manager to install the following packages:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;python3&lt;/tt&gt;&lt;/li&gt;
+&lt;li&gt;&lt;tt class="docutils literal"&gt;&lt;span class="pre"&gt;python3-pip&lt;/span&gt;&lt;/tt&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;
+&lt;/div&gt;
+&lt;div class="section" id="on-windows"&gt;
+&lt;h3&gt;On Windows&lt;/h3&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Download the latest &lt;a class="reference external" href="https://www.python.org/downloads/windows/"&gt;installer for Windows&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Double-click the file to start the installation.&lt;/li&gt;
+&lt;li&gt;Follow the online &lt;a class="reference external" href="https://docs.python.org/3/using/windows.html#installation-steps"&gt;installation instructions&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="section" id="create-a-virtual-environment"&gt;
+&lt;h2&gt;Create a Virtual Environment&lt;/h2&gt;
+&lt;p&gt;Use the App menu to open a terminal.
+If necessary, &lt;cite&gt;cd&lt;/cite&gt; to your home directory.&lt;/p&gt;
+&lt;p&gt;Run this command:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+python3 -m venv py3
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="install-balladeer"&gt;
+&lt;h2&gt;Install Balladeer&lt;/h2&gt;
+&lt;p&gt;On Linux:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+py3/bin/python -m pip install balladeer
+&lt;/pre&gt;
+&lt;p&gt;On Windows:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+py3\Scripts\python.exe -m pip install balladeer
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="first-line-of-dialogue"&gt;
+&lt;h2&gt;First line of dialogue&lt;/h2&gt;
+&lt;p&gt;Use the App menu to launch a Text Editor.
+Type in the following code.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="kn"&gt;from&lt;/span&gt; &lt;span class="nn"&gt;balladeer&lt;/span&gt; &lt;span class="kn"&gt;import&lt;/span&gt; &lt;span class="n"&gt;Dialogue&lt;/span&gt;
+
+&lt;span class="n"&gt;d&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Dialogue&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;Hello, World!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="nb"&gt;print&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;d&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;words&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;Save the file as &lt;cite&gt;main.py&lt;/cite&gt; in your home directory.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="execute-your-code"&gt;
+&lt;h2&gt;Execute your code&lt;/h2&gt;
+&lt;p&gt;Go back to your terminal window.&lt;/p&gt;
+&lt;p&gt;On Linux:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+py3/bin/python -m main
+&lt;/pre&gt;
+&lt;p&gt;On Windows:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+py3\Scripts\python.exe -m main
+&lt;/pre&gt;
+&lt;p&gt;Here's what you should see:&lt;/p&gt;
+&lt;pre class="literal-block"&gt;
+Hello, World!
+&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div class="section" id="and-after-lunch"&gt;
+&lt;h2&gt;And after Lunch&lt;/h2&gt;
+&lt;p&gt;It's fun to  play at adding extra dialogue.
+But don't hang around here too long.
+Your &lt;a class="reference external" href="https://tundish.github.io/balladeer/its-your-turn.html"&gt;next step&lt;/a&gt; is on the Balladeer blog.&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Blog"></category><category term="balladeer"></category><category term="basics"></category><category term="tutorial"></category></entry><entry><title>The Balladeer backstory</title><link href="https://tundish.github.io/balladeer/the-balladeer-backstory.html" rel="alternate"></link><published>2023-05-14T19:10:00+01:00</published><updated>2023-05-14T19:10:00+01:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2023-05-14:/balladeer/the-balladeer-backstory.html</id><summary type="html">&lt;p class="first last"&gt;This is an introductory article. Start here if you know nothing about Balladeer.&lt;/p&gt;
+</summary><content type="html">&lt;div class="section" id="the-world-written-web"&gt;
+&lt;h2&gt;The World Written Web&lt;/h2&gt;
+&lt;p&gt;What's that technology we use, in between reading a book and playing a video game?&lt;/p&gt;
+&lt;p&gt;In that space sits the Web and all its mechanisms and protocols.
+We've had it for decades and it has served us in different ways.
+It was a source of information. It was a platform for commerce.
+It was a nexus for social and cultural messages. It was a surface for state and corporate surveillance.&lt;/p&gt;
+&lt;p&gt;The Web is a mature technology now. It is better than it was at the beginning.
+Better to suit the big outfits. Better to serve the individual.&lt;/p&gt;
+&lt;p&gt;Better at telling a story.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="stories"&gt;
+&lt;h2&gt;Stories&lt;/h2&gt;
+&lt;p&gt;Story-telling is at the heart of human culture.
+Personal stories, family stories, folk stories. Everyone loves a good story.&lt;/p&gt;
+&lt;p&gt;Some of us like to create them too.
+And now in 2023 there is a free and modern option for those who do.&lt;/p&gt;
+&lt;p&gt;Its name is Balladeer.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="principles"&gt;
+&lt;h2&gt;Principles&lt;/h2&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;Made of 100% Free software.&lt;/li&gt;
+&lt;li&gt;Balladeer discovers your screenplay files at runtime and selects the next scene.&lt;/li&gt;
+&lt;li&gt;Need a markup format for dialogue? Balladeer has one. It's called &lt;a class="reference external" href="https://github.com/tundish/speechmark"&gt;SpeechMark&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;Is your story also a game? Write it in &lt;a class="reference external" href="https://python.org"&gt;Python&lt;/a&gt; code.&lt;/li&gt;
+&lt;li&gt;Balladeer embraces HTML5 and CSS3. Javascript is optional, but well supported.&lt;/li&gt;
+&lt;li&gt;Balladeer is a simple framework for prototyping which scales all the way up to global deployments.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Balladeer helps you build web-native narratives for a decentralized world.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="provenance"&gt;
+&lt;h2&gt;Provenance&lt;/h2&gt;
+&lt;p&gt;Balladeer sprang from a project I did several years ago.
+I made a little puzzle game for a competition called NarraScope.&lt;/p&gt;
+&lt;p&gt;Over two fortnights, in the evenings after work, I wrote the whole thing in Python because at the time
+I didn't know much Javascript.&lt;/p&gt;
+&lt;img alt="A screenshot of the game Tower of Rapunzel" class="pure-img low-key" src="https://tundish.github.io/balladeer/images/tor-screen.png" style="height: 480px;" /&gt;
+&lt;p&gt;Subsequent to that, I explored other ideas which you can still find publicly available.
+From time to time I revisit them:&lt;/p&gt;
+&lt;ul class="simple"&gt;
+&lt;li&gt;&lt;a class="reference external" href="https://github.com/tundish/tea_and_sympathy"&gt;Tea and Sympathy&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a class="reference external" href="https://github.com/tundish/pity_of_thieves"&gt;Pity of Thieves&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;I gradually evolved the notion of a storytelling framework which uses open standards to
+deliver animated text, graphics, images, audio, and even video. That is what Balladeer is today.&lt;/p&gt;
+&lt;p&gt;It is a very powerful integration of Python with the Web. And another thing:
+&lt;em&gt;Balladeer has the simplest, most flexible, most dynamic command parser in any game framework&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;If you disagree, please post a link to a better one in the &lt;a class="reference external" href="https://disqus.com/home/forums/balladeer/"&gt;comments section&lt;/a&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="what-next"&gt;
+&lt;h2&gt;What Next?&lt;/h2&gt;
+&lt;p&gt;The &lt;a class="reference external" href="https://tundish.github.io/balladeer/category/blog.html"&gt;Balladeer blog&lt;/a&gt; hosts regular articles on how to use the framework.
+They are tagged, so you can begin with the &lt;a class="reference external" href="https://tundish.github.io/balladeer/tag/basics.html"&gt;basics&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Don't forget you can post comments under the blog articles, or raise issues at the &lt;a class="reference external" href="https://github.com/tundish/balladeer"&gt;code repository&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Have fun telling your Story!&lt;/p&gt;
+&lt;/div&gt;
+</content><category term="Blog"></category><category term="balladeer"></category><category term="IF"></category><category term="basics"></category></entry><entry><title>Balladeer over the Web</title><link href="https://tundish.github.io/balladeer/balladeer-over-the-web.html" rel="alternate"></link><published>2021-11-17T14:00:00+00:00</published><updated>2021-11-17T14:00:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-17:/balladeer/balladeer-over-the-web.html</id><summary type="html">&lt;p class="first last"&gt;How Balladeer works over the Web.&lt;/p&gt;
+</summary><content type="html">&lt;div class="admonition note"&gt;
+&lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
+&lt;p&gt;This page explains Balladeer's &lt;em&gt;classic&lt;/em&gt; syntax, which is no longer maintained.&lt;/p&gt;
+&lt;p class="last"&gt;Refer to a more recent article for its replacement, Balladeer &lt;em&gt;lite&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="web-native"&gt;
 &lt;h2&gt;Web native&lt;/h2&gt;
 &lt;p&gt;Balladeer is designed with the Web in mind. Straight out of the box, it can render your dialogue
 into HTML5 pages. The only thing left to do is to integrate your Story into a Python web framework.&lt;/p&gt;
@@ -71,8 +358,7 @@ We create the Drama with its folders. Then from that the Story.&lt;/p&gt;
 &lt;p&gt;What's new is that we ourselves send a &lt;em&gt;look&lt;/em&gt; command and create a presenter to animate the result.&lt;/p&gt;
 &lt;p&gt;We keep the Story in an &lt;cite&gt;app&lt;/cite&gt; object which the web framework provides for such a purpose.
 Story objects have a unique ID, and this is used in subsequent URLs to identify and retrieve them.&lt;/p&gt;
-&lt;pre class="code python literal-block"&gt;
-&lt;span class="k"&gt;async&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_root&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;async&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_root&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="n"&gt;drama&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Bottles&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
     &lt;span class="n"&gt;drama&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;folder&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;song.rst&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;end.rst&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
     &lt;span class="n"&gt;story&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;Story&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;drama&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
@@ -80,34 +366,39 @@ Story objects have a unique ID, and this is used in subsequent URLs to identify 
     &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;represent&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sessions&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;
     &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="n"&gt;web&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;HTTPFound&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/&lt;/span&gt;&lt;span class="si"&gt;{0.id.hex}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="session-view"&gt;
 &lt;h3&gt;2. Session view&lt;/h3&gt;
 &lt;p&gt;The first job of the session view is to retrieve the Story object via its unique ID.&lt;/p&gt;
-&lt;pre class="code python literal-block"&gt;
-&lt;span class="k"&gt;async&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_session&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;async&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;get_session&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="n"&gt;uid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;uuid&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;UUID&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;hex&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;match_info&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;session&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
     &lt;span class="n"&gt;story&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sessions&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="n"&gt;uid&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Then we animate a frame. The following code chooses the next dialogue shot, animating
 it with the timing specified in the dialogue file:&lt;/p&gt;
-&lt;pre class="code python literal-block"&gt;
-    &lt;span class="n"&gt;animation&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;next&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;animate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
-        &lt;span class="n"&gt;frame&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dwell&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dwell&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pause&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pause&lt;/span&gt;
-    &lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;frame&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;frames&lt;/span&gt;&lt;span class="p"&gt;)))&lt;/span&gt;
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;animation&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;next&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+        &lt;span class="nb"&gt;filter&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="kc"&gt;None&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="p"&gt;(&lt;/span&gt;
+                &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;animate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+                    &lt;span class="n"&gt;frame&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;dwell&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;dwell&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pause&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;pause&lt;/span&gt;
+                &lt;span class="p"&gt;)&lt;/span&gt;
+                &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;frame&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;frames&lt;/span&gt;
+            &lt;span class="p"&gt;),&lt;/span&gt;
+        &lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Some web-specific stuff here. We decide a title for the page and prepare the web user interface.
 A Story object can choose to supply extra user controls. Our Story doesn't do that,
 so by default Balladeer gives us a single text box for command input.&lt;/p&gt;
-&lt;pre class="code python literal-block"&gt;
-    &lt;span class="n"&gt;title&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;metadata&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;project&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
-    &lt;span class="n"&gt;controls&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
-        &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;render_action_form&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;action&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;autofocus&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-        &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;action&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;enumerate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;actions&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;
-    &lt;span class="p"&gt;]&lt;/span&gt;
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;metadata&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;get&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;project&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)[&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;span class="n"&gt;controls&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;join&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;render_action_form&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;action&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;autofocus&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="ow"&gt;not&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
+    &lt;span class="k"&gt;for&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;action&lt;/span&gt; &lt;span class="ow"&gt;in&lt;/span&gt; &lt;span class="nb"&gt;enumerate&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;actions&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+    &lt;span class="k"&gt;if&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;count&lt;/span&gt;
+&lt;span class="p"&gt;]&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;We have seen &lt;tt class="docutils literal"&gt;story.render_frame_to_terminal&lt;/tt&gt; in previous examples.
 Since this is a web service we use &lt;tt class="docutils literal"&gt;story.render_animated_frame_to_html&lt;/tt&gt; to generate the dialogue in HTML.&lt;/p&gt;
 &lt;p&gt;The web page has a couple of optional elements too:&lt;/p&gt;
@@ -115,15 +406,14 @@ Since this is a web service we use &lt;tt class="docutils literal"&gt;story.rend
 &lt;li&gt;Links to the CSS files we're using.&lt;/li&gt;
 &lt;li&gt;Story-specific settings which will be rendered as CSS variables for use by our style sheets.&lt;/li&gt;
 &lt;/ul&gt;
-&lt;pre class="code python literal-block"&gt;
-    &lt;span class="n"&gt;rv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;render_body_html&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
-        &lt;span class="s2"&gt;&amp;quot;&amp;lt;!-- Extra head links go here --&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-        &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;render_dict_to_css&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;vars&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;settings&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
-        &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;render_animated_frame_to_html&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;animation&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;controls&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="p"&gt;)&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;rv&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;render_body_html&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;title&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;&amp;lt;!-- Extra head links go here --&amp;gt;&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+    &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;render_dict_to_css&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;vars&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;settings&lt;/span&gt;&lt;span class="p"&gt;)),&lt;/span&gt;
+    &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;render_animated_frame_to_html&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;animation&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;controls&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
 
-    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;web&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Response&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;rv&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;content_type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;text/html&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;
+&lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="n"&gt;web&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;Response&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;rv&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;content_type&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;text/html&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;These three elements are combined to create an HTML page.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class="section" id="command-input"&gt;
@@ -131,8 +421,7 @@ Since this is a web service we use &lt;tt class="docutils literal"&gt;story.rend
 &lt;p&gt;When a user enters a command, the browser sends it to our &lt;em&gt;cmd&lt;/em&gt; endpoint.&lt;/p&gt;
 &lt;p&gt;We retrieve the Story object as we did before. Then most of the code
 is validation and error checking.&lt;/p&gt;
-&lt;pre class="code python literal-block"&gt;
-&lt;span class="k"&gt;async&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;post_command&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;async&lt;/span&gt; &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;post_command&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="n"&gt;uid&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;uuid&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;UUID&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nb"&gt;hex&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;match_info&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;session&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;])&lt;/span&gt;
     &lt;span class="n"&gt;story&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;sessions&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;][&lt;/span&gt;&lt;span class="n"&gt;uid&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
     &lt;span class="n"&gt;data&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;await&lt;/span&gt; &lt;span class="n"&gt;request&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;post&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt;
@@ -141,9 +430,11 @@ is validation and error checking.&lt;/p&gt;
         &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="n"&gt;web&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;HTTPUnauthorized&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;reason&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;User sent invalid command.&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="k"&gt;else&lt;/span&gt;&lt;span class="p"&gt;:&lt;/span&gt;
         &lt;span class="n"&gt;text&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;deliver&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;cmd&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-        &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;represent&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;facts&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;facts&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;previous&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+        &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;represent&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+            &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;facts&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;context&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;facts&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;previous&lt;/span&gt;&lt;span class="o"&gt;=&lt;/span&gt;&lt;span class="n"&gt;story&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;presenter&lt;/span&gt;
+        &lt;span class="p"&gt;)&lt;/span&gt;
     &lt;span class="k"&gt;raise&lt;/span&gt; &lt;span class="n"&gt;web&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;HTTPFound&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;/&lt;/span&gt;&lt;span class="si"&gt;{0.hex}&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;format&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;uid&lt;/span&gt;&lt;span class="p"&gt;))&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;The two lines invoking the Story work the same as we've seen in previous examples. Every time we create a new
 presenter, we need to store it on the Story object so it's available in the session view.&lt;/p&gt;
 &lt;/div&gt;
@@ -156,12 +447,10 @@ on how to do that in the future.&lt;/p&gt;
 &lt;p&gt;For now, all we want is some simple styling to suit a demo. One of Balladeer's upstream packages has such a file,
 so we can borrow that for now. It will have been installed along with the library. We just have to tell the web
 framework where to find it:&lt;/p&gt;
-&lt;pre class="code python literal-block"&gt;
-    &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;router&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_static&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
-        &lt;span class="s2"&gt;&amp;quot;/css/base/&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
-        &lt;span class="n"&gt;pkg_resources&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;resource_filename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;turberfield.catchphrase&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;css&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
-    &lt;span class="p"&gt;)&lt;/span&gt;
-&lt;/pre&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;router&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;add_static&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;
+    &lt;span class="s2"&gt;&amp;quot;/css/base/&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;pkg_resources&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;resource_filename&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;turberfield.catchphrase&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;css&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class="section" id="running-the-example"&gt;
@@ -225,8 +514,13 @@ cd examples/05_server_parser
 &lt;p&gt;It's not pretty, but it works! The same Story we tested last time in the terminal is now served over the web.&lt;/p&gt;
 &lt;img alt="A screenshot of the 10 Green Bottles parser game, as seen in a Web browser." class="pure-img" src="https://tundish.github.io/balladeer/images/green_bottles-screen.png" /&gt;
 &lt;/div&gt;
-</content><category term="Blog"></category><category term="basics"></category><category term="tutorial"></category><category term="web"></category></entry><entry><title>Easy Interactions</title><link href="https://tundish.github.io/balladeer/easy-interactions.html" rel="alternate"></link><published>2021-11-16T07:45:00+00:00</published><updated>2021-11-16T07:45:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-16:/balladeer/easy-interactions.html</id><summary type="html">&lt;p class="first last"&gt;How to begin making your screenplay interactive.&lt;/p&gt;
-</summary><content type="html">&lt;div class="section" id="recap"&gt;
+</content><category term="Blog"></category><category term="balladeer"></category><category term="classic"></category></entry><entry><title>Easy Interactions</title><link href="https://tundish.github.io/balladeer/easy-interactions.html" rel="alternate"></link><published>2021-11-16T07:45:00+00:00</published><updated>2021-11-16T07:45:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-16:/balladeer/easy-interactions.html</id><summary type="html">&lt;p class="first last"&gt;How to begin making your screenplay interactive.&lt;/p&gt;
+</summary><content type="html">&lt;div class="admonition note"&gt;
+&lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
+&lt;p&gt;This page explains Balladeer's &lt;em&gt;classic&lt;/em&gt; syntax, which is no longer maintained.&lt;/p&gt;
+&lt;p class="last"&gt;Refer to a more recent article for its replacement, Balladeer &lt;em&gt;lite&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="recap"&gt;
 &lt;h2&gt;Recap&lt;/h2&gt;
 &lt;p&gt;&lt;a class="reference external" href="https://tundish.github.io/balladeer/message-in-a-bottle.html"&gt;Last time&lt;/a&gt; we built &lt;cite&gt;10 Green Bottles&lt;/cite&gt;
 in the form of a Balladeer screenplay. The structure we used is scalable to much larger projects.&lt;/p&gt;
@@ -247,7 +541,7 @@ modifying ensemble state. We will add two interactive commands by which the user
 &lt;p&gt;The first thing to do is add a &lt;cite&gt;look&lt;/cite&gt; command. That will be a way for the user to find out how many bottles
 are left. That command is implemented by this method on the Bottles class:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;do_look&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;this&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;    look&lt;/span&gt;
 
 &lt;span class="sd"&gt;    &amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
@@ -292,7 +586,7 @@ every time. That's an advanced topic for a later date though. We are going to ke
 &lt;h2&gt;Breaking changes&lt;/h2&gt;
 &lt;p&gt;Here's the second method to add. This one breaks a bottle when the user enters 'bottle' or 'break'.&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;do_bottle&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;this&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;text&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;presenter&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-    &lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="w"&gt;    &lt;/span&gt;&lt;span class="sd"&gt;&amp;quot;&amp;quot;&amp;quot;&lt;/span&gt;
 &lt;span class="sd"&gt;    bottle&lt;/span&gt;
 &lt;span class="sd"&gt;    break&lt;/span&gt;
 
@@ -371,8 +665,13 @@ No green bottles hanging on the wall.
 &lt;/pre&gt;
 &lt;p&gt;In the &lt;a class="reference external" href="https://tundish.github.io/balladeer/balladeer-over-the-web.html"&gt;next article&lt;/a&gt;, we'll take this interactive sing-song, and perform it over the Web.&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="Blog"></category><category term="basics"></category><category term="tutorial"></category><category term="parser"></category></entry><entry><title>Message in a Bottle</title><link href="https://tundish.github.io/balladeer/message-in-a-bottle.html" rel="alternate"></link><published>2021-11-10T10:15:00+00:00</published><updated>2021-11-10T10:15:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-10:/balladeer/message-in-a-bottle.html</id><summary type="html">&lt;p class="first last"&gt;Modifying State in ensemble objects.&lt;/p&gt;
-</summary><content type="html">&lt;div class="section" id="pour-implementation"&gt;
+</content><category term="Blog"></category><category term="balladeer"></category><category term="classic"></category></entry><entry><title>Message in a Bottle</title><link href="https://tundish.github.io/balladeer/message-in-a-bottle.html" rel="alternate"></link><published>2021-11-10T10:15:00+00:00</published><updated>2021-11-10T10:15:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-10:/balladeer/message-in-a-bottle.html</id><summary type="html">&lt;p class="first last"&gt;Modifying State in ensemble objects.&lt;/p&gt;
+</summary><content type="html">&lt;div class="admonition note"&gt;
+&lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
+&lt;p&gt;This page explains Balladeer's &lt;em&gt;classic&lt;/em&gt; syntax, which is no longer maintained.&lt;/p&gt;
+&lt;p class="last"&gt;Refer to a more recent article for its replacement, Balladeer &lt;em&gt;lite&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="pour-implementation"&gt;
 &lt;h2&gt;Pour implementation&lt;/h2&gt;
 &lt;p&gt;In the &lt;a class="reference external" href="https://tundish.github.io/balladeer/property-and-the-state.html"&gt;last article&lt;/a&gt; we
 took a very simple approach to &lt;em&gt;10 Green Bottles&lt;/em&gt;. Those bottles were just a number to us.&lt;/p&gt;
@@ -535,8 +834,13 @@ would do in a coding project.&lt;/p&gt;
 &lt;p&gt;There's just one element we haven't mentioned yet, and it's an important one.&lt;/p&gt;
 &lt;p&gt;It's the parser. We'll talk about that next time.&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="Blog"></category><category term="basics"></category><category term="tutorial"></category></entry><entry><title>Property and the State</title><link href="https://tundish.github.io/balladeer/property-and-the-state.html" rel="alternate"></link><published>2021-11-08T16:45:00+00:00</published><updated>2021-11-08T16:45:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-08:/balladeer/property-and-the-state.html</id><summary type="html">&lt;p class="first last"&gt;How Drama and Dialogue communicate by modifying state.&lt;/p&gt;
-</summary><content type="html">&lt;div class="section" id="properties"&gt;
+</content><category term="Blog"></category><category term="balladeer"></category><category term="classic"></category></entry><entry><title>Property and the State</title><link href="https://tundish.github.io/balladeer/property-and-the-state.html" rel="alternate"></link><published>2021-11-08T16:45:00+00:00</published><updated>2021-11-08T16:45:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-08:/balladeer/property-and-the-state.html</id><summary type="html">&lt;p class="first last"&gt;How Drama and Dialogue communicate by modifying state.&lt;/p&gt;
+</summary><content type="html">&lt;div class="admonition note"&gt;
+&lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
+&lt;p&gt;This page explains Balladeer's &lt;em&gt;classic&lt;/em&gt; syntax, which is no longer maintained.&lt;/p&gt;
+&lt;p class="last"&gt;Refer to a more recent article for its replacement, Balladeer &lt;em&gt;lite&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="properties"&gt;
 &lt;h2&gt;Properties&lt;/h2&gt;
 &lt;p&gt;If you've done any Python programming, you may know what a property is.
 It's a way of giving an object a &lt;em&gt;getter&lt;/em&gt; and a &lt;em&gt;setter&lt;/em&gt; for an internal attribute.&lt;/p&gt;
@@ -552,13 +856,11 @@ You can find the full &lt;a class="reference external" href="https://github.com/
 &lt;div class="section" id="drama-py"&gt;
 &lt;h3&gt;drama.py&lt;/h3&gt;
 &lt;p&gt;Here's a Drama class which on every turn reduces its integer state value by one:&lt;/p&gt;
-&lt;pre class="code python literal-block"&gt;
-&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Bottles&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Drama&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
-
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="k"&gt;class&lt;/span&gt; &lt;span class="nc"&gt;Bottles&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;Drama&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
     &lt;span class="k"&gt;def&lt;/span&gt; &lt;span class="nf"&gt;interlude&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;folder&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;index&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;args&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="o"&gt;**&lt;/span&gt;&lt;span class="n"&gt;kwargs&lt;/span&gt;&lt;span class="p"&gt;):&lt;/span&gt;
         &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nb"&gt;max&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;state&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
         &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="bp"&gt;self&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;facts&lt;/span&gt;
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Interlude methods are expected to return a dictionary.
 Drama objects have a dictionary attribute called &lt;em&gt;facts&lt;/em&gt;. So for simplicity that can be our return value here.&lt;/p&gt;
 &lt;p&gt;The state needs initially setting to 10, which we can do like this:&lt;/p&gt;
@@ -577,8 +879,7 @@ bottles.&lt;/p&gt;
 files everything is treated as a string.&lt;/p&gt;
 &lt;p&gt;Our conditional might look for an explicit string representation of the state integer, or we can define
 a regular expression instead. Regexes must be supplied inside parentheses, just as you see here:&lt;/p&gt;
-&lt;pre class="code rst literal-block"&gt;
-&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;entity&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span&gt;&lt;/span&gt;&lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;entity&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA
     &lt;span class="nc"&gt;:types:&lt;/span&gt; balladeer.Drama
 
 &lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="nt"&gt;|BOTTLES|&lt;/span&gt; &lt;span class="ow"&gt;property&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.state
@@ -594,7 +895,7 @@ a regular expression instead. Regexes must be supplied inside parentheses, just 
 |BOTTLES| green bottles, hanging on the wall.
 
 And if one green bottle should accidentally fall,
-There'll be...
+There&amp;#39;ll be...
 
 &lt;span class="gh"&gt;One&lt;/span&gt;
 &lt;span class="gh"&gt;---&lt;/span&gt;
@@ -604,7 +905,7 @@ There'll be...
 |BOTTLES| green bottle, hanging on the wall.
 
 And if one green bottle should accidentally fall,
-There'll be...
+There&amp;#39;ll be...
 
 &lt;span class="gh"&gt;None&lt;/span&gt;
 &lt;span class="gh"&gt;----&lt;/span&gt;
@@ -612,14 +913,19 @@ There'll be...
 &lt;span class="p"&gt;..&lt;/span&gt; &lt;span class="ow"&gt;condition&lt;/span&gt;&lt;span class="p"&gt;::&lt;/span&gt; DRAMA.state 0
 
 No green bottles hanging on the wall.
-&lt;/pre&gt;
+&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;Please take a moment to download the example and run this yourself.&lt;/p&gt;
 &lt;p&gt;This has been a simple case with which to start.
 In the next article we will complicate things slightly in order to learn more features of Balladeer.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
-</content><category term="Blog"></category><category term="basics"></category><category term="tutorial"></category></entry><entry><title>Hello, World!</title><link href="https://tundish.github.io/balladeer/hello-world.html" rel="alternate"></link><published>2021-11-05T08:30:00+00:00</published><updated>2021-11-05T08:30:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-05:/balladeer/hello-world.html</id><summary type="html">&lt;p class="first last"&gt;On why you should always do a 'Hello World'.&lt;/p&gt;
-</summary><content type="html">&lt;div class="section" id="a-tradition"&gt;
+</content><category term="Blog"></category><category term="balladeer"></category><category term="classic"></category></entry><entry><title>Say Hello, wave Goodbye</title><link href="https://tundish.github.io/balladeer/say-hello-wave-goodbye.html" rel="alternate"></link><published>2021-11-05T08:30:00+00:00</published><updated>2021-11-05T08:30:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-05:/balladeer/say-hello-wave-goodbye.html</id><summary type="html">&lt;p class="first last"&gt;On why you should always do a 'Hello World'.&lt;/p&gt;
+</summary><content type="html">&lt;div class="admonition note"&gt;
+&lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
+&lt;p&gt;This page explains Balladeer's &lt;em&gt;classic&lt;/em&gt; syntax, which is no longer maintained.&lt;/p&gt;
+&lt;p class="last"&gt;Refer to a more recent article for its replacement, Balladeer &lt;em&gt;lite&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="a-tradition"&gt;
 &lt;h2&gt;A tradition&lt;/h2&gt;
 &lt;p&gt;People have been writing 'Hello, World!' programs since about 1972.
 The object was to get a potentially complicated setup to do something simple.&lt;/p&gt;
@@ -685,8 +991,13 @@ Hello, World!
 The module &lt;tt class="docutils literal"&gt;story.py&lt;/tt&gt; shows how to accept text input and feed it as a command to the Drama.
 There'll be more on that here soon.&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="Blog"></category><category term="basics"></category><category term="tutorial"></category></entry><entry><title>Balladeer components</title><link href="https://tundish.github.io/balladeer/balladeer-components.html" rel="alternate"></link><published>2021-11-04T14:00:00+00:00</published><updated>2021-11-04T14:00:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-04:/balladeer/balladeer-components.html</id><summary type="html">&lt;p class="first last"&gt;This article presents a diagram of the main components of Balladeer.&lt;/p&gt;
-</summary><content type="html">&lt;div class="section" id="interactions"&gt;
+</content><category term="Blog"></category><category term="balladeer"></category><category term="classic"></category></entry><entry><title>Balladeer components</title><link href="https://tundish.github.io/balladeer/balladeer-components.html" rel="alternate"></link><published>2021-11-04T14:00:00+00:00</published><updated>2021-11-04T14:00:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-04:/balladeer/balladeer-components.html</id><summary type="html">&lt;p class="first last"&gt;This article presents a diagram of the main components of Balladeer.&lt;/p&gt;
+</summary><content type="html">&lt;div class="admonition note"&gt;
+&lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
+&lt;p&gt;This page explains Balladeer's &lt;em&gt;classic&lt;/em&gt; syntax, which is no longer maintained.&lt;/p&gt;
+&lt;p class="last"&gt;Refer to a more recent article for its replacement, Balladeer &lt;em&gt;lite&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="interactions"&gt;
 &lt;h2&gt;Interactions&lt;/h2&gt;
 &lt;p&gt;The top-level object in Balladeer is the Story. And whether game, prose or poetry, a Story always has one
 active Drama object. That object specifies where to find the corresponding Dialogue files.&lt;/p&gt;
@@ -716,8 +1027,13 @@ That input is passed to the Drama to interpret and act upon.&lt;/p&gt;
 Drama objects can recognize &lt;em&gt;commands&lt;/em&gt; of any complexity.
 You can enable or disable those commands on the fly as required.&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="Blog"></category><category term="basics"></category><category term="architecture"></category></entry><entry><title>Balladeer in brief</title><link href="https://tundish.github.io/balladeer/balladeer-in-brief.html" rel="alternate"></link><published>2021-11-03T10:30:00+00:00</published><updated>2021-11-03T10:30:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-03:/balladeer/balladeer-in-brief.html</id><summary type="html">&lt;p class="first last"&gt;This is an introductory article. Start here if you know nothing about Balladeer.&lt;/p&gt;
-</summary><content type="html">&lt;div class="section" id="culture"&gt;
+</content><category term="Blog"></category><category term="balladeer"></category><category term="classic"></category></entry><entry><title>Balladeer in brief</title><link href="https://tundish.github.io/balladeer/balladeer-in-brief.html" rel="alternate"></link><published>2021-11-03T10:30:00+00:00</published><updated>2021-11-03T10:30:00+00:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2021-11-03:/balladeer/balladeer-in-brief.html</id><summary type="html">&lt;p class="first last"&gt;This is an introductory article. Start here if you know nothing about Balladeer.&lt;/p&gt;
+</summary><content type="html">&lt;div class="admonition note"&gt;
+&lt;p class="first admonition-title"&gt;Note&lt;/p&gt;
+&lt;p&gt;This page explains Balladeer's &lt;em&gt;classic&lt;/em&gt; syntax, which is no longer maintained.&lt;/p&gt;
+&lt;p class="last"&gt;Refer to a more recent article for its replacement, Balladeer &lt;em&gt;lite&lt;/em&gt;.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class="section" id="culture"&gt;
 &lt;h2&gt;Culture&lt;/h2&gt;
 &lt;p&gt;You are reading a book. You are playing a video game. Culturally, what lies between?&lt;/p&gt;
 &lt;p&gt;In that space sits the Web and all its related technologies. We've had it for decades and it has served
@@ -776,4 +1092,4 @@ Each of those has its own &lt;a class="reference external" href="https://turberf
 &lt;p&gt;Don't forget you can post comments under the blog articles, or raise issues at the &lt;a class="reference external" href="https://github.com/tundish/balladeer"&gt;code repository&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Have fun telling your Story!&lt;/p&gt;
 &lt;/div&gt;
-</content><category term="Blog"></category><category term="IF"></category><category term="basics"></category></entry></feed>
+</content><category term="Blog"></category><category term="balladeer"></category><category term="classic"></category></entry></feed>

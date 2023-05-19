@@ -51,24 +51,20 @@ integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aeh
         <ul class="tagcloud">
  
  
- 
-<li class="tag-4 familytag">
-    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/web.html">web</a>
+<li class="tag-2">
+    <a class="pure-button" href="https://tundish.github.io/balladeer/tag/basics.html">basics</a>
+</li>
+<li class="tag-2">
+    <a class="pure-button" href="https://tundish.github.io/balladeer/tag/tutorial.html">tutorial</a>
+</li>
+<li class="tag-1 familytag">
+    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/classic.html">classic</a>
 </li>
 <li class="tag-4">
     <a class="pure-button" href="https://tundish.github.io/balladeer/tag/if.html">IF</a>
 </li>
 <li class="tag-1 familytag">
-    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/tutorial.html">tutorial</a>
-</li>
-<li class="tag-4">
-    <a class="pure-button" href="https://tundish.github.io/balladeer/tag/architecture.html">architecture</a>
-</li>
-<li class="tag-4">
-    <a class="pure-button" href="https://tundish.github.io/balladeer/tag/parser.html">parser</a>
-</li>
-<li class="tag-1 familytag">
-    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/basics.html">basics</a>
+    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/balladeer.html">balladeer</a>
 </li>
 </ul>
     </div>
@@ -80,7 +76,12 @@ integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aeh
     <div class="pure-u-lg-1-6">
     </div>
     <div class="pure-u-1 pure-u-lg-2-3">
-        <div class="section" id="web-native">
+        <div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>This page explains Balladeer's <em>classic</em> syntax, which is no longer maintained.</p>
+<p class="last">Refer to a more recent article for its replacement, Balladeer <em>lite</em>.</p>
+</div>
+<div class="section" id="web-native">
 <h2>Web native</h2>
 <p>Balladeer is designed with the Web in mind. Straight out of the box, it can render your dialogue
 into HTML5 pages. The only thing left to do is to integrate your Story into a Python web framework.</p>
@@ -151,8 +152,7 @@ We create the Drama with its folders. Then from that the Story.</p>
 <p>What's new is that we ourselves send a <em>look</em> command and create a presenter to animate the result.</p>
 <p>We keep the Story in an <cite>app</cite> object which the web framework provides for such a purpose.
 Story objects have a unique ID, and this is used in subsequent URLs to identify and retrieve them.</p>
-<pre class="code python literal-block">
-<span class="k">async</span> <span class="k">def</span> <span class="nf">get_root</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">get_root</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">drama</span> <span class="o">=</span> <span class="n">Bottles</span><span class="p">()</span>
     <span class="n">drama</span><span class="o">.</span><span class="n">folder</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;song.rst&quot;</span><span class="p">,</span> <span class="s2">&quot;end.rst&quot;</span><span class="p">]</span>
     <span class="n">story</span> <span class="o">=</span> <span class="n">Story</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="n">drama</span><span class="p">)</span>
@@ -160,34 +160,39 @@ Story objects have a unique ID, and this is used in subsequent URLs to identify 
     <span class="n">story</span><span class="o">.</span><span class="n">presenter</span> <span class="o">=</span> <span class="n">story</span><span class="o">.</span><span class="n">represent</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
     <span class="n">request</span><span class="o">.</span><span class="n">app</span><span class="p">[</span><span class="s2">&quot;sessions&quot;</span><span class="p">][</span><span class="n">story</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">story</span>
     <span class="k">raise</span> <span class="n">web</span><span class="o">.</span><span class="n">HTTPFound</span><span class="p">(</span><span class="s2">&quot;/</span><span class="si">{0.id.hex}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">story</span><span class="p">))</span>
-</pre>
+</pre></div>
 </div>
 <div class="section" id="session-view">
 <h3>2. Session view</h3>
 <p>The first job of the session view is to retrieve the Story object via its unique ID.</p>
-<pre class="code python literal-block">
-<span class="k">async</span> <span class="k">def</span> <span class="nf">get_session</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">get_session</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">uid</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">(</span><span class="nb">hex</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">match_info</span><span class="p">[</span><span class="s2">&quot;session&quot;</span><span class="p">])</span>
     <span class="n">story</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">app</span><span class="p">[</span><span class="s2">&quot;sessions&quot;</span><span class="p">][</span><span class="n">uid</span><span class="p">]</span>
-</pre>
+</pre></div>
 <p>Then we animate a frame. The following code chooses the next dialogue shot, animating
 it with the timing specified in the dialogue file:</p>
-<pre class="code python literal-block">
-    <span class="n">animation</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">filter</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="p">(</span><span class="n">story</span><span class="o">.</span><span class="n">presenter</span><span class="o">.</span><span class="n">animate</span><span class="p">(</span>
-        <span class="n">frame</span><span class="p">,</span> <span class="n">dwell</span><span class="o">=</span><span class="n">story</span><span class="o">.</span><span class="n">presenter</span><span class="o">.</span><span class="n">dwell</span><span class="p">,</span> <span class="n">pause</span><span class="o">=</span><span class="n">story</span><span class="o">.</span><span class="n">presenter</span><span class="o">.</span><span class="n">pause</span>
-    <span class="p">)</span> <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">story</span><span class="o">.</span><span class="n">presenter</span><span class="o">.</span><span class="n">frames</span><span class="p">)))</span>
-</pre>
+<div class="highlight"><pre><span></span><span class="n">animation</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span>
+        <span class="nb">filter</span><span class="p">(</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="p">(</span>
+                <span class="n">story</span><span class="o">.</span><span class="n">presenter</span><span class="o">.</span><span class="n">animate</span><span class="p">(</span>
+                    <span class="n">frame</span><span class="p">,</span> <span class="n">dwell</span><span class="o">=</span><span class="n">story</span><span class="o">.</span><span class="n">presenter</span><span class="o">.</span><span class="n">dwell</span><span class="p">,</span> <span class="n">pause</span><span class="o">=</span><span class="n">story</span><span class="o">.</span><span class="n">presenter</span><span class="o">.</span><span class="n">pause</span>
+                <span class="p">)</span>
+                <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">story</span><span class="o">.</span><span class="n">presenter</span><span class="o">.</span><span class="n">frames</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
 <p>Some web-specific stuff here. We decide a title for the page and prepare the web user interface.
 A Story object can choose to supply extra user controls. Our Story doesn't do that,
 so by default Balladeer gives us a single text box for command input.</p>
-<pre class="code python literal-block">
-    <span class="n">title</span> <span class="o">=</span> <span class="n">story</span><span class="o">.</span><span class="n">presenter</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">controls</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">story</span><span class="o">.</span><span class="n">render_action_form</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">autofocus</span><span class="o">=</span><span class="ow">not</span> <span class="n">n</span><span class="p">))</span>
-        <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">action</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">story</span><span class="o">.</span><span class="n">actions</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">story</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">count</span>
-    <span class="p">]</span>
-</pre>
+<div class="highlight"><pre><span></span><span class="n">title</span> <span class="o">=</span> <span class="n">story</span><span class="o">.</span><span class="n">presenter</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;project&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">controls</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">story</span><span class="o">.</span><span class="n">render_action_form</span><span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">autofocus</span><span class="o">=</span><span class="ow">not</span> <span class="n">n</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">action</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">story</span><span class="o">.</span><span class="n">actions</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">story</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">count</span>
+<span class="p">]</span>
+</pre></div>
 <p>We have seen <tt class="docutils literal">story.render_frame_to_terminal</tt> in previous examples.
 Since this is a web service we use <tt class="docutils literal">story.render_animated_frame_to_html</tt> to generate the dialogue in HTML.</p>
 <p>The web page has a couple of optional elements too:</p>
@@ -195,15 +200,14 @@ Since this is a web service we use <tt class="docutils literal">story.render_ani
 <li>Links to the CSS files we're using.</li>
 <li>Story-specific settings which will be rendered as CSS variables for use by our style sheets.</li>
 </ul>
-<pre class="code python literal-block">
-    <span class="n">rv</span> <span class="o">=</span> <span class="n">story</span><span class="o">.</span><span class="n">render_body_html</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
-        <span class="s2">&quot;&lt;!-- Extra head links go here --&gt;&quot;</span><span class="p">,</span>
-        <span class="n">story</span><span class="o">.</span><span class="n">render_dict_to_css</span><span class="p">(</span><span class="nb">vars</span><span class="p">(</span><span class="n">story</span><span class="o">.</span><span class="n">settings</span><span class="p">)),</span>
-        <span class="n">story</span><span class="o">.</span><span class="n">render_animated_frame_to_html</span><span class="p">(</span><span class="n">animation</span><span class="p">,</span> <span class="n">controls</span><span class="p">)</span>
-    <span class="p">)</span>
+<div class="highlight"><pre><span></span><span class="n">rv</span> <span class="o">=</span> <span class="n">story</span><span class="o">.</span><span class="n">render_body_html</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">)</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+    <span class="s2">&quot;&lt;!-- Extra head links go here --&gt;&quot;</span><span class="p">,</span>
+    <span class="n">story</span><span class="o">.</span><span class="n">render_dict_to_css</span><span class="p">(</span><span class="nb">vars</span><span class="p">(</span><span class="n">story</span><span class="o">.</span><span class="n">settings</span><span class="p">)),</span>
+    <span class="n">story</span><span class="o">.</span><span class="n">render_animated_frame_to_html</span><span class="p">(</span><span class="n">animation</span><span class="p">,</span> <span class="n">controls</span><span class="p">),</span>
+<span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">rv</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/html&quot;</span><span class="p">)</span>
-</pre>
+<span class="k">return</span> <span class="n">web</span><span class="o">.</span><span class="n">Response</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">rv</span><span class="p">,</span> <span class="n">content_type</span><span class="o">=</span><span class="s2">&quot;text/html&quot;</span><span class="p">)</span>
+</pre></div>
 <p>These three elements are combined to create an HTML page.</p>
 </div>
 <div class="section" id="command-input">
@@ -211,8 +215,7 @@ Since this is a web service we use <tt class="docutils literal">story.render_ani
 <p>When a user enters a command, the browser sends it to our <em>cmd</em> endpoint.</p>
 <p>We retrieve the Story object as we did before. Then most of the code
 is validation and error checking.</p>
-<pre class="code python literal-block">
-<span class="k">async</span> <span class="k">def</span> <span class="nf">post_command</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+<div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">post_command</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="n">uid</span> <span class="o">=</span> <span class="n">uuid</span><span class="o">.</span><span class="n">UUID</span><span class="p">(</span><span class="nb">hex</span><span class="o">=</span><span class="n">request</span><span class="o">.</span><span class="n">match_info</span><span class="p">[</span><span class="s2">&quot;session&quot;</span><span class="p">])</span>
     <span class="n">story</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">app</span><span class="p">[</span><span class="s2">&quot;sessions&quot;</span><span class="p">][</span><span class="n">uid</span><span class="p">]</span>
     <span class="n">data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">request</span><span class="o">.</span><span class="n">post</span><span class="p">()</span>
@@ -221,9 +224,11 @@ is validation and error checking.</p>
         <span class="k">raise</span> <span class="n">web</span><span class="o">.</span><span class="n">HTTPUnauthorized</span><span class="p">(</span><span class="n">reason</span><span class="o">=</span><span class="s2">&quot;User sent invalid command.&quot;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">text</span> <span class="o">=</span> <span class="n">story</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">deliver</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">presenter</span><span class="o">=</span><span class="n">story</span><span class="o">.</span><span class="n">presenter</span><span class="p">)</span>
-        <span class="n">story</span><span class="o">.</span><span class="n">presenter</span> <span class="o">=</span> <span class="n">story</span><span class="o">.</span><span class="n">represent</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">facts</span><span class="o">=</span><span class="n">story</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">facts</span><span class="p">,</span> <span class="n">previous</span><span class="o">=</span><span class="n">story</span><span class="o">.</span><span class="n">presenter</span><span class="p">)</span>
+        <span class="n">story</span><span class="o">.</span><span class="n">presenter</span> <span class="o">=</span> <span class="n">story</span><span class="o">.</span><span class="n">represent</span><span class="p">(</span>
+            <span class="n">text</span><span class="p">,</span> <span class="n">facts</span><span class="o">=</span><span class="n">story</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">facts</span><span class="p">,</span> <span class="n">previous</span><span class="o">=</span><span class="n">story</span><span class="o">.</span><span class="n">presenter</span>
+        <span class="p">)</span>
     <span class="k">raise</span> <span class="n">web</span><span class="o">.</span><span class="n">HTTPFound</span><span class="p">(</span><span class="s2">&quot;/</span><span class="si">{0.hex}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">uid</span><span class="p">))</span>
-</pre>
+</pre></div>
 <p>The two lines invoking the Story work the same as we've seen in previous examples. Every time we create a new
 presenter, we need to store it on the Story object so it's available in the session view.</p>
 </div>
@@ -236,12 +241,10 @@ on how to do that in the future.</p>
 <p>For now, all we want is some simple styling to suit a demo. One of Balladeer's upstream packages has such a file,
 so we can borrow that for now. It will have been installed along with the library. We just have to tell the web
 framework where to find it:</p>
-<pre class="code python literal-block">
-    <span class="n">app</span><span class="o">.</span><span class="n">router</span><span class="o">.</span><span class="n">add_static</span><span class="p">(</span>
-        <span class="s2">&quot;/css/base/&quot;</span><span class="p">,</span>
-        <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s2">&quot;turberfield.catchphrase&quot;</span><span class="p">,</span> <span class="s2">&quot;css&quot;</span><span class="p">)</span>
-    <span class="p">)</span>
-</pre>
+<div class="highlight"><pre><span></span><span class="n">app</span><span class="o">.</span><span class="n">router</span><span class="o">.</span><span class="n">add_static</span><span class="p">(</span>
+    <span class="s2">&quot;/css/base/&quot;</span><span class="p">,</span> <span class="n">pkg_resources</span><span class="o">.</span><span class="n">resource_filename</span><span class="p">(</span><span class="s2">&quot;turberfield.catchphrase&quot;</span><span class="p">,</span> <span class="s2">&quot;css&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
 </div>
 </div>
 <div class="section" id="running-the-example">
@@ -342,7 +345,7 @@ document.getElementsByTagName('body')[0]).appendChild(dsq);
 </section>
 <section>
 <footer>
-Copyright 2021 D E Haynes
+Copyright 2023 D E Haynes
 </footer>
 </section>
 </body>

@@ -51,23 +51,20 @@ integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aeh
         <ul class="tagcloud">
  
  
-<li class="tag-4">
-    <a class="pure-button" href="https://tundish.github.io/balladeer/tag/web.html">web</a>
+<li class="tag-2">
+    <a class="pure-button" href="https://tundish.github.io/balladeer/tag/basics.html">basics</a>
+</li>
+<li class="tag-2">
+    <a class="pure-button" href="https://tundish.github.io/balladeer/tag/tutorial.html">tutorial</a>
+</li>
+<li class="tag-1 familytag">
+    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/classic.html">classic</a>
 </li>
 <li class="tag-4">
     <a class="pure-button" href="https://tundish.github.io/balladeer/tag/if.html">IF</a>
 </li>
 <li class="tag-1 familytag">
-    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/tutorial.html">tutorial</a>
-</li>
-<li class="tag-4">
-    <a class="pure-button" href="https://tundish.github.io/balladeer/tag/architecture.html">architecture</a>
-</li>
-<li class="tag-4">
-    <a class="pure-button" href="https://tundish.github.io/balladeer/tag/parser.html">parser</a>
-</li>
-<li class="tag-1 familytag">
-    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/basics.html">basics</a>
+    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/balladeer.html">balladeer</a>
 </li>
 </ul>
     </div>
@@ -79,7 +76,12 @@ integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aeh
     <div class="pure-u-lg-1-6">
     </div>
     <div class="pure-u-1 pure-u-lg-2-3">
-        <div class="section" id="properties">
+        <div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>This page explains Balladeer's <em>classic</em> syntax, which is no longer maintained.</p>
+<p class="last">Refer to a more recent article for its replacement, Balladeer <em>lite</em>.</p>
+</div>
+<div class="section" id="properties">
 <h2>Properties</h2>
 <p>If you've done any Python programming, you may know what a property is.
 It's a way of giving an object a <em>getter</em> and a <em>setter</em> for an internal attribute.</p>
@@ -95,13 +97,11 @@ You can find the full <a class="reference external" href="https://github.com/tun
 <div class="section" id="drama-py">
 <h3>drama.py</h3>
 <p>Here's a Drama class which on every turn reduces its integer state value by one:</p>
-<pre class="code python literal-block">
-<span class="k">class</span> <span class="nc">Bottles</span><span class="p">(</span><span class="n">Drama</span><span class="p">):</span>
-
+<div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Bottles</span><span class="p">(</span><span class="n">Drama</span><span class="p">):</span>
     <span class="k">def</span> <span class="nf">interlude</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">folder</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">state</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">facts</span>
-</pre>
+</pre></div>
 <p>Interlude methods are expected to return a dictionary.
 Drama objects have a dictionary attribute called <em>facts</em>. So for simplicity that can be our return value here.</p>
 <p>The state needs initially setting to 10, which we can do like this:</p>
@@ -120,8 +120,7 @@ bottles.</p>
 files everything is treated as a string.</p>
 <p>Our conditional might look for an explicit string representation of the state integer, or we can define
 a regular expression instead. Regexes must be supplied inside parentheses, just as you see here:</p>
-<pre class="code rst literal-block">
-<span class="p">..</span> <span class="ow">entity</span><span class="p">::</span> DRAMA
+<div class="highlight"><pre><span></span><span class="p">..</span> <span class="ow">entity</span><span class="p">::</span> DRAMA
     <span class="nc">:types:</span> balladeer.Drama
 
 <span class="p">..</span> <span class="nt">|BOTTLES|</span> <span class="ow">property</span><span class="p">::</span> DRAMA.state
@@ -137,7 +136,7 @@ a regular expression instead. Regexes must be supplied inside parentheses, just 
 |BOTTLES| green bottles, hanging on the wall.
 
 And if one green bottle should accidentally fall,
-There'll be...
+There&#39;ll be...
 
 <span class="gh">One</span>
 <span class="gh">---</span>
@@ -147,7 +146,7 @@ There'll be...
 |BOTTLES| green bottle, hanging on the wall.
 
 And if one green bottle should accidentally fall,
-There'll be...
+There&#39;ll be...
 
 <span class="gh">None</span>
 <span class="gh">----</span>
@@ -155,7 +154,7 @@ There'll be...
 <span class="p">..</span> <span class="ow">condition</span><span class="p">::</span> DRAMA.state 0
 
 No green bottles hanging on the wall.
-</pre>
+</pre></div>
 <p>Please take a moment to download the example and run this yourself.</p>
 <p>This has been a simple case with which to start.
 In the next article we will complicate things slightly in order to learn more features of Balladeer.</p>
@@ -198,7 +197,7 @@ document.getElementsByTagName('body')[0]).appendChild(dsq);
 </section>
 <section>
 <footer>
-Copyright 2021 D E Haynes
+Copyright 2023 D E Haynes
 </footer>
 </section>
 </body>

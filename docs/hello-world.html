@@ -43,31 +43,29 @@ integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aeh
 <dt style="display: inline;">by</dt>
 <dd style="display: inline; margin-left: 0em;">tundish</dd>
 <dt hidden="hidden">date</dt>
-<dd>2021 November 05</dd>
-<dd>Friday morning</dd>
+<dd>2023 May 15</dd>
+<dd>Monday evening</dd>
 </dl>
     </div>
     <div class="pure-u-1-1 pure-u-lg-5-12">
         <ul class="tagcloud">
  
  
-<li class="tag-4">
-    <a class="pure-button" href="https://tundish.github.io/balladeer/tag/web.html">web</a>
+ 
+<li class="tag-2 familytag">
+    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/basics.html">basics</a>
+</li>
+<li class="tag-2 familytag">
+    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/tutorial.html">tutorial</a>
+</li>
+<li class="tag-1">
+    <a class="pure-button" href="https://tundish.github.io/balladeer/tag/classic.html">classic</a>
 </li>
 <li class="tag-4">
     <a class="pure-button" href="https://tundish.github.io/balladeer/tag/if.html">IF</a>
 </li>
 <li class="tag-1 familytag">
-    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/tutorial.html">tutorial</a>
-</li>
-<li class="tag-4">
-    <a class="pure-button" href="https://tundish.github.io/balladeer/tag/architecture.html">architecture</a>
-</li>
-<li class="tag-4">
-    <a class="pure-button" href="https://tundish.github.io/balladeer/tag/parser.html">parser</a>
-</li>
-<li class="tag-1 familytag">
-    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/basics.html">basics</a>
+    <a class="pure-button pure-button-active" href="https://tundish.github.io/balladeer/tag/balladeer.html">balladeer</a>
 </li>
 </ul>
     </div>
@@ -85,65 +83,90 @@ integrity="sha384-Uu6IeWbM+gzNVXJcM9XV3SohHtmWE+3VGi496jvgX1jyvDTXfdK+rfZc8C1Aeh
 The object was to get a potentially complicated setup to do something simple.</p>
 <p>When you see 'Hello, World!' on the screen, you can be reassured that you've
 figured out the correct compiler flags and now you can go and have some lunch.</p>
-<p>Fast forward to 2021, when in Python the equivalent is literally <tt class="docutils literal"><span class="pre">print(&quot;Hello,</span> <span class="pre">World!&quot;)</span></tt>.
-I doubted the benefit of showing one here for Balladeer.</p>
-<p>It turns out well that I did. In writing this I came across a few inconveniences which
-we could have done without. Those are all fixed now in <a class="reference external" href="https://pypi.org/project/balladeer/0.12.0/">version 0.12.0</a>.</p>
-<p>A design feature of Balladeer is the way it separates screen dialogue from functional code.
-To follow along, you'll need to create two new files; <tt class="docutils literal">hello.rst</tt> for dialogue and <tt class="docutils literal">hello.py</tt> for code.</p>
+<p>Fast forward to 2023. In Python the equivalent is literally <tt class="docutils literal"><span class="pre">print(&quot;Hello,</span> <span class="pre">World!&quot;)</span></tt>.
+But it is worth starting here. After this quick exercise, you'll have achieved these
+important steps:</p>
+<ul class="simple">
+<li><a class="reference internal" href="#install-python">Install Python</a> on your computer</li>
+<li><a class="reference internal" href="#create-a-virtual-environment">Create a virtual environment</a> for packages</li>
+<li><a class="reference internal" href="#install-balladeer">Install Balladeer</a></li>
+<li>Write your very <a class="reference internal" href="#first-line-of-dialogue">first line of dialogue</a></li>
+<li><a class="reference internal" href="#execute-your-code">Execute your code</a></li>
+</ul>
 </div>
-<div class="section" id="hello-rst">
-<h2>hello.rst</h2>
-<p>Dialogue files are a <a class="reference external" href="https://www.writethedocs.org/guide/writing/reStructuredText/">reStructuredText</a> markup format. They consist of a top level heading
-for the <em>scene</em>, and below that one or more <em>shots</em>. The titles for them can be whatever you like.</p>
-<p>Here's everything that goes in this file:</p>
-<div class="highlight"><pre><span></span><span class="gh">Scene 1</span>
-<span class="gh">=======</span>
-
-<span class="gh">Shot 1</span>
-<span class="gh">------</span>
-
-Hello, World!
-</pre></div>
+<div class="section" id="install-python">
+<h2>Install Python</h2>
+<div class="section" id="on-linux">
+<h3>On Linux</h3>
+<p>Use the software manager to install the following packages:</p>
+<blockquote>
+<ul class="simple">
+<li><tt class="docutils literal">python3</tt></li>
+<li><tt class="docutils literal"><span class="pre">python3-pip</span></tt></li>
+</ul>
+</blockquote>
 </div>
-<div class="section" id="hello-py">
-<h2>hello.py</h2>
-<p>In this file goes the code we need to create the simplest possible Balladeer Story, then to
-animate and render it.</p>
-<p>First we import a couple of classes:</p>
-<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">balladeer</span> <span class="kn">import</span> <span class="n">Drama</span>
-<span class="kn">from</span> <span class="nn">balladeer</span> <span class="kn">import</span> <span class="n">Story</span>
-</pre></div>
-<p>We'll need a Drama object, whose dialogue folder will reference the previous <em>.rst</em> file:</p>
-<div class="highlight"><pre><span></span><span class="n">drama</span> <span class="o">=</span> <span class="n">Drama</span><span class="p">()</span>
-<span class="n">drama</span><span class="o">.</span><span class="n">folder</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;hello.rst&quot;</span><span class="p">]</span>
-</pre></div>
-<p>Now our Story object, whose context is that drama:</p>
-<div class="highlight"><pre><span></span><span class="n">story</span> <span class="o">=</span> <span class="n">Story</span><span class="p">(</span><span class="n">context</span><span class="o">=</span><span class="n">drama</span><span class="p">)</span>
-</pre></div>
-<p>Whenever we animate and render, we create a new Presenter object:</p>
-<div class="highlight"><pre><span></span><span class="n">presenter</span> <span class="o">=</span> <span class="n">story</span><span class="o">.</span><span class="n">represent</span><span class="p">()</span>
-</pre></div>
-<p>Under the hood, the Presenter here parses each Dialogue file (there is only one), checks its Entity constraints
-(there are none) against the Ensemble (which we left empty). It then parses each Shot into a frame.</p>
-<p>We'll now iterate over the (one) frame, and animate it. Then iterate over each rendered line (only one again)
-and print it:</p>
-<div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">presenter</span><span class="o">.</span><span class="n">frames</span><span class="p">:</span>
-    <span class="n">animation</span> <span class="o">=</span> <span class="n">presenter</span><span class="o">.</span><span class="n">animate</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<div class="section" id="on-windows">
+<h3>On Windows</h3>
+<ul class="simple">
+<li>Download the latest <a class="reference external" href="https://www.python.org/downloads/windows/">installer for Windows</a>.</li>
+<li>Double-click the file to start the installation.</li>
+<li>Follow the online <a class="reference external" href="https://docs.python.org/3/using/windows.html#installation-steps">installation instructions</a>.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="create-a-virtual-environment">
+<h2>Create a Virtual Environment</h2>
+<p>Use the App menu to open a terminal.
+If necessary, <cite>cd</cite> to your home directory.</p>
+<p>Run this command:</p>
+<pre class="literal-block">
+python3 -m venv py3
+</pre>
+</div>
+<div class="section" id="install-balladeer">
+<h2>Install Balladeer</h2>
+<p>On Linux:</p>
+<pre class="literal-block">
+py3/bin/python -m pip install balladeer
+</pre>
+<p>On Windows:</p>
+<pre class="literal-block">
+py3\Scripts\python.exe -m pip install balladeer
+</pre>
+</div>
+<div class="section" id="first-line-of-dialogue">
+<h2>First line of dialogue</h2>
+<p>Use the App menu to launch a Text Editor.
+Type in the following code.</p>
+<div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">balladeer</span> <span class="kn">import</span> <span class="n">Dialogue</span>
 
-    <span class="k">for</span> <span class="n">line</span><span class="p">,</span> <span class="n">duration</span> <span class="ow">in</span> <span class="n">story</span><span class="o">.</span><span class="n">render_frame_to_terminal</span><span class="p">(</span><span class="n">animation</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">Dialogue</span><span class="p">(</span><span class="s2">&quot;Hello, World!&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="o">*</span><span class="n">d</span><span class="o">.</span><span class="n">words</span><span class="p">)</span>
 </pre></div>
-<p>Now the command <tt class="docutils literal">python hello.py</tt> should show you:</p>
+<p>Save the file as <cite>main.py</cite> in your home directory.</p>
+</div>
+<div class="section" id="execute-your-code">
+<h2>Execute your code</h2>
+<p>Go back to your terminal window.</p>
+<p>On Linux:</p>
+<pre class="literal-block">
+py3/bin/python -m main
+</pre>
+<p>On Windows:</p>
+<pre class="literal-block">
+py3\Scripts\python.exe -m main
+</pre>
+<p>Here's what you should see:</p>
 <pre class="literal-block">
 Hello, World!
 </pre>
 </div>
 <div class="section" id="and-after-lunch">
 <h2>And after Lunch</h2>
-<p>From here, you can play at adding extra dialogue. Also check out <a class="reference external" href="https://github.com/tundish/tea_and_sympathy">Tea and Sympathy</a>.
-The module <tt class="docutils literal">story.py</tt> shows how to accept text input and feed it as a command to the Drama.
-There'll be more on that here soon.</p>
+<p>It's fun to  play at adding extra dialogue.
+But don't hang around here too long.
+Your <a class="reference external" href="https://tundish.github.io/balladeer/its-your-turn.html">next step</a> is on the Balladeer blog.</p>
 </div>
 
     </div>
@@ -182,7 +205,7 @@ document.getElementsByTagName('body')[0]).appendChild(dsq);
 </section>
 <section>
 <footer>
-Copyright 2021 D E Haynes
+Copyright 2023 D E Haynes
 </footer>
 </section>
 </body>

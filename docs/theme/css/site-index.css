@@ -1,13 +1,13 @@
 p, div.section ul {
-letter-spacing: 0.055em;
-padding: 1em 2em 1em 2em;
-font-size: 1.3em;
+letter-spacing: 0.055rem;
+padding: 1rem 2rem 1rem 2rem;
+font-size: 1.3rem;
 }
 
 aside {
 background-color: #221e59;
-padding: 0 1em 0 1em;
-margin: 7.5em 1em 0 1em;
+padding: 0 1rem 0 1rem;
+margin: 7.5rem 1rem 0 1rem;
 border-radius: 6px;
 color: #f7faec;
 }
