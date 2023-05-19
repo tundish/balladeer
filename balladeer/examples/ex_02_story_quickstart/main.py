@@ -15,4 +15,3 @@ story = StoryBuilder(
 
 if __name__ == "__main__":
     quick_start(builder=story)
-

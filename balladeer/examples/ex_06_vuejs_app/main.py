@@ -74,12 +74,10 @@ class Wall(Drama):
         """
         try:
             random.choice(self.unbroken).state = 0
-            yield Dialogue(
-                """
+            yield Dialogue("""
                 <>  And if one green bottle should *accidentally* fall,
                 There'll be...
-                """
-            )
+                """)
 
         except IndexError:
             pass
@@ -98,16 +96,23 @@ class Wall(Drama):
 
 class Story(StoryBuilder):
     title = "Balladeer Example: JS integration"
+
     def build(self):
         yield Wall(world=self.world, config=self.config)
 
 
 class Song(Session):
-
-    def compose(self, request, page: Page, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Page:
-        page.paste(page.zone.app, '<div id="app"><diorama v-bind:ensemble="ensemble"></diorama></div>')
+    def compose(
+        self, request, page: Page, story: StoryBuilder = None, turn: StoryBuilder.Turn = None
+    ) -> Page:
+        page.paste(
+            page.zone.app, '<div id="app"><diorama v-bind:ensemble="ensemble"></diorama></div>'
+        )
         page = super().compose(request, page, story, turn)
-        page.paste(page.zone.link, '<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>')
+        page.paste(
+            page.zone.link,
+            '<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>',
+        )
         return page
 
 

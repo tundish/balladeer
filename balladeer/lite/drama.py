@@ -46,4 +46,3 @@ class Drama(Entity, Performance):
 
     def interlude(self, *args, **kwargs) -> Entity:
         return self
-

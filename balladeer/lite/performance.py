@@ -30,7 +30,6 @@ from balladeer.lite.types import Grouping
 
 
 class Performance:
-
     discard = ("a", "an", "any", "her", "his", "my", "some", "the", "their")
 
     @staticmethod
@@ -48,9 +47,9 @@ class Performance:
             if isinstance(t, type):
                 if issubclass(t, enum.Enum):
                     yield from (
-                        (name, i) for i in t for v in (
-                            [i.value] if isinstance(i.value, str) else i.value
-                        )
+                        (name, i)
+                        for i in t
+                        for v in ([i.value] if isinstance(i.value, str) else i.value)
                     )
                 else:
                     yield from ((name, i) for i in ensemble if isinstance(i, t))
@@ -76,12 +75,16 @@ class Performance:
 
         """
         doc = method.func.__doc__ if hasattr(method, "func") else method.__doc__
-        terms = list(filter(None, (i.strip() for line in doc.splitlines() for i in line.split("|"))))
-        params = list(itertools.chain(
-            list(Performance.unpack_annotation(p.name, p.annotation, ensemble, parent))
-            for p in inspect.signature(method, follow_wrapped=True).parameters.values()
-            if p.annotation != inspect.Parameter.empty
-        ))
+        terms = list(
+            filter(None, (i.strip() for line in doc.splitlines() for i in line.split("|")))
+        )
+        params = list(
+            itertools.chain(
+                list(Performance.unpack_annotation(p.name, p.annotation, ensemble, parent))
+                for p in inspect.signature(method, follow_wrapped=True).parameters.values()
+                if p.annotation != inspect.Parameter.empty
+            )
+        )
         cartesian = [dict(i) for i in itertools.product(*params)]
         for term in terms:
             tokens = Performance.parse_tokens(term, discard=Performance.discard)
@@ -94,12 +97,16 @@ class Performance:
     def __call__(self, fn, *args, **kwargs):
         yield from fn(fn, *args, **kwargs)
 
-    def options(self, ensemble: list[Entity], prefix="do_") -> Grouping[str, list[tuple[Callable, dict[str, Entity]]]]:
+    def options(
+        self, ensemble: list[Entity], prefix="do_"
+    ) -> Grouping[str, list[tuple[Callable, dict[str, Entity]]]]:
         if not hasattr(self, "active"):
-            self.active = set(filter(
-                lambda x: isinstance(x, Callable),
-                (getattr(self, name) for name in dir(self) if name.startswith(prefix))
-            ))
+            self.active = set(
+                filter(
+                    lambda x: isinstance(x, Callable),
+                    (getattr(self, name) for name in dir(self) if name.startswith(prefix)),
+                )
+            )
 
         rv = Grouping(list)
         for fn in self.active:
@@ -111,14 +118,12 @@ class Performance:
         return next(iter(options), (None,) * 3)
 
     def actions(self, text, context=None, ensemble=[], prefix="do_", cutoff=0.95):
-
         options = self.options(ensemble, prefix=prefix)
 
         tokens = self.parse_tokens(text, discard=self.discard)
-        matches = (
-            difflib.get_close_matches(" ".join(tokens), options, cutoff=cutoff)
-            or difflib.get_close_matches(text.strip(), options, cutoff=cutoff)
-        )
+        matches = difflib.get_close_matches(
+            " ".join(tokens), options, cutoff=cutoff
+        ) or difflib.get_close_matches(text.strip(), options, cutoff=cutoff)
         try:
             yield from ((fn, [text, context], kwargs) for fn, kwargs in options[matches[0]])
         except (IndexError, KeyError):

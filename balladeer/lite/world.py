@@ -55,7 +55,6 @@ class MapMaker:
 
 
 class WorldBuilder:
-
     def __init__(self, map, config=None):
         self.map = map
         self.config = config

@@ -756,7 +756,6 @@ class ModeTests(unittest.TestCase):
 
 
 class RewriteTests(unittest.TestCase):
-
     def setUp(self):
         self.roles = {
             "GUEST": Entity(name="Alan"),
@@ -777,7 +776,7 @@ class RewriteTests(unittest.TestCase):
         self.assertIsInstance(rv[0], tuple)
         self.assertEqual(2, len(rv[0]))
         self.assertIn('data-entity="Alan"', rv[0][1])
-        self.assertIn('>Alan</cite>', rv[0][1])
+        self.assertIn(">Alan</cite>", rv[0][1])
 
     def test_multi_speech_rewrite(self):
         d = Director()
@@ -788,7 +787,7 @@ class RewriteTests(unittest.TestCase):
                     Dialogue("<GUEST> I'd like to order a taxi, please."),
                     Epilogue("<STAFF> Certainly. Going to?"),
                     Prologue("<STAFF> Can I help you, sir?"),
-                ]
+                ],
             )
         )
         self.assertEqual(3, len(rv))
@@ -796,19 +795,19 @@ class RewriteTests(unittest.TestCase):
         self.assertIsInstance(rv[0], tuple)
         self.assertEqual(2, len(rv[0]))
         self.assertIn('data-entity="Beth"', rv[0][1])
-        self.assertIn('>Beth</cite>', rv[0][1])
+        self.assertIn(">Beth</cite>", rv[0][1])
         self.assertIn("help", rv[0][1])
 
         self.assertIsInstance(rv[1], tuple)
         self.assertEqual(2, len(rv[1]))
         self.assertIn('data-entity="Alan"', rv[1][1])
-        self.assertIn('>Alan</cite>', rv[1][1])
+        self.assertIn(">Alan</cite>", rv[1][1])
         self.assertIn("taxi", rv[1][1])
 
         self.assertIsInstance(rv[2], tuple)
         self.assertEqual(2, len(rv[2]))
         self.assertIn('data-entity="Beth"', rv[2][1])
-        self.assertIn('>Beth</cite>', rv[2][1])
+        self.assertIn(">Beth</cite>", rv[2][1])
         self.assertIn("Going", rv[2][1])
 
     def test_multi_speech_notes(self):
@@ -829,7 +828,7 @@ class RewriteTests(unittest.TestCase):
                     Dialogue("""
                         <STAFF> Certainly. Going to?
                     """),
-                ]
+                ],
             )
         )
 
@@ -851,4 +850,3 @@ class RewriteTests(unittest.TestCase):
                     self.assertEqual(2, len(maps))
 
         self.assertEqual(3, len(rv))
-

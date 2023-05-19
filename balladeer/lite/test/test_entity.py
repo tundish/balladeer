@@ -62,7 +62,7 @@ class TestAttributes(unittest.TestCase):
 class TestNamesAndTypes(unittest.TestCase):
     class Active(State):
         off = 0
-        on =  1
+        on = 1
 
     class Thing(Entity):
         pass

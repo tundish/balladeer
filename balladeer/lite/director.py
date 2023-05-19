@@ -223,7 +223,7 @@ class Director:
         except KeyError:
             return match.group()
 
-        #TODO: New child for notes.
+        # TODO: New child for notes.
         delay = self.delay + self.pause
         try:
             attr = f'" data-entity="{entity.names[0]}'
@@ -231,9 +231,8 @@ class Director:
             self.notes[key]["entity"] = entity
             self.notes[key]["role"] = self.role
             return (
-                f'{head}{self.role}{attr}{tail}'
-                f' style="animation-delay: {delay:.2f}s; animation-duration: {self.dwell:.2f}s">'
-                f'{text}</cite>'
+                f'{head}{self.role}{attr}{tail} style="animation-delay: {delay:.2f}s;'
+                f' animation-duration: {self.dwell:.2f}s">{text}</cite>'
             )
         except IndexError:
             return match.group()
@@ -249,7 +248,9 @@ class Director:
         self.delay = delay + duration
 
         key = list(self.notes)[-1]
-        self.notes[key] = self.notes[key].new_child(pause=self.pause, duration=duration, delay=self.delay)
+        self.notes[key] = self.notes[key].new_child(
+            pause=self.pause, duration=duration, delay=self.delay
+        )
         return (
             f'<p style="animation-delay: {delay:.2f}s; animation-duration:'
             f' {duration:.2f}s">{content}</p>'
@@ -329,19 +330,16 @@ class Director:
                 yield n, Dialogue(text)
 
     def rewrite(
-            self,
-            scene: Loader.Scene = Loader.Scene("", {}),
-            roles: dict[str, Entity] = {},
-            speech: list[Speech] = [],
-        ) -> Generator[tuple[int | None, str]]:
-
+        self,
+        scene: Loader.Scene = Loader.Scene("", {}),
+        roles: dict[str, Entity] = {},
+        speech: list[Speech] = [],
+    ) -> Generator[tuple[int | None, str]]:
         n_shots = len(scene.tables.get(self.shot_key, [])) if scene else 0
         shot_tuples = [
             (t, n_shots + n, s)
             for n, (t, s) in enumerate(
-                (t, s)
-                for t, v in Grouping.typewise(speech).items()
-                for s in filter(None, v)
+                (t, s) for t, v in Grouping.typewise(speech).items() for s in filter(None, v)
             )
         ]
         spoken = Grouping(list)
@@ -349,15 +347,19 @@ class Director:
             for b in self.edit(s, roles, path=None, index=n):
                 spoken[t].append((n, b))
 
-        spoken[Dialogue] = list(itertools.chain.from_iterable(itertools.zip_longest(
-            spoken.setdefault(Dialogue, []),
-            [
-                (n, html5)
-                for n, d in self.dialogue(scene, roles)
-                for html5 in self.edit(d, roles, path=scene.path, index=n)
-            ],
-            fillvalue=Speech()
-        )))
+        spoken[Dialogue] = list(
+            itertools.chain.from_iterable(
+                itertools.zip_longest(
+                    spoken.setdefault(Dialogue, []),
+                    [
+                        (n, html5)
+                        for n, d in self.dialogue(scene, roles)
+                        for html5 in self.edit(d, roles, path=scene.path, index=n)
+                    ],
+                    fillvalue=Speech(),
+                )
+            )
+        )
 
         self.delay = 0
 

@@ -27,7 +27,6 @@ from balladeer.lite.performance import Performance
 
 
 class Trivial(Performance):
-
     def do_this(self, this, text, context):
         """
         This?
@@ -53,23 +52,33 @@ class Trivial(Performance):
 
 
 class MatchingTests(unittest.TestCase):
-
     class Location(enum.Enum):
         HERE = "here"
         THERE = "there"
 
-    class Liquid(Entity): pass
-    class Mass(Entity): pass
-    class Space(Entity): pass
+    class Liquid(Entity):
+        pass
+
+    class Mass(Entity):
+        pass
+
+    class Space(Entity):
+        pass
 
     def test_unpack_annotation_single_enum(self):
         rv = list(Performance.unpack_annotation("locn", MatchingTests.Location, ensemble=[]))
         self.assertTrue(rv)
         self.assertTrue(all(isinstance(i, tuple) for i in rv), rv)
         self.assertEqual(
-            len([v for i in MatchingTests.Location for v in ([i.value] if isinstance(i.value, str) else i.value)]),
+            len(
+                [
+                    v
+                    for i in MatchingTests.Location
+                    for v in ([i.value] if isinstance(i.value, str) else i.value)
+                ]
+            ),
             len(rv),
-            rv
+            rv,
         )
 
     def test_unpack_annotation_enum_list(self):
@@ -79,18 +88,23 @@ class MatchingTests(unittest.TestCase):
             autumn = "Autumn"
             winter = "Winter"
 
-        rv = list(Performance.unpack_annotation("item", [MatchingTests.Location, Season], ensemble=[]))
+        rv = list(
+            Performance.unpack_annotation("item", [MatchingTests.Location, Season], ensemble=[])
+        )
         self.assertTrue(rv)
         self.assertTrue(all(isinstance(i, tuple) for i in rv), rv)
         self.assertTrue(all(isinstance(i[0], str) for i in rv), rv)
         self.assertTrue(all(isinstance(i[1], enum.Enum) for i in rv), rv)
         self.assertEqual(
-            len([
-                v for i in list(MatchingTests.Location) + list(Season)
-                for v in ([i.value] if isinstance(i.value, str) else i.value)
-            ]),
+            len(
+                [
+                    v
+                    for i in list(MatchingTests.Location) + list(Season)
+                    for v in ([i.value] if isinstance(i.value, str) else i.value)
+                ]
+            ),
             len(rv),
-            rv
+            rv,
         )
 
     def test_unpack_annotation_single_class(self):
@@ -103,7 +117,11 @@ class MatchingTests(unittest.TestCase):
 
     def test_unpack_annotation_dataobject(self):
         ensemble = [MatchingTests.Liquid(), MatchingTests.Mass(), MatchingTests.Space()]
-        rv = list(Performance.unpack_annotation("thing", [MatchingTests.Liquid, MatchingTests.Mass], ensemble))
+        rv = list(
+            Performance.unpack_annotation(
+                "thing", [MatchingTests.Liquid, MatchingTests.Mass], ensemble
+            )
+        )
         self.assertTrue(all(isinstance(i, tuple) for i in rv), rv)
         self.assertEqual(2, len(rv), rv)
         self.assertIsInstance(rv[0][1], MatchingTests.Liquid)
@@ -155,11 +173,12 @@ class MatchingTests(unittest.TestCase):
 
     def test_unpack_annotation_parent_attribute_mixed(self):
         obj = SimpleNamespace(one=SimpleNamespace(two={"three": 3}))
-        rv = list(Performance.unpack_annotation("item", "one.two[three]", ensemble=[], parent=obj))
+        rv = list(
+            Performance.unpack_annotation("item", "one.two[three]", ensemble=[], parent=obj)
+        )
         self.assertEqual(("item", 3), rv[0])
 
     def test_expand_commands_no_preserver(self):
-
         thing = Entity(name="thing")
 
         def func(obj: Entity):
@@ -171,7 +190,6 @@ class MatchingTests(unittest.TestCase):
         self.assertIn("pick up thing", rv)
 
     def test_expand_commands_sequence_with_preserver(self):
-
         thing = Entity(names=["thing"])
 
         def func(obj: Entity):
@@ -183,7 +201,6 @@ class MatchingTests(unittest.TestCase):
         self.assertIn("pick up a thing", rv)
 
     def test_expand_commands_sequence_no_preserver(self):
-
         thing = Entity(names=["thing"])
 
         def func(obj: Entity):
@@ -195,7 +212,6 @@ class MatchingTests(unittest.TestCase):
         self.assertIn("pick up thing", rv)
 
     def test_expand_commands_sequence_synonyms_no_preserver(self):
-
         thing = Entity(names=["thing", "doobrey"])
         idea = Entity(names=["idea"])
 
@@ -212,7 +228,6 @@ class MatchingTests(unittest.TestCase):
         self.assertIn("grab doobrey", rv)
 
     def test_expand_commands_with_preserver(self):
-
         thing = Entity(name="thing")
 
         def func(obj: Entity):
@@ -224,7 +239,6 @@ class MatchingTests(unittest.TestCase):
         self.assertIn("pick up a thing", rv)
 
     def test_expand_commands_discrimminator(self):
-
         ensemble = [
             Entity(names=["thing"], aspect="blue"),
             Entity(names=["thing"], aspect="red"),
@@ -243,7 +257,6 @@ class MatchingTests(unittest.TestCase):
 
 
 class PerformanceMatchTests(unittest.TestCase):
-
     def setUp(self):
         self.performance = Trivial()
 
@@ -262,7 +275,6 @@ class PerformanceMatchTests(unittest.TestCase):
 
 
 class PerformanceTests(unittest.TestCase):
-
     def setUp(self):
         self.performance = Trivial()
 

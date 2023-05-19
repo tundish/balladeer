@@ -40,7 +40,6 @@ class World(WorldBuilder):
 
 
 class Fight(Drama):
-
     def on_attacking(self, entity: Entity, *args: tuple[Entity], **kwargs):
         for enemy in args:
             enemy.set_state(0)

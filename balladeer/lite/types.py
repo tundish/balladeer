@@ -22,7 +22,6 @@ from collections import defaultdict
 
 
 class Page:
-
     themes = {
         "default": {
             "ballad-ink-gravity": "hsl(293.33, 96.92%, 12.75%)",
@@ -108,6 +107,7 @@ class Fruition(State, enum.IntEnum):
     fig 5.1: The basic conversation for action.
 
     """
+
     inception = 1
     elaboration = 2
     construction = 3
@@ -120,7 +120,6 @@ class Fruition(State, enum.IntEnum):
 
 
 class Grouping(defaultdict):
-
     @classmethod
     def typewise(cls, items):
         rv = cls(list)
@@ -143,4 +142,3 @@ class Grouping(defaultdict):
     @property
     def each(self):
         return list(set(self.all))
-

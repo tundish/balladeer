@@ -16,12 +16,10 @@ class Wall(Drama):
         """
         try:
             self.state = max(0, self.state - 1)
-            yield Dialogue(
-                """
+            yield Dialogue("""
                 <>  And if one green bottle should *accidentally* fall,
                 There'll be...
-                """
-            )
+                """)
 
         except IndexError:
             pass
@@ -36,6 +34,7 @@ class Wall(Drama):
 
 class Story(StoryBuilder):
     title = "Balladeer Example: Scene and Drama"
+
     def build(self):
         yield Wall(world=self.world, config=self.config).set_state(10)
 

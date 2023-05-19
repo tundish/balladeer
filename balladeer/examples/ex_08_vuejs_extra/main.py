@@ -49,7 +49,9 @@ class World(WorldBuilder):
     def build(self):
         for n in range(10):
             green = random.choice(list(Green))
-            yield Entity(type="Bottle", sketch=f"{green.name} green bottle").set_state(green, n + 1)
+            yield Entity(type="Bottle", sketch=f"{green.name} green bottle").set_state(
+                green, n + 1
+            )
 
 
 class Wall(Drama):
@@ -67,13 +69,10 @@ class Wall(Drama):
         bottle.state = 0
         bottle.aspect = "lies in pieces"
         self.state = len(self.unbroken)
-        yield Dialogue(
-            f"""
+        yield Dialogue(f"""
             <>  And if one {bottle.sketch} should *accidentally* fall,
             There'll be...
-            """
-        )
-
+            """)
 
     def do_look(self, this, text, director, *args, **kwargs):
         """
@@ -89,16 +88,23 @@ class Wall(Drama):
 
 class Story(StoryBuilder):
     title = "Balladeer Example: Scalable JavaScript integration"
+
     def build(self):
         yield Wall(world=self.world, config=self.config)
 
 
 class Song(Session):
-
-    def compose(self, request, page: Page, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Page:
-        page.paste(page.zone.app, '<div id="app"><diorama v-bind:ensemble="ensemble"></diorama></div>')
+    def compose(
+        self, request, page: Page, story: StoryBuilder = None, turn: StoryBuilder.Turn = None
+    ) -> Page:
+        page.paste(
+            page.zone.app, '<div id="app"><diorama v-bind:ensemble="ensemble"></diorama></div>'
+        )
         page = super().compose(request, page, story, turn)
-        page.paste(page.zone.link, '<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>')
+        page.paste(
+            page.zone.link,
+            '<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>',
+        )
         return page
 
 

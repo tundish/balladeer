@@ -39,10 +39,7 @@ class StoryTests(unittest.TestCase):
         )
         self.assertIsInstance(story.context.speech, deque)
         for n in range(3):
-            with (
-                self.subTest(n=n),
-                story.turn() as turn
-            ):
+            with self.subTest(n=n), story.turn() as turn:
                 if n < 2:
                     self.assertTrue(turn.blocks, turn)
                 else:
@@ -73,7 +70,7 @@ class StoryTests(unittest.TestCase):
                 self.assertFalse(any(entity.types is i.types for i in b.world.entities))
 
         for a_d, b_d in zip(a.drama, b.drama):
-            with self.subTest(a_d=a_d , b_d=b_d):
+            with self.subTest(a_d=a_d, b_d=b_d):
                 self.assertNotEqual(a_d.uid, b_d.uid)
 
 
@@ -122,7 +119,6 @@ class ExampleTests(unittest.TestCase):
                 notes = story.director.notes[(None, 0)]
 
                 with story.turn() as turn:
-
                     roles = dict(story.director.roles(specs, story.context.ensemble))
                     if not n:
                         self.assertTrue(turn.blocks, notes)
@@ -134,4 +130,3 @@ class ExampleTests(unittest.TestCase):
                         self.assertRaises(KeyError, list, rewriter)
                     elif n == 2:
                         self.assertFalse(turn.blocks, notes)
-

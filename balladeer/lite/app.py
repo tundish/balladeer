@@ -61,21 +61,17 @@ class About(HTTPEndpoint):
 
 
 class Home(HTTPEndpoint):
-    meta = textwrap.dedent(
-        """
+    meta = textwrap.dedent("""
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    """
-    ).strip()
+    """).strip()
 
-    body = textwrap.dedent(
-        """
+    body = textwrap.dedent("""
     <form role="form" action="/sessions" method="POST" name="ballad-form-start">
     <button action="submit">Begin</button>
     </form>
-    """
-    ).strip()
+    """).strip()
 
     async def get(self, request):
         page = Page()
@@ -96,7 +92,9 @@ class Home(HTTPEndpoint):
     @staticmethod
     def render_js_links(request, assets: Grouping[str, list[Loader.Asset]]) -> Generator[str]:
         static = request.app.state.static
-        assets = sorted(assets["application/javascript"], key=lambda x: len(x.path.suffix), reverse=True)
+        assets = sorted(
+            assets["application/javascript"], key=lambda x: len(x.path.suffix), reverse=True
+        )
         for asset in assets:
             try:
                 path = asset.path.relative_to(static)
@@ -108,7 +106,9 @@ class Home(HTTPEndpoint):
             else:
                 yield f'<script src="/static/{path}"></script>'
 
-    def compose(self, request, page: Page, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Page:
+    def compose(
+        self, request, page: Page, story: StoryBuilder = None, turn: StoryBuilder.Turn = None
+    ) -> Page:
         assets = getattr(self, "assets", Grouping())
 
         page.paste(page.zone.meta, self.meta)
@@ -132,7 +132,6 @@ class Start(HTTPEndpoint):
 
 
 class Session(HTTPEndpoint):
-
     async def get(self, request):
         session_id = request.path_params["session_id"]
         state = request.app.state
@@ -153,7 +152,9 @@ class Session(HTTPEndpoint):
 
         return HTMLResponse(page.html)
 
-    def render_cues(self, request, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Generator[str]:
+    def render_cues(
+        self, request, story: StoryBuilder = None, turn: StoryBuilder.Turn = None
+    ) -> Generator[str]:
         for n, (index, html5) in enumerate(turn.blocks):
             yield '<div class="ballad cue">'
             yield html5
@@ -165,7 +166,9 @@ class Session(HTTPEndpoint):
                 media = cue.get("media", [])
                 delay = cue.get("delay", 0) + cue.get("pause", 0)
                 if media:
-                    yield from self.render_detail(request, mode, media, delay, index=index, ordinal=n)
+                    yield from self.render_detail(
+                        request, mode, media, delay, index=index, ordinal=n
+                    )
             except (IndexError, KeyError):
                 pass
             yield "</div>"
@@ -173,7 +176,7 @@ class Session(HTTPEndpoint):
     def render_detail(
         self,
         request,
-        mode: str="",
+        mode: str = "",
         media: list[str] = [],
         delay: float = 0,
         duration: float = 1,
@@ -182,10 +185,13 @@ class Session(HTTPEndpoint):
     ) -> Generator[str]:
         assets = {i.path.stem: i for i in self.assets[Loader.Asset]}
 
-        yield f'<details tabindex="0" style="animation-delay: {delay:.2f}s; animation-duration: {duration:.2f}s">'
+        yield (
+            f'<details tabindex="0" style="animation-delay: {delay:.2f}s; animation-duration:'
+            f' {duration:.2f}s">'
+        )
 
         if mode:
-            yield f'<summary>{mode}</summary>'
+            yield f"<summary>{mode}</summary>"
 
         # TODO: separate method to resolve file types, paths, etc.
         for m in media:
@@ -193,15 +199,15 @@ class Session(HTTPEndpoint):
                 asset = assets[m]
                 if asset.type == "audio/mpeg":
                     yield (
-                        f'<audio id="{index:02d}-{ordinal:02d}" src="/static/{asset.path.name}" '
-                        'controls="controls" preload="auto"></audio>'
+                        f'<audio id="{index:02d}-{ordinal:02d}" src="/static/{asset.path.name}"'
+                        ' controls="controls" preload="auto"></audio>'
                     )
                     yield (
                         '<script type="text/javascript">\n'
-                        '  setTimeout(function(){\n'
+                        "  setTimeout(function(){\n"
                         f'   document.getElementById("{index:02d}-{ordinal:02d}").play();\n'
-                        f'  }}, {delay * 1000})\n'
-                        '</script>'
+                        f"  }}, {delay * 1000})\n"
+                        "</script>"
                     )
             except KeyError:
                 pass
@@ -217,8 +223,7 @@ class Session(HTTPEndpoint):
     def render_inputs_to_command(self, request, story):
         options = story.context.options(story.context.ensemble)
         url = request.url_for("command", session_id=story.uid)
-        return textwrap.dedent(
-            f"""
+        return textwrap.dedent(f"""
             <form role="form" action="{url}" method="post" name="ballad-command-form">
             <fieldset>
             <label for="ballad-command-form-input-text" id="ballad-command-form-input-text-label">&gt;</label>
@@ -234,10 +239,11 @@ class Session(HTTPEndpoint):
             <button type="submit">Enter</button>
             </fieldset>
             </form>
-        """
-        )
+        """)
 
-    def compose(self, request, page: Page, story: StoryBuilder=None, turn: StoryBuilder.Turn=None) -> Page:
+    def compose(
+        self, request, page: Page, story: StoryBuilder = None, turn: StoryBuilder.Turn = None
+    ) -> Page:
         assets = getattr(self, "assets", Grouping())
 
         try:
@@ -246,7 +252,9 @@ class Session(HTTPEndpoint):
             page.paste(page.zone.title, "<title>Story</title>")
 
         page.paste(page.zone.meta, Home.meta)
-        page.paste(page.zone.css, *sorted(line for line in Home.render_css_links(request, assets)))
+        page.paste(
+            page.zone.css, *sorted(line for line in Home.render_css_links(request, assets))
+        )
         page.paste(page.zone.script, *Home.render_js_links(request, assets))
 
         html5 = "\n".join(self.render_cues(request, story, turn))
@@ -278,13 +286,11 @@ class Command(HTTPEndpoint):
 
 
 class Assembly(HTTPEndpoint):
-
     class EntitySerializer(JSONResponse):
         encoder = Entity.Encoder()
 
         def render(self, content) -> bytes:
             return self.encoder.encode(content).encode("utf-8")
-
 
     async def get(self, request):
         session_id = request.path_params["session_id"]
@@ -311,7 +317,7 @@ async def app_factory(
         session=next(reversed(Session.__subclasses__()), Session),
         assembly=next(reversed(Assembly.__subclasses__()), Assembly),
         command=next(reversed(Command.__subclasses__()), Command),
-        **kwargs
+        **kwargs,
     )
     for endpt in endpoints.values():
         endpt.assets = assets.copy()
@@ -322,7 +328,12 @@ async def app_factory(
         Route("/sessions", endpoints["start"], methods=["POST"], name="start"),
         Route("/session/{session_id:uuid}", endpoints["session"], name="session"),
         Route("/session/{session_id:uuid}/assembly", endpoints["assembly"], name="assembly"),
-        Route("/session/{session_id:uuid}/command", endpoints["command"], methods=["POST"], name="command"),
+        Route(
+            "/session/{session_id:uuid}/command",
+            endpoints["command"],
+            methods=["POST"],
+            name="command",
+        ),
     ]
     if static:
         routes.append(Mount("/static", app=StaticFiles(directory=static), name="static"))
@@ -336,7 +347,9 @@ async def app_factory(
     return app
 
 
-def quick_start(module: [str | ModuleType] = "", resource="", builder=None, host="localhost", port=8080):
+def quick_start(
+    module: [str | ModuleType] = "", resource="", builder=None, host="localhost", port=8080
+):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
@@ -354,13 +367,24 @@ def quick_start(module: [str | ModuleType] = "", resource="", builder=None, host
         if isinstance(k, str):
             for asset in v:
                 locations.add(asset.path.parent)
-                print(f"Discovered in {asset.path.parent.name:<24}: {asset.path.name:<36} ({k})", file=sys.stderr)
+                print(
+                    f"Discovered in {asset.path.parent.name:<24}: {asset.path.name:<36} ({k})",
+                    file=sys.stderr,
+                )
         elif k is Loader.Scene:
             for scene in v:
-                print(f"Discovered in {scene.path.parent.name:<24}: {scene.path.name:<36} ({k.__name__})", file=sys.stderr)
+                print(
+                    (
+                        f"Discovered in {scene.path.parent.name:<24}:"
+                        f" {scene.path.name:<36} ({k.__name__})"
+                    ),
+                    file=sys.stderr,
+                )
 
     app = loop.run_until_complete(
-        app_factory(assets=assets, builder=builder, static=locations and min(locations), loop=loop)
+        app_factory(
+            assets=assets, builder=builder, static=locations and min(locations), loop=loop
+        )
     )
     settings = hypercorn.Config.from_mapping({"bind": f"{host}:{port}", "errorlog": "-"})
 

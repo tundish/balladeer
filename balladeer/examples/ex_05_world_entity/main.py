@@ -72,12 +72,10 @@ class Wall(Drama):
         """
         try:
             random.choice(self.unbroken).state = 0
-            yield Dialogue(
-                """
+            yield Dialogue("""
                 <>  And if one green bottle should *accidentally* fall,
                 There'll be...
-                """
-            )
+                """)
 
         except IndexError:
             pass
@@ -96,6 +94,7 @@ class Wall(Drama):
 
 class Story(StoryBuilder):
     title = "Balladeer Example: The World of Entities"
+
     def build(self):
         yield Wall(world=self.world, config=self.config)
 

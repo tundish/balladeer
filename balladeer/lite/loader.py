@@ -29,9 +29,7 @@ import xml.etree.ElementTree as ET
 
 
 class Loader:
-    Asset = namedtuple(
-        "Asset", ["resource", "path", "type", "stats"], defaults=[None, None]
-    )
+    Asset = namedtuple("Asset", ["resource", "path", "type", "stats"], defaults=[None, None])
     Scene = namedtuple(
         "Scene",
         ["text", "tables", "resource", "path", "stats"],
@@ -40,10 +38,11 @@ class Loader:
 
     @staticmethod
     def discover(
-        package: [Package | Path], resource=".",
+        package: [Package | Path],
+        resource=".",
         suffixes=[".scene.toml"],
         avoid=["__pycache__", "node_modules"],
-        ignore=[re.compile("^test_.*")]
+        ignore=[re.compile("^test_.*")],
     ):
         if isinstance(package, Path):
             paths = list(package.iterdir()) if package.is_dir() else [package]

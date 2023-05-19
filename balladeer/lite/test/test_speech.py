@@ -24,7 +24,6 @@ from balladeer.lite.speech import Speech
 
 
 class SpeechTests(unittest.TestCase):
-
     def test_trim(self):
         text = """
             1
@@ -81,4 +80,3 @@ class SpeechTests(unittest.TestCase):
         b = s.words
         self.assertIs(a, b)
         self.assertEqual(24, len(s.words))
-

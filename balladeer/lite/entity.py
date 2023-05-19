@@ -54,8 +54,11 @@ class Entity:
 
     def __deepcopy__(self, memo):
         return self.__class__(
-            name=self.names.copy(), types=self.types.copy(), states=self.states.copy(),
-            sketch=self.sketch, aspect=self.aspect
+            name=self.names.copy(),
+            types=self.types.copy(),
+            states=self.states.copy(),
+            sketch=self.sketch,
+            aspect=self.aspect,
         )
 
     def __eq__(self, other):

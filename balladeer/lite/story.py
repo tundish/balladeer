@@ -34,20 +34,18 @@ from balladeer.lite.world import WorldBuilder
 
 
 class StoryBuilder:
-
     Turn = namedtuple(
-        "Turn",
-        ["scene", "specs", "roles", "speech", "blocks", "notes"],
-        defaults=(None, None)
+        "Turn", ["scene", "specs", "roles", "speech", "blocks", "notes"], defaults=(None, None)
     )
 
     def __init__(
         self,
         *speech: tuple[Speech],
-        config = None,
+        config=None,
         assets: Grouping = Grouping(),
-        world: WorldBuilder = None, drama: [list | deque] = None,
-        **kwargs
+        world: WorldBuilder = None,
+        drama: [list | deque] = None,
+        **kwargs,
     ):
         self.uid = uuid.uuid4()
         self.speech = deque(speech)
@@ -68,29 +66,20 @@ class StoryBuilder:
         rv = self.__class__(*self.speech, self.config, self.assets)
         rv.world = copy.deepcopy(self.world, memo)
         for drama in (d for d in rv.drama if hasattr(d, "active")):
-            del drama.active   # Will be regenerated on demand
+            del drama.active  # Will be regenerated on demand
 
         return rv
 
     def build(self):
         drama_classes = Drama.__subclasses__()
         if self.speech or not drama_classes:
-            yield Drama(
-                *self.speech,
-                world=self.world,
-                config=self.config
-            )
+            yield Drama(*self.speech, world=self.world, config=self.config)
         else:
             yield from (d(world=self.world, config=self.config) for d in drama_classes)
 
     @property
     def context(self):
-        return next(
-            (reversed(sorted(
-                self.drama, key=operator.attrgetter("state")
-            ))),
-            None
-        )
+        return next((reversed(sorted(self.drama, key=operator.attrgetter("state")))), None)
 
     @property
     def notes(self):

@@ -25,10 +25,12 @@ from balladeer.lite.types import Grouping
 
 
 class GroupingTests(unittest.TestCase):
-
     def test_grouping_by_class(self):
-        class A: pass
-        class B: pass
+        class A:
+            pass
+
+        class B:
+            pass
 
         g = Grouping.typewise([A(), B(), A()])
         self.assertIn(A, g)
@@ -38,7 +40,7 @@ class GroupingTests(unittest.TestCase):
         self.assertEqual(1, len(g[B]))
         self.assertEqual(3, len(g.all))
         self.assertEqual(3, len(g.each))
- 
+
     def test_grouping_by_type(self):
         types = ("audio/mpeg", "text/css", "text/javascript")
         items = [

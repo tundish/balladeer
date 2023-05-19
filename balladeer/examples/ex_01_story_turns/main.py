@@ -19,4 +19,3 @@ while True:
         for speech in turn.speech:
             time.sleep(story.director.pause + story.director.dwell * len(speech.words))
             print(*speech.words)
-
