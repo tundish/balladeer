@@ -29,7 +29,7 @@ class DramaTests(unittest.TestCase):
     def test_next_states_single(self):
         text = textwrap.dedent("""
         .. entity:: DRAMA
-           :types:  balladeer.Drama
+           :types:  balladeer.classic.drama.Drama
 
         Scene
         =====
@@ -54,7 +54,7 @@ class DramaTests(unittest.TestCase):
     def test_next_states_gaps(self):
         text = textwrap.dedent("""
         .. entity:: DRAMA
-           :types:  balladeer.Drama
+           :types:  balladeer.classic.drama.Drama
 
         Scene
         =====

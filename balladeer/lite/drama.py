@@ -23,7 +23,6 @@ from collections import deque
 from balladeer.lite.entity import Entity
 from balladeer.lite.loader import Loader
 from balladeer.lite.performance import Performance
-from balladeer.lite.speech import Speech
 
 
 class Drama(Entity, Performance):
