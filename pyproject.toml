@@ -18,16 +18,14 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
 ]
 dependencies = [
+    "python-multipart",
     "speechmark >= 0.10.0",
+    "starlette>=0.26.1",
+    "turberfield-utils==0.47.0",
     "tomli >= 2.0.0; python_version < '3.11'"
 ]
 
 [project.optional-dependencies]
-lite = [
-    "python-multipart",
-    "starlette>=0.26.1",
-    "turberfield-utils==0.47.0",
-]
 classic = [
     "aiohttp",
     "docutils==0.18.1",
