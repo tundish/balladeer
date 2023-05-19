@@ -6,8 +6,8 @@
 Change Log
 ::::::::::
 
-0.36.0-rc
-=========
+0.36.0
+======
 
 Minor fixes while preparing development blog.
 

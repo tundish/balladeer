@@ -26,31 +26,21 @@ Packages
 
 #. Install (or update) Balladeer::
 
-    ~/balladeer-app/bin/pip install -U balladeer[classic]
+    ~/balladeer-app/bin/pip install -U balladeer
 
 Examples
 ========
 
-Downloads and Dependencies
---------------------------
-
-#. Install dependencies::
-
-    ~/balladeer-app/bin/pip install aiohttp
-
 #. Download the `repository as a zip file <https://github.com/tundish/balladeer/archive/master.zip>`_.
    Unzip it to a local directory.
 
-Operation
----------
-
 #. `cd` to one of the directories under `examples`::
 
-    cd examples/00_hello_world
+    cd balladeer/examples/ex_00_hello_world
 
 #. Run the example like this::
 
-    ~/balladeer-app/bin/python hello.py
+    ~/balladeer-app/bin/python -m main
 
     Hello, World!
 
