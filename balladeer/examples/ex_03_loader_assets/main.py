@@ -1,6 +1,6 @@
-from balladeer.lite.app import quick_start
-from balladeer.lite.speech import Dialogue
-from balladeer.lite.story import StoryBuilder
+from balladeer import quick_start
+from balladeer import Dialogue
+from balladeer import StoryBuilder
 
 
 story = StoryBuilder(

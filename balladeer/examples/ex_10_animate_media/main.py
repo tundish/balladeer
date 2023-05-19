@@ -18,11 +18,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import balladeer
-from balladeer.lite.app import quick_start
-from balladeer.lite.story import StoryBuilder
-from balladeer.lite.drama import Drama
-from balladeer.lite.entity import Entity
-from balladeer.lite.world import WorldBuilder
+from balladeer import quick_start
+from balladeer import StoryBuilder
+from balladeer import Drama
+from balladeer import Entity
+from balladeer import WorldBuilder
 
 __doc__ = """
 python3 -m balladeer.examples.10_animate_media.main
@@ -52,4 +52,4 @@ class Story(StoryBuilder):
 
 
 if __name__ == "__main__":
-    quick_start(balladeer.examples.ex_10_lite_sequence)
+    quick_start(balladeer.examples.ex_10_animate_media)

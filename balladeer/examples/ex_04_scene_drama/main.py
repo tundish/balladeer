@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 #   encoding: utf-8
 
-from balladeer.lite.app import quick_start
-from balladeer.lite.drama import Drama
-from balladeer.lite.speech import Dialogue
-from balladeer.lite.story import StoryBuilder
+from balladeer import quick_start
+from balladeer import Drama
+from balladeer import Dialogue
+from balladeer import StoryBuilder
 
 
 class Wall(Drama):

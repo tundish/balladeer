@@ -1,7 +1,7 @@
 import time
 
-from balladeer.lite.speech import Dialogue
-from balladeer.lite.story import StoryBuilder
+from balladeer import Dialogue
+from balladeer import StoryBuilder
 
 
 story = StoryBuilder(

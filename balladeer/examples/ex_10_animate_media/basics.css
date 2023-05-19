@@ -36,6 +36,10 @@ font-size: 1.6rem;
 text-transform: uppercase;
 }
 
+details {
+list-style-type: inherit;
+}
+
 details > summary {
 color: grey;
 cursor: pointer;

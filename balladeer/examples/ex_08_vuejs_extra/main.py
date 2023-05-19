@@ -21,16 +21,16 @@ import enum
 import random
 
 import balladeer
-from balladeer.lite.app import Session
-from balladeer.lite.app import quick_start
-from balladeer.lite.drama import Drama
-from balladeer.lite.entity import Entity
-from balladeer.lite.speech import Dialogue
-from balladeer.lite.speech import Speech
-from balladeer.lite.story import StoryBuilder
-from balladeer.lite.types import Page
-from balladeer.lite.types import State
-from balladeer.lite.world import WorldBuilder
+from balladeer import Session
+from balladeer import quick_start
+from balladeer import Drama
+from balladeer import Entity
+from balladeer import Dialogue
+from balladeer import Speech
+from balladeer import StoryBuilder
+from balladeer import Page
+from balladeer import State
+from balladeer import WorldBuilder
 
 
 __doc__ = """
