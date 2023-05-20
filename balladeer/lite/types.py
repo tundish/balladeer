@@ -36,27 +36,29 @@ class Page:
 
     @enum.unique
     class Zone(enum.Enum):
-        xml = enum.auto()
-        doc = enum.auto()
-        html = enum.auto()
-        head = enum.auto()
-        title = enum.auto()
-        rdf = enum.auto()
-        meta = enum.auto()
-        link = enum.auto()
-        css = enum.auto()
-        theme = enum.auto()
-        body = enum.auto()
-        style = enum.auto()
-        app = enum.auto()
-        nav = enum.auto()
-        main = enum.auto()
-        asides = enum.auto()
-        inputs = enum.auto()
-        svg = enum.auto()
-        iframe = enum.auto()
-        script = enum.auto()
-        end = enum.auto()
+        xml = "XML features only"
+        doc = "Doctype declaration"
+        html = "HTML opening tag"
+        head = "Head tag"
+        title = "Title tag and attributes"
+        rdf = "Dublin Core and semantic links"
+        meta = "Meta tags"
+        link = "Link tags"
+        css = "Links to CSS styles"
+        theme = "Dynamic updates to styles"
+        body = "Body tag"
+        style = "Inline styles"
+        banner = "Top content"
+        app = "Anchor points for ECMAScript features"
+        nav = "Menus and navigation"
+        main = "Main focus of content"
+        asides = "Ancillary content"
+        inputs = "Forms and controls for user input"
+        svg = "Inline SVG documents"
+        iframe = "Inclusion of external content"
+        script = "Late-loading ECMAScript"
+        legals = "End content and links"
+        end = "Closing tags"
 
     def __init__(self, zone=Zone):
         self.zone = zone
