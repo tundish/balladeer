@@ -8,7 +8,7 @@ For documentation, please visit the `development blog site
 Installation
 ============
 
-Here are the install instructions for Linux. You need Python version 3.8 or higher.
+Here are the install instructions for Linux. You need Python version 3.11 or higher.
 
 Virtual Environment
 -------------------
