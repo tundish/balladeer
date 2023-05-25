@@ -20,8 +20,11 @@
 import balladeer
 from balladeer import quick_start
 from balladeer import StoryBuilder
+from balladeer import Compass
 from balladeer import Drama
 from balladeer import Entity
+from balladeer import Traffic
+from balladeer import Transit
 from balladeer import MapBuilder
 from balladeer import WorldBuilder
 
@@ -34,11 +37,14 @@ python3 -m balladeer.examples.10_animate_media.main
 class Map(MapBuilder):
 
     spots = {
-        "bar": ["bar"],
+        "foyer": ["foyer", "lobby"],
+        "bar": ["bar", "saloon bar"],
+        "cloakroom": ["cloakroom", "cloaks"],
     }
 
     def build(self):
         yield from [
+            Transit().set_State(self.exit.foyer, Compass.N, self.into.bar, Traffic.flowing),
         ]
 
 
