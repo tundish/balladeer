@@ -18,6 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from collections import defaultdict
+from collections.abc import Generator
 import enum
 
 from balladeer.lite.entity import Entity
@@ -41,7 +42,7 @@ class Transit(Entity):
 
 
 # TODO: Reconcile with balladeer.cartography.Map
-class MapMaker:
+class MapBuilder:
     def __init__(self, spots, config=None):
         self.config = config
         global Into, Spot, Exit
@@ -50,8 +51,11 @@ class MapMaker:
         self.spot = Spot = enum.Enum("Spot", spots, type=State)
         self.transits = list(self.make())
 
+    def build(self) -> Generator[Transit]:
+        return ()
+
     def make(self):
-        raise NotImplementedError
+        yield from self.build()
 
 
 class WorldBuilder:

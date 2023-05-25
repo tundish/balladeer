@@ -39,6 +39,8 @@ class Entity:
     states: dict = dataclasses.field(default_factory=dict, compare=False)
     uid: uuid.UUID = dataclasses.field(default_factory=uuid.uuid4)
 
+    links: set = dataclasses.field(default_factory=set, compare=False)
+
     sketch: Speech = dataclasses.field(default_factory=Speech, compare=False)
     aspect: Speech = dataclasses.field(default_factory=Speech, compare=False)
 
@@ -57,6 +59,7 @@ class Entity:
             name=self.names.copy(),
             types=self.types.copy(),
             states=self.states.copy(),
+            links=self.links.copy(),
             sketch=self.sketch,
             aspect=self.aspect,
         )
@@ -78,6 +81,7 @@ class Entity:
             data = dataclasses.asdict(obj)
             data["uid"] = str(data["uid"])
             data["types"] = sorted(data.get("types", []))
+            data["links"] = sorted(data.get("links", []))
             return data
 
     @property

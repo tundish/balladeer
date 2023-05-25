@@ -27,3 +27,4 @@ from balladeer.lite.types import Grouping
 from balladeer.lite.types import Page
 from balladeer.lite.types import State
 from balladeer.lite.world import WorldBuilder
+from balladeer.lite.world import MapBuilder
