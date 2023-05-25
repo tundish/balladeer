@@ -1,7 +1,7 @@
 [project]
 name = "balladeer"
 version = "0.36.0"
-description = "Web-enabled interactive fiction in Python."
+description = "Web-enabled interactive fiction framework."
 readme = "README.rst"
 requires-python = ">=3.11"
 license = {file = "LICENSE"}
