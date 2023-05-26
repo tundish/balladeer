@@ -39,35 +39,34 @@ class Map(MapBuilder):
     spots = {
         "foyer": ["foyer", "lobby"],
         "bar": ["bar", "saloon bar"],
-        "cloakroom": ["cloakroom", "cloaks"],
+        "cloakroom": ["cloakroom", "cloak room", "cloaks"],
+        "hook": ["hook", "cloakroom hook"],
+        "inventory": ["inventory"],
     }
 
     def build(self):
         yield from [
-            Transit().set_State(self.exit.foyer, Compass.N, self.into.bar, Traffic.flowing),
+            Transit().set_state(self.exit.bar, Compass.N, self.into.foyer, Traffic.flowing),
+            Transit().set_state(self.exit.foyer, Compass.W, self.into.cloakroom, Traffic.flowing),
         ]
 
 
 class World(WorldBuilder):
     def build(self):
         yield from [
-            Entity(name="Biffy", type="Animal").set_state(1),
-            Entity(name="Bashy", type="Animal").set_state(1),
-            Entity(name="Rusty", type="Weapon").set_state(1),
+            Entity(name="Cloak", type="Clothing").set_state(self.map.spot.cloakroom),
+            Entity(name="Hook", type="Fixture").set_state(self.map.home.cloakroom),
+            Entity(name="Message", type="Marking").set_state(self.map.home.bar),
         ]
 
 
-class Fight(Drama):
-    def on_attacking(self, entity: Entity, *args: tuple[Entity], **kwargs):
-        for enemy in args:
-            enemy.set_state(0)
+class Adventure(Drama):
+    pass
 
 
 class Story(StoryBuilder):
     def build(self):
-        # self.world.map = Map()
-        print(self.world.map)
-        yield Fight(world=self.world, config=self.config)
+        yield Adventure(world=self.world, config=self.config)
 
 
 if __name__ == "__main__":

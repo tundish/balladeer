@@ -44,7 +44,6 @@ class StoryBuilder:
         *speech: tuple[Speech],
         config=None,
         assets: Grouping = Grouping(),
-        map: MapBuilder = None,
         world: WorldBuilder = None,
         drama: [list | deque] = None,
         **kwargs,
@@ -56,7 +55,10 @@ class StoryBuilder:
         if not world:
             map_type = next(reversed(MapBuilder.__subclasses__()), MapBuilder)
             world_type = next(reversed(WorldBuilder.__subclasses__()), WorldBuilder)
-            self.world = world_type(config)
+            self.world = world_type(
+                map_type(getattr(map_type, "spots", {}), config=config),
+                config=config
+            )
         else:
             self.world = world
 
