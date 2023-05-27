@@ -34,6 +34,16 @@ python3 -m balladeer.examples.10_animate_media.main
 """
 
 
+import enum
+# TODO: add tests in test_director.EnumConditionTests
+class Focus(State, enum.Flag):
+    spot = enum.auto()
+    exit = enum.auto()
+    into = enum.auto()
+    home = enum.auto()
+    area = spot | exit | into
+
+
 class Map(MapBuilder):
 
     spots = {
