@@ -29,6 +29,7 @@ from balladeer.lite.director import Director
 from balladeer.lite.drama import Drama
 from balladeer.lite.loader import Loader
 from balladeer.lite.speech import Speech
+from balladeer.lite.types import Focus
 from balladeer.lite.types import Grouping
 from balladeer.lite.world import MapBuilder
 from balladeer.lite.world import WorldBuilder
@@ -151,6 +152,7 @@ class StoryBuilder:
                 except Exception as e:
                     warnings.warn(e)
 
+        drama.set_state(Focus.none)
         return self.Turn(scene, specs, roles, speech, blocks, self.director.notes.copy())
 
     def __exit__(self, exc_type, exc_val, exc_tb):
