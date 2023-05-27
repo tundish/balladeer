@@ -34,21 +34,6 @@ python3 -m balladeer.examples.10_animate_media.main
 """
 
 
-import enum
-
-class Focus(State, enum.Enum):
-    area = enum.auto()
-    exit = enum.auto()
-    help = enum.auto()
-    hint = enum.auto()
-    home = enum.auto()
-    info = enum.auto()
-    into = enum.auto()
-    none = enum.auto()
-    quit = enum.auto()
-    spot = enum.auto()
-
-
 class Map(MapBuilder):
 
     spots = {
