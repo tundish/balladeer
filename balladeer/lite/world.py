@@ -22,6 +22,7 @@ from collections.abc import Generator
 import enum
 
 from balladeer.lite.entity import Entity
+from balladeer.lite.types import Grouping
 from balladeer.lite.types import State
 
 
@@ -65,6 +66,7 @@ class WorldBuilder:
         self.config = config
         # TODO: Grouper by type or name of type?
         self.entities = list(self.build())
+        self.grouping = Grouping.typewise(self.entities)
 
     def build(self):
         return ()

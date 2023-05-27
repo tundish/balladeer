@@ -61,7 +61,15 @@ class World(WorldBuilder):
 
 
 class Adventure(Drama):
-    pass
+
+    def do_look(self, this, text, director, *args, **kwargs):
+        """
+        look
+        where | where am i
+
+        """
+        print(self.world.grouping)
+        yield Dialogue("<> Singing...")
 
 
 class Story(StoryBuilder):
