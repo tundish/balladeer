@@ -1,0 +1,42 @@
+@keyframes fadein {
+0% {
+opacity: 0;
+}
+12% {
+opacity: 1;
+}
+100% {
+opacity: 1;
+}
+}
+
+@keyframes fadeinout {
+0% {
+opacity: 0;
+}
+12% {
+opacity: 1;
+}
+82% {
+opacity: 1;
+}
+100% {
+opacity: 0.6;
+}
+}
+
+
+p {
+animation-name: fadeinout;
+animation-fill-mode: both;
+}
+
+p:last-of-type {
+animation-name: fadein;
+}
+
+details, cite{
+animation-name: fadein;
+animation-fill-mode: both;
+}
+
