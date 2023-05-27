@@ -48,8 +48,8 @@ class MapBuilder:
         global Into, Home, Spot, Exit
         self.into = Into = enum.Enum("Into", spots, type=State)
         self.home = Home = enum.Enum("Home", spots, type=State)
-        self.exit = Exit = enum.Enum("Exit", spots, type=State)
         self.spot = Spot = enum.Enum("Spot", spots, type=State)
+        self.exit = Exit = enum.Enum("Exit", spots, type=State)
         self.transits = list(self.make())
 
     def build(self) -> Generator[Transit]:

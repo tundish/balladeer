@@ -66,7 +66,7 @@ class Adventure(Drama):
 
 class Story(StoryBuilder):
     def build(self):
-        yield Adventure(world=self.world, config=self.config)
+        yield Adventure(world=self.world, config=self.config).set_state(self.world.map.spot.foyer)
 
 
 if __name__ == "__main__":
