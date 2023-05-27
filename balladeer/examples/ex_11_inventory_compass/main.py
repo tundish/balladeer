@@ -23,6 +23,8 @@ from balladeer import StoryBuilder
 from balladeer import Compass
 from balladeer import Drama
 from balladeer import Entity
+from balladeer import Focus
+from balladeer import Prologue
 from balladeer import Traffic
 from balladeer import Transit
 from balladeer import MapBuilder
@@ -68,8 +70,9 @@ class Adventure(Drama):
         where | where am i
 
         """
-        print(self.world.grouping)
-        yield Dialogue("<> Singing...")
+        self.set_state(Focus.info)
+        print(self)
+        yield Prologue("<> Looking around.")
 
 
 class Story(StoryBuilder):
