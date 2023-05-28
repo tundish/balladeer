@@ -18,20 +18,20 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import balladeer
-from balladeer import quick_start
-from balladeer import StoryBuilder
 from balladeer import Compass
+from balladeer import Detail
 from balladeer import Drama
 from balladeer import Entity
-from balladeer import Focus
+from balladeer import MapBuilder
 from balladeer import Prologue
+from balladeer import StoryBuilder
 from balladeer import Traffic
 from balladeer import Transit
-from balladeer import MapBuilder
 from balladeer import WorldBuilder
+from balladeer import quick_start
 
 __doc__ = """
-python3 -m balladeer.examples.10_animate_media.main
+python3 -m balladeer.examples.11_.inventory_compass.main
 
 """
 
@@ -70,8 +70,7 @@ class Adventure(Drama):
         where | where am i
 
         """
-        self.set_state(Focus.info)
-        print(self)
+        self.set_state(Detail.here)
         yield Prologue("<> Looking around.")
 
 

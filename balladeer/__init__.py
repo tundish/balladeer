@@ -24,7 +24,7 @@ from balladeer.lite.speech import Epilogue
 from balladeer.lite.speech import Prologue
 from balladeer.lite.speech import Speech
 from balladeer.lite.story import StoryBuilder
-from balladeer.lite.types import Focus
+from balladeer.lite.types import Detail
 from balladeer.lite.types import Grouping
 from balladeer.lite.types import Page
 from balladeer.lite.types import State

@@ -6,6 +6,14 @@
 Change Log
 ::::::::::
 
+0.37.0 rc
+=========
+
+Adds functionality for text adventures.
+
+* Example 11: *Cloak of Darkness*.
+* Added a generic Detail state for controlling verbosity.
+
 0.36.0
 ======
 

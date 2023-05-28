@@ -102,32 +102,18 @@ class State:
         return cls[name]
 
 
-class Focus(State, enum.Enum):
-    none = enum.auto()
-    live = enum.auto()
-    dead = enum.auto()
-    gone = enum.auto()
-    area = enum.auto()
-    grab = enum.auto()
-    high = enum.auto()
-    down = enum.auto()
-    drop = enum.auto()
-    seen = enum.auto()
-    lost = enum.auto()
-    pick = enum.auto()
-    take = enum.auto()
-    dark = enum.auto()
-    hide = enum.auto()
-    info = enum.auto()
-    star = enum.auto()
-    home = enum.auto()
-    quit = enum.auto()
-    into = enum.auto()
-    spot = enum.auto()
-    exit = enum.auto()
-    here = enum.auto()
-    help = enum.auto()
-    hint = enum.auto()
+class Detail(State, enum.Enum):
+    none = "Reset"
+    hide = "Hidden"
+    info = "Information requested"
+    home = "Detail of home"
+    into = "Detail of entrances"
+    spot = "Detail of current position"
+    exit = "Detail of exits"
+    here = "Detail of location"
+    help = "Detail of functions"
+    hint = "Detail in context"
+    quit = "Story ending"
 
 
 class Fruition(State, enum.IntEnum):
