@@ -4,14 +4,11 @@ state = "Spot.foyer"
 
 [[_]]
 s="""
-<>  {DRAMA.state} green bottles, hanging on the wall.
+<>  This old building no longer looks much like a hotel.
 
-"""
+    Here would have been the foyer.
+    You can see the footprint of a grand reception desk running down one side
+    of the floor.
 
-[[_]]
-# One bottle
-if.DRAMA.state = 1
-s="""
-<>  {DRAMA.state} [green bottle](https://www.onegreenbottle.com/), hanging on the wall.
-
+<>  The room has been stripped of all it once contained.
 """
