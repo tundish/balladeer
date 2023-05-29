@@ -12,7 +12,9 @@ Change Log
 Adds functionality for text adventures.
 
 * Example 11: *Cloak of Darkness*.
-* Added a generic Detail state for controlling verbosity.
+* Added a standard *Detail* state for controlling verbosity.
+* Unified the classic *Waypoint* with *State*.
+* Added the *compass* module with classic code and tests.
 
 0.36.0
 ======
