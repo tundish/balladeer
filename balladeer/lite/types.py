@@ -101,6 +101,15 @@ class State:
     def factory(cls, name=None, **kwargs):
         return cls[name]
 
+    @property
+    def label(self):
+        return self.value[0] if self.value and isinstance(self.value, list) else self.value
+
+    @property
+    def title(self):
+        return self.label.title()
+
+
 
 class Detail(State, enum.Enum):
     none = "Reset"

@@ -17,11 +17,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import enum
 import unittest
 
 from balladeer.lite.entity import Entity
 from balladeer.lite.loader import Loader
 from balladeer.lite.types import Grouping
+from balladeer.lite.types import State
 
 
 class GroupingTests(unittest.TestCase):
@@ -101,11 +103,26 @@ class GroupingTests(unittest.TestCase):
 class StateTests(unittest.TestCase):
 
     class SingleValue(State, enum.Enum):
-        A = "A"
-        B = "B"
-        C = "C"
+        A = "Ah"
+        B = "Ba"
+        C = "Co"
 
     class MultiValue(State, enum.Enum):
-        A = ["a", "A"]
-        B = ["b", "B"]
-        C = ["c", "C"]
+        A = ["ah", "Ah"]
+        B = ["ba", "Ba"]
+        C = ["co", "Co"]
+
+    def test_labels(self):
+        s = StateTests.SingleValue.B
+        self.assertEqual("Ba", s.label)
+
+        m = StateTests.MultiValue.B
+        self.assertEqual("ba", m.label)
+
+    def test_titles(self):
+        s = StateTests.SingleValue.B
+        self.assertEqual("Ba", s.title)
+
+        m = StateTests.MultiValue.B
+        self.assertEqual("Ba", m.title)
+
