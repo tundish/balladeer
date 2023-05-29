@@ -13,9 +13,10 @@ except importlib.metadata.PackageNotFoundError:
     __version__ = datetime.date.today().strftime("%Y.%m.%d") + "+local_repository"
 
 
-from balladeer.classic.cartography import Compass
 from balladeer.lite.app import Session
 from balladeer.lite.app import quick_start
+from balladeer.lite.compass import Compass
+from balladeer.lite.compass import MapBuilder
 from balladeer.lite.drama import Drama
 from balladeer.lite.entity import Entity
 from balladeer.lite.loader import Loader
@@ -28,7 +29,6 @@ from balladeer.lite.types import Detail
 from balladeer.lite.types import Grouping
 from balladeer.lite.types import Page
 from balladeer.lite.types import State
-from balladeer.lite.world import MapBuilder
 from balladeer.lite.world import Traffic
 from balladeer.lite.world import Transit
 from balladeer.lite.world import WorldBuilder
