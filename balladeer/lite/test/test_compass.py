@@ -36,7 +36,7 @@ class CompassTests(unittest.TestCase):
         self.assertEqual(Compass.NE, Compass.SW.back)
 
     def test_vectors(self):
-        self.assertEqual(Compass.NE.value, Compass.N.value + Compass.E.value)
+        self.assertEqual(Compass.NE.value[-1], Compass.N.value[-1] + Compass.E.value[-1])
 
 
 class MapTests(unittest.TestCase):

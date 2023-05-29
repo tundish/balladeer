@@ -75,13 +75,15 @@ class Adventure(Drama):
         print(self.world.map.options(here))
         yield Prologue("<> Looking around.")
 
-    def do_go(self, this, text, director, *args, option: "world.map.options", **kwargs):
+    def do_go(self, this, text, director, *args, heading: Compass, **kwargs):
         """
-        how
+        {heading.name}
+        go {heading.name}
 
         """
-        print(option)
-        yield Prologue("<> Where?.")
+        here = self.get_state(self.world.map.spot)
+        print(self.world.map.options(here))
+        yield Prologue(f"<> You try to go {heading.title}.")
 
 
 class Story(StoryBuilder):

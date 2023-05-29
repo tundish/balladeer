@@ -29,14 +29,14 @@ from balladeer.lite.types import State
 
 
 class Compass(State, enum.Enum):
-    N = vector(+0, +1)
-    NE = vector(+1, +1)
-    E = vector(+1, +0)
-    SE = vector(+1, -1)
-    S = vector(+0, -1)
-    SW = vector(-1, -1)
-    W = vector(-1, +0)
-    NW = vector(-1, -1)
+    N = ["north", vector(+0, +1)]
+    NE = ["northeast", vector(+1, +1)]
+    E = ["east", vector(+1, +0)]
+    SE = ["southeast", vector(+1, -1)]
+    S = ["south", vector(+0, -1)]
+    SW = ["southwest", vector(-1, -1)]
+    W = ["west", vector(-1, +0)]
+    NW = ["northwest", vector(-1, -1)]
 
     @property
     def back(self):
@@ -53,7 +53,8 @@ class Compass(State, enum.Enum):
 
     @property
     def bearing(self):
-        phase = 180 * cmath.phase(complex(*self.value[:2])) / cmath.pi
+        vec = self.value[-1]
+        phase = 180 * cmath.phase(complex(*vec[:2])) / cmath.pi
         if phase <= 90:
             rv = 90 - phase
         elif phase <= 180:
