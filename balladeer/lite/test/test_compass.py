@@ -27,9 +27,10 @@ from balladeer.lite.compass import Transit
 
 
 class CompassTests(unittest.TestCase):
-    def test_nearing(self):
-        self.assertEqual(0, Compass.N.bearing)
-        self.assertEqual(180, Compass.S.bearing)
+    def test_bearing(self):
+        self.assertEqual(0, Compass.bearing(Compass.N))
+        self.assertEqual(90, Compass.bearing(Compass.E))
+        self.assertEqual(45, Compass.bearing(Compass.N, Compass.E))
 
     def test_back(self):
         self.assertEqual(Compass.SW, Compass.NE.back)

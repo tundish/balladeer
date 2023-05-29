@@ -21,6 +21,7 @@ import cmath
 from collections import defaultdict
 from collections.abc import Generator
 import enum
+import itertools
 
 from turberfield.utils.homogeneous import vector
 
@@ -38,6 +39,21 @@ class Compass(State, enum.Enum):
     W = ["west", vector(-1, +0)]
     NW = ["northwest", vector(-1, -1)]
 
+    @classmethod
+    def bearing(cls, *args):
+        # FIXME sum triggers bug in __add__
+        vec = list(itertools.accumulate(i.value[-1] for i in args))[-1]
+        phase = 180 * cmath.phase(complex(*vec[:2])) / cmath.pi
+        if phase <= 90:
+            rv = 90 - phase
+        elif phase <= 180:
+            rv = 270 + (180 - phase)
+        elif phase <= 270:
+            rv = 180 + (270 - phase)
+        else:
+            rv = 90 + 360 - phase
+        return rv % 360
+
     @property
     def back(self):
         return {
@@ -50,20 +66,6 @@ class Compass(State, enum.Enum):
             "W": Compass.E,
             "NW": Compass.SE,
         }.get(self.name)
-
-    @property
-    def bearing(self):
-        vec = self.value[-1]
-        phase = 180 * cmath.phase(complex(*vec[:2])) / cmath.pi
-        if phase <= 90:
-            rv = 90 - phase
-        elif phase <= 180:
-            rv = 270 + (180 - phase)
-        elif phase <= 270:
-            rv = 180 + (270 - phase)
-        else:
-            rv = 90 + 360 - phase
-        return rv % 360
 
 
 Into = None
