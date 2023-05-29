@@ -26,21 +26,6 @@ from balladeer.lite.types import Grouping
 from balladeer.lite.types import State
 
 
-Into = None
-Spot = None
-Exit = None
-
-
-class Traffic(State, enum.Enum):
-    blocked = enum.auto()
-    forward = enum.auto()
-    reverse = enum.auto()
-    flowing = enum.auto()
-
-
-class Transit(Entity):
-    pass
-
 
 class WorldBuilder:
     def __init__(self, map, config=None):

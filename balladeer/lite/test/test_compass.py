@@ -21,7 +21,9 @@ import enum
 import unittest
 
 from balladeer.lite.compass import Compass
-from balladeer.lite.world import Transit
+from balladeer.lite.compass import MapBuilder
+from balladeer.lite.compass import Traffic
+from balladeer.lite.compass import Transit
 
 
 class CompassTests(unittest.TestCase):
@@ -38,7 +40,7 @@ class CompassTests(unittest.TestCase):
 
 
 class MapTests(unittest.TestCase):
-    class SimpleMap(Map):
+    class SimpleMap(MapBuilder):
         spots = {
             "bedroom": ["bedroom"],
             "hall": ["hall", "hallway"],
@@ -47,28 +49,21 @@ class MapTests(unittest.TestCase):
             "inventory": None,
         }
 
-        Into = enum.Enum("Into", spots, type=Waypoint)
-        Exit = enum.Enum("Exit", spots, type=Waypoint)
-        Spot = enum.Enum("Spot", spots, type=Waypoint)
-
-        def __init__(self, exit=None, into=None, **kwargs):
-            super().__init__(exit, into, **kwargs)
-            exit = self.exit
-            into = self.into
-            self.transits = [
-                Transit(label="bedroom door").set_state(exit.bedroom, into.hall, Via.bidir),
-                Transit().set_state(exit.hall, Compass.N, into.stairs, Via.bidir),
-                Transit(label="kitchen door").set_state(
-                    exit.kitchen, Compass.SW, into.hall, Via.bidir
+        def build(self):
+            yield from [
+                Transit(name="bedroom door").set_state(self.exit.bedroom, self.into.hall, Traffic.flowing),
+                Transit().set_state(self.exit.hall, Compass.N, self.into.stairs, Traffic.flowing),
+                Transit(name="kitchen door").set_state(
+                    self.exit.kitchen, Compass.SW, self.into.hall, Traffic.flowing
                 ),
             ]
 
     def test_simple_options(self):
-        m = MapTests.SimpleMap()
-        self.assertEqual(3, len(m.options(m.Spot.hall)))
+        m = MapTests.SimpleMap(MapTests.SimpleMap.spots)
+        self.assertEqual(3, len(m.options(m.spot.hall)))
 
     def test_simple_route(self):
-        m = MapTests.SimpleMap()
-        r = m.route(m.Spot.kitchen, m.Spot.bedroom)
+        m = MapTests.SimpleMap(MapTests.SimpleMap.spots)
+        r = m.route(m.spot.kitchen, m.spot.bedroom)
         self.assertEqual(3, len(r))
         self.assertEqual(3, len(set(r)))

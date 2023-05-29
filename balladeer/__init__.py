@@ -16,6 +16,8 @@ except importlib.metadata.PackageNotFoundError:
 from balladeer.lite.app import Session
 from balladeer.lite.app import quick_start
 from balladeer.lite.compass import Compass
+from balladeer.lite.compass import Traffic
+from balladeer.lite.compass import Transit
 from balladeer.lite.compass import MapBuilder
 from balladeer.lite.drama import Drama
 from balladeer.lite.entity import Entity
@@ -29,6 +31,4 @@ from balladeer.lite.types import Detail
 from balladeer.lite.types import Grouping
 from balladeer.lite.types import Page
 from balladeer.lite.types import State
-from balladeer.lite.world import Traffic
-from balladeer.lite.world import Transit
 from balladeer.lite.world import WorldBuilder

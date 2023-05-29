@@ -19,15 +19,16 @@
 
 import cmath
 from collections import defaultdict
+from collections.abc import Generator
 import enum
 
-from turberfield.dialogue.types import DataObject
-from turberfield.dialogue.types import EnumFactory
-from turberfield.dialogue.types import Stateful
 from turberfield.utils.homogeneous import vector
 
+from balladeer.lite.entity import Entity
+from balladeer.lite.types import State
 
-class Compass(EnumFactory, enum.Enum):
+
+class Compass(State, enum.Enum):
     N = vector(+0, +1)
     NE = vector(+1, +1)
     E = vector(+1, +0)
@@ -64,6 +65,23 @@ class Compass(EnumFactory, enum.Enum):
         return rv % 360
 
 
+Into = None
+Home = None
+Spot = None
+Exit = None
+
+
+class Traffic(State, enum.Enum):
+    blocked = enum.auto()
+    forward = enum.auto()
+    reverse = enum.auto()
+    flowing = enum.auto()
+
+
+class Transit(Entity):
+    pass
+
+
 class MapBuilder:
     def __init__(self, spots, config=None):
         self.config = config
@@ -73,18 +91,19 @@ class MapBuilder:
         self.spot = Spot = enum.Enum("Spot", spots, type=State)
         self.exit = Exit = enum.Enum("Exit", spots, type=State)
         self.transits = list(self.make())
+        self.routes = {}
 
     @property
     def topology(self):
         for t in self.transits:
             d = t.get_state(self.exit)
             a = t.get_state(self.into)
-            v = t.get_state(Via)
+            v = t.get_state(Traffic)
             c = t.get_state(Compass)
             b = c and c.back
-            if v in (Via.bidir, Via.forwd):
+            if v in (Traffic.flowing, Traffic.forward):
                 yield d, c, t, a
-            if v in (Via.bidir, Via.bckwd):
+            if v in (Traffic.flowing, Traffic.reverse):
                 yield a, b, t, d
 
     def options(self, waypoint):

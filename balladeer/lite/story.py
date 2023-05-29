@@ -25,13 +25,13 @@ import operator
 import uuid
 import warnings
 
+from balladeer.lite.compass import MapBuilder
 from balladeer.lite.director import Director
 from balladeer.lite.drama import Drama
 from balladeer.lite.loader import Loader
 from balladeer.lite.speech import Speech
 from balladeer.lite.types import Detail
 from balladeer.lite.types import Grouping
-from balladeer.lite.world import MapBuilder
 from balladeer.lite.world import WorldBuilder
 
 
