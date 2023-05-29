@@ -96,3 +96,16 @@ class GroupingTests(unittest.TestCase):
 
         self.assertEqual(5, len(g.all), g.all)
         self.assertEqual(2, len(g.each))
+
+
+class StateTests(unittest.TestCase):
+
+    class SingleValue(State, enum.Enum):
+        A = "A"
+        B = "B"
+        C = "C"
+
+    class MultiValue(State, enum.Enum):
+        A = ["a", "A"]
+        B = ["b", "B"]
+        C = ["c", "C"]
