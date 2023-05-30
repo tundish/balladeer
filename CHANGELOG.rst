@@ -15,6 +15,7 @@ Adds functionality for text adventures.
 * Added a standard *Detail* state for controlling verbosity.
 * Unified the classic *Waypoint* with *State*.
 * Added the *compass* module with classic code and tests.
+* Added the *description* property to Entity.
 
 0.36.0
 ======

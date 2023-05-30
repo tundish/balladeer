@@ -17,8 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-import dataclasses
-
 import balladeer
 from balladeer import Compass
 from balladeer import Detail
@@ -91,14 +89,15 @@ class Adventure(Drama):
             i for i in self.world.entities
             if i.get_state("Spot") in (here, self.world.map.spot.inventory)
         ]
-        yield Epilogue("<> Looking around, you see:")
-        for entity in entities:
-            sketch = entity.sketch.format(**dataclasses.asdict(entity))
-            yield Epilogue(f"+ {sketch}")
+        yield Epilogue(
+            "<> Looking around, you see:\n" +
+            "\n".join([f"+ {i.description}" for i in entities])
+        )
 
-        yield Epilogue("<> Exits are:")
-        for dirn, dest, transit in self.world.map.options(here):
-            yield Epilogue(f"+ {dirn.title}")
+        yield Epilogue(
+            "<> Exits are:\n" +
+            "\n".join([f"+ {dirn.title}" for dirn, dest, transit in self.world.map.options(here)])
+        )
 
     def do_go(self, this, text, director, *args, heading: Compass, **kwargs):
         """

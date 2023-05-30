@@ -89,6 +89,10 @@ class Entity:
         return sorted(self.types)[0] if self.types else type(self)
 
     @property
+    def description(self):
+        return self.sketch.format(**dataclasses.asdict(self))
+
+    @property
     def state(self):
         return self.get_state()
 
