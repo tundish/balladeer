@@ -56,9 +56,21 @@ class Map(MapBuilder):
 class World(WorldBuilder):
     def build(self):
         yield from [
-            Entity(name="Cloak", type="Clothing").set_state(self.map.spot.cloakroom),
-            Entity(name="Hook", type="Fixture").set_state(self.map.home.cloakroom),
-            Entity(name="Message", type="Marking").set_state(self.map.home.bar),
+            Entity(
+                name="Cloak", type="Clothing",
+                sketch="A {name} so black that its folds and textures cannot be perceived.",
+                aspect="It seems to swallow all light.",
+            ).set_state(self.map.spot.cloakroom),
+            Entity(
+                name="Hook", type="Fixture",
+                sketch="A brass hook.",
+                aspect="Solid. This is not for decoration.",
+            ).set_state(self.map.home.cloakroom),
+            Entity(
+                name="Message", type="Marking",
+                sketch="Someone has written a message in the dust on the floor. It says: {aspect}",
+                aspect="You win!",
+            ).set_state(self.map.home.bar, 0),
         ]
 
 
@@ -72,6 +84,8 @@ class Adventure(Drama):
         """
         self.set_state(Detail.here)
         here = self.get_state(self.world.map.spot)
+        entities = [i for i in self.world.entities if i.get_state["Spot"] == here]
+        print(f"Entities: {entities}")
         print(self.world.map.options(here))
         yield Prologue("<> Looking around.")
 
@@ -88,7 +102,9 @@ class Adventure(Drama):
 
 class Story(StoryBuilder):
     def build(self):
-        yield Adventure(world=self.world, config=self.config).set_state(self.world.map.spot.foyer)
+        yield Adventure(world=self.world, config=self.config).set_state(
+            self.world.map.spot.foyer, Detail.none
+        )
 
 
 if __name__ == "__main__":

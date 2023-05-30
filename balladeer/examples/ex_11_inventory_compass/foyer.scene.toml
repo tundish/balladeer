@@ -3,6 +3,7 @@ type = "Adventure"
 state = "Spot.foyer"
 
 [[_]]
+if.DRAMA.states.Detail = ["none"]
 s="""
 <>  This old building no longer looks much like a hotel.
 
@@ -14,6 +15,7 @@ s="""
 """
 
 [[_]]
+if.DRAMA.states.Detail = ["none"]
 s="""
 <>  You are wearing a long cloak, which gathers around you. It feels furry,
     like velvet, although that's hard to tell by looking. It is so black

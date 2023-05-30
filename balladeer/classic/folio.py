@@ -22,7 +22,7 @@
 
 Usage::
 
-    python -m balladeer.classic.folio blathnaid/tale/ | weasyprint - folio.pdf
+    python -m balladeer.classic.folio blathnaid/book/ | weasyprint - folio.pdf
 
 """
 
