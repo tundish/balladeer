@@ -96,6 +96,10 @@ class Adventure(Drama):
             sketch = entity.sketch.format(**dataclasses.asdict(entity))
             yield Epilogue(f"+ {sketch}")
 
+        yield Epilogue("<> Exits are:")
+        for dirn, dest, transit in self.world.map.options(here):
+            yield Epilogue(f"+ {dirn.title}")
+
     def do_go(self, this, text, director, *args, heading: Compass, **kwargs):
         """
         {heading.name}

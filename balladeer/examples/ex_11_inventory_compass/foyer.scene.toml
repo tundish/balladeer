@@ -5,7 +5,7 @@ state = "Spot.foyer"
 [[_]]
 if.DRAMA.states.Detail = ["here"]
 s="""
-<>  This old building no longer looks much like a hotel.
+<>  This shell of a building was once a hotel.
 
     Here would have been the foyer.
     You can see the footprint of a grand reception desk running down one side
