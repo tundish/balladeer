@@ -17,11 +17,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import dataclasses
+
 import balladeer
 from balladeer import Compass
 from balladeer import Detail
 from balladeer import Drama
 from balladeer import Entity
+from balladeer import Epilogue
 from balladeer import MapBuilder
 from balladeer import Prologue
 from balladeer import StoryBuilder
@@ -58,9 +61,9 @@ class World(WorldBuilder):
         yield from [
             Entity(
                 name="Cloak", type="Clothing",
-                sketch="A {name} so black that its folds and textures cannot be perceived.",
+                sketch="A {names[0]} so black that its folds and textures cannot be perceived.",
                 aspect="It seems to swallow all light.",
-            ).set_state(self.map.spot.cloakroom),
+            ).set_state(self.map.spot.inventory),
             Entity(
                 name="Hook", type="Fixture",
                 sketch="A brass hook.",
@@ -84,10 +87,14 @@ class Adventure(Drama):
         """
         self.set_state(Detail.here)
         here = self.get_state(self.world.map.spot)
-        entities = [i for i in self.world.entities if i.get_state["Spot"] == here]
-        print(f"Entities: {entities}")
-        print(self.world.map.options(here))
-        yield Prologue("<> Looking around.")
+        entities = [
+            i for i in self.world.entities
+            if i.get_state("Spot") in (here, self.world.map.spot.inventory)
+        ]
+        yield Epilogue("<> Looking around, you see:")
+        for entity in entities:
+            sketch = entity.sketch.format(**dataclasses.asdict(entity))
+            yield Epilogue(f"+ {sketch}")
 
     def do_go(self, this, text, director, *args, heading: Compass, **kwargs):
         """
