@@ -99,7 +99,7 @@ class Adventure(Drama):
             "\n".join([f"+ {dirn.title}" for dirn, dest, transit in self.world.map.options(here)])
         )
 
-    def do_go(self, this, text, director, *args, heading: Compass, **kwargs):
+    def do_move(self, this, text, director, *args, heading: Compass, **kwargs):
         """
         {heading.name} | {heading.label}
         go {heading.name} | go {heading.label}
@@ -111,6 +111,26 @@ class Adventure(Drama):
             yield Prologue(f"<> You can't go {heading.title} from here.")
         else:
             self.set_state(options[heading])
+
+    """
+    def do_take(self, this, text, director, *args, heading: Compass, **kwargs):
+        pass
+
+    def do_drop(self, this, text, director, *args, heading: Compass, **kwargs):
+        pass
+    """
+
+    def do_hang(
+        self, this, text, director, *args,
+        clothing: "world.typewise[Clothing]",
+        fixture: "world.typewise[Fixture]",
+        **kwargs
+    ):
+        """
+        hang {clothing.names[0]} on {fixture.names[0]}
+
+        """
+        yield Prologue(f"<> Not yet.")
 
 
 class Story(StoryBuilder):

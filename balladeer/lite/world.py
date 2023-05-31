@@ -31,9 +31,9 @@ class WorldBuilder:
     def __init__(self, map, config=None):
         self.map = map
         self.config = config
-        # TODO: Grouper by type or name of type?
+
         self.entities = list(self.build())
-        self.grouping = Grouping.typewise(self.entities)
+        self.typewise = Grouping.typewise(self.entities)
 
     def build(self):
         return ()
