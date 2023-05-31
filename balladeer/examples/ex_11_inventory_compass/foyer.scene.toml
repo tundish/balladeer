@@ -2,12 +2,15 @@
 type = "Adventure"
 state = "Spot.foyer"
 
+[GARMENT]
+type = "Clothing"
+
 [[_]]
 if.DRAMA.states.Detail = ["here"]
 s="""
 <>  This shell of a building was once a hotel.
 
-    Here would have been the foyer.
+    Right here would have been a foyer.
     You can see the footprint of a grand reception desk running down one side
     of the floor.
 
@@ -20,7 +23,7 @@ s="""
 """
 
 [[_]]
-if.DRAMA.states.Detail = ["none"]
+if.GARMENT.states.Spot = ["inventory"]
 s="""
 <>  You are wearing a long cloak, which gathers around you.
 """

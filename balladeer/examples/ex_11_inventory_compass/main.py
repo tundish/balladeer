@@ -101,13 +101,16 @@ class Adventure(Drama):
 
     def do_go(self, this, text, director, *args, heading: Compass, **kwargs):
         """
-        {heading.name}
-        go {heading.name}
+        {heading.name} | {heading.label}
+        go {heading.name} | go {heading.label}
 
         """
         here = self.get_state(self.world.map.spot)
-        print(self.world.map.options(here))
-        yield Prologue(f"<> You try to go {heading.title}.")
+        options = {compass: spot for compass, spot, transit in self.world.map.options(here)}
+        if heading not in options:
+            yield Prologue(f"<> You can't go {heading.title} from here.")
+        else:
+            self.set_state(options[heading])
 
 
 class Story(StoryBuilder):
