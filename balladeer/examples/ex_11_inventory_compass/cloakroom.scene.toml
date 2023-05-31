@@ -1,11 +1,17 @@
 [DRAMA]
-type = "Wall"
-state = 0
+type = "Adventure"
+state = "Spot.cloakroom"
+
+[GARMENT]
+type = "Clothing"
 
 [[_]]
 
 s="""
-<> **No** green bottles hanging on the wall!
+<>  This is a cloakroom for patrons of the bar. You can tell because at eye-level
+    an array of metalwork resembles a line of coat hooks. All are gone, witnessed only by
+    broken brass baseplates or rotten screw holes.
 
+<>  No, wait; there is one. One coat hook survives.
 """
 
