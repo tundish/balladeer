@@ -1,6 +1,9 @@
 [DRAMA]
-type = "Wall"
-state = 0
+type = "Adventure"
+state = "Spot.bar"
+
+[GARMENT]
+type = "Clothing"
 
 [[_]]
 
