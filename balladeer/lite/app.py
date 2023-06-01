@@ -234,7 +234,7 @@ class Session(HTTPEndpoint):
             pattern="[\w ]+"
             autofocus="autofocus"
             type="text"
-            title="&gt;"
+            title="{story.context.tooltip}"
             />
             <button type="submit">Enter</button>
             </fieldset>

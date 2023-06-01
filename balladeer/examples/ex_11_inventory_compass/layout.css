@@ -19,7 +19,9 @@ padding: inherit;
 }
 
 button, input {
+font-family: cursive;
 padding: 1.2rem 3rem 1.2rem 3rem;
+width: 96%;
 }
 
 cite {

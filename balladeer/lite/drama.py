@@ -31,7 +31,8 @@ class Drama(Entity, Performance):
         self.world = world
         self.config = config
         self.speech = deque(args) or list()
-        self.prompt = "?"
+        self.prompt = ""
+        self.tooltip = "Enter a command, or type 'help' for a list of options."
         self.prefixes = ("do_", "on_")
 
     @property

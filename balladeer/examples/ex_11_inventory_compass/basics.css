@@ -12,17 +12,23 @@ vertical-align: baseline;
 }
 
 body {
-background-color: lightgray;
+background-color: grey;
 font-family: sans-serif;
 font-size: 1.2rem;
 }
 
 div.cue {
-background-color: white;
+border-radius: 0.3rem;
+background-color: lightgrey;
 }
 
 button, input {
-font-size: 1.8rem;
+font-size: 1.4rem;
+}
+
+label {
+color: white;
+font-weight: bold;
 }
 
 input + button {
