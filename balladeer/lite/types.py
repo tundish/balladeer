@@ -116,6 +116,7 @@ class Detail(State, enum.Enum):
     hide = "Hidden"
     info = "Information requested"
     home = "Detail of home"
+    held = "Detail of inventory"
     into = "Detail of entrances"
     spot = "Detail of current position"
     exit = "Detail of exits"

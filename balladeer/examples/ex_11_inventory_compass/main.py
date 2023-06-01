@@ -86,18 +86,34 @@ class Adventure(Drama):
         self.set_state(Detail.here)
         here = self.get_state(self.world.map.spot)
         entities = [
-            i for i in self.world.entities
-            if i.get_state("Spot") in (here, self.world.map.spot.inventory)
+            i for i in self.world.entities if i.get_state("Spot") == here
         ]
-        yield Epilogue(
-            "<> Looking around, you see:\n" +
-            "\n".join([f"+ {i.description}" for i in entities])
-        )
+        if entities:
+            yield Epilogue(
+                "<> Looking around, you see:\n" +
+                "\n".join([f"+ {i.description}" for i in entities])
+            )
 
         yield Epilogue(
             "<> Exits are:\n" +
             "\n".join([f"+ {dirn.title}" for dirn, dest, transit in self.world.map.options(here)])
         )
+
+    def do_inventory(self, this, text, director, *args, **kwargs):
+        """
+        i | inventory
+
+        """
+        self.set_state(Detail.held)
+        here = self.get_state(self.world.map.spot)
+        entities = [
+            i for i in self.world.entities if i.get_state("Spot") == self.world.map.spot.inventory
+        ]
+        yield Epilogue(
+            "<> You are carrying:\n" +
+            "\n".join([f"+ {i.description}" for i in entities])
+        )
+
 
     def do_move(self, this, text, director, *args, heading: Compass, **kwargs):
         """
