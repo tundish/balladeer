@@ -66,7 +66,7 @@ class World(WorldBuilder):
                 name="Hook", type="Fixture",
                 sketch="A brass hook.",
                 aspect="Solid. This is not for decoration.",
-            ).set_state(self.map.home.cloakroom),
+            ).set_state(self.map.home.cloakroom, self.map.spot.cloakroom, 0),
             Entity(
                 name="Message", type="Marking",
                 sketch="Someone has written a message in the dust on the floor. It says: {aspect}",
