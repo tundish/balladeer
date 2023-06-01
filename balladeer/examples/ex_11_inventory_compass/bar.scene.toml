@@ -5,10 +5,33 @@ state = "Spot.bar"
 [GARMENT]
 type = "Clothing"
 
+[PRIZE]
+type = "Marking"
+
 [[_]]
 
 s="""
-<> This is the bar.
-<> The room is totally dark. The echoes suggest empty, too.
+<> This is the Bar.
+"""
+
+[[_]]
+if.PRIZE.state = 0
+s="""
+<> The room is totally dark. The echoes suggest it's empty, too.
+"""
+
+[[_]]
+if.GARMENT.states.Spot = ["inventory"]
+s="""
+<>  The hem of your cloak is catching against uneven wooden boards.
+    The smell of sawdust begins to reach your nostrils as you sweep
+    over the floor.
+
+"""
+
+[[_]]
+if.PRIZE.state = 1
+s="""
+<>  {PRIZE.description}
 """
 
