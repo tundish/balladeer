@@ -33,6 +33,8 @@ classic = [
     "turberfield-dialogue==0.47.0",
     "turberfield-utils==0.47.0",
 ]
+docbuild = [
+]
 
 [project.scripts]
 
@@ -54,7 +56,7 @@ packages = [
 ]
 
 [tool.setuptools.package-data]
-balladeer = ["examples"]
+balladeer = ["examples", "doc"]
 
 [tool.black]
 line-length = 96
