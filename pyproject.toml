@@ -34,7 +34,7 @@ classic = [
     "turberfield-utils==0.47.0",
 ]
 docbuild = [
-    "sphinx >= 7.0.1",
+    "sphinx <= 6.2.1",
     "karma-sphinx-theme >= 0.0.8",
 ]
 
