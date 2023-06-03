@@ -10,7 +10,7 @@ type = "Fixture"
 
 
 [[_]]
-if.DRAMA.states.Detail = ["none"]
+if.DRAMA.states.Detail = ["none", "hint"]
 s="""
 You find yourself in a gloomy space which smells strongly of damp.
 It has a partition which makes a small anteroom near the doorway, leaving a much larger area behind.
@@ -25,6 +25,17 @@ s="""
 	All are gone, witnessed only by broken brass baseplates or rotten screw holes.
 
 <>  No, wait; there is one. One coat hook survives.
+"""
+
+[[_]]
+if.DRAMA.states.Detail = ["hint"]
+s="""
+<>  Try these commands:
+
+    + 'Look' to see more detail.
+    + 'Inventory' to learn what you are carrying.
+
+    Or perhaps you should make use of the facilities?
 """
 
 [[_]]
