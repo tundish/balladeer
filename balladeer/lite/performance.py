@@ -101,16 +101,17 @@ class Performance:
         self, ensemble: list[Entity], prefix="do_"
     ) -> Grouping[str, list[tuple[Callable, dict[str, Entity]]]]:
         if not hasattr(self, "active"):
-            self.active = set(
-                filter(
-                    lambda x: isinstance(x, Callable),
-                    (getattr(self, name) for name in dir(self) if name.startswith(prefix)),
-                )
+            self.active = dict(
+                (i, set())
+                for i in (getattr(self, name) for name in dir(self) if name.startswith(prefix))
+                if isinstance(i, Callable)
             )
 
         rv = Grouping(list)
-        for fn in self.active:
+        for fn, commands in self.active.items():
+            commands.clear()
             for k, v in self.expand_commands(fn, ensemble, parent=self):
+                commands.add(k)
                 rv[k].append(v)
         return rv
 

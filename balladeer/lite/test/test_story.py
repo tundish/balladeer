@@ -61,7 +61,7 @@ class StoryTests(unittest.TestCase):
         for drama in a.drama:
             with self.subTest(a=a, b=b, drama=drama):
                 self.assertNotIn(drama, b.drama)
-                self.assertFalse(any(drama.active.intersection(i.active) for i in b.drama))
+                self.assertFalse(any(set(drama.active).intersection(set(i.active)) for i in b.drama))
 
         for entity in a.world.entities:
             with self.subTest(a=a, b=b, entity=entity):

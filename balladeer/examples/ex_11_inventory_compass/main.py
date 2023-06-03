@@ -77,6 +77,17 @@ class World(WorldBuilder):
 
 class Adventure(Drama):
 
+    def do_help(self, this, text, director, *args, **kwargs):
+        """
+        help | h | ?
+
+        """
+        commands = [sorted(i, key=lambda x: len(x), reverse=True)[0] for i in self.active.values() if i]
+        yield Epilogue(
+            "<> Try one of these commands:\n" +
+            "\n".join([f"+ {i.upper()}" for i in commands])
+        )
+
     def do_look(self, this, text, director, *args, **kwargs):
         """
         look

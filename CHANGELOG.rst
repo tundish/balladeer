@@ -17,6 +17,7 @@ Adds functionality for text adventures.
 * Added the *compass* module with classic code and tests.
 * Added the *description* property to Entity.
 * Began to create API documentation.
+* *Drama.active* is now a dictionary whose values are valid commands.
 
 0.36.0
 ======
