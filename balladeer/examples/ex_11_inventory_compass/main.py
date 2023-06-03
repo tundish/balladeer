@@ -71,9 +71,9 @@ class World(WorldBuilder):
             ).set_state(self.map.home.cloakroom, self.map.spot.cloakroom, 0),
             Entity(
                 name="Message", type="Marking",
-                sketch="Someone has written a message in the dust on the floor. It says: {aspect}",
+                sketch="A {names[0]} in the dust on the floor. It says: '{aspect}'",
                 aspect="You win!",
-            ).set_state(self.map.home.bar, 0),
+            ).set_state(self.map.home.bar, self.map.spot.bar, 0),
         ]
 
 
@@ -114,7 +114,6 @@ class Adventure(Drama):
         where | where am i
 
         """
-        print(self.local)
         self.set_state(Detail.here)
         entities = [
             i for i in self.world.entities if i.get_state("Spot") == self.here
@@ -156,8 +155,8 @@ class Adventure(Drama):
             self.set_state(options[heading])
 
         # On leaving the bar we remove a letter of the message
-        if self.here == self.world.map.spot.bar:
-            mark = self.world.typewise["Marking"][0]
+        print(self.local)
+        for mark in self.local["Marking"]:
             mark.aspect = mark.aspect.replace(
                 random.choice(mark.aspect), " ", 1
             )
