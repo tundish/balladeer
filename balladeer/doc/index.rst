@@ -1,20 +1,17 @@
-.. Balladeer documentation master file, created by
-   sphinx-quickstart on Fri Jun  2 21:23:52 2023.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+..  Titling
+    ##++::==~~--''``
 
-Welcome to Balladeer's documentation!
-=====================================
+Balladeer
++++++++++
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 1
 
+   entity
 
+.. include:: ../../README.rst
 
-Indices and tables
-==================
+.. _GNU General Public License: http://www.gnu.org/licenses/gpl.html
+.. _issue tracker: https://github.com/tundish/balladeer/issues
 
-* :ref:`genindex`
 * :ref:`modindex`
-* :ref:`search`
