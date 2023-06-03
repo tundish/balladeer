@@ -174,8 +174,8 @@ class Adventure(Drama):
 
     def do_hang(
         self, this, text, director, *args,
-        clothing: "world.statewise[Spot.inventory]",
-        fixture: "world.typewise[Fixture]",
+        clothing: "local[Clothing]",
+        fixture: "local[Fixture]",
         **kwargs
     ):
         """
