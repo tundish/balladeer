@@ -68,7 +68,7 @@ class World(WorldBuilder):
                 name="Hook", type="Fixture",
                 sketch="A brass hook.",
                 aspect="Solid. This is not for decoration.",
-            ).set_state(self.map.home.cloakroom, self.map.spot.cloakroom, 0),
+            ).set_state(self.map.home.cloakroom, self.map.spot.cloakroom, 1),
             Entity(
                 name="Message", type="Marking",
                 sketch="A {names[0]} in the dust on the floor. It says: '{aspect}'",
@@ -89,6 +89,14 @@ class Adventure(Drama):
         return Grouping.typewise(
             i for i in self.world.entities if i.get_state("Spot") in (self.here, inventory)
         )
+
+    @property
+    def visible(self):
+        # Entities are invisible in their home location when their integer state is 0
+        return [
+            i for i in self.world.entities if i.get_state("Spot") == self.here
+            and (i.get_state(int) or i.get_state("Home") != self.world.map.home[self.here.name])
+        ]
 
     def do_help(self, this, text, director, *args, **kwargs):
         """
@@ -115,9 +123,8 @@ class Adventure(Drama):
 
         """
         self.set_state(Detail.here)
-        entities = [
-            i for i in self.world.entities if i.get_state("Spot") == self.here
-        ]
+        entities = self.visible
+
         if entities:
             yield Dialogue("<> You take a look around.")
             yield Dialogue( "<> You see:\n" + "\n".join([f"+ {i.description}" for i in entities]))

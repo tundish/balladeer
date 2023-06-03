@@ -5,19 +5,10 @@ state = "Spot.bar"
 [GARMENT]
 type = "Clothing"
 
-[PRIZE]
-type = "Marking"
-
 [[_]]
-
+if.DRAMA.states.Detail = ["here"]
 s="""
 <> This is the Bar.
-"""
-
-[[_]]
-if.PRIZE.state = 0
-s="""
-<> The room is totally dark. The echoes suggest it's empty, too.
 """
 
 [[_]]
@@ -28,10 +19,3 @@ s="""
     over the floor.
 
 """
-
-[[_]]
-if.PRIZE.state = 1
-s="""
-<>  {PRIZE.description}
-"""
-
