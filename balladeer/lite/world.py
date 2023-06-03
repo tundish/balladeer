@@ -35,5 +35,13 @@ class WorldBuilder:
         self.entities = list(self.build())
         self.typewise = Grouping.typewise(self.entities)
 
+    @property
+    def statewise(self):
+        rv = Grouping(list)
+        for entity in self.entities:
+            for state in entity.states.values():
+                rv[str(state)].append(entity)
+        return rv
+
     def build(self):
         return ()

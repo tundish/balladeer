@@ -17,11 +17,14 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import random
+
 import balladeer
 from balladeer import Compass
 from balladeer import Detail
 from balladeer import Drama
 from balladeer import Entity
+from balladeer import Grouping
 from balladeer import Prologue, Dialogue, Epilogue
 from balladeer import MapBuilder
 from balladeer import StoryBuilder
@@ -76,6 +79,17 @@ class World(WorldBuilder):
 
 class Adventure(Drama):
 
+    @property
+    def here(self):
+        return self.get_state("Spot")
+
+    @property
+    def local(self):
+        inventory = self.world.map.spot.inventory
+        return Grouping.typewise(
+            i for i in self.world.entities if i.get_state("Spot") in (self.here, inventory)
+        )
+
     def do_help(self, this, text, director, *args, **kwargs):
         """
         help | syntax
@@ -100,10 +114,10 @@ class Adventure(Drama):
         where | where am i
 
         """
+        print(self.local)
         self.set_state(Detail.here)
-        here = self.get_state(self.world.map.spot)
         entities = [
-            i for i in self.world.entities if i.get_state("Spot") == here
+            i for i in self.world.entities if i.get_state("Spot") == self.here
         ]
         if entities:
             yield Dialogue("<> You take a look around.")
@@ -111,7 +125,7 @@ class Adventure(Drama):
 
         yield Epilogue(
             "<> Exits are:\n" +
-            "\n".join([f"+ {dirn.title}" for dirn, dest, transit in self.world.map.options(here)])
+            "\n".join([f"+ {dirn.title}" for dirn, dest, transit in self.world.map.options(self.here)])
         )
 
     def do_inventory(self, this, text, director, *args, **kwargs):
@@ -120,7 +134,6 @@ class Adventure(Drama):
 
         """
         self.set_state(Detail.held)
-        here = self.get_state(self.world.map.spot)
         entities = [
             i for i in self.world.entities if i.get_state("Spot") == self.world.map.spot.inventory
         ]
@@ -136,12 +149,20 @@ class Adventure(Drama):
         go {heading.name} | go {heading.label}
 
         """
-        here = self.get_state(self.world.map.spot)
-        options = {compass: spot for compass, spot, transit in self.world.map.options(here)}
+        options = {compass: spot for compass, spot, transit in self.world.map.options(self.here)}
         if heading not in options:
             yield Prologue(f"<> You can't go {heading.title} from here.")
         else:
             self.set_state(options[heading])
+
+        # On leaving the bar we remove a letter of the message
+        if self.here == self.world.map.spot.bar:
+            mark = self.world.typewise["Marking"][0]
+            mark.aspect = mark.aspect.replace(
+                random.choice(mark.aspect), " ", 1
+            )
+            print(mark.description)
+
 
     """
     def do_take(self, this, text, director, *args, heading: Compass, **kwargs):
@@ -153,7 +174,7 @@ class Adventure(Drama):
 
     def do_hang(
         self, this, text, director, *args,
-        clothing: "world.typewise[Clothing]",
+        clothing: "world.statewise[Spot.inventory]",
         fixture: "world.typewise[Fixture]",
         **kwargs
     ):
