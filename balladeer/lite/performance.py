@@ -74,7 +74,7 @@ class Performance:
         Generates pairs of each command with a 2-tuple; (method, keyword arguments).
 
         """
-        doc = method.func.__doc__ if hasattr(method, "func") else method.__doc__
+        doc = method.func.__doc__ if hasattr(method, "func") else method.__doc__ or ""
         terms = list(
             filter(None, (i.strip() for line in doc.splitlines() for i in line.split("|")))
         )

@@ -162,21 +162,19 @@ class Adventure(Drama):
             self.set_state(options[heading])
 
         # On leaving the bar we remove a letter of the message
-        print(self.local)
         for mark in self.local["Marking"]:
             mark.aspect = mark.aspect.replace(
                 random.choice(mark.aspect), " ", 1
             )
-            print(mark.description)
 
 
     """
     def do_take(self, this, text, director, *args, heading: Compass, **kwargs):
         pass
-
-    def do_drop(self, this, text, director, *args, heading: Compass, **kwargs):
-        pass
     """
+
+    def do_drop(self, this, text, director, *args, item: "world.typewise[Clothing]", **kwargs):
+        print(item)
 
     def do_hang(
         self, this, text, director, *args,
