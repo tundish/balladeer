@@ -188,7 +188,12 @@ class Adventure(Drama):
         hang {clothing.names[0]} on {fixture.names[0]}
 
         """
-        yield Prologue(f"<> Not yet.")
+        if fixture.state > 1:
+            yield Prologue(f"<> Already done.")
+        else:
+            clothing.set_state(self.here)
+            fixture.set_state(2)
+            yield Prologue(f"<> You hang the {clothing.names[0]} on the {fixture.names[0]}.")
 
 
 class Story(StoryBuilder):
