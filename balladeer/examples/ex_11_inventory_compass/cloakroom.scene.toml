@@ -21,7 +21,7 @@ It has a partition which makes a small anteroom near the doorway, leaving a much
 if.DRAMA.states.Detail = ["here"]
 s="""
 <>  This is a cloakroom for patrons of the bar.
-	At eye-level there is an array of metalwork which vaguely resembles a line of coat hooks.
+	At eye-level there is an array of metal scars; the remains of a line of coat hooks.
 	All are gone, witnessed only by broken brass baseplates or rotten screw holes.
 
 <>  OK, so there *is* one. One coat hook survives.
