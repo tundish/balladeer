@@ -22,9 +22,8 @@ from balladeer import Compass
 from balladeer import Detail
 from balladeer import Drama
 from balladeer import Entity
-from balladeer import Epilogue
+from balladeer import Prologue, Dialogue, Epilogue
 from balladeer import MapBuilder
-from balladeer import Prologue
 from balladeer import StoryBuilder
 from balladeer import Traffic
 from balladeer import Transit
@@ -79,7 +78,7 @@ class Adventure(Drama):
 
     def do_help(self, this, text, director, *args, **kwargs):
         """
-        help | h
+        help | syntax
 
         """
         commands = [sorted(i, key=lambda x: len(x), reverse=True)[0] for i in self.active.values() if i]
@@ -90,7 +89,7 @@ class Adventure(Drama):
 
     def do_hint(self, this, text, director, *args, **kwargs):
         """
-        hint
+        hint | h
 
         """
         self.set_state(Detail.hint)
@@ -107,10 +106,8 @@ class Adventure(Drama):
             i for i in self.world.entities if i.get_state("Spot") == here
         ]
         if entities:
-            yield Epilogue(
-                "<> Looking around, you see:\n" +
-                "\n".join([f"+ {i.description}" for i in entities])
-            )
+            yield Dialogue("<> You take a look around.")
+            yield Dialogue( "<> You see:\n" + "\n".join([f"+ {i.description}" for i in entities]))
 
         yield Epilogue(
             "<> Exits are:\n" +
@@ -119,7 +116,7 @@ class Adventure(Drama):
 
     def do_inventory(self, this, text, director, *args, **kwargs):
         """
-        i | inventory
+        inventory | i
 
         """
         self.set_state(Detail.held)

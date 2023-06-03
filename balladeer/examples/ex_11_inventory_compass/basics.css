@@ -17,6 +17,14 @@ font-family: sans-serif;
 font-size: 1.2rem;
 }
 
+em {
+font-style: italic;
+}
+
+strong {
+font-weight: bold;
+}
+
 div.cue {
 border-radius: 0.3rem;
 background-color: lightgrey;
