@@ -131,6 +131,18 @@ class Adventure(Drama):
             "\n".join([f"+ {i.description}" for i in entities])
         )
 
+    def do_inspect(self, this, text, director, *args, item: "local.each", **kwargs):
+        """
+        check {item.names[0]}
+        inspect {item.names[0]}
+        examine {item.names[0]} | x {item.names[0]}
+
+        """
+        if not item.state:
+            yield Prologue(f"<> You can't see that here.")
+        else:
+            yield Prologue(f"<> You check the {item.names[0]}." + "\n\n" + f"{item.aspect}")
+
     def do_move(self, this, text, director, *args, heading: Compass, **kwargs):
         """
         {heading.name} | {heading.label}
