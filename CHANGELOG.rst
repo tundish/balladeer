@@ -6,16 +6,17 @@
 Change Log
 ::::::::::
 
-0.37.0 rc
-=========
+0.37.0
+======
 
 Adds functionality for text adventures.
 
-* Example 11: *Cloak of Darkness*.
+* Example 11: *Cloak of Darkness*. First working implementation.
 * Added a standard *Detail* state for controlling verbosity.
 * Unified the classic *Waypoint* with *State*.
 * Added the *compass* module with classic code and tests.
 * Added the *description* property to Entity.
+* *Entity* gets *repute* attribute.
 * Began to create API documentation.
 * *Drama.active* is now a dictionary whose values are valid commands.
 

@@ -24,7 +24,6 @@ python3 -m balladeer.examples.ex_11_inventory_compass.main
 
 
 class Map(MapBuilder):
-
     spots = {
         "foyer": ["foyer", "lobby"],
         "bar": ["bar", "saloon bar"],
@@ -36,7 +35,9 @@ class Map(MapBuilder):
     def build(self):
         yield from [
             Transit().set_state(self.exit.bar, Compass.N, self.into.foyer, Traffic.flowing),
-            Transit().set_state(self.exit.foyer, Compass.W, self.into.cloakroom, Traffic.flowing),
+            Transit().set_state(
+                self.exit.foyer, Compass.W, self.into.cloakroom, Traffic.flowing
+            ),
         ]
 
 
@@ -44,18 +45,21 @@ class World(WorldBuilder):
     def build(self):
         yield from [
             Entity(
-                name="Cloak", type="Clothing",
+                name="Cloak",
+                type="Clothing",
                 sketch="A {names[0]} so black that its folds and textures cannot be perceived.",
                 aspect="It seems to swallow all light.",
                 repute="It seems to swallow all light.",
             ).set_state(self.map.spot.inventory, 1),
             Entity(
-                name="Hook", type="Fixture",
+                name="Hook",
+                type="Fixture",
                 sketch="A brass hook.",
                 aspect="Solid. This is not for decoration.",
             ).set_state(self.map.home.cloakroom, self.map.spot.cloakroom, 1),
             Entity(
-                name="Message", type="Marking",
+                name="Message",
+                type="Marking",
                 sketch="A {names[0]} in the dust on the floor. It says: '{aspect}'",
                 aspect="You win!",
             ).set_state(self.map.home.bar, self.map.spot.bar, 0),
@@ -63,7 +67,6 @@ class World(WorldBuilder):
 
 
 class Adventure(Drama):
-
     @property
     def here(self):
         return self.get_state("Spot")
@@ -97,10 +100,7 @@ class Adventure(Drama):
 
         """
         commands = [random.choice(list(i)) for i in self.active.values() if i]
-        yield Epilogue(
-            "<> Syntax:\n" +
-            "\n".join([f"+ {i.upper()}" for i in commands])
-        )
+        yield Epilogue("<> Syntax:\n" + "\n".join([f"+ {i.upper()}" for i in commands]))
 
     def do_hint(self, this, text, director, *args, **kwargs):
         """
@@ -120,11 +120,15 @@ class Adventure(Drama):
 
         if entities:
             yield Dialogue("<> You take a look around.")
-            yield Dialogue( "<> You see:\n" + "\n".join([f"+ {i.description}" for i in entities]))
+            yield Dialogue(
+                "<> You see:\n" + "\n".join([f"+ {i.description}" for i in entities])
+            )
 
         yield Epilogue(
-            "<> Exits are:\n" +
-            "\n".join([f"+ {dirn.title}" for dirn, dest, transit in self.world.map.options(self.here)])
+            "<> Exits are:\n"
+            + "\n".join(
+                [f"+ {dirn.title}" for dirn, dest, transit in self.world.map.options(self.here)]
+            )
         )
 
     def do_inventory(self, this, text, director, *args, **kwargs):
@@ -134,11 +138,12 @@ class Adventure(Drama):
         """
         self.set_state(Detail.held)
         entities = [
-            i for i in self.world.entities if i.get_state("Spot") == self.world.map.spot.inventory
+            i
+            for i in self.world.entities
+            if i.get_state("Spot") == self.world.map.spot.inventory
         ]
         yield Epilogue(
-            "<> You are carrying:\n" +
-            "\n".join([f"+ {i.description}" for i in entities])
+            "<> You are carrying:\n" + "\n".join([f"+ {i.description}" for i in entities])
         )
 
     def do_inspect(self, this, text, director, *args, item: "local.each", **kwargs):
@@ -159,7 +164,9 @@ class Adventure(Drama):
         go {heading.name} | go {heading.label}
 
         """
-        options = {compass: spot for compass, spot, transit in self.world.map.options(self.here)}
+        options = {
+            compass: spot for compass, spot, transit in self.world.map.options(self.here)
+        }
         if heading not in options:
             yield Prologue(f"<> You can't go {heading.title} from here.")
         else:
@@ -167,9 +174,7 @@ class Adventure(Drama):
 
         # On leaving the bar we remove a letter of the message
         for mark in self.local["Marking"]:
-            mark.aspect = mark.aspect.replace(
-                random.choice(mark.aspect), " ", 1
-            )
+            mark.aspect = mark.aspect.replace(random.choice(mark.aspect), " ", 1)
 
     def do_take(self, this, text, director, *args, item: "local[Clothing]", **kwargs):
         """
@@ -184,10 +189,16 @@ class Adventure(Drama):
             return
 
         lookup = {i.uid: i for i in self.world.entities}
-        fixture = lookup.get(next(
-            (uid for uid in item.links if "Fixture" in getattr(lookup.get(uid), "types", [])),
-            None
-        ))
+        fixture = lookup.get(
+            next(
+                (
+                    uid
+                    for uid in item.links
+                    if "Fixture" in getattr(lookup.get(uid), "types", [])
+                ),
+                None,
+            )
+        )
         if fixture:
             # Remove the association between entities and modify fixture visibility
             item.links.discard(fixture.uid)
@@ -198,7 +209,9 @@ class Adventure(Drama):
         item.aspect = item.repute
         yield Prologue(f"<> You take the {item.names[0]}.")
 
-    def do_drop(self, this, text, director, *args, item: "world.statewise[Spot.inventory]", **kwargs):
+    def do_drop(
+        self, this, text, director, *args, item: "world.statewise[Spot.inventory]", **kwargs
+    ):
         """
         drop {item.names[0]}
         discard {item.names[0]}
@@ -209,10 +222,14 @@ class Adventure(Drama):
         yield Prologue(f"<> You drop the {item.names[0]}.")
 
     def do_hang(
-        self, this, text, director, *args,
+        self,
+        this,
+        text,
+        director,
+        *args,
         clothing: "local[Clothing]",
         fixture: "local[Fixture]",
-        **kwargs
+        **kwargs,
     ):
         """
         hang {clothing.names[0]} on {fixture.names[0]}

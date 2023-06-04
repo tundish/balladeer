@@ -154,4 +154,3 @@ class MapBuilder:
 
     def make(self):
         yield from self.build()
-

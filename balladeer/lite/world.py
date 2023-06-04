@@ -26,7 +26,6 @@ from balladeer.lite.types import Grouping
 from balladeer.lite.types import State
 
 
-
 class WorldBuilder:
     def __init__(self, map, config=None):
         self.map = map

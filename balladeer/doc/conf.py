@@ -26,8 +26,9 @@ release = pkgutil.resolve_name("balladeer.__version__")
 extensions = ["sphinx.ext.autodoc"]
 
 templates_path = ["_templates"]
-exclude_patterns = ["_build",]
-
+exclude_patterns = [
+    "_build",
+]
 
 
 # -- Options for HTML output -------------------------------------------------

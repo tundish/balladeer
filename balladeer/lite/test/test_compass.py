@@ -52,8 +52,12 @@ class MapTests(unittest.TestCase):
 
         def build(self):
             yield from [
-                Transit(name="bedroom door").set_state(self.exit.bedroom, self.into.hall, Traffic.flowing),
-                Transit().set_state(self.exit.hall, Compass.N, self.into.stairs, Traffic.flowing),
+                Transit(name="bedroom door").set_state(
+                    self.exit.bedroom, self.into.hall, Traffic.flowing
+                ),
+                Transit().set_state(
+                    self.exit.hall, Compass.N, self.into.stairs, Traffic.flowing
+                ),
                 Transit(name="kitchen door").set_state(
                     self.exit.kitchen, Compass.SW, self.into.hall, Traffic.flowing
                 ),

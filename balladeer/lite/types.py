@@ -110,7 +110,6 @@ class State:
         return self.label.title()
 
 
-
 class Detail(State, enum.Enum):
     none = "Reset"
     hide = "Hidden"

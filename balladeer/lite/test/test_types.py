@@ -101,7 +101,6 @@ class GroupingTests(unittest.TestCase):
 
 
 class StateTests(unittest.TestCase):
-
     class SingleValue(State, enum.Enum):
         A = "Ah"
         B = "Ba"
@@ -125,4 +124,3 @@ class StateTests(unittest.TestCase):
 
         m = StateTests.MultiValue.B
         self.assertEqual("Ba", m.title)
-

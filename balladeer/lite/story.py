@@ -57,8 +57,7 @@ class StoryBuilder:
             map_type = next(reversed(MapBuilder.__subclasses__()), MapBuilder)
             world_type = next(reversed(WorldBuilder.__subclasses__()), WorldBuilder)
             self.world = world_type(
-                map_type(getattr(map_type, "spots", {}), config=config),
-                config=config
+                map_type(getattr(map_type, "spots", {}), config=config), config=config
             )
         else:
             self.world = world
