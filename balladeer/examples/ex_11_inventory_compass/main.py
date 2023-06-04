@@ -1,21 +1,5 @@
-#!/usr/bin/env python3
-#   encoding: utf-8
-
-# This is part of the Balladeer library.
-# Copyright (C) 2023 D E Haynes
-
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as
-# published by the Free Software Foundation, either version 3 of the
-# License, or (at your option) any later version.
-
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#!/usr/bin/env python
+# encoding: UTF-8
 
 import random
 
@@ -63,7 +47,8 @@ class World(WorldBuilder):
                 name="Cloak", type="Clothing",
                 sketch="A {names[0]} so black that its folds and textures cannot be perceived.",
                 aspect="It seems to swallow all light.",
-            ).set_state(self.map.spot.inventory),
+                repute="It seems to swallow all light.",
+            ).set_state(self.map.spot.inventory, 1),
             Entity(
                 name="Hook", type="Fixture",
                 sketch="A brass hook.",
@@ -92,18 +77,14 @@ class Adventure(Drama):
 
     @property
     def visible(self):
-        # Entities are invisible in their home location when their integer state is 0
-        return [
-            i for i in self.world.entities if i.get_state("Spot") == self.here
-            and (i.get_state(int) or i.get_state("Home") != self.world.map.home[self.here.name])
-        ]
+        return [i for i in self.world.entities if i.get_state("Spot") == self.here and i.state]
 
     def do_help(self, this, text, director, *args, **kwargs):
         """
         help | syntax
 
         """
-        commands = [sorted(i, key=lambda x: len(x), reverse=True)[0] for i in self.active.values() if i]
+        commands = [random.choice(list(i)) for i in self.active.values() if i]
         yield Epilogue(
             "<> Syntax:\n" +
             "\n".join([f"+ {i.upper()}" for i in commands])
@@ -184,13 +165,19 @@ class Adventure(Drama):
     ):
         """
         hang {clothing.names[0]} on {fixture.names[0]}
+        hang up {clothing.names[0]}
+        put {clothing.names[0]} on {fixture.names[0]}
+        cover {fixture.names[0]} with {clothing.names[0]}
 
         """
-        if fixture.state > 1:
+        if clothing.uid in fixture.links:
             yield Prologue(f"<> Already done.")
         else:
             clothing.set_state(self.here)
-            fixture.set_state(2)
+            clothing.links.add(fixture.uid)
+            clothing.aspect = f"It hangs from a {fixture.names[0]}."
+            fixture.links.add(clothing.uid)
+            fixture.state = 0
             yield Prologue(f"<> You hang the {clothing.names[0]} on the {fixture.names[0]}.")
 
 

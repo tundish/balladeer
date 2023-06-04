@@ -43,6 +43,7 @@ class Entity:
 
     sketch: Speech = dataclasses.field(default_factory=Speech, compare=False)
     aspect: Speech = dataclasses.field(default_factory=Speech, compare=False)
+    repute: Speech = dataclasses.field(default_factory=Speech, compare=False)
 
     def __post_init__(self, name, type):
         # Unfortunately the builtin 'type' can't be used here

@@ -19,10 +19,11 @@ It has a partition which makes a small anteroom near the doorway, leaving a much
 
 [[_]]
 if.DRAMA.states.Detail = ["here"]
+if.HANGER.state = 1
 s="""
 <>  This is a cloakroom for patrons of the bar.
 	At eye-level there is an array of metal scars; the remains of a line of coat hooks.
-	All are gone, witnessed only by broken brass baseplates or rotten screw holes.
+	All are gone but for broken brass baseplates and rotten screw holes.
 
 <>  OK, so there *is* one. One coat hook survives.
 """
@@ -39,14 +40,14 @@ s="""
 """
 
 [[_]]
-if.HANGER.state = 0
+if.HANGER.state = 1
 if.GARMENT.states.Spot = ["cloakroom"]
 s="""
 <>  Your cloak lies in a heap on the floor.
 """
 
 [[_]]
-if.HANGER.state = 1
+if.HANGER.state = 0
 if.GARMENT.states.Spot = ["cloakroom"]
 s="""
 <>  Your velvet cloak hangs darkly from the hook.
