@@ -5,6 +5,17 @@ state = "Spot.bar"
 [GARMENT]
 type = "Clothing"
 
+[PRIZE]
+type = "Marking"
+
+[[_]]
+if.PRIZE.state = 1
+s="""
+<>  The room is flooded with light. There's something special here.
+
+    {PRIZE.description}
+"""
+
 [[_]]
 if.DRAMA.states.Detail = ["here"]
 s="""

@@ -81,6 +81,16 @@ class Adventure(Drama):
             i for i in self.world.entities if i.get_state("Spot") == self.here and i.state
         )
 
+    def interlude(self, *args, **kwargs) -> Entity:
+        clothing = next(iter(self.world.typewise["Clothing"]), None)
+        marking = next(iter(self.world.typewise["Marking"]), None)
+        if clothing.get_state("Spot") == self.world.map.spot.inventory:
+            marking.state = 0
+        else:
+            marking.state = 1
+
+        return self
+
     def do_help(self, this, text, director, *args, **kwargs):
         """
         help | syntax
