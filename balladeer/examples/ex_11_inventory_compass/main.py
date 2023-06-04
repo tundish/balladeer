@@ -157,6 +157,10 @@ class Adventure(Drama):
         wear {item.names[0]}
 
         """
+        if item.get_state("Spot") == self.world.map.spot.inventory:
+            yield Prologue(f"<> You already have the {item.names[0]}.")
+            return
+
         lookup = {i.uid: i for i in self.world.entities}
         fixture = lookup.get(next(
             (uid for uid in item.links if "Fixture" in getattr(lookup.get(uid), "types", [])),
