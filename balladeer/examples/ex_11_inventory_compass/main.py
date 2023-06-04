@@ -18,7 +18,7 @@ from balladeer import WorldBuilder
 from balladeer import quick_start
 
 __doc__ = """
-python3 -m balladeer.examples.11_.inventory_compass.main
+python3 -m balladeer.examples.ex_11_inventory_compass.main
 
 """
 
@@ -77,7 +77,9 @@ class Adventure(Drama):
 
     @property
     def visible(self):
-        return [i for i in self.world.entities if i.get_state("Spot") == self.here and i.state]
+        return Grouping.typewise(
+            i for i in self.world.entities if i.get_state("Spot") == self.here and i.state
+        )
 
     def do_help(self, this, text, director, *args, **kwargs):
         """
@@ -104,7 +106,7 @@ class Adventure(Drama):
 
         """
         self.set_state(Detail.here)
-        entities = self.visible
+        entities = self.visible.each
 
         if entities:
             yield Dialogue("<> You take a look around.")
@@ -129,7 +131,6 @@ class Adventure(Drama):
             "\n".join([f"+ {i.description}" for i in entities])
         )
 
-
     def do_move(self, this, text, director, *args, heading: Compass, **kwargs):
         """
         {heading.name} | {heading.label}
@@ -148,14 +149,38 @@ class Adventure(Drama):
                 random.choice(mark.aspect), " ", 1
             )
 
+    def do_take(self, this, text, director, *args, item: "local[Clothing]", **kwargs):
+        """
+        get {item.names[0]}
+        pick up {item.names[0]}
+        take {item.names[0]}
+        wear {item.names[0]}
 
-    """
-    def do_take(self, this, text, director, *args, heading: Compass, **kwargs):
-        pass
-    """
+        """
+        lookup = {i.uid: i for i in self.world.entities}
+        fixture = lookup.get(next(
+            (uid for uid in item.links if "Fixture" in getattr(lookup.get(uid), "types", [])),
+            None
+        ))
+        if fixture:
+            # Remove the association between entities and modify fixture visibility
+            item.links.discard(fixture.uid)
+            fixture.links.discard(item.uid)
+            fixture.state = fixture.state if len(fixture.links) else 1
 
-    def do_drop(self, this, text, director, *args, item: "world.typewise[Clothing]", **kwargs):
-        print(item)
+        item.set_state(self.world.map.spot.inventory)
+        item.aspect = item.repute
+        yield Prologue(f"<> You take the {item.names[0]}.")
+
+    def do_drop(self, this, text, director, *args, item: "world.statewise[Spot.inventory]", **kwargs):
+        """
+        drop {item.names[0]}
+        discard {item.names[0]}
+
+        """
+        item.set_state(self.here)
+        item.aspect = f"It lies on the floor."
+        yield Prologue(f"<> You drop the {item.names[0]}.")
 
     def do_hang(
         self, this, text, director, *args,
