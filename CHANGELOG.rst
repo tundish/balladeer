@@ -6,6 +6,12 @@
 Change Log
 ::::::::::
 
+0.38.0 rc
+=========
+
+* FIXME: Fix bug in building an assembly with Entity links.
+* TODO: Consider scene specs as regex strings.
+
 0.37.0
 ======
 
