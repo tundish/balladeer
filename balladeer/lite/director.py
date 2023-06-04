@@ -52,6 +52,7 @@ class Director:
         roles = set(filter(None, spec.get("roles", []) + [spec.get("role")]))
         types = set(filter(None, spec.get("types", []) + [spec.get("type")]))
         states = {k: set(v) for k, v in spec.get("states", {}).items()}
+        # TODO: Interpret strings inside parentheses as regex patterns
         try:
             key, value = spec["state"].split(".")
             states.setdefault(key, set()).add(value)
