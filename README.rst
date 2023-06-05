@@ -3,9 +3,9 @@ Overview
 
 Balladeer_ is a Python package for creating web-enabled interactive screenplay.
 
-
 For tutorials and updates, please visit the `development blog`_ site.
-An API manual is included in the repository_ and is available to `read online`_.
+
+An API manual is included in the `code repository`_ and is available to `read online`_.
 
 Installation
 ============
@@ -47,6 +47,6 @@ Examples
     Hello, World!
 
 .. _balladeer: https://pypi.org/project/balladeer/
-.. _repository: https://github.com/tundish/balladeer
+.. _code repository: https://github.com/tundish/balladeer
 .. _development blog: https://tundish.github.io/balladeer/
 .. _read online: https://balladeer.readthedocs.io/en/latest/index.html

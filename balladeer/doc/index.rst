@@ -6,9 +6,13 @@ Balladeer
 
 .. include:: ../../README.rst
 
+API Documentation
+:::::::::::::::::
+
 .. toctree::
    :maxdepth: 1
 
+   intro
    entity
 
 .. _GNU General Public License: http://www.gnu.org/licenses/gpl.html

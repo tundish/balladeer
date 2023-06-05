@@ -1,7 +1,7 @@
 ..  Titling
     ##++::==~~--''``
 
-Entities
-========
+Introduction
+============
 
 TBD.
