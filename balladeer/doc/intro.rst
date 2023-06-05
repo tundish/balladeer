@@ -4,31 +4,48 @@
 Introduction
 ============
 
-Thanks for choosing Balladeer for your next writing project.
-You steer the vessel. It was me who picked the crew.
+Thanks for choosing Balladeer for your next writing project!
 
-Python, an elegant, flexible, popular programming language.
-SpeechMark a simple, expressive markup system.
-TOML a standardized, well-specified data format.
-HTML5 the ubiquitous syntax for portable, structured electronic documents.
-CSS3 powerful styling rules for layouts, themes and animation.
+You will be steering the vessel, of course. All I did was pick the crew.
+And here they are:
 
-The challenge in the fitting out of Balladeer was to stop this bunch from fighting.
+Python_
+    A popular, elegant, flexible programming language.
+SpeechMark_
+    A simple, expressive dialogue markup system.
+TOML_
+    A structured data format. Highly specified, and widely adopted.
+HTML5_
+    The ultimate syntax for semantic, portable, electronic documents.
+CSS3_
+    Powerful styling rules for layouts, themes and animation.
 
-I had to figure out the fundamental action of each of these technologies.
-Then I had to put them all together without introducing friction.
+The challenge I had was to stop this bunch from fighting.
+
+It took me a while to find the right role for each of these special talents.
+Then I had to put them all together without there being any friction.
 In the same way a gearbox couples an engine to a loaded axle,
 or a waveguide finds the match between an amplifier and an antenna.
+Five salty seadogs, half a gallon of rum, and three ounces of butter.
 
 If you're reading this any time after June 2023, you'll be happy to learn
 that I was successful.
 
-You can now...
+    Balladeer is a great option for every kind of mission:.
 
-Parser-driven interactive fiction
-Choice-based game books
-Multimedia web art
-Poetry and Screenplay
+    * Parser-driven interactive fiction
+    * Choice-based game books
+    * Multimedia web art
+    * Poetry
+    * Screenplay
 
-Balladeer is simple to handle. And she'll take you anywhere you want to go.
 
+    You'll find Balladeer simple to handle. And she'll take you anywhere you want to go.
+
+    -- Tundish
+
+.. _Python: https://www.python.org/
+.. _SpeechMark: https://github.com/tundish/speechmark
+.. _TOML: https://toml.io/en/
+.. _HTML5: https://en.wikipedia.org/wiki/HTML5
+.. _CSS3: https://www.w3.org/Style/CSS/
