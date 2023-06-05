@@ -82,7 +82,7 @@ class Entity:
             data = dataclasses.asdict(obj)
             data["uid"] = str(data["uid"])
             data["types"] = sorted(data.get("types", []))
-            data["links"] = sorted(data.get("links", []))
+            data["links"] = sorted((str(i) for i in data.get("links", [])))
             return data
 
     @property

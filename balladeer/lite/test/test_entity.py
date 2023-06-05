@@ -154,3 +154,22 @@ class TestStringStates(unittest.TestCase):
 
         self.assertEqual(TestEnumStates.Colour.green, e.get_state("Colour"))
         self.assertIsNone(e.get_state("Color"))
+
+
+class TestSerialization(unittest.TestCase):
+
+    def test_default(self):
+        entity = Entity()
+        s = entity.Encoder().encode(entity)
+        data = json.loads(s)
+        self.assertTrue(data)
+
+    def test_linked_uids(self):
+        entities = [Entity(), Entity()]
+        entities[0].links.add(entities[1].uid)
+        entities[1].links.add(entities[0].uid)
+        s = Entity.Encoder().encode(entities)
+        data = json.loads(s)
+        self.assertEqual(2, len(data), data)
+        data = json.loads(s)
+        self.assertTrue(data)
