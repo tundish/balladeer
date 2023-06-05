@@ -31,7 +31,7 @@ Five salty seadogs, half a gallon of rum, and three ounces of butter.
 If you're reading this any time after June 2023, you'll be happy to learn
 that it seems to be working.
 
-    Balladeer is a great option for every kind of mission:.
+    Balladeer is a great option for every kind of mission.
 
     * Parser-driven interactive fiction
     * Choice-based game books
