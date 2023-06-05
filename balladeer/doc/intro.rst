@@ -5,7 +5,7 @@ Introduction
 ============
 
 Thanks for choosing Balladeer for your next writing project.
-You steer the vessel. I was me who picked the crew.
+You steer the vessel. It was me who picked the crew.
 
 Python, an elegant, flexible, popular programming language.
 SpeechMark a simple, expressive markup system.
@@ -30,6 +30,5 @@ Choice-based game books
 Multimedia web art
 Poetry and Screenplay
 
-Balladeer tries to be simple. Don't think less of it for that. Simplicity is its mission.
-This is the documentation for the Balladeer API.
+Balladeer is simple to handle. And she'll take you anywhere you want to go.
 
