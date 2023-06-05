@@ -37,3 +37,8 @@ exclude_patterns = [
 html_theme = "karma_sphinx_theme"
 html_static_path = ["_static"]
 html_title = f"{project} {release}"
+html_theme_options = {
+    "navigation_depth": 2,
+    "includehidden": True,
+    "titles_only": True
+}
