@@ -24,8 +24,8 @@ The challenge I had was to stop this bunch from fighting.
 
 It took me a while to find the right role for each of these special talents.
 Then I had to put them all together without there being any friction.
-In the same way a gearbox couples an engine to a loaded axle,
-or a waveguide finds the match between an amplifier and an antenna.
+In the same way a waveguide finds the match between an amplifier and an antenna.
+Or as a gearbox couples an engine to a loaded axle.
 Five salty seadogs, half a gallon of rum, and three ounces of butter.
 
 If you're reading this any time after June 2023, you'll be happy to learn
