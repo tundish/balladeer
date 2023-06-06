@@ -30,14 +30,14 @@ from balladeer.lite.types import State
 
 
 class Compass(State, enum.Enum):
-    N = ["north", vector(+0, +1)]
-    NE = ["northeast", vector(+1, +1)]
-    E = ["east", vector(+1, +0)]
-    SE = ["southeast", vector(+1, -1)]
-    S = ["south", vector(+0, -1)]
-    SW = ["southwest", vector(-1, -1)]
-    W = ["west", vector(-1, +0)]
-    NW = ["northwest", vector(-1, -1)]
+    N = ["North", vector(+0, +1)]
+    NE = ["Northeast", "North East", vector(+1, +1)]
+    E = ["East", vector(+1, +0)]
+    SE = ["Southeast", "South East", vector(+1, -1)]
+    S = ["South", vector(+0, -1)]
+    SW = ["Southwest", "South West", vector(-1, -1)]
+    W = ["West", vector(-1, +0)]
+    NW = ["Northwest", "North West", vector(-1, -1)]
 
     @classmethod
     def bearing(cls, *args):

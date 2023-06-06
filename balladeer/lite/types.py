@@ -119,15 +119,6 @@ class State:
         """
         return self.value[0] if self.value and isinstance(self.value, list) else self.value
 
-    @property
-    def title(self) -> str:
-        """
-        Gives a version of a label which can be used
-        in isolation or to begin a new sentence.
-
-        """
-        return self.label.title()
-
 
 class Detail(State, enum.Enum):
     none = "Reset"

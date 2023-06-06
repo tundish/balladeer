@@ -111,6 +111,17 @@ class StateTests(unittest.TestCase):
         B = ["ba", "Ba"]
         C = ["co", "Co"]
 
+    class Politics(State, enum.Enum):
+        con = ["Conservative", "Tory"]
+        dem = ["Liberal Democrat", "LibDem"]
+        grn = ["Green Party", "Green"]
+        ind = ["Independent"]
+        lab = ["Labour", "New Labour"]
+        lib = ["Liberal"]
+        ref = ["Reform Party"]
+        res = ["Residents' Party"]
+        ukp = ["UKIP", "UK Independence Party"]
+
     def test_labels(self):
         s = StateTests.SingleValue.B
         self.assertEqual("Ba", s.label)
@@ -118,9 +129,6 @@ class StateTests(unittest.TestCase):
         m = StateTests.MultiValue.B
         self.assertEqual("ba", m.label)
 
-    def test_titles(self):
-        s = StateTests.SingleValue.B
-        self.assertEqual("Ba", s.title)
-
-        m = StateTests.MultiValue.B
-        self.assertEqual("Ba", m.title)
+    def test_politics(self):
+        s = StateTests.Politics.ukp
+        self.assertEqual("UKIP", s.label)

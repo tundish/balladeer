@@ -1,8 +1,8 @@
 ..  Titling
     ##++::==~~--''``
 
-Types
-=====
+Basics
+======
 
 Python is a very flexible language. It supports object
 oriented design, but at the same time its standard data
@@ -31,13 +31,17 @@ In Balladeer, you can model all these by defining and allocating :py:class:`~bal
    :members:
    :member-order: bysource
 
-There are a couple of State types defined by Balladeer itself.
-By way of example, here's the code for the
-:py:class:`~balladeer.lite.types.Detail`
-state (of which more later).
+By way of example, here's how you might create a state
+for political affiliation in the UK.
 
-.. literalinclude:: ../lite/types.py
-   :pyobject: Detail
+.. literalinclude:: ../lite/test/test_types.py
+   :pyobject: StateTests.Politics
+
+Note how this class captures synonyms for the various parties. The `label` property gives you a preferred term for
+each one:
+
+>>> Politics.ukp.label
+'UKIP'
 
 Grouping
 ~~~~~~~~

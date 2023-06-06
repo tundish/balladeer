@@ -127,7 +127,7 @@ class Adventure(Drama):
         yield Epilogue(
             "<> Exits are:\n"
             + "\n".join(
-                [f"+ {dirn.title}" for dirn, dest, transit in self.world.map.options(self.here)]
+                [f"+ {dirn.label}" for dirn, dest, transit in self.world.map.options(self.here)]
             )
         )
 
@@ -168,7 +168,7 @@ class Adventure(Drama):
             compass: spot for compass, spot, transit in self.world.map.options(self.here)
         }
         if heading not in options:
-            yield Prologue(f"<> You can't go {heading.title} from here.")
+            yield Prologue(f"<> You can't go {heading.label} from here.")
         else:
             self.set_state(options[heading])
 
