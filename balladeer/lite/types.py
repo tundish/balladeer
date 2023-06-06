@@ -98,7 +98,8 @@ class Page:
 
 class State:
     """
-    A mix-in for Python `enum.Enum`.
+    A mix-in for Python's standard
+    `enum.Enum <https://docs.python.org/3/library/enum.html#module-enum>`_.
 
     Adds some convenient properties to help
     formatting state values as strings.
@@ -163,8 +164,49 @@ class Fruition(State, enum.IntEnum):
 
 
 class Grouping(defaultdict):
+    """
+    A subclass of Python's standard
+    `defaultdict <https://docs.python.org/3/library/collections.html#collections.defaultdict>`_.
+
+    This data structure is used to return objects
+    filtered, sorted, and grouped in a particular
+    fashion, eg: by state or type.
+
+    """
     @classmethod
-    def typewise(cls, items):
+    def typewise(cls, items: list) -> defaultdict:
+        """
+        Create a Grouping of *items* according to their type.
+
+        >>> pprint.pprint(Grouping.typewise([0, 1, 0.0, 1.0, True, False, None]))
+        Grouping(
+            <class 'list'>,
+            {
+                <class 'bool'>: [True, False],
+                <class 'float'>: [0.0, 1.0],
+                <class 'int'>: [0, 1],
+                <class 'NoneType'>: [None]
+            }
+        )
+
+        Objects will be grouped against their class, as
+        well as by any *declared type* (attributes `type` and `types`).
+
+        >>> pprint.pprint(Grouping.typewise([namespace(type='Cat'), namespace(types=['Feline', 'Leopard'])))
+        Grouping(
+            <class 'list'>,
+            {
+                'Cat': [namespace(type='Cat')],
+                'Feline': [namespace(types=['Feline', 'Leopard'])],
+                'Leopard': [namespace(types=['Feline', 'Leopard'])],
+                 <class 'types.SimpleNamespace'>: [
+                    namespace(type='Cat'),
+                    namespace(types=['Feline', 'Leopard'])
+                 ]
+            }
+        )
+
+        """
         rv = cls(list)
         for i in items:
             rv[type(i)].append(i)
@@ -179,9 +221,11 @@ class Grouping(defaultdict):
         return rv
 
     @property
-    def all(self):
+    def all(self) -> list:
+        "Returns every entry in the grouping."
         return [i for s in self.values() for i in s]
 
     @property
-    def each(self):
+    def each(self) -> list:
+        "Returns every unique entry in the grouping."
         return list(set(self.all))

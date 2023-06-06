@@ -13,8 +13,8 @@ API Documentation
    :maxdepth: 1
 
    intro
-   types
    entity
+   types
    world
    speech
    drama

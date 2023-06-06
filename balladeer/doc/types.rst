@@ -1,8 +1,8 @@
 ..  Titling
     ##++::==~~--''``
 
-Basic types
-===========
+Types
+=====
 
 Python is a very flexible language. It supports object
 oriented design, but at the same time its standard data
@@ -41,6 +41,16 @@ state (of which more later).
 
 Grouping
 ~~~~~~~~
+
+Whether you are modelling a forest glade, a drinks party, or an alien space fleet, you will need to create objects for
+that model.
+
+The next challenge is to organize those objects, sorting and
+filtering them so that you can isolate the ones you need
+to operate on (ie: modify their states_).
+
+This is what :py:class:`~balladeer.lite.types.Grouping`
+is for.
 
 .. autoclass:: balladeer.lite.types.Grouping
    :members:
