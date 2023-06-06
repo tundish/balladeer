@@ -28,8 +28,8 @@ In the same way a waveguide finds the match between an amplifier and an antenna.
 Or as a gearbox couples an engine to a loaded axle.
 Five salty seadogs, half a gallon of rum, and three ounces of butter.
 
-If you're reading this any time after June 2023, you'll be happy to learn
-that it seems to be working.
+If you're reading this any time after June 2023, we've now completed our trials
+and stand ready for action.
 
     Balladeer is a great option for every kind of mission.
 
