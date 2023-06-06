@@ -5,23 +5,36 @@ Basic types
 ===========
 
 Python is a very flexible language. It supports object
-oriented design. At the same time its standard data
+oriented design, but at the same time its standard data
 types are extremely powerful and often sufficient by
 themselves.
 
 Balladeer tries to minimize the number of classes you
 need to learn. It's less than a dozen in total.
 
-There are a couple which are fundamental to the Balladeer
-philosophy. We will see them in use soon. So here's some
+Here are two which are fundamental to the Balladeer
+philosophy. We will see them in use soon. So let's get some
 detail on them before we proceed further.
 
 States
 ~~~~~~
 
+Whatever the genre of your narrative, it's a safe bet that
+the characters you create will undergo change.
+
+They may advance in their profession, lose weight, take up sewing, get drenched in a rainstorm, or disappear never to be seen again.
+
+In Balladeer, you can model all these by defining and allocating :py:class:`~balladeer.lite.types.State`.
+
+
 .. autoclass:: balladeer.lite.types.State
    :members:
    :member-order: bysource
+
+There are a couple of State types defined by Balladeer itself.
+By way of example, here's the code for the
+:py:class:`~balladeer.lite.types.Detail`
+state (of which more later).
 
 .. literalinclude:: ../lite/types.py
    :pyobject: Detail

@@ -100,8 +100,8 @@ class State:
     """
     A mix-in for Python `enum.Enum`.
 
-    Adds properties which give consistent access
-    to class members when formatting strings.
+    Adds some convenient properties to help
+    formatting state values as strings.
 
     """
     @classmethod
@@ -109,11 +109,22 @@ class State:
         return cls[name]
 
     @property
-    def label(self):
+    def label(self) -> str:
+        """
+        Gives a consistent string to be used as a label
+        even when the class defines multiple synonyms
+        for each state value.
+
+        """
         return self.value[0] if self.value and isinstance(self.value, list) else self.value
 
     @property
-    def title(self):
+    def title(self) -> str:
+        """
+        Gives a version of a label which can be used
+        in isolation or to begin a new sentence.
+
+        """
         return self.label.title()
 
 
