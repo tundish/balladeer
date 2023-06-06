@@ -4,4 +4,7 @@
 Drama
 =====
 
-TBD.
+.. autoclass:: balladeer.lite.drama.Drama
+   :members:
+   :member-order: bysource
+

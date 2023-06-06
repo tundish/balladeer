@@ -97,6 +97,13 @@ class Page:
 
 
 class State:
+    """
+    A mix-in for Python `enum.Enum`.
+
+    Adds properties which give consistent access
+    to class members when formatting strings.
+
+    """
     @classmethod
     def factory(cls, name=None, **kwargs):
         return cls[name]

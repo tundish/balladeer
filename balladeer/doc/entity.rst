@@ -4,4 +4,11 @@
 Entities
 ========
 
-TBD.
+Entity objects
+~~~~~~~~~~~~~~
+
+.. autoclass:: balladeer.lite.entity.Entity
+   :members:
+   :member-order: bysource
+
+
