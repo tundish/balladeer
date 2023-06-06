@@ -27,6 +27,7 @@ Then I had to put them all together without there being any friction.
 In the same way a waveguide finds the match between an amplifier and an antenna.
 Or as a gearbox couples an engine to a loaded axle.
 Five salty seadogs, half a gallon of rum, and three ounces of butter.
+Each of them has his duties, and they all get along fine now.
 
 If you're reading this any time after June 2023, we'll have completed our trials
 and stand ready for action.
