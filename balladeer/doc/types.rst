@@ -6,7 +6,7 @@ Basics
 
 Python is a very flexible language. It supports object
 oriented design, but at the same time its standard data
-types are extremely powerful and often sufficient by
+types are extremely powerful and often sufficient just by
 themselves.
 
 Balladeer tries to minimize the number of classes you
@@ -30,6 +30,8 @@ In Balladeer, you can model all these by defining and allocating :py:class:`~bal
 .. autoclass:: balladeer.lite.types.State
    :members:
    :member-order: bysource
+
+.. _`state example`:
 
 By way of example, here's how you might create a state
 for political affiliation in the UK.

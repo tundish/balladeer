@@ -30,6 +30,52 @@ from balladeer.lite.types import State
 
 @dataclasses.dataclass(kw_only=True, unsafe_hash=True)
 class Entity:
+    """
+    All parameters are optional. Without any, you'll get
+    an anonymous Entity which is unique by virtue
+    of its `uid`:
+
+    >>> Entity()
+    Entity(names=[], types=set(), states={}, uid=UUID('76f72aba-056c-4d84-9da0-7e8c8451cf7e'), links=set(), sketch='', aspect='', repute='')
+
+    As a convenience you can pass an Entity a single
+    `name` argument, but note how this is stored in
+    the `names` attribute of the created object:
+
+    >>> Entity(name="Anna")
+    Entity(names=['Anna'], types=set(), states={}, uid=UUID('0797bd07-9cdc-47c0-9cae-f6cae5d69ded'), links=set(), sketch='', aspect='', repute='')
+
+    Of course, you can do this:
+
+    >>> Entity(names=["Bob", "Robert"])
+    Entity(names=['Bob', 'Robert'], types=set(), states={}, uid=UUID('bc8ba6bf-565e-4588-97cc-337dd54bdc31'), links=set(), sketch='', aspect='', repute='')
+
+    Entity `type` works the same way, except the supporting structure is a *set*. The declared types
+    of an entity should all be strings:
+
+    >>> Entity(name="Chuck", type="Squirrel")
+    Entity(names=['Chuck'], types={'Squirrel'}, states={}, uid=UUID('5aab38be-3147-4647-a635-c999943ff017'), links=set(), sketch='', aspect='', repute='')
+
+    >>> Entity(name="Chuck", types={"Squirrel", "Cartoon"})
+    Entity(names=['Chuck'], types={'Squirrel', 'Cartoon'}, states={}, uid=UUID('a468f8e5-1372-45a1-8795-dab5be51902a'), links=set(), sketch='', aspect='', repute='')
+
+    There are three :py:class:`~balladeer.lite.speech.Speech` attributes, which you can modify at any time:
+
+    aspect
+        Delivers the most recent articulation of this entity's mood or disposition.
+
+    repute
+        This is a backup for a previous `aspect`, so that
+        the entity may return to it after a brief departure.
+
+    sketch
+        This is a piece of speech which is *always true*
+        of the entity object. It will be treated as a
+        `string with format specifiers
+        <file:///home/boss/Documents/python-3.10.5-docs-html/library/string.html#formatstrings>`_.
+        It may contain named arguments to reference `names`, `aspect`, etc.
+
+    """
     name: dataclasses.InitVar = ""
     names: list = dataclasses.field(default_factory=list, compare=False)
 

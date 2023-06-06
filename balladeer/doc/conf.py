@@ -42,3 +42,5 @@ html_theme_options = {
     "includehidden": True,
     "titles_only": True
 }
+
+autodoc_class_signature = "separated"
