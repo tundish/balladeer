@@ -40,7 +40,7 @@ class WorldBuilder:
             pass
 
     """
-    def __init__(self, map, config=None):
+    def __init__(self, map=None, config=None):
         self.map = map
         self.config = config
 

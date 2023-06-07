@@ -25,10 +25,24 @@ from balladeer.lite.world import WorldBuilder
 
 
 class WorldBuilderTests(unittest.TestCase):
-    def test_simple(self):
+    def test_empty(self):
         class World(WorldBuilder):
             pass
 
         world = World()
-        print(vars(world))
-        print(dir(world))
+        self.assertIsNone(world.map)
+        self.assertIsNone(world.config)
+        self.assertFalse(world.entities)
+        self.assertFalse(world.typewise)
+
+    def test_simple(self):
+        class World(WorldBuilder):
+            def build(self):
+                yield Entity(type="Tinker")
+                yield Entity(type="Tailor")
+                yield Entity(type="Soldier")
+
+        world = World()
+        self.assertEqual(3, len(world.entities))
+        self.assertEqual(len(world.entities), len(world.typewise.each))
+        self.assertEqual(set(world.entities), set(world.typewise.each))
