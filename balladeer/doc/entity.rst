@@ -20,3 +20,11 @@ Entities are like that too. They can have many `names`, many `types`, and many `
 
 Entity state
 ~~~~~~~~~~~~
+
+Entity objects have methods and properties to support state allocation.
+
+.. automethod:: balladeer.lite.entity.Entity.set_state
+
+.. automethod:: balladeer.lite.entity.Entity.get_state
+
+

@@ -218,5 +218,5 @@ class Grouping(defaultdict):
 
     @property
     def each(self) -> list:
-        "Returns every unique entry in the grouping."
+        "Returns one of each entry in the grouping."
         return list(set(self.all))

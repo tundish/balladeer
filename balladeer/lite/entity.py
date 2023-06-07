@@ -22,6 +22,7 @@ import enum
 import json
 import random
 import re
+from typing import Type
 import uuid
 
 from balladeer.lite.speech import Speech
@@ -59,18 +60,27 @@ class Entity:
     >>> Entity(name="Chuck", types={"Squirrel", "Cartoon"})
     Entity(names=['Chuck'], types={'Squirrel', 'Cartoon'}, states={}, uid=UUID('a468f8e5-1372-45a1-8795-dab5be51902a'), links=set(), sketch='', aspect='', repute='')
 
+    Entity objects have a `links` attribute, which allows you to associate one Entity with another.
+
+    >>> a, b = (Entity(), Entity())
+    >>> a.links.add(b.uid)
+    Entity(names=[], types=set(), states={}, uid=UUID('e594b6ad-88df-4199-9694-18acc788b81d'), links={UUID('aa66771b-5ba6-40fe-857d-d7c57099a013')}, sketch='', aspect='', repute='')
+
+    To delete a link:
+
+    >>> a.links.discard(b.uid)
+
     There are three :py:class:`~balladeer.lite.speech.Speech` attributes, which you can modify at any time:
 
     aspect
-        Delivers the most recent articulation of this entity's mood or disposition.
+        Here you should record this entity's most recent mood or disposition.
 
     repute
-        This is a backup for a previous `aspect`, so that
-        the entity may return to it after a brief departure.
+        This is a backup for a previous `aspect`, so you can revert to it after a temporary change.
 
     sketch
-        This is a piece of speech which is *always true*
-        of the entity object. It will be treated as a
+        This is a piece of speech which should be *always true*
+        of the entity object. It will be processed as a
         `string with format specifiers
         <file:///home/boss/Documents/python-3.10.5-docs-html/library/string.html#formatstrings>`_.
         It may contain named arguments to reference `names`, `aspect`, etc.
@@ -132,15 +142,24 @@ class Entity:
             return data
 
     @property
-    def name(self):
+    def name(self) -> str:
+        "Return a random choice of the object's declared names."
         return random.choice(self.names or [""])
 
     @property
-    def type(self):
+    def type(self) -> Type | str:
+        """
+        Return the preferred type for the object.
+
+        If the *types* attribute is populated, the first element is returned.
+        Otherwise the result is the natural Python type of the object.
+
+        """
         return sorted(self.types)[0] if self.types else type(self)
 
     @property
-    def description(self):
+    def description(self) -> str:
+        "Return a description of the object based on its `sketch` and other attributes"
         return self.sketch.format(**dataclasses.asdict(self))
 
     @property
@@ -151,12 +170,37 @@ class Entity:
     def state(self, value):
         return self.set_state(value)
 
-    def set_state(self, *args):
+    def set_state(self, *args: tuple[State | int]):
+        """
+        Set a state value on the object.
+
+        >>> entity = Entity()
+        >>> entity.set_state(Politics.ind)
+        Entity(names=[], types=set(), states={'Politics': <Politics.ind: ['Independent']>}, uid=UUID('4f02535e-b386-400c-9297-350fd73cd6fa'), links=set(), sketch='', aspect='', repute='')
+
+        As a special case, an argument of type `int` is also considered a state value:
+
+        >>> entity = Entity()
+        >>> entity.set_state(12)
+        Entity(names=[], types=set(), states={'int': 12}, uid=UUID('4f02535e-b386-400c-9297-350fd73cd6fa'), links=set(), sketch='', aspect='', repute='')
+
+        You may supply multiple state values to this method.
+
+        >>> entity = Entity()
+        >>> entity.set_state(Politics.ind, 12)
+        Entity(names=[], types=set(), states={'Politics': <Politics.ind: ['Independent']>, 'int': 12}, uid=UUID('4f02535e-b386-400c-9297-350fd73cd6fa'), links=set(), sketch='', aspect='', repute='')
+
+        The return value is the entity object, allowing a declarative style of state assignment as follows:
+
+        >>> entity = Entity().set_state(Politics.ind, 12)
+
+        """
         for arg in args:
             self.states[type(arg).__name__] = arg
         return self
 
     def get_state(self, typ: State = int):
+        "Get state"
         try:
             return self.states.get(typ.__name__)
         except AttributeError:
