@@ -27,4 +27,6 @@ Entity objects have methods and properties to support state allocation.
 
 .. automethod:: balladeer.lite.entity.Entity.get_state
 
+.. autoproperty:: balladeer.lite.entity.Entity.state
+
 

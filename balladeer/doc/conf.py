@@ -40,7 +40,7 @@ html_title = f"{project} {release}"
 html_theme_options = {
     "navigation_depth": 2,
     "includehidden": True,
-    "titles_only": True
+    "titles_only": False
 }
 
 autodoc_class_signature = "separated"

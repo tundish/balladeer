@@ -162,14 +162,6 @@ class Entity:
         "Return a description of the object based on its `sketch` and other attributes"
         return self.sketch.format(**dataclasses.asdict(self))
 
-    @property
-    def state(self):
-        return self.get_state()
-
-    @state.setter
-    def state(self, value):
-        return self.set_state(value)
-
     def set_state(self, *args: tuple[State | int]):
         """
         Set a state value on the object.
@@ -199,11 +191,48 @@ class Entity:
             self.states[type(arg).__name__] = arg
         return self
 
-    def get_state(self, typ: State = int):
-        "Get state"
+    def get_state(self, typ: State | str = int):
+        """
+        Get a state by type or type name.
+
+        >>> entity.get_state(Politics)
+        <Politics.ind: ['Independent']>
+
+        >>> entity.get_state("Politics")
+        <Politics.ind: ['Independent']>
+
+        >>> entity.get_state(int)
+        12
+
+        >>> entity.get_state("int")
+        12
+
+        This method returns `None` if the state type is not set on the object.
+
+        """
         try:
             return self.states.get(typ.__name__)
         except AttributeError:
             return self.states.get(typ)
         else:
             return None
+
+    @property
+    def state(self):
+        """
+        This property provides an alternative idiom when allocating a single state:
+
+        >>> entity.state = Politics.ind
+
+        When used to access state, it will return integer state only:
+
+        >>> entity.state
+        12
+
+        """
+        return self.get_state()
+
+    @state.setter
+    def state(self, value):
+        return self.set_state(value)
+
