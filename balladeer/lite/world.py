@@ -27,6 +27,19 @@ from balladeer.lite.types import State
 
 
 class WorldBuilder:
+    """
+
+    This class is the base for the world of your narrative.
+
+    It is responsible for holding all the entities you need.
+    It has methods to help you retrieve them when you need them.
+
+    .. code-block:: python
+
+        class World(WorldBuilder):
+            pass
+
+    """
     def __init__(self, map, config=None):
         self.map = map
         self.config = config
