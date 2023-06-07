@@ -147,17 +147,6 @@ class Entity:
         return random.choice(self.names or [""])
 
     @property
-    def type(self) -> Type | str:
-        """
-        Return the preferred type for the object.
-
-        If the *types* attribute is populated, the first element is returned.
-        Otherwise the result is the natural Python type of the object.
-
-        """
-        return sorted(self.types)[0] if self.types else type(self)
-
-    @property
     def description(self) -> str:
         "Return a description of the object based on its `sketch` and other attributes"
         return self.sketch.format(**dataclasses.asdict(self))
