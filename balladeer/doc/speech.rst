@@ -30,7 +30,7 @@ But there are other ways, and Balladeer encourages you to try them.
 
 Here are some suggestions for a good Entity:
 
-* A newspaper.
+* A newspaper which prints articles from a parallel reality.
 * A kettle that whistles tunes.
 * A statue which comes alive and murders people.
 * A bulletproof car with the calm authority of an English Butler.
