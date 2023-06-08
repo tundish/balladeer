@@ -35,12 +35,17 @@ Here are some suggestions for a good Entity:
 * A statue which comes alive and murders people.
 * A bulletproof car with the calm authority of an English Butler.
 
-In other words; *characters*. And the primary mode of action of your characters is Speech.
+In other words; *characters*. And the primary medium for your characters is Speech.
 
 Markup
 ~~~~~~
+
+So we need a way of defining Speech. Not just words, but to remember who said the words and why.
+
+Enter SpeechMark_. It's probably a good idea to follow the link and read up a little before we continue further.
 
 .. autoclass:: balladeer.lite.speech.Speech
    :members:
    :member-order: bysource
 
+.. _SpeechMark: https://github.com/tundish/speechmark
