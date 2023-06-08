@@ -49,7 +49,7 @@ class World(WorldBuilder):
                 type="Clothing",
                 sketch="A {names[0]} so black that its folds and textures cannot be perceived.",
                 aspect="It seems to swallow all light.",
-                repute="It seems to swallow all light.",
+                revert="It seems to swallow all light.",
             ).set_state(self.map.spot.inventory, 1),
             Entity(
                 name="Hook",
@@ -206,7 +206,7 @@ class Adventure(Drama):
             fixture.state = fixture.state if len(fixture.links) else 1
 
         item.set_state(self.world.map.spot.inventory)
-        item.aspect = item.repute
+        item.aspect = item.revert
         yield Prologue(f"<> You take the {item.names[0]}.")
 
     def do_drop(

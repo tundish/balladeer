@@ -37,34 +37,34 @@ class Entity:
     of its `uid`:
 
     >>> Entity()
-    Entity(names=[], types=set(), states={}, uid=UUID('76f72aba-056c-4d84-9da0-7e8c8451cf7e'), links=set(), sketch='', aspect='', repute='')
+    Entity(names=[], types=set(), states={}, uid=UUID('76f72aba-056c-4d84-9da0-7e8c8451cf7e'), links=set(), sketch='', aspect='', revert='')
 
     As a convenience you can pass an Entity a single
     `name` argument, but note how this is stored in
     the `names` attribute of the created object:
 
     >>> Entity(name="Anna")
-    Entity(names=['Anna'], types=set(), states={}, uid=UUID('0797bd07-9cdc-47c0-9cae-f6cae5d69ded'), links=set(), sketch='', aspect='', repute='')
+    Entity(names=['Anna'], types=set(), states={}, uid=UUID('0797bd07-9cdc-47c0-9cae-f6cae5d69ded'), links=set(), sketch='', aspect='', revert='')
 
     Of course, you can do this:
 
     >>> Entity(names=["Bob", "Robert"])
-    Entity(names=['Bob', 'Robert'], types=set(), states={}, uid=UUID('bc8ba6bf-565e-4588-97cc-337dd54bdc31'), links=set(), sketch='', aspect='', repute='')
+    Entity(names=['Bob', 'Robert'], types=set(), states={}, uid=UUID('bc8ba6bf-565e-4588-97cc-337dd54bdc31'), links=set(), sketch='', aspect='', revert='')
 
     Entity `type` works the same way, except the supporting structure is a *set*. The declared types
     of an entity should all be strings:
 
     >>> Entity(name="Chuck", type="Squirrel")
-    Entity(names=['Chuck'], types={'Squirrel'}, states={}, uid=UUID('5aab38be-3147-4647-a635-c999943ff017'), links=set(), sketch='', aspect='', repute='')
+    Entity(names=['Chuck'], types={'Squirrel'}, states={}, uid=UUID('5aab38be-3147-4647-a635-c999943ff017'), links=set(), sketch='', aspect='', revert='')
 
     >>> Entity(name="Chuck", types={"Squirrel", "Cartoon"})
-    Entity(names=['Chuck'], types={'Squirrel', 'Cartoon'}, states={}, uid=UUID('a468f8e5-1372-45a1-8795-dab5be51902a'), links=set(), sketch='', aspect='', repute='')
+    Entity(names=['Chuck'], types={'Squirrel', 'Cartoon'}, states={}, uid=UUID('a468f8e5-1372-45a1-8795-dab5be51902a'), links=set(), sketch='', aspect='', revert='')
 
     Entity objects have a `links` attribute, which allows you to associate one Entity with another.
 
     >>> a, b = (Entity(), Entity())
     >>> a.links.add(b.uid)
-    Entity(names=[], types=set(), states={}, uid=UUID('e594b6ad-88df-4199-9694-18acc788b81d'), links={UUID('aa66771b-5ba6-40fe-857d-d7c57099a013')}, sketch='', aspect='', repute='')
+    Entity(names=[], types=set(), states={}, uid=UUID('e594b6ad-88df-4199-9694-18acc788b81d'), links={UUID('aa66771b-5ba6-40fe-857d-d7c57099a013')}, sketch='', aspect='', revert='')
 
     To delete a link:
 
@@ -73,9 +73,9 @@ class Entity:
     There are three :py:class:`~balladeer.lite.speech.Speech` attributes, which you can modify at any time:
 
     aspect
-        Here you should record this entity's most recent mood or disposition.
+        Here you can record this entity's most recent mood or disposition.
 
-    repute
+    revert
         This is a backup for a previous `aspect`, so you can revert to it after a temporary change.
 
     sketch
@@ -99,7 +99,7 @@ class Entity:
 
     sketch: Speech = dataclasses.field(default_factory=Speech, compare=False)
     aspect: Speech = dataclasses.field(default_factory=Speech, compare=False)
-    repute: Speech = dataclasses.field(default_factory=Speech, compare=False)
+    revert: Speech = dataclasses.field(default_factory=Speech, compare=False)
 
     def __post_init__(self, name, type):
         # Unfortunately the builtin 'type' can't be used here
@@ -157,19 +157,19 @@ class Entity:
 
         >>> entity = Entity()
         >>> entity.set_state(Politics.ind)
-        Entity(names=[], types=set(), states={'Politics': <Politics.ind: ['Independent']>}, uid=UUID('4f02535e-b386-400c-9297-350fd73cd6fa'), links=set(), sketch='', aspect='', repute='')
+        Entity(names=[], types=set(), states={'Politics': <Politics.ind: ['Independent']>}, uid=UUID('4f02535e-b386-400c-9297-350fd73cd6fa'), links=set(), sketch='', aspect='', revert='')
 
         As a special case, an argument of type `int` is also considered a state value:
 
         >>> entity = Entity()
         >>> entity.set_state(12)
-        Entity(names=[], types=set(), states={'int': 12}, uid=UUID('4f02535e-b386-400c-9297-350fd73cd6fa'), links=set(), sketch='', aspect='', repute='')
+        Entity(names=[], types=set(), states={'int': 12}, uid=UUID('4f02535e-b386-400c-9297-350fd73cd6fa'), links=set(), sketch='', aspect='', revert='')
 
         You may supply multiple state values to this method.
 
         >>> entity = Entity()
         >>> entity.set_state(Politics.ind, 12)
-        Entity(names=[], types=set(), states={'Politics': <Politics.ind: ['Independent']>, 'int': 12}, uid=UUID('4f02535e-b386-400c-9297-350fd73cd6fa'), links=set(), sketch='', aspect='', repute='')
+        Entity(names=[], types=set(), states={'Politics': <Politics.ind: ['Independent']>, 'int': 12}, uid=UUID('4f02535e-b386-400c-9297-350fd73cd6fa'), links=set(), sketch='', aspect='', revert='')
 
         The return value is the entity object, allowing a declarative style of state assignment as follows:
 

@@ -22,7 +22,7 @@ Adds functionality for text adventures.
 * Unified the classic *Waypoint* with *State*.
 * Added the *compass* module with classic code and tests.
 * Added the *description* property to Entity.
-* *Entity* gets *repute* attribute.
+* *Entity* gets *revert* attribute.
 * Began to create API documentation.
 * *Drama.active* is now a dictionary whose values are valid commands.
 

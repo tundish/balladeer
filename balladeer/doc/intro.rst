@@ -28,7 +28,7 @@ In the same way a waveguide finds the match between an amplifier and an antenna.
 Or how a gearbox couples an engine to a loaded axle.
 
 So there was me, five salty seadogs, half a gallon of rum, and three ounces of butter.
-I gave them each a duty, and now they're getting along just fine.
+I gave them their duties, set them to work and now they're getting along just fine.
 
 If you're reading this any time after June 2023, we'll have completed our trials
 and stand ready for action.
