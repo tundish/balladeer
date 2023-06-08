@@ -62,10 +62,14 @@ or a fully described feature of your story.
 
     >>> transit.set_state(Traffic.flowing).aspect, transit.revert = "unlocked", transit.aspect
 
-    With the consequent result:
+    With the subsequent result:
 
     >>> transit.description
     "A Wooden Door. It seems to be unlocked."
+    >>> transit,get_state("Traffic")
+    <Traffic.flowing>
+    >>> transit.revert
+    "locked"
 
 MapBuilder
 ~~~~~~~~~~
