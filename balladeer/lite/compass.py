@@ -189,12 +189,26 @@ class MapBuilder:
             if v in (Traffic.flowing, Traffic.reverse):
                 yield a, b, t, d
 
-    def options(self, waypoint):
-        typ = type(waypoint)
+    def options(self, spot: State) -> set:
+        """
+        Returns a set of all the permitted transits from the supplied spot.
+        Each item of the set is a tuple of three elements.
+        The first is a compass heading if one is defined, otherwise it's an integer unique in the result set. 
+        The second element is the destination spot. The third is the viable transit.
+
+        Using the example above, this line of code will return a set with three items:
+
+        >>> map.options(map.spot.hall)
+        (<Compass.NE: ['Northeast', 'North East', (1, 1, 0)]>, <Spot.kitchen: ['kitchen']>, Transit(names=['kitchen door'], ...)
+        (<Compass.N: ['North', (0, 1, 0)]>, <Spot.stairs: ['stairs', ...]>, Transit(names=[], ...))
+        (1, <Spot.bedroom: ['bedroom']>, Transit(names=['bedroom door'], ...))
+
+        """
+        typ = type(spot)
         return {
             (c or n, typ[a.name], t)
             for n, (d, c, t, a) in enumerate(self.topology)
-            if d.name == waypoint.name
+            if d.name == spot.name
         }
 
     def route(self, locn, dest):
