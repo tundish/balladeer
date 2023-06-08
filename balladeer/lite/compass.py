@@ -122,7 +122,7 @@ class MapBuilder:
 
     To populate a new map, create a subclass of MapBuilder.
     Give the new class an attribute called ``spots``.
-    This must be a dictionary suitable for the constructor of an
+    This must be a dictionary suitable for the construction of an
     `enum.Enum <https://docs.python.org/3/library/enum.html#module-enum>`_.
 
     Override the `build` method of your class.
@@ -199,9 +199,9 @@ class MapBuilder:
         Using the example above, this line of code will return a set with three items:
 
         >>> map.options(map.spot.hall)
-        (<Compass.NE: ['Northeast', 'North East', (1, 1, 0)]>, <Spot.kitchen: ['kitchen']>, Transit(names=['kitchen door'], ...)
-        (<Compass.N: ['North', (0, 1, 0)]>, <Spot.stairs: ['stairs', ...]>, Transit(names=[], ...))
-        (1, <Spot.bedroom: ['bedroom']>, Transit(names=['bedroom door'], ...))
+        {(<Compass.NE: ['Northeast', 'North East', (1, 1, 0)]>, <Spot.kitchen: ['kitchen']>, Transit(names=['kitchen door'], ...),
+        (<Compass.N: ['North', (0, 1, 0)]>, <Spot.stairs: ['stairs', ...]>, Transit(names=[], ...)),
+        (1, <Spot.bedroom: ['bedroom']>, Transit(names=['bedroom door'], ...))}
 
         """
         typ = type(spot)
@@ -211,12 +211,21 @@ class MapBuilder:
             if d.name == spot.name
         }
 
-    def route(self, locn, dest):
-        if (locn.name, dest.name) in self.routes:
-            return self.routes[(locn.name, dest.name)]
+    def route(self, start: State, end: State) -> list[State]:
+        """
+        Return a list containing the shortest route between the spots `start` and `end`.
+        The endpoints are included in the output.
+
+        >>> map.route(map.spot.kitchen, map.spot.bedroom)
+        [<Spot.kitchen: ['kitchen']>,
+         <Spot.hall: ['hall', 'hallway']>,
+         <Spot.bedroom: ['bedroom']>]
+        """
+        if (start.name, end.name) in self.routes:
+            return self.routes[(start.name, end.name)]
 
         rvs = set()
-        paths = [[locn.name]]
+        paths = [[start.name]]
 
         graph = defaultdict(set)
         for d, _, t, a in self.topology:
@@ -227,7 +236,7 @@ class MapBuilder:
         while n >= 0 or not rvs:
             nxt = []
             for p in paths:
-                if p[-1] == dest.name:
+                if p[-1] == end.name:
                     rvs.add(tuple(p))
                 else:
                     nodes = graph[p[-1]]
@@ -239,8 +248,8 @@ class MapBuilder:
             paths = nxt
             n = n - d
 
-        rv = [type(locn)[i] for i in sorted(rvs, key=len)[0]] if rvs else []
-        self.routes[(locn.name, dest.name)] = rv
+        rv = [type(start)[i] for i in sorted(rvs, key=len)[0]] if rvs else []
+        self.routes[(start.name, end.name)] = rv
         return rv
 
     def build(self) -> Generator[Transit]:

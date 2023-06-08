@@ -66,8 +66,6 @@ class MapTests(unittest.TestCase):
     def test_simple_options(self):
         m = MapTests.Map(MapTests.Map.spots)
         self.assertEqual(3, len(m.options(m.spot.hall)))
-        import pprint
-        pprint.pprint(m.options(m.spot.hall))
 
     def test_simple_route(self):
         m = MapTests.Map(MapTests.Map.spots)

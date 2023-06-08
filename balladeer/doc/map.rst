@@ -13,7 +13,6 @@ they need to be able to change their location.
 Then you have to consider how travel works.
 What locations can be reached from here? How do we identify the possible directions?
 Can I give this pathway a name? Did I just make that pathway a real place by naming it?
-OK so how do I get there?
 
 The design goal for Balladeer's topological model is to be extremely flexible, while
 remaining as simple as possible.
