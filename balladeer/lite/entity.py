@@ -149,7 +149,7 @@ class Entity:
     @property
     def description(self) -> str:
         "Return a description of the object based on its `sketch` and other attributes"
-        return self.sketch.format(**dataclasses.asdict(self))
+        return self.sketch.format(self, **dataclasses.asdict(self))
 
     def set_state(self, *args: tuple[State | int]):
         """

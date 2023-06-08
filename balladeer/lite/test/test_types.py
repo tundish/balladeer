@@ -20,6 +20,8 @@
 import enum
 import unittest
 
+from balladeer.lite.compass import Traffic
+from balladeer.lite.compass import Transit
 from balladeer.lite.entity import Entity
 from balladeer.lite.loader import Loader
 from balladeer.lite.types import Grouping
@@ -132,3 +134,20 @@ class StateTests(unittest.TestCase):
     def test_politics(self):
         s = StateTests.Politics.ukp
         self.assertEqual("UKIP", s.label)
+
+
+class TransitExample(unittest.TestCase):
+    def test_named_transit(self):
+        transit = Transit(
+            names=["Door", "Wooden Door"],
+            type="Door",
+            aspect="locked",
+            sketch="A {0.name}. It seems to be {aspect}.",
+        ).set_state(Traffic.blocked)
+        self.assertIn(
+            transit.description,
+            (
+                "A Door. It seems to be locked.",
+                "A Wooden Door. It seems to be locked.",
+            )
+        )

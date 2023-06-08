@@ -12,6 +12,8 @@ they need to be able to change their location.
 
 Then you have to consider how travel works.
 What locations can be reached from here? How do we identify the possible directions?
+Can I give this pathway a name? Did I just make that pathway a real place by naming it?
+OK so how do I get there?
 
 The design goal for Balladeer's topological model is to be extremely flexible, while
 remaining as simple as possible.
@@ -33,15 +35,23 @@ Traffic and Transits
 ~~~~~~~~~~~~~~~~~~~~
 
 It's very common in a story for a way to be blocked, only to open later. Or perhaps
-there's a slippery slope which can only be taken in one direction.
+there's a slippery slope which can be taken only in one direction.
 
 :py:class:`~balladeer.lite.compass.Traffic` is a simple state definition to model that behaviour.
 
 .. literalinclude:: ../lite/compass.py
    :pyobject: Traffic
 
-A :py:class:`~balladeer.lite.compass.Transit` is an Entity which describes the navigation between
-two places in the story.
+A :py:class:`~balladeer.lite.compass.Transit` is an object which describes the navigation between
+two places in the world. It inherits from :py:class:`~balladeer.lite.entity.Entity` so it may be anonymous,
+or a fully described feature of your story.
+
+.. literalinclude:: ../lite/test/test_types.py
+   :lines: 141-146
+   :dedent: 8
+
+>>> transit.description
+"A Wooden Door. It seems to be locked."
 
 MapBuilder
 ~~~~~~~~~~

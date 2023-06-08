@@ -47,7 +47,7 @@ class MapTests(unittest.TestCase):
             "hall": ["hall", "hallway"],
             "kitchen": ["kitchen"],
             "stairs": ["stairs", "stairway", "up", "up stairs", "upstairs"],
-            "inventory": None,
+            "inventory": ["inventory"],
         }
 
         def build(self):
