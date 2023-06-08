@@ -102,10 +102,10 @@ Exit = None
 
 
 class Traffic(State, enum.Enum):
-    blocked = enum.auto()
-    forward = enum.auto()
-    reverse = enum.auto()
-    flowing = enum.auto()
+    blocked = "No traffic"
+    forward = "Traffic flow forward"
+    reverse = "Traffic flow reversed"
+    flowing = "Traffic flows freely"
 
 
 class Transit(Entity):
