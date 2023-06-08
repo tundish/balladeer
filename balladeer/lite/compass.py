@@ -158,7 +158,26 @@ class MapBuilder:
         self.routes = {}
 
     @property
-    def topology(self):
+    def topology(self) -> Generator[tuple[State, State, Entity, State]]:
+        """
+        Generates the topological mesh of the map.
+
+        Each item is a tuple representing an arc from one spot to another, if permitted by a transit.
+        Compass direction, when known, is the second element of the tuple.
+
+        The built map of the previous example generates the following six arcs:
+
+        .. code-block:: python
+           :linenos:
+
+           (<Exit.bedroom: ['bedroom']>, None, Transit(names=['bedroom door'], ...), <Into.hall: ['hall', 'hallway']>)
+           (<Into.hall: ['hall', 'hallway']>, None, Transit(names=['bedroom door'], ...), <Exit.bedroom: ['bedroom']>)
+           (<Exit.hall: ['hall', 'hallway']>, <Compass.N: ['North', (0, 1, 0)]>, Transit(names=[], ...), <Into.stairs: ['stairs', ...]>)
+           (<Into.stairs: ['stairs', ...]>, <Compass.S: ['South', (0, -1, 0)]>, Transit(names=[], ...) <Exit.hall: ['hall', 'hallway']>)
+           (<Exit.kitchen: ['kitchen']>, <Compass.SW: ['Southwest', 'South West', (-1, -1, 0)]>, Transit(names=['kitchen door'], ...) <Into.hall: ['hall', 'hallway']>)
+           (<Into.hall: ['hall', 'hallway']>, <Compass.NE: ['Northeast', 'North East', (1, 1, 0)]>, Transit(names=['kitchen door'], ...) <Exit.kitchen: ['kitchen']>)
+
+        """
         for t in self.transits:
             d = t.get_state(self.exit)
             a = t.get_state(self.into)
