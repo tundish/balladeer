@@ -113,7 +113,41 @@ class Transit(Entity):
 
 
 class MapBuilder:
-    def __init__(self, spots, config=None):
+    """
+
+    This class is the base for the map of your story world.
+
+    It is responsible for routing and navigation.
+    It helps your characters find their way around.
+
+    To populate a new map, create a subclass of MapBuilder.
+    Give the new class an attribute called ``spots``.
+    This must be a dictionary suitable for the constructor of an
+    `enum.Enum <https://docs.python.org/3/library/enum.html#module-enum>`_.
+
+    Override the `build` method of your class.
+    This method generates :py:class:`~balladeer.lite.compass.Transit` objects.
+
+    Internally the map object will derive four state types from the spot
+    data you supplied to it:
+
+    Spot
+        This state represents an absolute position, eg: ``map.spot.kitchen``.
+    Into
+        This state represents motion towards the position, eg: ``map.into.kitchen``.
+    Exit
+        This state represents motion away from the position, eg: ``map.exit.kitchen``.
+    Home
+        This state represents an affinity to the position, eg: ``map.home.kitchen``.
+
+    These states are available for use with transits and other entities.
+
+    .. literalinclude:: ../lite/test/test_compass.py
+       :pyobject: MapTests.Map
+       :dedent: 4
+
+    """
+    def __init__(self, spots: dict, config=None):
         self.config = config
         global Into, Home, Spot, Exit
         self.into = Into = enum.Enum("Into", spots, type=State)

@@ -151,3 +151,13 @@ class TransitExample(unittest.TestCase):
                 "A Wooden Door. It seems to be locked.",
             )
         )
+
+        transit.set_state(Traffic.flowing).aspect, transit.revert = "open", transit.aspect
+        self.assertIn(
+            transit.description,
+            (
+                "A Door. It seems to be open.",
+                "A Wooden Door. It seems to be open.",
+            )
+        )
+        self.assertEqual("locked", transit.revert)

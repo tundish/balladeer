@@ -22,7 +22,7 @@ API Documentation
    story
    scene
    style
-   # web
+   pages
 
 .. _GNU General Public License: http://www.gnu.org/licenses/gpl.html
 .. _issue tracker: https://github.com/tundish/balladeer/issues

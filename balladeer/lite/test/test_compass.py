@@ -41,7 +41,7 @@ class CompassTests(unittest.TestCase):
 
 
 class MapTests(unittest.TestCase):
-    class SimpleMap(MapBuilder):
+    class Map(MapBuilder):
         spots = {
             "bedroom": ["bedroom"],
             "hall": ["hall", "hallway"],
@@ -64,11 +64,11 @@ class MapTests(unittest.TestCase):
             ]
 
     def test_simple_options(self):
-        m = MapTests.SimpleMap(MapTests.SimpleMap.spots)
+        m = MapTests.Map(MapTests.Map.spots)
         self.assertEqual(3, len(m.options(m.spot.hall)))
 
     def test_simple_route(self):
-        m = MapTests.SimpleMap(MapTests.SimpleMap.spots)
+        m = MapTests.Map(MapTests.Map.spots)
         r = m.route(m.spot.kitchen, m.spot.bedroom)
         self.assertEqual(3, len(r))
         self.assertEqual(3, len(set(r)))

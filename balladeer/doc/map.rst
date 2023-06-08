@@ -53,6 +53,21 @@ or a fully described feature of your story.
 >>> transit.description
 "A Wooden Door. It seems to be locked."
 
+.. caution:: **Compact idiom for attribute swapping and state allocation**.
+
+    At the the expense of readability, this one-liner will:
+
+    * Change the state of the door
+    * Copy the value of `aspect` to `revert`
+    * Change the value of `aspect` to "unlocked"
+
+    >>> transit.set_state(Traffic.flowing).aspect, transit.revert = "unlocked", transit.aspect
+
+    With the consequent result:
+
+    >>> transit.description
+    "A Wooden Door. It seems to be unlocked."
+
 MapBuilder
 ~~~~~~~~~~
 
