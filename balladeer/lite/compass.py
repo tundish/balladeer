@@ -29,18 +29,20 @@ from balladeer.lite.entity import Entity
 from balladeer.lite.types import State
 
 
-class Compass(State, enum.Enum):
-    N = ["North", vector(+0, +1)]
-    NE = ["Northeast", "North East", vector(+1, +1)]
-    E = ["East", vector(+1, +0)]
-    SE = ["Southeast", "South East", vector(+1, -1)]
-    S = ["South", vector(+0, -1)]
-    SW = ["Southwest", "South West", vector(-1, -1)]
-    W = ["West", vector(-1, +0)]
-    NW = ["Northwest", "North West", vector(-1, -1)]
-
+class Bearing:
     @classmethod
-    def bearing(cls, *args):
+    def bearing(cls, *args) -> float:
+        """
+        Calculate the angular bearing of the endpoint of
+        a route as measured from the beginning.
+
+        >>> Compass.bearing(Compass.E)
+        90.0
+
+        >>> Compass.bearing(Compass.N, Compass.E, Compass.E, Compass.SW)
+        90.0
+
+        """
         # FIXME sum triggers bug in __add__
         vec = list(itertools.accumulate(i.value[-1] for i in args))[-1]
         phase = 180 * cmath.phase(complex(*vec[:2])) / cmath.pi
@@ -54,8 +56,33 @@ class Compass(State, enum.Enum):
             rv = 90 + 360 - phase
         return rv % 360
 
+
+class Compass(Bearing, State, enum.Enum):
+    """
+    A state to represent the eight points of the compass.
+
+    .. literalinclude:: ../lite/compass.py
+       :lines: 68-75
+
+    """
+    N = ["North", vector(+0, +1)]
+    NE = ["Northeast", "North East", vector(+1, +1)]
+    E = ["East", vector(+1, +0)]
+    SE = ["Southeast", "South East", vector(+1, -1)]
+    S = ["South", vector(+0, -1)]
+    SW = ["Southwest", "South West", vector(-1, -1)]
+    W = ["West", vector(-1, +0)]
+    NW = ["Northwest", "North West", vector(-1, -1)]
+
     @property
     def back(self):
+        """
+        Return the opposite point:
+
+        >>> Compass.NE.back
+        Compass.SW
+
+        """
         return {
             "N": Compass.S,
             "NE": Compass.SW,

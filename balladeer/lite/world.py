@@ -40,6 +40,7 @@ class WorldBuilder:
 
     .. literalinclude:: ../lite/test/test_world.py
        :pyobject: WorldBuilderTests.test_simple.World
+       :dedent: 8
 
     """
     def __init__(self, map: MapBuilder=None, config: dict=None):
