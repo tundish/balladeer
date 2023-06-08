@@ -38,9 +38,9 @@ class WorldBuilderTests(unittest.TestCase):
     def test_simple(self):
         class World(WorldBuilder):
             def build(self):
-                yield Entity(type="Tinker")
-                yield Entity(type="Tailor")
-                yield Entity(type="Soldier")
+                yield Entity(names=["Percy Alleline,", "Tinker"], type="Spy")
+                yield Entity(names=["Bill Haydon", "Tailor"], type="Spy")
+                yield Entity(names=["Roy Bland", "Soldier"], type="Spy")
 
         world = World()
         self.assertEqual(3, len(world.entities))

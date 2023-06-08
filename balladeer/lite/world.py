@@ -21,6 +21,7 @@ from collections import defaultdict
 from collections.abc import Generator
 import enum
 
+from balladeer.lite.compass import MapBuilder
 from balladeer.lite.entity import Entity
 from balladeer.lite.types import Grouping
 from balladeer.lite.types import State
@@ -32,15 +33,16 @@ class WorldBuilder:
     This class is the base for the world of your narrative.
 
     It is responsible for holding all the entities you need.
-    It has methods to help you retrieve them when you need them.
+    It helps you retrieve them when you need them.
 
-    .. code-block:: python
+    To populate a new world, override the `build` method of a subclass.
+    It is a generator of entity objects.
 
-        class World(WorldBuilder):
-            pass
+    .. literalinclude:: ../lite/test/test_world.py
+       :pyobject: WorldBuilderTests.test_simple.World
 
     """
-    def __init__(self, map=None, config=None):
+    def __init__(self, map: MapBuilder=None, config: dict=None):
         self.map = map
         self.config = config
 
@@ -48,12 +50,24 @@ class WorldBuilder:
         self.typewise = Grouping.typewise(self.entities)
 
     @property
-    def statewise(self):
+    def statewise(self) -> Grouping:
+        """
+        Returns a :py:class:`~balladeer.lite.types.Grouping`
+        whose keys are all of type ``int`` or
+        :py:class:`~balladeer.lite.types.State`.
+
+        The corresponding value is a list of entities with that state.
+
+        """
         rv = Grouping(list)
         for entity in self.entities:
             for state in entity.states.values():
                 rv[str(state)].append(entity)
         return rv
 
-    def build(self):
+    def build(self) -> Generator[Entity]:
+        """
+        Override this method to generate Entities.
+
+        """
         return ()
