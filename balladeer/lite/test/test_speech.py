@@ -78,5 +78,6 @@ class SpeechTests(unittest.TestCase):
 
         a = s.words
         b = s.words
+        print(s.tags)
         self.assertIs(a, b)
         self.assertEqual(24, len(s.words))

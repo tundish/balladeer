@@ -44,9 +44,9 @@ So we need a way of defining Speech.
 It's more than a string of words. We want to remember who says the words and why.
 We want the words to have an effect on the story.
 
-Enter SpeechMark_.
+Enter SpeechMark.
 
-.. note::   Please read the `documentation on SpeechMark`_.
+.. important::   Please read the `documentation for SpeechMark`_.
             Take a few minutes to become familiar with its syntax.
 
 
@@ -55,4 +55,4 @@ Enter SpeechMark_.
    :member-order: bysource
 
 .. _SpeechMark: https://github.com/tundish/speechmark
-.. _documentation on SpeechMark: https://github.com/tundish/speechmark
+.. _documentation for SpeechMark: https://github.com/tundish/speechmark

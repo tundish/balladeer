@@ -26,15 +26,58 @@ from speechmark import SpeechMark
 
 
 class Speech(str):
+    """
+    This is a lightweight class for objects which
+    represent marked-up speech.
+
+    .. code-block:: python
+
+        speech = Speech('''
+        <STAFF.proposing#3> What will you have, sir? The special is fish today.
+            1. Order the Beef Wellington
+            2. Go for the Shepherd's Pie
+            3. Try the Dover Sole
+        ''')
+    """
     processor = SpeechMark()
     tag_matcher = re.compile("<[^>]+?>")
 
     @functools.cache
     def trim(self) -> str:
+        """
+        Eliminates indentation and other leading whitespace.
+        This method is used internally, so you won't need to call it explicitly.
+
+        """
         return textwrap.dedent(self).strip()
 
     @functools.cached_property
     def tags(self) -> str:
+        """
+        Returns the Speech as HTML5.
+
+        >>> speech.tags
+
+        .. code-block:: html
+
+            <cite data-role="STAFF" data-directives=".proposing" data-fragments="#3">STAFF</cite>
+            <p>
+             What will you have, sir? The special is fish today.
+            </p>
+            <ol>
+            <li id="1"><p>
+            Order the Beef Wellington
+            </p></li>
+            <li id="2"><p>
+            Go for the Shepherd's Pie
+            </p></li>
+            <li id="3"><p>
+            Try the Dover Sole
+            </p></li>
+            </ol>
+            </blockquote>
+
+        """
         return self.processor.loads(self.trim())
 
     @functools.cached_property
