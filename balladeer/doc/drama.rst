@@ -75,27 +75,45 @@ Here is the Drama class with the corresponding handler:
 .. literalinclude:: ../examples/ex_10_animate_media/main.py
     :lines: 42-45
 
+
 Dialogue generator
 ~~~~~~~~~~~~~~~~~~
 
-Discourse
+Dialogue generators must be instance methods whose name begins with the prefix ``do_``.
+They take keyword arguments, each of which must have an annotation_.
 
-do_
+The method must contain a docstring which defines the text which triggers the method.
+Docstrings may contain format specifiers wich reference the keyword arguments.
 
-Speech
-------
+.. py:function:: drama.do_xxx(self, this, text, director, *args, **kwargs):
 
-Generate:
+    Annotations for keyword arguments may be:
 
-* :py:class:`~balladeer.lite.speech.Prologue`
-* :py:class:`~balladeer.lite.speech.Dialogue`
-* :py:class:`~balladeer.lite.speech.Epilogue`
+    * An iterable type eg: an Enum/State.
+    * A string which gives attribute access via the drama object to an iterable of entities.
 
-Action
-------
+    Ths method is a generator of Speech objects.
+    The speech objects must be of these three classes:
+
+    :py:class:`~balladeer.lite.speech.Prologue`
+        Speech which belongs at the top of a page.
+    :py:class:`~balladeer.lite.speech.Dialogue`
+        Speech interleaved with the main content of the scene.
+    :py:class:`~balladeer.lite.speech.Epilogue`
+        Speech which belongs at the bottom of a page.
+
+This sounds complicated, but it's easily demonstrated with a couple of examples_.
+
+This ``do_move`` method declares in its docstring that text like ``n``, ``north``, ``go n`` or ``go north``
+will activate the method. The method will be invoked with the corresponding
+:py:class:`~balladeer.lite.compass.Compass` class member supplied via the *heading* parameter.
 
 .. literalinclude:: ../examples/ex_11_inventory_compass/main.py
     :lines: 161-174
+
+Next we have ``do_drop``, an example of an annotation which is a string accessor on the drama object.
+The text which triggers the method is ``drop`` or ``discard``, so long as it's followed by the name of
+any item in the *inventory* location of the drama object's :py:class:`~balladeer.lite.world.WorldBuilder`.
 
 .. literalinclude:: ../examples/ex_11_inventory_compass/main.py
     :lines: 212-222
@@ -103,3 +121,4 @@ Action
 .. _SpeechMark: https://github.com/tundish/speechmark
 .. _directives: https://github.com/tundish/speechmark#605
 .. _examples: https://github.com/tundish/balladeer/tree/master/balladeer/examples
+.. _annotation: https://docs.python.org/3/howto/annotations.html
