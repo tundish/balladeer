@@ -27,8 +27,8 @@ of the current location of the narrative.
 In addition to properties, there are three ways of adding functionality.
 
 * Overriding the Interlude_ method.
-* In a `Dialogue generator`_ method.
 * As a `Directive handler`_.
+* In a `Dialogue generator`_ method.
 
 Interlude
 ~~~~~~~~~
@@ -39,15 +39,41 @@ place to put game rules which are invariant.
 
 .. py:function:: drama.interlude(self, *args, **kwargs)
 
-   Return a list of random ingredients as strings.
+   Apply rules once every story turn.
 
-   :param self: Optional "kind" of ingredients.
-   :type self: list[str] or None
    :return: The Drama object
    :rtype: :py:class:`~balladeer.lite.entity.Entity`.
 
-No return value.
-Invariant
+Directive handler
+~~~~~~~~~~~~~~~~~
+
+SpeechMark_ has a feature called directives_.
+When a drama object implements a directive handler, it may be invoked
+from Speech.
+
+Handlers must be instance methods whose name begins with the prefix ``on_``.
+They take an argument which is the primary entity of the declaration.
+Any other entities are supplied as positional arguments.
+
+.. py:function:: drama.on_xxxing(self, entity: Entity, *args: tuple[Entity], **kwargs):
+
+   Handles the SpeechMark directive 'xxxing'.
+
+   :param entity: The primary entity of the directive
+   :param args: The associated entites of the directive
+   :rtype: None
+
+This is a snippet from the Balladeer examples_.
+In the scene, one character attacks another::
+
+    <WEAPON.attacking@FIGHTER_2>
+
+        _Whack!_
+
+Here is the Drama class with the corresponding handler:
+
+.. literalinclude:: ../examples/ex_10_animate_media/main.py
+    :lines: 42-45
 
 Dialogue generator
 ~~~~~~~~~~~~~~~~~~
@@ -74,29 +100,6 @@ Action
 .. literalinclude:: ../examples/ex_11_inventory_compass/main.py
     :lines: 212-222
 
-Directive handler
-~~~~~~~~~~~~~~~~~
-
-on_
-
-.. py:function:: drama.on_something(self, *args, **kwargs)
-
-   Return a list of random ingredients as strings.
-
-   :param self: Optional "kind" of ingredients.
-   :type self: list[str] or None
-   :return: The ingredients list.
-   :rtype: None
-
-No return value.
-
-    ::
-
-        <WEAPON.attacking@FIGHTER_2:noise/slapwhack>
-
-            _Whack!_
-
-.. literalinclude:: ../examples/ex_10_animate_media/main.py
-    :lines: 42-45
-
+.. _SpeechMark: https://github.com/tundish/speechmark
+.. _directives: https://github.com/tundish/speechmark#605
 .. _examples: https://github.com/tundish/balladeer/tree/master/balladeer/examples
