@@ -54,7 +54,7 @@ class Speech(str):
     @functools.cached_property
     def tags(self) -> str:
         """
-        Returns the Speech as HTML5.
+        Render the markup as HTML5.
 
         >>> speech.tags
 
@@ -82,11 +82,27 @@ class Speech(str):
 
     @functools.cached_property
     def lines(self) -> list[str]:
+        """
+        Render the markup into lines of plain text.
+
+        >>> speech.lines
+        ['STAFF', 'What will you have, sir? The special is fish today.', 'Order the Beef Wellington',
+        "Go for the Shepherd's Pie", 'Try the Dover Sole']
+
+        """
         text = self.tag_matcher.sub("", self.tags)
         return list(filter(None, (i.strip() for i in text.splitlines())))
 
     @functools.cached_property
     def words(self) -> list[str]:
+        """
+        Render the markup into constituent words.
+
+        >>> speech.words
+        ['STAFF', 'What', 'will', 'you', 'have,', 'sir?', 'The', 'special', 'is', 'fish', 'today.',
+        'Order', 'the', 'Beef', 'Wellington', 'Go', 'for', 'the', "Shepherd's", 'Pie',
+        'Try', 'the', 'Dover', 'Sole']
+        """
         return " ".join(self.lines).split(" ")
 
 

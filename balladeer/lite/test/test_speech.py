@@ -69,7 +69,6 @@ class SpeechTests(unittest.TestCase):
     def test_word_count(self):
         text = """
         <STAFF.proposing#3> What will you have, sir? The special is fish today.
-
             1. Order the Beef Wellington
             2. Go for the Shepherd's Pie
             3. Try the Dover Sole
@@ -78,6 +77,5 @@ class SpeechTests(unittest.TestCase):
 
         a = s.words
         b = s.words
-        print(s.tags)
         self.assertIs(a, b)
         self.assertEqual(24, len(s.words))
