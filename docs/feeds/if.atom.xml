@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>Balladeer - IF</title><link href="https://tundish.github.io/balladeer/" rel="alternate"></link><link href="https://tundish.github.io/balladeer/feeds/if.atom.xml" rel="self"></link><id>https://tundish.github.io/balladeer/</id><updated>2023-05-14T19:10:00+01:00</updated><entry><title>The Balladeer backstory</title><link href="https://tundish.github.io/balladeer/the-balladeer-backstory.html" rel="alternate"></link><published>2023-05-14T19:10:00+01:00</published><updated>2023-05-14T19:10:00+01:00</updated><author><name>tundish</name></author><id>tag:tundish.github.io,2023-05-14:/balladeer/the-balladeer-backstory.html</id><summary type="html">&lt;p class="first last"&gt;This is an introductory article. Start here if you know nothing about Balladeer.&lt;/p&gt;
-</summary><content type="html">&lt;div class="section" id="the-world-written-web"&gt;
-&lt;h2&gt;The World Written Web&lt;/h2&gt;
+</summary><content type="html">&lt;div class="section" id="the-word-write-web"&gt;
+&lt;h2&gt;The Word Write Web&lt;/h2&gt;
 &lt;p&gt;What's that technology we use, in between reading a book and playing a video game?&lt;/p&gt;
 &lt;p&gt;In that space sits the Web and all its mechanisms and protocols.
 We've had it for decades and it has served us in different ways.
