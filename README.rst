@@ -50,3 +50,4 @@ Examples
 .. _code repository: https://github.com/tundish/balladeer
 .. _development blog: https://tundish.github.io/balladeer/
 .. _read online: https://balladeer.readthedocs.io/en/latest/index.html
+.. _examples: https://github.com/tundish/balladeer/tree/master/balladeer/examples
