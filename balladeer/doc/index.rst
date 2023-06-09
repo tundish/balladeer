@@ -21,6 +21,7 @@ API Documentation
    scene
    style
    pages
+   changes
 
 .. include:: ../../README.rst
 

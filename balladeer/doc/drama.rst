@@ -24,7 +24,6 @@ of the current location of the narrative.
 .. literalinclude:: ../examples/ex_11_inventory_compass/main.py
     :lines: 70-72
 
-
 In addition to properties, there are three ways of adding functionality.
 
 * Overriding the Interlude_ method.
@@ -34,14 +33,18 @@ In addition to properties, there are three ways of adding functionality.
 Interlude
 ~~~~~~~~~
 
+In Balladeer the `interlude` gets called every turn of a
+:ref:`Story <story section>`. This makes it the ideal
+place to put game rules which are invariant.
+
 .. py:function:: drama.interlude(self, *args, **kwargs)
 
    Return a list of random ingredients as strings.
 
    :param self: Optional "kind" of ingredients.
    :type self: list[str] or None
-   :return: The ingredients list.
-   :rtype: None
+   :return: The Drama object
+   :rtype: :py:class:`~balladeer.lite.entity.Entity`.
 
 No return value.
 Invariant
@@ -76,6 +79,24 @@ Directive handler
 
 on_
 
+.. py:function:: drama.on_something(self, *args, **kwargs)
+
+   Return a list of random ingredients as strings.
+
+   :param self: Optional "kind" of ingredients.
+   :type self: list[str] or None
+   :return: The ingredients list.
+   :rtype: None
+
 No return value.
+
+    ::
+
+        <WEAPON.attacking@FIGHTER_2:noise/slapwhack>
+
+            _Whack!_
+
+.. literalinclude:: ../examples/ex_10_animate_media/main.py
+    :lines: 42-45
 
 .. _examples: https://github.com/tundish/balladeer/tree/master/balladeer/examples

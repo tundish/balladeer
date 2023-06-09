@@ -1,6 +1,8 @@
 ..  Titling
     ##++::==~~--''``
 
+.. _`story section`:
+
 Story
 =====
 
