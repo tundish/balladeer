@@ -19,8 +19,9 @@ API Documentation
    drama
    story
    scene
-   style
    pages
+   style
+   web
    changes
 
 .. include:: ../../README.rst
