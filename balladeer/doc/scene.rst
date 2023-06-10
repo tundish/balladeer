@@ -14,7 +14,7 @@ Balladeer uses the TOML format to store scene dialogue.
 Scene file names end in `".scene.toml"`.
 
 .. important::   Please read the `documentation for TOML`_.
-            Take a few minutes to become familiar with its format.
+            Spend a few minutes to become familiar with its format.
 
 Specifications
 ~~~~~~~~~~~~~~
@@ -75,9 +75,12 @@ You can have multiple conditions which apply to different roles:
 Model
 ~~~~~
 
+For reference, so you can understand the link between scene syntax and TOML structure, here's an
+entire scene file:
+
 .. literalinclude:: ../examples/ex_11_inventory_compass/foyer.scene.toml
 
-::
+... and here's how Balladeer reads it::
 
     {
         'DRAMA': {'state': 'Spot.foyer', 'type': 'Adventure'},
