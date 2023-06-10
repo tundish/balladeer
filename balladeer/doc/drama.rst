@@ -1,6 +1,8 @@
 ..  Titling
     ##++::==~~--''``
 
+.. _`drama section`:
+
 Drama
 =====
 

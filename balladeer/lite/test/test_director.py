@@ -694,7 +694,7 @@ class LoopTests(unittest.TestCase):
 
 class DirectiveTests(unittest.TestCase):
     def test_directive_handling(self):
-        script = textwrap.dedent("""
+        script = textwrap.dedent('''
             [GUEST]
 
             [STAFF]
@@ -702,11 +702,11 @@ class DirectiveTests(unittest.TestCase):
             [PHONE]
 
             [[_]]
-
-            s='''
+            s="""
             <PHONE.announcing@GUEST,STAFF> Ring riiing!
-            '''
-            """).strip()
+
+            """
+            ''').strip()
 
         scene = tomllib.loads(script)
         ensemble = [Entity(), Entity(), Entity()]
