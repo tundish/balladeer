@@ -58,11 +58,22 @@ In other words, something that looks like this:
 Conditions
 ~~~~~~~~~~
 
+Each shot may have one or more *conditions* attached to it which determine whether or not the speech is voiced.
+The format for conditions is the same as for specifications_, except that the keys are preceded with ``if.ROLE``.
+
+Here's an example from *Cloak of Darkness*. The shot has a single condition, specifying multiple values for
+one state.
+
 .. literalinclude:: ../examples/ex_11_inventory_compass/foyer.scene.toml
     :lines: 8-13
 
+You can have multiple conditions which apply to different roles:
+
 .. literalinclude:: ../examples/ex_11_inventory_compass/foyer.scene.toml
     :lines: 35-40
+
+Model
+~~~~~
 
 .. literalinclude:: ../examples/ex_11_inventory_compass/foyer.scene.toml
 
