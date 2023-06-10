@@ -43,8 +43,7 @@ class Green(State, enum.Enum):
     lime = "#00BB00"
 
 
-class World(WorldBuilder):t
-L
+class World(WorldBuilder):
     def build(self):
         yield from [
             Entity(type="Bottle").set_state(random.choice(list(Green)), 1),
@@ -63,7 +62,7 @@ L
 class Wall(Drama):
     @property
     def unbroken(self):
-        return [i for i in self.ensemble if i.type == "Bottle" and i.state == 1]
+        return [i for i in self.ensemble if "Bottle" in i.types and i.state == 1]
 
     def do_bottle(self, this, text, director, *args, **kwargs):
         """
@@ -90,7 +89,6 @@ class Wall(Drama):
 
     def interlude(self, *args, **kwargs) -> list[Speech]:
         self.state = len(self.unbroken)
-        return self.speech.copy()
 
 
 class Story(StoryBuilder):

@@ -21,16 +21,16 @@ import enum
 import random
 
 import balladeer
-from balladeer import Session
-from balladeer import quick_start
+from balladeer import Dialogue
 from balladeer import Drama
 from balladeer import Entity
-from balladeer import Dialogue
-from balladeer import Speech
-from balladeer import StoryBuilder
 from balladeer import Page
+from balladeer import Session
+from balladeer import Speech
 from balladeer import State
+from balladeer import StoryBuilder
 from balladeer import WorldBuilder
+from balladeer import quick_start
 
 
 __doc__ = """
@@ -57,7 +57,7 @@ class World(WorldBuilder):
 class Wall(Drama):
     @property
     def unbroken(self):
-        return [i for i in self.ensemble if i.type == "Bottle" and i.state != 0]
+        return [i for i in self.ensemble if "Bottle" in i.types and i.state != 0]
 
     def do_bottle(self, this, text, director, bottle: "unbroken", *args, **kwargs):
         """

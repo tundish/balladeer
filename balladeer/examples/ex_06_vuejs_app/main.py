@@ -64,7 +64,7 @@ class World(WorldBuilder):
 class Wall(Drama):
     @property
     def unbroken(self):
-        return [i for i in self.ensemble if i.type == "Bottle" and i.state == 1]
+        return [i for i in self.ensemble if "Bottle" in i.types and i.state == 1]
 
     def do_bottle(self, this, text, director, *args, **kwargs):
         """
