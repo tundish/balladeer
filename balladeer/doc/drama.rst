@@ -85,7 +85,7 @@ Dialogue generators must be instance methods whose name begins with the prefix `
 They take keyword arguments, each of which must have an annotation_.
 
 The method must contain a docstring which defines the text which triggers the method.
-Docstrings may contain format specifiers wich reference the keyword arguments.
+Docstrings may contain format specifiers which reference the keyword arguments.
 
 .. py:function:: drama.do_xxx(self, this, text, director, *args, **kwargs):
 
