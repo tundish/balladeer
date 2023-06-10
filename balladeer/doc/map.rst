@@ -33,7 +33,7 @@ The Compass is a traditional direction system. It is very common in text adventu
 Traffic and Transits
 ~~~~~~~~~~~~~~~~~~~~
 
-It's very common in a story for a way to be blocked, only to open later. Or perhaps
+Sometimes in a story a way is blocked, only to be opened later. Or perhaps
 there's a slippery slope which can be taken only in one direction.
 
 :py:class:`~balladeer.lite.compass.Traffic` is a simple state definition to model that behaviour.

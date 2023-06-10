@@ -48,8 +48,8 @@ each one:
 Grouping
 ~~~~~~~~
 
-Whether you are modelling a forest glade, a drinks party, or an alien space fleet, you will need to create objects for
-that model.
+Whether you are modelling a forest glade, a castle dungeon, or an alien space fleet,
+you will need to create objects for that model.
 
 The next challenge is to organize those objects, sorting and
 filtering them so that you can isolate the ones you need

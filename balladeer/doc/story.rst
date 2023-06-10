@@ -28,8 +28,8 @@ While this is the case, you should use the ``quick_start`` function to run your 
     :param module:      A Python module, or else a string which identifies one.
     :param resource:    An optional path into a submodule. Web assets will be loaded from this location.
     :param builder:     A subclass of :py:class:`~balladeer.lite.story.StoryBuilder` or an instance object.
-    :param host:        The host interface from which to serve the Story,
-    :param port:        The network port from which to serve the Story,
+    :param host:        The host interface from which to serve the Story.
+    :param port:        The network port from which to serve the Story.
 
 
 If you don't supply all that information, ``quick_start`` is clever enough to guess anyway.

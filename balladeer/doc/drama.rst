@@ -94,7 +94,7 @@ Docstrings may contain format specifiers wich reference the keyword arguments.
     * An iterable type eg: an Enum/State.
     * A string which gives attribute access via the drama object to an iterable of entities.
 
-    Ths method is a generator of Speech objects.
+    This method is a generator of Speech objects.
     The speech objects must be of these three classes:
 
     :py:class:`~balladeer.lite.speech.Prologue`
