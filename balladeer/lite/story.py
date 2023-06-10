@@ -36,25 +36,6 @@ from balladeer.lite.world import WorldBuilder
 
 
 class StoryBuilder:
-    """
-
-    This class provides the top level object for your narrative.
-
-    Any saving, loading, or wrangling of
-    :py:class:`~balladeer.lite.drama.Drama`
-    is done here.
-
-    To create a new story, override the `build` method of a subclass.
-    It is a generator of
-    :py:class:`~balladeer.lite.drama.Drama`  objects.
-
-    .. code-block:: python
-
-        class Story(StoryBuilder):
-            def build(self):
-                yield Drama(world=self.world, config=self.config).set_state(Detail.none)
-
-    """
 
     Turn = namedtuple(
         "Turn", ["scene", "specs", "roles", "speech", "blocks", "notes"], defaults=(None, None)
@@ -96,9 +77,6 @@ class StoryBuilder:
         return rv
 
     def build(self):
-        """
-        It's build
-        """
         drama_classes = Drama.__subclasses__()
         if self.speech or not drama_classes:
             yield Drama(*self.speech, world=self.world, config=self.config)
