@@ -54,7 +54,7 @@ When a drama object implements a directive handler, it may be invoked
 from Speech.
 
 Handlers must be instance methods whose name begins with the prefix ``on_``.
-They take an argument which is the primary entity of the declaration.
+They take an argument which is the primary entity of the directive.
 Any other entities are supplied as positional arguments.
 
 .. py:function:: drama.on_xxxing(self, entity: Entity, *args: tuple[Entity], **kwargs):
@@ -84,7 +84,7 @@ Dialogue generator
 Dialogue generators must be instance methods whose name begins with the prefix ``do_``.
 They take keyword arguments, each of which must have an annotation_.
 
-The method must contain a docstring which defines the text which triggers the method.
+The method must contain a docstring which defines the text that triggers the method.
 Docstrings may contain format specifiers which reference the keyword arguments.
 
 .. py:function:: drama.do_xxx(self, this, text, director, *args, **kwargs):
