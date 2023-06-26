@@ -6,6 +6,12 @@
 Change Log
 ::::::::::
 
+0.39.0 rc
+=========
+
+* TODO: Give loader module a CLI.
+* TODO: Detect sqlite files as Assets.
+
 0.38.0
 ======
 
