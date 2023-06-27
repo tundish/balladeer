@@ -17,7 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-
 from collections import namedtuple
 import importlib.resources
 from importlib.resources import Package
@@ -25,7 +24,6 @@ import mimetypes
 from pathlib import Path
 import re
 import tomllib
-import xml.etree.ElementTree as ET
 
 
 class Loader:
