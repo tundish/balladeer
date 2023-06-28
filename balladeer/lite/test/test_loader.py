@@ -21,7 +21,10 @@
 import copy
 import enum
 import operator
+import pathlib
+import shutil
 import sys
+import tempfile
 import textwrap
 import unittest
 import uuid
@@ -30,6 +33,25 @@ from balladeer.lite.entity import Entity
 from balladeer.lite.types import State
 
 from balladeer.lite.loader import Loader
+
+
+class LoaderTests(unittest.TestCase):
+
+    def setUp(self):
+        self.path = pathlib.Path(tempfile.mkdtemp(prefix="balladeer-", suffix="-test"))
+
+    def tearDown(self):
+        shutil.rmtree(self.path)
+
+    def test_single_scene(self):
+        text = textwrap.dedent("""
+        [NARRATOR]
+        type = "Narrator"
+        """)
+        self.path.joinpath("test.scene.toml").write_text(text)
+        assets = list(Loader.discover(self.path))
+        self.assertEqual(1, len(assets))
+        self.assertIsInstance(assets[0], Loader.Scene)
 
 
 class SceneTests(unittest.TestCase):
