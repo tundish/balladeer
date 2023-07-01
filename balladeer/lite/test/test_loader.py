@@ -23,6 +23,7 @@ import enum
 import operator
 import pathlib
 import shutil
+import sqlite3
 import sys
 import tempfile
 import textwrap
@@ -52,6 +53,15 @@ class LoaderTests(unittest.TestCase):
         assets = list(Loader.discover(self.path))
         self.assertEqual(1, len(assets))
         self.assertIsInstance(assets[0], Loader.Scene)
+
+    def test_sqlite_database(self):
+        path = self.path.joinpath("test.db")
+        con = sqlite3.connect(path)
+        con.close()
+
+        assets = list(Loader.discover(self.path))
+        self.assertEqual(1, len(assets))
+        self.assertIsInstance(assets[0], Loader.Storage)
 
 
 class SceneTests(unittest.TestCase):

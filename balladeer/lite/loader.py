@@ -33,12 +33,16 @@ class Loader:
         ["text", "tables", "resource", "path", "stats"],
         defaults=[None, None, None],
     )
+    Storage = namedtuple("Storage", ["resource", "path", "stats"], defaults=[None])
 
     @staticmethod
     def discover(
         package: [Package | Path],
         resource=".",
-        suffixes=[".scene.toml"],
+        suffixes={
+            ".db": Storage,
+            ".scene.toml": Scene,
+        },
         avoid=["__pycache__", "node_modules"],
         ignore=[re.compile("^test_.*")],
     ):
@@ -58,10 +62,14 @@ class Loader:
                 with importlib.resources.as_file(path) as f:
                     yield Loader.Asset(resource, path, typ, f.stat())
 
-            if "".join(path.suffixes) in suffixes:
+            typ = suffixes.get("".join(path.suffixes))
+            if typ is Loader.Scene:
                 with importlib.resources.as_file(path) as f:
                     text = f.read_text(encoding="utf8")
                     yield Loader.read(text, resource=resource, path=path)
+            elif typ:
+                with importlib.resources.as_file(path) as f:
+                    yield typ(resource=resource, path=path)
 
     @staticmethod
     def read(text: str, resource="", path=None):
