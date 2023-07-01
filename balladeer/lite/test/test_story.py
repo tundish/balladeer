@@ -109,7 +109,7 @@ class ExampleTests(unittest.TestCase):
 
             ''').strip()
 
-        scene = Loader.read(content)
+        scene = Loader.Scene(content, Loader.read_toml(content))
         story = Story_10(config={}, assets=Grouping.typewise([scene]))
         specs = story.director.specifications(scene.tables)
         self.assertEqual(story.director.rank_constraints(specs["FIGHTER_1"]), 1, specs)

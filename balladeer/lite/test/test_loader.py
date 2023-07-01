@@ -63,6 +63,19 @@ class LoaderTests(unittest.TestCase):
         self.assertEqual(1, len(assets))
         self.assertIsInstance(assets[0], Loader.Storage)
 
+    def test_toml_file(self):
+        text = textwrap.dedent("""
+        [DB]
+        host = "localhost"
+        port = 5432
+        """)
+        self.path.joinpath("config.toml").write_text(text)
+        assets = list(Loader.discover(self.path))
+        self.assertEqual(1, len(assets))
+        self.assertIsInstance(assets[0], Loader.Structure)
+
+        self.assertEqual(5432, assets[0].data["DB"]["port"])
+
 
 class SceneTests(unittest.TestCase):
     def test_one_scene(self):
@@ -73,11 +86,11 @@ class SceneTests(unittest.TestCase):
             Text
             '''
         """)
-        scene = Loader.read(content)
-        self.assertIsInstance(scene, Loader.Scene)
-        self.assertEqual(1, len(scene.tables.get("_")))
+        data = Loader.read_toml(content)
+        self.assertIsInstance(data, dict)
+        self.assertEqual(1, len(data.get("_")))
 
-        self.assertEqual("Text\n", scene.tables["_"][0]["s"])
+        self.assertEqual("Text\n", data["_"][0]["s"])
 
     def test_multi_scene(self):
         content = textwrap.dedent("""
@@ -93,9 +106,9 @@ class SceneTests(unittest.TestCase):
             Text
             '''
         """)
-        scene = Loader.read(content)
-        self.assertIsInstance(scene, Loader.Scene)
-        self.assertEqual(2, len(scene.tables.get("_")))
+        data = Loader.read_toml(content)
+        self.assertIsInstance(data, dict)
+        self.assertEqual(2, len(data.get("_")))
 
-        self.assertEqual("Text\n", scene.tables["_"][0]["s"])
-        self.assertEqual("Text\n", scene.tables["_"][1]["s"])
+        self.assertEqual("Text\n", data["_"][0]["s"])
+        self.assertEqual("Text\n", data["_"][1]["s"])

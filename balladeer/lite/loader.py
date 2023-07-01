@@ -34,6 +34,7 @@ class Loader:
         defaults=[None, None, None],
     )
     Storage = namedtuple("Storage", ["resource", "path", "stats"], defaults=[None])
+    Structure = namedtuple("Sructure", ["text", "data", "resource", "path", "stats"], defaults=[None, None, None])
 
     @staticmethod
     def discover(
@@ -42,6 +43,7 @@ class Loader:
         suffixes={
             ".db": Storage,
             ".scene.toml": Scene,
+            ".toml": Structure,
         },
         avoid=["__pycache__", "node_modules"],
         ignore=[re.compile("^test_.*")],
@@ -63,20 +65,18 @@ class Loader:
                     yield Loader.Asset(resource, path, typ, f.stat())
 
             typ = suffixes.get("".join(path.suffixes))
-            if typ is Loader.Scene:
+            if typ in (Loader.Scene, Loader.Structure):
                 with importlib.resources.as_file(path) as f:
                     text = f.read_text(encoding="utf8")
-                    yield Loader.read(text, resource=resource, path=path)
+                    data = Loader.read_toml(text)
+                    yield typ(text, data, resource, path, f.stat())
             elif typ:
                 with importlib.resources.as_file(path) as f:
-                    yield typ(resource=resource, path=path)
+                    yield typ(resource, path, f.stat())
 
     @staticmethod
-    def read(text: str, resource="", path=None):
+    def read_toml(text: str, resource="", path=None):
         try:
-            tables = tomllib.loads(text)
-            stats = {}
+            return tomllib.loads(text)
         except tomllib.TOMLDecodeError as e:
-            tables = {}
-            stats = e
-        return Loader.Scene(text, tables, resource, path, stats)
+            return {}
