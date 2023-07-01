@@ -34,7 +34,6 @@ class Page:
         },
     }
 
-    @enum.unique
     class Zone(enum.Enum):
         xml = "XML features only"
         doc = "Doctype declaration"
@@ -46,8 +45,8 @@ class Page:
         link = "Link tags"
         css = "Links to CSS styles"
         theme = "Dynamic updates to styles"
-        body = "Body tag"
         style = "Inline styles"
+        body = "Body tag"
         banner = "Top content"
         app = "Anchor points for ECMAScript features"
         nav = "Menus and navigation"
