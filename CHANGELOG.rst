@@ -9,8 +9,10 @@ Change Log
 0.39.0 rc
 =========
 
+* TODO: Consider adopting ColourAdapter from turberfield.dialogue.adapters.
+* TODO: Render speech cue parameters as CSS root variables with 'ballad-' prefix.
 * TODO: Give loader module a CLI.
-* TODO: Detect sqlite files as Assets.
+* Detect sqlite files as Assets.
 
 0.38.0
 ======
