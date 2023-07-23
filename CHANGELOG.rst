@@ -9,9 +9,14 @@ Change Log
 0.39.0 rc
 =========
 
-* TODO: Consider adopting ColourAdapter from turberfield.dialogue.adapters.
-* TODO: Render speech cue parameters as CSS root variables with 'ballad-' prefix.
+* TODO: Allow parameter 'class' from cue which renders at blockquote level.
+  See balladeer.lite.director.Director.parameters.
+* TODO: Render theme parameters as CSS root variables with 'ballad-ink-' prefix.
+  turberfield.catchphrase.render.Renderer.render_dict_to_css -> balladeer.lite.app.App
+* TODO: Allow parameter 'theme' from cue which populates root variables.
+  See balladeer.lite.director.Director.parameters.
 * TODO: Give loader module a CLI.
+* TODO: Consider adopting ColourAdapter from turberfield.dialogue.adapters (CLI only).
 * Detect sqlite files as Assets.
 
 0.38.0
