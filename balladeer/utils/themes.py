@@ -37,6 +37,11 @@ class ColourTests(unittest.TestCase):
         rgba = parse_colour(text)
         self.fail(rgba)
 
+    def test_rgb_to_rgba(self):
+        text = "rgb(128, 64, 32)"
+        rgba = parse_colour(text)
+        self.assertEqual([128, 64, 32, 1], rgba)
+
 
 def parse_colour(text: str, regex = re.compile("(?P<fn>[^\(]+)\((?P<data>[^\)]*)\)")):
     colour = regex.match(text)
@@ -46,13 +51,10 @@ def parse_colour(text: str, regex = re.compile("(?P<fn>[^\(]+)\((?P<data>[^\)]*)
     if fn == "rgba":
         return values
     elif fn == "rgb":
-        # TODO: extend
-        return values
+        return values + [1]
     elif fn.startswith("hsl"):
-        print(values, file=sys.stderr)
         rgb = colorsys.hls_to_rgb(values[0] / 360.0, *values[1:3])
-        # TODO: extend
-        return [int(i * 256) for i in rgb] + [1]
+        return [int(i * 256) for i in rgb] + [values[3] if len(values) > 3 else 1]
 
 
 def swatch(name, theme):
