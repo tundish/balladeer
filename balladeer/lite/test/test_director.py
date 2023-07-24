@@ -648,6 +648,18 @@ class ParametersTests(unittest.TestCase):
         self.assertIn("option", d.notes[(None, 0)])
         self.assertEqual(2, d.notes[(None, 0)]["option"])
 
+    def test_class_single(self):
+        speech = Speech("<?class=warning>Watch out!")
+        d = Director()
+        rv = "\n".join(d.edit(speech))
+        self.assertTrue(rv.startswith('<blockquote class="warning" '))
+
+    def test_class_multi(self):
+        speech = Speech("<?class=urgent&class=warning>Watch out!")
+        d = Director()
+        rv = "\n".join(d.edit(speech))
+        self.assertTrue(rv.startswith('<blockquote class="urgent warning" '), rv)
+
 
 class LoopTests(unittest.TestCase):
     def setUp(self):

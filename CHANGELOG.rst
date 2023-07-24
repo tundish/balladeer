@@ -9,8 +9,7 @@ Change Log
 0.39.0 rc
 =========
 
-* TODO: Allow parameter 'class' from cue which renders at blockquote level.
-  See balladeer.lite.director.Director.parameters.
+* Allow parameter 'class' from cue which renders at blockquote level.
 * TODO: Render theme parameters as CSS root variables with 'ballad-ink-' prefix.
   turberfield.catchphrase.render.Renderer.render_dict_to_css -> balladeer.lite.app.App
 * TODO: Allow parameter 'theme' from cue which populates root variables.

@@ -132,6 +132,7 @@ class Director:
             offer = None
 
         return {
+            "class": params.get("class", []),
             "pause": float(params.get("pause", [self.pause])[0]),
             "dwell": float(params.get("dwell", [self.dwell])[0]),
             "delay": float(params.get("delay", [self.delay])[0]),
@@ -176,7 +177,12 @@ class Director:
         self.dwell = parameters["dwell"]
         self.offer = parameters["offer"]
         self.notes[(path, index)]["offer"] = self.offer
-        return html5
+
+        class_values = " ".join(parameters["class"])
+        if class_values:
+            return html5.replace("<blockquote", f'<blockquote class="{class_values}"', 1)
+        else:
+            return html5
 
     def rank_constraints(self, spec: dict) -> int:
         roles, states, types = self.specify_role(spec)
