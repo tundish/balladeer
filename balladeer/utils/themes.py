@@ -28,6 +28,16 @@ import textwrap
 from balladeer.lite.types import Page
 
 
+import unittest
+
+class ColourTests(unittest.TestCase):
+
+    def test_hsl_to_rgba(self):
+        text = "hsl(293.33, 96.92%, 12.75%)"
+        rgba = parse_colour(text)
+        self.fail(rgba)
+
+
 def parse_colour(text: str, regex = re.compile("(?P<fn>[^\(]+)\((?P<data>[^\)]*)\)")):
     colour = regex.match(text)
     fn = colour.groupdict()["fn"]
@@ -83,6 +93,7 @@ def run():
     p = parser()
     args = p.parse_args()
     rv = main(args)
+    unittest.main()
     sys.exit(rv)
 
 if __name__ == "__main__":
