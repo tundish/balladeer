@@ -18,6 +18,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import argparse
+import colorsys
+from decimal import Decimal
 import pathlib
 import re
 import sys
@@ -25,16 +27,34 @@ import textwrap
 
 from balladeer.lite.types import Page
 
+
+def parse_colour(text: str, regex = re.compile("(?P<fn>[^\(]+)\((?P<data>[^\)]*)\)")):
+    colour = regex.match(text)
+    fn = colour.groupdict()["fn"]
+    data = colour.groupdict()["data"]
+    values = [float(i.strip(" %")) / (100 if "%" in i else 1) for i in data.split(",")]
+    if fn == "rgba":
+        return values
+    elif fn == "rgb":
+        # TODO: extend
+        return values
+    elif fn.startswith("hsl"):
+        print(values, file=sys.stderr)
+        rgb = colorsys.hls_to_rgb(values[0] / 360.0, *values[1:3])
+        # TODO: extend
+        return [int(i * 256) for i in rgb] + [1]
+
+
 def swatch(name, theme):
-    fn_regex = re.compile("(?P<fn>[^\(]+)\([^\)]*\)")
     yield f"<h3>{name}</h3>"
     yield "<ul>"
     for label, value in theme.items():
-        fn = fn_regex.match(value)
+        colour = parse_colour(value)
         yield "<li>"
-        yield f"{label}: {value} {fn.groupdict()}"
+        yield f"{label}: {value} {colour}"
         yield "</li>"
     yield "</ul>"
+
 
 def parser(usage=__doc__):
     rv = argparse.ArgumentParser(usage)
