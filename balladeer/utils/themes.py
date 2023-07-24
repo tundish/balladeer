@@ -59,13 +59,23 @@ def parse_colour(text: str, regex = re.compile("(?P<fn>[^\(]+)\((?P<data>[^\)]*)
 
 def swatch(name, theme):
     yield f"<h3>{name}</h3>"
-    yield "<ul>"
+    yield "<table><thead><tr>"
+    yield "<th>Label</th>"
+    yield "<th>Value</th>"
+    yield "<th>Swatch</th>"
+    yield "<th>RGBA</th>"
+    yield "</tr></thead><tbody>"
     for label, value in theme.items():
-        colour = parse_colour(value)
-        yield "<li>"
-        yield f"{label}: {value} {colour}"
-        yield "</li>"
-    yield "</ul>"
+        rgba = parse_colour(value)
+        colour = "rgba({0}, {1}, {2}, {3})".format(*rgba)
+        yield "<tr>"
+        yield f"<td>{label}</td>"
+        yield f'<td>{value}</td>'
+        yield f'<td style="background-color: {value}; width=4rem;"></td>'
+        yield f'<td style="border-color: {colour}; border-style: solid; width=4rem;">{rgba}</td>'
+        yield "</tr>"
+
+    yield "</tbody></table>"
 
 
 def parser(usage=__doc__):
