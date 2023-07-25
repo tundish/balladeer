@@ -32,10 +32,15 @@ import unittest
 
 class ColourTests(unittest.TestCase):
 
-    def test_hsl_to_rgba(self):
-        text = "hsl(293.33, 96.92%, 12.75%)"
+    def test_zero_red(self):
+        text = "hsl(0, 100%, 50%)"
         rgba = parse_colour(text)
-        self.fail(rgba)
+        self.assertEqual([255, 0, 0, 1], rgba)
+
+    def test_full_red(self):
+        text = "hsl(360, 100%, 50%)"
+        rgba = parse_colour(text)
+        self.assertEqual([255, 0, 0, 1], rgba)
 
     def test_rgb_to_rgba(self):
         text = "rgb(128, 64, 32)"
@@ -43,6 +48,8 @@ class ColourTests(unittest.TestCase):
         self.assertEqual([128, 64, 32, 1], rgba)
 
 
+# TODO: without commas
+# TODO: deg, turn
 def parse_colour(text: str, regex = re.compile("(?P<fn>[^\(]+)\((?P<data>[^\)]*)\)")):
     colour = regex.match(text)
     fn = colour.groupdict()["fn"]
@@ -53,8 +60,9 @@ def parse_colour(text: str, regex = re.compile("(?P<fn>[^\(]+)\((?P<data>[^\)]*)
     elif fn == "rgb":
         return values + [1]
     elif fn.startswith("hsl"):
-        rgb = colorsys.hls_to_rgb(values[0] / 360.0, *values[1:3])
-        return [int(i * 256) for i in rgb] + [values[3] if len(values) > 3 else 1]
+        args = (values[0] / 360.0, values[2], values[1])
+        rgb = colorsys.hls_to_rgb(*args)
+        return [int(i * 255) for i in rgb] + [values[3] if len(values) > 3 else 1]
 
 
 def swatch(name, theme):
