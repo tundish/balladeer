@@ -104,7 +104,8 @@ def main(args):
     for cls in [Page] + Page.__subclasses__():
         page.paste(page.zone.body, f"<h2>{cls.__name__}</h2>")
         for name, theme in cls.themes.items():
-            page.paste(page.zone.body, *swatch(name, theme))
+            palette = theme.get("ink", {})
+            page.paste(page.zone.body, *swatch(name, palette))
     print(page.html)
     return 0
 

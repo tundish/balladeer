@@ -24,14 +24,19 @@ from collections import defaultdict
 class Page:
     themes = {
         "default": {
-            "ballad-ink-gravity": "hsl(293.33, 96.92%, 12.75%)",
-            "ballad-ink-shadows": "hsl(202.86, 100%, 4.12%)",
-            "ballad-ink-lolight": "hsl(203.39, 96.72%, 11.96%)",
-            "ballad-ink-midtone": "hsl(203.39, 96.72%, 11.96%)",
-            "ballad-ink-hilight": "hsl(203.06, 97.3%, 56.47%)",
-            "ballad-ink-washout": "hsl(50, 0%, 100%, 1.0)",
-            "ballad-ink-glamour": "hsl(353.33, 96.92%, 12.75%)",
-        },
+            "ink": {
+                "gravity": "hsl(293.33, 96.92%, 12.75%)",
+                "shadows": "hsl(202.86, 100%, 4.12%)",
+                "lolight": "hsl(203.39, 96.72%, 11.96%)",
+                "midtone": "hsl(203.39, 96.72%, 11.96%)",
+                "hilight": "hsl(203.06, 97.3%, 56.47%)",
+                "washout": "hsl(50, 0%, 100%, 1.0)",
+                "glamour": "hsl(353.33, 96.92%, 12.75%)",
+            },
+            # TODO: background images for grid
+            "img": {
+            }
+        }
     }
 
     class Zone(enum.Enum):
