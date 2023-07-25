@@ -110,7 +110,7 @@ def main(args):
     margin-right: auto;
     padding: 1.2rem;
     text-align: center;
-    width: 60%;
+    width: 80%;
     }
     </style>
     """).strip()

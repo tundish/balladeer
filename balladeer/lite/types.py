@@ -30,8 +30,8 @@ class Page:
                 "lolight": "hsl(203.39, 96.72%, 11.96%)",
                 "midtone": "hsl(203.39, 96.72%, 31.96%)",
                 "hilight": "hsl(203.06, 97.3%, 56.47%)",
-                "washout": "hsl(50, 0%, 100%, 1.0)",
-                "glamour": "hsl(18.24, 96.92%, 72.75%)",
+                "washout": "hsl(50.00, 0%, 100%)",
+                "glamour": "hsl(66.77, 96.92%, 72.75%)",
             },
             # TODO: background images for grid
             "img": {
