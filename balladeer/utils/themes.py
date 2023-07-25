@@ -66,21 +66,27 @@ def parse_colour(text: str, regex = re.compile("(?P<fn>[^\(]+)\((?P<data>[^\)]*)
 
 
 def swatch(name, theme):
-    yield f"<h3>{name}</h3>"
+    yield f"<h3>Theme: {name}</h3>"
     yield "<table><thead><tr>"
     yield "<th>Label</th>"
     yield "<th>Value</th>"
     yield "<th>Swatch</th>"
-    yield "<th>RGBA</th>"
+    yield "<th>R</th>"
+    yield "<th>G</th>"
+    yield "<th>B</th>"
+    yield "<th>A</th>"
     yield "</tr></thead><tbody>"
     for label, value in theme.items():
         rgba = parse_colour(value)
         colour = "rgba({0}, {1}, {2}, {3})".format(*rgba)
         yield "<tr>"
         yield f"<td>{label}</td>"
-        yield f'<td>{value}</td>'
+        yield f'<td style="font-family: monospace;">{value}</td>'
         yield f'<td style="background-color: {value}; width=4rem;"></td>'
-        yield f'<td style="border-color: {colour}; border-style: solid; width=4rem;">{rgba}</td>'
+        yield f'<td style="border-color: {colour}; border-style: solid; font-family: monospace;">{rgba[0]:03d}</td>'
+        yield f'<td style="border-color: {colour}; border-style: solid; font-family: monospace;">{rgba[1]:03d}</td>'
+        yield f'<td style="border-color: {colour}; border-style: solid; font-family: monospace;">{rgba[2]:03d}</td>'
+        yield f'<td style="border-color: {colour}; border-style: solid; font-family: monospace;">{rgba[3]}</td>'
         yield "</tr>"
 
     yield "</tbody></table>"
@@ -97,12 +103,20 @@ def main(args):
     <style>
     body {
     background-color: silver;
+    font-family: sans;
+    font-size: 0.8rem;
+    margin: 1.2rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1.2rem;
+    text-align: center;
+    width: 60%;
     }
     </style>
     """).strip()
     page.paste(page.zone.style, style)
     for cls in [Page] + Page.__subclasses__():
-        page.paste(page.zone.body, f"<h2>{cls.__name__}</h2>")
+        page.paste(page.zone.body, f"<h2>Class: {cls.__name__}</h2>")
         for name, theme in cls.themes.items():
             palette = theme.get("ink", {})
             page.paste(page.zone.body, *swatch(name, palette))
