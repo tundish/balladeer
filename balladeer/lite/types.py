@@ -17,8 +17,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import colorsys
 import enum
 from collections import defaultdict
+import re
 import warnings
 
 
@@ -39,6 +41,21 @@ class Page:
             }
         }
     }
+
+    @staticmethod
+    def css_rgba(text: str, regex = re.compile("(?P<fn>[^\(]+)\((?P<data>[^\)]*)\)")):
+        colour = regex.match(text)
+        fn = colour.groupdict()["fn"]
+        data = colour.groupdict()["data"]
+        values = [float(i.strip("%, ")) / (100 if "%" in i else 1) for i in data.split()]
+        if fn == "rgba":
+            return values
+        elif fn == "rgb":
+            return values + [1]
+        elif fn.startswith("hsl"):
+            args = (values[0] / 360.0, values[2], values[1])
+            rgb = colorsys.hls_to_rgb(*args)
+            return [int(i * 255) for i in rgb] + [values[3] if len(values) > 3 else 1]
 
     class Zone(enum.Enum):
         xml = "XML features only"

@@ -18,7 +18,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import argparse
-import colorsys
 from decimal import Decimal
 import pathlib
 import re
@@ -26,53 +25,6 @@ import sys
 import textwrap
 
 from balladeer.lite.types import Page
-
-
-import unittest
-
-class ColourTests(unittest.TestCase):
-
-    def test_zero_red(self):
-        for text in (
-            "hsl(0 100% 50%)",
-            "hsl(0, 100%, 50%)",
-        ):
-            with self.subTest(text=text):
-                rgba = parse_colour(text)
-                self.assertEqual([255, 0, 0, 1], rgba)
-
-    def test_full_red(self):
-        for text in (
-            "hsl(360 100% 50%)",
-            "hsl(360, 100%, 50%)"
-        ):
-            with self.subTest(text=text):
-                rgba = parse_colour(text)
-                self.assertEqual([255, 0, 0, 1], rgba)
-
-    def test_rgb_to_rgba(self):
-        for text in (
-            "rgb(128 64 32)",
-            "rgb(128, 64, 32)"
-        ):
-            with self.subTest(text=text):
-                rgba = parse_colour(text)
-                self.assertEqual([128, 64, 32, 1], rgba)
-
-
-def parse_colour(text: str, regex = re.compile("(?P<fn>[^\(]+)\((?P<data>[^\)]*)\)")):
-    colour = regex.match(text)
-    fn = colour.groupdict()["fn"]
-    data = colour.groupdict()["data"]
-    values = [float(i.strip("%, ")) / (100 if "%" in i else 1) for i in data.split()]
-    if fn == "rgba":
-        return values
-    elif fn == "rgb":
-        return values + [1]
-    elif fn.startswith("hsl"):
-        args = (values[0] / 360.0, values[2], values[1])
-        rgb = colorsys.hls_to_rgb(*args)
-        return [int(i * 255) for i in rgb] + [values[3] if len(values) > 3 else 1]
 
 
 def swatch(name, theme):
@@ -87,7 +39,7 @@ def swatch(name, theme):
     yield "<th>A</th>"
     yield "</tr></thead><tbody>"
     for label, value in theme.items():
-        rgba = parse_colour(value)
+        rgba = Page.css_rgba(value)
         colour = "rgba({0}, {1}, {2}, {3})".format(*rgba)
         yield "<tr>"
         yield f"<td>{label}</td>"
@@ -138,7 +90,6 @@ def run():
     p = parser()
     args = p.parse_args()
     rv = main(args)
-    unittest.main()
     sys.exit(rv)
 
 if __name__ == "__main__":

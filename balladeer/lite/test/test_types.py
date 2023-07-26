@@ -181,3 +181,33 @@ class PageTests(unittest.TestCase):
         self.assertFalse(page.structure[page.zone.title])
         page.paste("<title>Zone test</title>", zone=page.zone.title)
         self.assertTrue(page.structure[page.zone.title])
+
+
+class ColourTests(unittest.TestCase):
+
+    def test_zero_red(self):
+        for text in (
+            "hsl(0 100% 50%)",
+            "hsl(0, 100%, 50%)",
+        ):
+            with self.subTest(text=text):
+                rgba = Page.css_rgba(text)
+                self.assertEqual([255, 0, 0, 1], rgba)
+
+    def test_full_red(self):
+        for text in (
+            "hsl(360 100% 50%)",
+            "hsl(360, 100%, 50%)"
+        ):
+            with self.subTest(text=text):
+                rgba = Page.css_rgba(text)
+                self.assertEqual([255, 0, 0, 1], rgba)
+
+    def test_rgb_to_rgba(self):
+        for text in (
+            "rgb(128 64 32)",
+            "rgb(128, 64, 32)"
+        ):
+            with self.subTest(text=text):
+                rgba = Page.css_rgba(text)
+                self.assertEqual([128, 64, 32, 1], rgba)
