@@ -33,28 +33,38 @@ import unittest
 class ColourTests(unittest.TestCase):
 
     def test_zero_red(self):
-        text = "hsl(0, 100%, 50%)"
-        rgba = parse_colour(text)
-        self.assertEqual([255, 0, 0, 1], rgba)
+        for text in (
+            "hsl(0 100% 50%)",
+            "hsl(0, 100%, 50%)",
+        ):
+            with self.subTest(text=text):
+                rgba = parse_colour(text)
+                self.assertEqual([255, 0, 0, 1], rgba)
 
     def test_full_red(self):
-        text = "hsl(360, 100%, 50%)"
-        rgba = parse_colour(text)
-        self.assertEqual([255, 0, 0, 1], rgba)
+        for text in (
+            "hsl(360 100% 50%)",
+            "hsl(360, 100%, 50%)"
+        ):
+            with self.subTest(text=text):
+                rgba = parse_colour(text)
+                self.assertEqual([255, 0, 0, 1], rgba)
 
     def test_rgb_to_rgba(self):
-        text = "rgb(128, 64, 32)"
-        rgba = parse_colour(text)
-        self.assertEqual([128, 64, 32, 1], rgba)
+        for text in (
+            "rgb(128 64 32)",
+            "rgb(128, 64, 32)"
+        ):
+            with self.subTest(text=text):
+                rgba = parse_colour(text)
+                self.assertEqual([128, 64, 32, 1], rgba)
 
 
-# TODO: without commas
-# TODO: deg, turn
 def parse_colour(text: str, regex = re.compile("(?P<fn>[^\(]+)\((?P<data>[^\)]*)\)")):
     colour = regex.match(text)
     fn = colour.groupdict()["fn"]
     data = colour.groupdict()["data"]
-    values = [float(i.strip(" %")) / (100 if "%" in i else 1) for i in data.split(",")]
+    values = [float(i.strip("%, ")) / (100 if "%" in i else 1) for i in data.split()]
     if fn == "rgba":
         return values
     elif fn == "rgb":
