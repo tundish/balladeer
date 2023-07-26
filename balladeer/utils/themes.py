@@ -18,9 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import argparse
-from decimal import Decimal
 import pathlib
-import re
 import sys
 import textwrap
 
