@@ -252,7 +252,7 @@ class Session(HTTPEndpoint):
             page.paste("<title>Story</title>", zone=page.zone.title)
 
         page.paste(Home.meta, zone=page.zone.meta)
-        page.paste(*sorted(line for line in Home.render_css_links(request, assets), zone=page.zone.css))
+        page.paste(*sorted(line for line in Home.render_css_links(request, assets)), zone=page.zone.css)
         page.paste(*Home.render_js_links(request, assets), zone=page.zone.script)
 
         html5 = "\n".join(self.render_cues(request, story, turn))

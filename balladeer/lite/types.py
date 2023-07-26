@@ -19,6 +19,7 @@
 
 import enum
 from collections import defaultdict
+import warnings
 
 
 class Page:
@@ -96,12 +97,15 @@ class Page:
 
     @property
     def html(self):
-        return "\n".join(
-            gen if isinstance(gen, str) else "\n".join(gen)
-            for seq in self.structure.values()
-            for gen in seq
-        )
-
+        try:
+            return "\n".join(
+                gen if isinstance(gen, str) else "\n".join(gen)
+                for seq in self.structure.values()
+                for gen in seq
+            )
+        except TypeError:
+            warnings.warn("Check paste calls for non-keyword zones")
+            raise
 
 class State:
     """
