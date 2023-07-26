@@ -25,6 +25,7 @@ from balladeer.lite.compass import Transit
 from balladeer.lite.entity import Entity
 from balladeer.lite.loader import Loader
 from balladeer.lite.types import Grouping
+from balladeer.lite.types import Page
 from balladeer.lite.types import State
 
 
@@ -161,3 +162,22 @@ class TransitExample(unittest.TestCase):
             )
         )
         self.assertEqual("locked", transit.revert)
+
+
+class PageTests(unittest.TestCase):
+
+    def test_creation(self):
+        page = Page()
+        self.assertEqual(page.zone.body, page.cursor)
+
+    def test_paste(self):
+        page = Page()
+        self.assertEqual(2, len(page.structure[page.zone.body]))
+        page.paste("<p>One upon a time...</p>")
+        self.assertEqual(3, len(page.structure[page.zone.body]))
+
+    def test_paste_zone(self):
+        page = Page()
+        self.assertFalse(page.structure[page.zone.title])
+        page.paste("<title>Zone test</title>", zone=page.zone.title)
+        self.assertTrue(page.structure[page.zone.title])

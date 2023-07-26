@@ -66,6 +66,7 @@ class Page:
 
     def __init__(self, zone=Zone):
         self.zone = zone
+        self.cursor = next(iter(zone), None)
         self.structure = self.setup(zone)
 
     def setup(self, zone):
@@ -85,9 +86,11 @@ class Page:
         # NB: Prefetch gets resources for the next page.
         # Stateful Presenter needs lookahead.
         rv[zone.end].extend(["</body>", "</html>"])
+        self.cursor = zone.body
         return rv
 
-    def paste(self, zone, *args):
+    def paste(self, *args, zone=None):
+        zone = zone or self.cursor
         self.structure[zone].extend(filter(None, args))
         return self
 
