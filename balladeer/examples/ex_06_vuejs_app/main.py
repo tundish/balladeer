@@ -106,12 +106,13 @@ class Song(Session):
         self, request, page: Page, story: StoryBuilder = None, turn: StoryBuilder.Turn = None
     ) -> Page:
         page.paste(
-            page.zone.app, '<div id="app"><diorama v-bind:ensemble="ensemble"></diorama></div>'
+            '<div id="app"><diorama v-bind:ensemble="ensemble"></diorama></div>',
+            zone=page.zone.app
         )
         page = super().compose(request, page, story, turn)
         page.paste(
-            page.zone.link,
             '<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>',
+            zone=page.zone.link
         )
         return page
 
