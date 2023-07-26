@@ -111,9 +111,9 @@ class Home(HTTPEndpoint):
     ) -> Page:
         assets = getattr(self, "assets", Grouping())
 
-        page.paste(page.zone.meta, self.meta)
-        page.paste(page.zone.css, *[line for line in self.render_css_links(request, assets)])
-        page.paste(page.zone.body, self.body)
+        page.paste(self.meta, zone=page.zone.meta)
+        page.paste(*[line for line in self.render_css_links(request, assets)], zone=page.zone.css)
+        page.paste(self.body, zone=page.zone.body)
         return page
 
 
@@ -247,24 +247,22 @@ class Session(HTTPEndpoint):
         assets = getattr(self, "assets", Grouping())
 
         try:
-            page.paste(page.zone.title, f"<title>{story.title}</title>")
+            page.paste(f"<title>{story.title}</title>", zone=page.zone.title)
         except AttributeError:
-            page.paste(page.zone.title, "<title>Story</title>")
+            page.paste("<title>Story</title>", zone=page.zone.title)
 
-        page.paste(page.zone.meta, Home.meta)
-        page.paste(
-            page.zone.css, *sorted(line for line in Home.render_css_links(request, assets))
-        )
-        page.paste(page.zone.script, *Home.render_js_links(request, assets))
+        page.paste(Home.meta, zone=page.zone.meta)
+        page.paste(*sorted(line for line in Home.render_css_links(request, assets), zone=page.zone.css))
+        page.paste(*Home.render_js_links(request, assets), zone=page.zone.script)
 
         html5 = "\n".join(self.render_cues(request, story, turn))
-        page.paste(page.zone.body, html5)
+        page.paste(html5, zone=page.zone.body)
 
         offer = story.notes and story.notes[-1]["offer"]
         if offer:
-            page.paste(page.zone.meta, self.render_refresh(request.url, story.notes[-1]))
+            page.paste(self.render_refresh(request.url, story.notes[-1]), zone=page.zone.meta)
         else:
-            page.paste(page.zone.inputs, self.render_inputs_to_command(request, story))
+            page.paste(self.render_inputs_to_command(request, story), zone=page.zone.inputs)
 
         return page
 
