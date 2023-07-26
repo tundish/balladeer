@@ -16,6 +16,7 @@ Change Log
   See balladeer.lite.director.Director.parameters.
 * TODO: Give loader module a CLI.
 * TODO: Consider adopting ColourAdapter from turberfield.dialogue.adapters (CLI only).
+* Improvements to `Page.paste` method.
 * Detect sqlite files as Assets.
 
 0.38.0
