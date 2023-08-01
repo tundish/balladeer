@@ -252,6 +252,8 @@ class Session(HTTPEndpoint):
             page.paste("<title>Story</title>", zone=page.zone.title)
 
         page.paste(Home.meta, zone=page.zone.meta)
+
+        # Find named styles among assets.
         page.paste(*sorted(line for line in Home.render_css_links(request, assets)), zone=page.zone.css)
         page.paste(*Home.render_js_links(request, assets), zone=page.zone.script)
 
