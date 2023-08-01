@@ -76,6 +76,20 @@ class LoaderTests(unittest.TestCase):
 
         self.assertEqual(5432, assets[0].data["DB"]["port"])
 
+    def test_style_files(self):
+        styles = {
+            ("stool-cover.css",): "cite {color: red;}",
+            ("style-gallery.css",): "cite {color: green;}",
+            ("styles", "cover.css"): "cite {color: blue;}",
+            ("styles", "gallery.css"): "cite {color: black;}",
+        }
+        self.path.joinpath("styles").mkdir()
+        for paths, text in styles.items():
+            self.path.joinpath(*paths).write_text(text)
+
+        assets = list(Loader.discover(self.path))
+        self.assertEqual(4, len(assets))
+
 
 class SceneTests(unittest.TestCase):
     def test_one_scene(self):
