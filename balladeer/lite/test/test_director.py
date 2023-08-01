@@ -668,6 +668,14 @@ class ParametersTests(unittest.TestCase):
         self.assertIn("style", notes, notes)
         self.assertIsInstance(notes["style"], list)
 
+    def test_theme_single(self):
+        speech = Speech("<?theme=dark>")
+        d = Director()
+        rv = "\n".join(d.edit(speech))
+        notes = next(iter(d.notes.values()), None)
+        self.assertIn("theme", notes, notes)
+        self.assertIsInstance(notes["theme"], list)
+
 
 class LoopTests(unittest.TestCase):
     def setUp(self):

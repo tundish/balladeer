@@ -133,6 +133,8 @@ class Director:
 
         return {
             "class": params.get("class", []),
+            "style": params.get("style", []),
+            "theme": params.get("theme"),
             "pause": float(params.get("pause", [self.pause])[0]),
             "dwell": float(params.get("dwell", [self.dwell])[0]),
             "delay": float(params.get("delay", [self.delay])[0]),
@@ -176,6 +178,8 @@ class Director:
         self.pause = parameters["pause"]
         self.dwell = parameters["dwell"]
         self.offer = parameters["offer"]
+        self.notes[(path, index)]["style"] = parameters["style"]
+        self.notes[(path, index)]["theme"] = parameters["theme"]
         self.notes[(path, index)]["offer"] = self.offer
 
         class_values = " ".join(parameters["class"])
