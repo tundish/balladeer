@@ -90,6 +90,9 @@ class LoaderTests(unittest.TestCase):
         assets = list(Loader.discover(self.path))
         self.assertEqual(4, len(assets))
 
+        assets = list(Loader.filter(assets))
+        print(assets)
+
 
 class SceneTests(unittest.TestCase):
     def test_one_scene(self):

@@ -75,6 +75,10 @@ class Loader:
                     yield typ(resource, path, f.stat())
 
     @staticmethod
+    def filter(assets):
+        yield from assets
+
+    @staticmethod
     def read_toml(text: str, resource="", path=None):
         try:
             return tomllib.loads(text)
