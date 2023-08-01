@@ -660,6 +660,14 @@ class ParametersTests(unittest.TestCase):
         rv = "\n".join(d.edit(speech))
         self.assertTrue(rv.startswith('<blockquote class="urgent warning" '), rv)
 
+    def test_style_single(self):
+        speech = Speech("<?style=gallery>")
+        d = Director()
+        rv = "\n".join(d.edit(speech))
+        notes = next(iter(d.notes.values()), None)
+        self.assertIn("style", notes, notes)
+        self.assertIsInstance(notes["style"], list)
+
 
 class LoopTests(unittest.TestCase):
     def setUp(self):
