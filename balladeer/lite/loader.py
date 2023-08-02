@@ -24,6 +24,9 @@ import mimetypes
 from pathlib import Path
 import re
 import tomllib
+from typing import Mapping
+
+from balladeer.lite.types import Grouping
 
 
 class Loader:
@@ -75,7 +78,13 @@ class Loader:
                     yield typ(resource, path, f.stat())
 
     @staticmethod
-    def filter(assets):
+    def ignore_style(asset: Asset, *args):
+        return asset
+
+    @staticmethod
+    def filter(assets: Grouping[str, list[Asset]], predicate=None, *args):
+        assert  isinstance(assets, Mapping), type(assets)
+        predicate = predicate or Loader.ignore_style
         yield from assets
 
     @staticmethod

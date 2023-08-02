@@ -34,6 +34,7 @@ from balladeer.lite.entity import Entity
 from balladeer.lite.types import State
 
 from balladeer.lite.loader import Loader
+from balladeer.lite.types import Grouping
 
 
 class LoaderTests(unittest.TestCase):
@@ -87,11 +88,14 @@ class LoaderTests(unittest.TestCase):
         for paths, text in styles.items():
             self.path.joinpath(*paths).write_text(text)
 
-        assets = list(Loader.discover(self.path))
-        self.assertEqual(4, len(assets))
+        assets = Grouping.typewise(Loader.discover(self.path))
+        self.assertEqual(4, len(assets["text/css"]), assets)
 
-        assets = list(Loader.filter(assets))
-        print(assets)
+        for n, selection in enumerate(((), ("cover"), ("gallery"), ("cover", "gallery"))):
+            with self.subTest(n=n, selection=selection):
+                filtered = list(Loader.filter(assets, *selection))
+                self.assertEqual(len(filtered), selection.count("cover") + 2 * selection.count("gallery"))
+                print(assets)
 
 
 class SceneTests(unittest.TestCase):
