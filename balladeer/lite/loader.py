@@ -85,7 +85,7 @@ class Loader:
 
     @staticmethod
     def stage(assets: Grouping[str, list[Asset]], *args, predicate=None) -> Grouping[str, list[Asset]]:
-        assert  isinstance(assets, Mapping), type(assets)
+        assert isinstance(assets, Mapping), type(assets)
         predicate = predicate or Loader.ignore_style
 
         rv = assets.copy()

@@ -106,6 +106,12 @@ class Home(HTTPEndpoint):
             else:
                 yield f'<script src="/static/{path}"></script>'
 
+    @staticmethod
+    def render_css_vars(data: dict=None, tag=":root"):
+        data = data or {}
+        entries = "\n".join("--{0}: {1};".format(k, v) for k, v in data.items())
+        yield "{tag} {{\n{entries}\n}}".format(tag=tag, entries=entries)
+
     def compose(
         self, request, page: Page, story: StoryBuilder = None, turn: StoryBuilder.Turn = None
     ) -> Page:
