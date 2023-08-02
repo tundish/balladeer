@@ -91,11 +91,11 @@ class LoaderTests(unittest.TestCase):
         assets = Grouping.typewise(Loader.discover(self.path))
         self.assertEqual(4, len(assets["text/css"]), assets)
 
-        for n, selection in enumerate(((), ("cover"), ("gallery"), ("cover", "gallery"))):
+        for n, selection in enumerate(((), ("cover",), ("gallery",), ("cover", "gallery"))):
             with self.subTest(n=n, selection=selection):
                 staged = Loader.stage(assets, *selection)
                 self.assertIsInstance(staged, Grouping)
-                self.assertEqual(len(staged.each), selection.count("cover") + 2 * selection.count("gallery"))
+                self.assertEqual(len(staged.each), 1 + selection.count("cover") + 2 * selection.count("gallery"))
 
 
 class SceneTests(unittest.TestCase):

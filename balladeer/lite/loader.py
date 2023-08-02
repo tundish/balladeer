@@ -78,14 +78,21 @@ class Loader:
                     yield typ(resource, path, f.stat())
 
     @staticmethod
-    def ignore_style(asset: Asset, *args):
-        return asset
+    def ignore_style(asset: Asset, *args) -> bool:
+        if any(i in str(asset.path) for i in args):
+            return True
+        return "style" not in str(asset.path)
 
     @staticmethod
-    def stage(assets: Grouping[str, list[Asset]], predicate=None, *args):
+    def stage(assets: Grouping[str, list[Asset]], *args, predicate=None) -> Grouping[str, list[Asset]]:
         assert  isinstance(assets, Mapping), type(assets)
         predicate = predicate or Loader.ignore_style
-        return assets
+
+        rv = assets.copy()
+        for key in assets:
+            rv[key] = [i for i in assets[key] if predicate(i, *args)]
+
+        return rv
 
     @staticmethod
     def read_toml(text: str, resource="", path=None):
