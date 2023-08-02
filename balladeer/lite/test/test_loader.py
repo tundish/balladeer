@@ -93,9 +93,9 @@ class LoaderTests(unittest.TestCase):
 
         for n, selection in enumerate(((), ("cover"), ("gallery"), ("cover", "gallery"))):
             with self.subTest(n=n, selection=selection):
-                filtered = list(Loader.filter(assets, *selection))
-                self.assertEqual(len(filtered), selection.count("cover") + 2 * selection.count("gallery"))
-                print(assets)
+                staged = Loader.stage(assets, *selection)
+                self.assertIsInstance(staged, Grouping)
+                self.assertEqual(len(staged.each), selection.count("cover") + 2 * selection.count("gallery"))
 
 
 class SceneTests(unittest.TestCase):

@@ -82,10 +82,10 @@ class Loader:
         return asset
 
     @staticmethod
-    def filter(assets: Grouping[str, list[Asset]], predicate=None, *args):
+    def stage(assets: Grouping[str, list[Asset]], predicate=None, *args):
         assert  isinstance(assets, Mapping), type(assets)
         predicate = predicate or Loader.ignore_style
-        yield from assets
+        return assets
 
     @staticmethod
     def read_toml(text: str, resource="", path=None):
