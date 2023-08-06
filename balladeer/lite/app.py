@@ -109,8 +109,14 @@ class Home(HTTPEndpoint):
     @staticmethod
     def render_css_vars(data: dict=None, tag=":root"):
         data = data or {}
-        entries = "\n".join("--{0}: {1};".format(k, v) for k, v in data.items())
+        entries = "\n".join(
+            "--ballad-{0}-{1}: {2};".format(key, k, v)
+            for key in data
+            for k, v in (data[key] or {}).items()
+        )
+        yield '<style type="text/css">'
         yield "{tag} {{\n{entries}\n}}".format(tag=tag, entries=entries)
+        yield "</style>"
 
     def compose(
         self, request, page: Page, story: StoryBuilder = None, turn: StoryBuilder.Turn = None
@@ -262,6 +268,10 @@ class Session(HTTPEndpoint):
         # Find named styles among assets.
         page.paste(*sorted(line for line in Home.render_css_links(request, assets)), zone=page.zone.css)
         page.paste(*Home.render_js_links(request, assets), zone=page.zone.script)
+
+        theme_names = ["default"] + (story.notes[-1].get("theme", []) or [] if story.notes else [])
+        settings = story.settings(*theme_names, themes=page.themes)
+        page.paste(*Home.render_css_vars(settings), zone=page.zone.theme)
 
         html5 = "\n".join(self.render_cues(request, story, turn))
         page.paste(html5, zone=page.zone.body)

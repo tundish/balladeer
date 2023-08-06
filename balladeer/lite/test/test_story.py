@@ -96,12 +96,12 @@ class StoryTests(unittest.TestCase):
                 with story.turn() as turn:
                     theme_spec = story.notes[-1].get("theme")
                     self.assertIsInstance(theme_spec, list)
-                    theme = story.theme(*theme_spec, themes=page.themes)
-                    self.assertIsInstance(theme, dict)
-                    self.assertTrue(theme)
-                    self.assertIn("ink", theme)
+                    settings = story.settings(*theme_spec, themes=page.themes)
+                    self.assertIsInstance(settings, dict)
+                    self.assertTrue(settings)
+                    self.assertIn("ink", settings)
                     self.assertTrue(
-                        set(theme["ink"]).issubset(
+                        set(settings["ink"]).issubset(
                             {
                                 "gravity", "shadows",
                                 "lolight", "midtone",
@@ -111,9 +111,9 @@ class StoryTests(unittest.TestCase):
                         )
                     )
                     if n == 0:
-                        self.assertEqual("blue", theme["ink"]["gravity"])
+                        self.assertEqual("blue", settings["ink"]["gravity"])
                     else:
-                        self.assertEqual("crimson", theme["ink"]["gravity"])
+                        self.assertEqual("crimson", settings["ink"]["gravity"])
 
 
 class ExampleTests(unittest.TestCase):
