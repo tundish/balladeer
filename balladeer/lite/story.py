@@ -43,7 +43,10 @@ class StoryBuilder:
 
     @staticmethod
     def theme(*names, themes={}) -> dict:
-        return {}
+        rv = dict()
+        for key in ("ink", ):
+            rv[key] = dict([(k, v) for name in names for k, v in themes.get(name, {}).get(key, {}).items()])
+        return rv
 
     def __init__(
         self,

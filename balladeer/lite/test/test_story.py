@@ -88,15 +88,15 @@ class StoryTests(unittest.TestCase):
         page.themes["b"] = {"ink": {"gravity": "blue"}}
         page.themes["c"] = {"ink": {"gravity": "crimson"}}
         story = StoryBuilder(
-            Dialogue("<?theme=a> Knock, knock."),
-            Dialogue("<?theme=a&theme=b> Who's there?"),
+            Dialogue("<?theme=b&theme=a> Knock, knock."),
+            Dialogue("<?theme=b&theme=c> Who's there?"),
         )
         for n in range(2):
             with self.subTest(n=n, m=len(story.director.notes[(None, 0)].maps)):
                 with story.turn() as turn:
                     theme_spec = story.notes[-1].get("theme")
                     self.assertIsInstance(theme_spec, list)
-                    theme = story.theme(*theme_spec, page.themes)
+                    theme = story.theme(*theme_spec, themes=page.themes)
                     self.assertIsInstance(theme, dict)
                     self.assertTrue(theme)
                     self.assertIn("ink", theme)
