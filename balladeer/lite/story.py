@@ -41,6 +41,10 @@ class StoryBuilder:
         "Turn", ["scene", "specs", "roles", "speech", "blocks", "notes"], defaults=(None, None)
     )
 
+    @staticmethod
+    def theme(*names, themes={}) -> dict:
+        return {}
+
     def __init__(
         self,
         *speech: tuple[Speech],

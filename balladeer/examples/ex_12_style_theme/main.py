@@ -8,7 +8,7 @@ from balladeer.utils.themes import theme_page
 __doc__ = """
 Usage:
 
-    python -m balladeer.examples.ex_12_style_theme.main
+    python -m balladeer.examples.ex_12_style_theme.main > themes.html
 
 """
 

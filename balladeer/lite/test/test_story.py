@@ -29,9 +29,16 @@ from balladeer.lite.loader import Loader
 from balladeer.lite.speech import Dialogue
 from balladeer.lite.story import StoryBuilder
 from balladeer.lite.types import Grouping
+from balladeer.lite.types import Page
 
 
 class StoryTests(unittest.TestCase):
+
+    def tearDown(self):
+        themes = [i for i in Page.themes.keys() if i != "default"]
+        for theme in themes:
+            del Page.themes[theme]
+
     def test_simple_turns(self):
         story = StoryBuilder(
             Dialogue("<> Knock, knock."),
@@ -74,6 +81,24 @@ class StoryTests(unittest.TestCase):
         for a_d, b_d in zip(a.drama, b.drama):
             with self.subTest(a_d=a_d, b_d=b_d):
                 self.assertNotEqual(a_d.uid, b_d.uid)
+
+    def test_theme(self):
+        page = Page()
+        page.themes["a"] = {"ink": {}}
+        page.themes["b"] = {"ink": {}}
+        page.themes["c"] = {"ink": {}}
+        story = StoryBuilder(
+            Dialogue("<?theme=a> Knock, knock."),
+            Dialogue("<?theme=a&theme=b> Who's there?"),
+        )
+        for n in range(2):
+            with self.subTest(n=n, m=len(story.director.notes[(None, 0)].maps)):
+                with story.turn() as turn:
+                    theme_spec = story.notes[-1].get("theme")
+                    self.assertIsInstance(theme_spec, list)
+                    theme = story.theme(*theme_spec, page.themes)
+                    self.assertIsInstance(theme, dict)
+                    self.assertTrue(theme)
 
 
 class ExampleTests(unittest.TestCase):
