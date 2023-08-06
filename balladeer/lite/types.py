@@ -36,9 +36,6 @@ class Page:
                 "washout": "hsl(50.00, 0%, 100%)",
                 "glamour": "hsl(66.77, 96.92%, 72.75%)",
             },
-            # TODO: background images for grid
-            "img": {
-            }
         }
     }
 

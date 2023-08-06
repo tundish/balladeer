@@ -1,8 +1,39 @@
 import balladeer
 from balladeer import quick_start
 from balladeer import Dialogue
+from balladeer import Page
 from balladeer import StoryBuilder
 
+__doc__ = """
+Usage:
+
+    python -m balladeer.examples.ex_12_style_theme.main
+
+"""
+
+Page.themes["grey"] = {
+    "ink": {
+        "gravity": "hsl(293.33, 96.92%, 12.75%)",
+        "shadows": "hsl(202.86, 100%, 4.12%)",
+        "lolight": "hsl(203.39, 96.72%, 11.96%)",
+        "midtone": "hsl(203.39, 96.72%, 31.96%)",
+        "hilight": "hsl(203.06, 97.3%, 56.47%)",
+        "washout": "hsl(50.00, 0%, 100%)",
+        "glamour": "hsl(66.77, 96.92%, 72.75%)",
+    },
+}
+
+Page.themes["blue"] = {
+    "ink": {
+        "gravity": "hsl(293.33, 96.92%, 12.75%)",
+        "shadows": "hsl(202.86, 100%, 4.12%)",
+        "lolight": "hsl(203.39, 96.72%, 11.96%)",
+        "midtone": "hsl(203.39, 96.72%, 31.96%)",
+        "hilight": "hsl(203.06, 97.3%, 56.47%)",
+        "washout": "hsl(50.00, 0%, 100%)",
+        "glamour": "hsl(66.77, 96.92%, 72.75%)",
+    },
+}
 
 story = StoryBuilder(
     Dialogue("""
