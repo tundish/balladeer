@@ -85,8 +85,8 @@ class StoryTests(unittest.TestCase):
     def test_theme(self):
         page = Page()
         page.themes["a"] = {"ink": {}}
-        page.themes["b"] = {"ink": {}}
-        page.themes["c"] = {"ink": {}}
+        page.themes["b"] = {"ink": {"gravity": "blue"}}
+        page.themes["c"] = {"ink": {"gravity": "crimson"}}
         story = StoryBuilder(
             Dialogue("<?theme=a> Knock, knock."),
             Dialogue("<?theme=a&theme=b> Who's there?"),
@@ -99,6 +99,21 @@ class StoryTests(unittest.TestCase):
                     theme = story.theme(*theme_spec, page.themes)
                     self.assertIsInstance(theme, dict)
                     self.assertTrue(theme)
+                    self.assertIn("ink", theme)
+                    self.assertTrue(
+                        set(theme["ink"]).issubset(
+                            {
+                                "gravity", "shadows",
+                                "lolight", "midtone",
+                                "hilight", "washout",
+                                "glamour"
+                            }
+                        )
+                    )
+                    if n == 0:
+                        self.assertEqual("blue", theme["ink"]["gravity"])
+                    else:
+                        self.assertEqual("crimson", theme["ink"]["gravity"])
 
 
 class ExampleTests(unittest.TestCase):
