@@ -3,6 +3,7 @@ from balladeer import quick_start
 from balladeer import Dialogue
 from balladeer import Page
 from balladeer import StoryBuilder
+from balladeer.utils.themes import theme_page
 
 __doc__ = """
 Usage:
@@ -63,4 +64,5 @@ story = StoryBuilder(
 
 
 if __name__ == "__main__":
+    print(theme_page().html)
     quick_start(balladeer.examples.ex_12_style_theme, builder=story)
