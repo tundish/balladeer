@@ -52,12 +52,7 @@ def swatch(name, theme):
     yield "</tbody></table>"
 
 
-def parser(usage=__doc__):
-    rv = argparse.ArgumentParser(usage)
-    return rv
-
-
-def main(args):
+def theme_page() -> Page:
     page = Page()
     style = textwrap.dedent("""
     <style>
@@ -80,6 +75,16 @@ def main(args):
         for name, theme in cls.themes.items():
             palette = theme.get("ink", {})
             page.paste(*swatch(name, palette), zone=page.zone.body)
+    return page
+
+
+def parser(usage=__doc__):
+    rv = argparse.ArgumentParser(usage)
+    return rv
+
+
+def main(args):
+    page = theme_page()
     print(page.html)
     return 0
 
