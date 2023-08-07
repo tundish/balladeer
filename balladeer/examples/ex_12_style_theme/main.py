@@ -70,7 +70,7 @@ story = StoryBuilder(
 )
 
 
-class Song(Session):
+class Narrative(Session):
     def compose(
         self, request, page: Page, story: StoryBuilder = None, turn: StoryBuilder.Turn = None
     ) -> Page:
