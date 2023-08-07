@@ -2,6 +2,7 @@ import balladeer
 from balladeer import quick_start
 from balladeer import Dialogue
 from balladeer import Page
+from balladeer import Session
 from balladeer import StoryBuilder
 from balladeer.utils.themes import theme_page
 
@@ -61,6 +62,20 @@ story = StoryBuilder(
     """
     ),
 )
+
+
+class Song(Session):
+    def compose(
+        self, request, page: Page, story: StoryBuilder = None, turn: StoryBuilder.Turn = None
+    ) -> Page:
+        page = super().compose(request, page, story, turn)
+        page.paste(
+            '<div class="dressing">',
+            *(f'<span class="flower">{n+1:02d}</span>' for n in range(12)),
+            "</div>",
+            zone=page.zone.bucket
+        )
+        return page
 
 
 if __name__ == "__main__":

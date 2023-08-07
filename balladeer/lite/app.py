@@ -274,7 +274,7 @@ class Session(HTTPEndpoint):
         page.paste(*Home.render_css_vars(settings), zone=page.zone.theme)
 
         html5 = "\n".join(self.render_cues(request, story, turn))
-        page.paste(html5, zone=page.zone.body)
+        page.paste("<main>", html5, "</main>", zone=page.zone.main)
 
         offer = story.notes and story.notes[-1]["offer"]
         if offer:
