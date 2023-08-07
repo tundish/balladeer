@@ -39,7 +39,7 @@ Page.themes["blue"] = {
 
 story = StoryBuilder(
     Dialogue("""
-    <DOUGAL> Well, the voices were coming from that old factory on the hill.
+    <DOUGAL> The voices were coming from that old factory on the hill.
     You know, the one where they used to make treacle.
 
     It's been empty for years but now, it had lights on.
@@ -47,7 +47,11 @@ story = StoryBuilder(
     """
     ),
     Dialogue("""
-    <DOUGAL> I got myself with some cunning into a position of vantage.
+    <DOUGAL> Well being as you know, a brave spirit, I thought I'd get a better
+    look at it all.
+
+    So, moving backwards so as to confuse anyone with evil intents into thinking
+    I was going forwards, I got myself with some cunning into a position of vantage.
 
     """
     ),
@@ -57,7 +61,9 @@ story = StoryBuilder(
     Not very much, I answer.
 
     The old factory was there on top of the hill, but everything seemed
-    craggy and very sinister, and very _blue_
+    craggy and very sinister, and very _blue_.
+
+    And then I heard the voice again.
 
     """
     ),
