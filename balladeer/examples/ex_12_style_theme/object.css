@@ -1,0 +1,13 @@
+
+cite {
+background-origin: content-box;
+background-repeat: no-repeat;
+background-size: contain;
+color: var(--ballad-ink-shadows, grey);
+text-align: right;
+}
+
+cite[data-role="dougal" i] {
+background-image: url(/static/skye_terrier.png);
+height: 207px;
+}

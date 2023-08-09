@@ -25,10 +25,8 @@ width: 96%;
 }
 
 cite {
-background-image: url(/static/skye_terrier.png);
 display: block;
 margin: 0.6rem 0 0 1.2rem;
-text-align: left;
 }
 
 details > summary {
