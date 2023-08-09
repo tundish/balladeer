@@ -25,6 +25,7 @@ width: 96%;
 }
 
 cite {
+background-image: url(/static/skye_terrier.png);
 display: block;
 margin: 0.6rem 0 0 1.2rem;
 text-align: left;
@@ -46,4 +47,8 @@ grid-column-start: 1;
 grid-column-end: 2;
 grid-row-start: 1;
 grid-row-end: 2;
+}
+
+div.dressing span {
+display: inline-block;
 }

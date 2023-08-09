@@ -40,7 +40,7 @@ Page.themes["blue"] = {
 
 story = StoryBuilder(
     Dialogue("""
-    <DOUGAL> The voices were coming from that old factory on the hill.
+    <DOUGAL?theme=grey> The voices were coming from that old factory on the hill.
     You know, the one where they used to make treacle.
 
     It's been empty for years but now, it had lights on.
@@ -57,7 +57,7 @@ story = StoryBuilder(
     """
     ),
     Dialogue("""
-    <DOUGAL> What did I see?, you will ask.
+    <DOUGAL?theme=blue> What did I see?, you will ask.
 
     Not very much, I answer.
 

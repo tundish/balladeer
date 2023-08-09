@@ -22,6 +22,7 @@ font-style: italic;
 }
 
 strong {
+color: var(--ballad-ink-lolight, black);
 font-weight: bold;
 }
 
