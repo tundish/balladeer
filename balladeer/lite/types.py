@@ -28,8 +28,8 @@ class Page:
     themes = {
         "default": {
             "ink": {
-                "gravity": "hsl(293.33, 96.92%, 12.75%)",
-                "shadows": "hsl(202.86, 100%, 4.12%)",
+                "gravity": "hsl(282.86, 100%, 14.12%)",
+                "shadows": "hsl(203.33, 96.92%, 8.75%)",
                 "lolight": "hsl(203.39, 96.72%, 11.96%)",
                 "midtone": "hsl(203.39, 96.72%, 31.96%)",
                 "hilight": "hsl(203.06, 97.3%, 56.47%)",
