@@ -47,7 +47,7 @@ story = StoryBuilder(
     """
     ),
     Dialogue("""
-    <DOUGAL> Well being as you know, a brave spirit, I thought I'd get a better
+    <DOUGAL?theme=grey> Well being as you know, a brave spirit, I thought I'd get a better
     look at it all.
 
     So, moving backwards so as to confuse anyone with evil intents into thinking
@@ -75,8 +75,8 @@ class Narrative(Session):
         page = super().compose(request, page, story, turn)
         page.paste(
             '<div class="dressing">',
-            '<span class="factory"></span>',
             *(f'<span class="flower">{n+1:02d}</span>' for n in range(12)),
+            '<span class="factory"></span>',
             "</div>",
             zone=page.zone.basket
         )
