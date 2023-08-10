@@ -75,9 +75,10 @@ class Narrative(Session):
         page = super().compose(request, page, story, turn)
         page.paste(
             '<div class="dressing">',
+            '<span class="factory"></span>',
             *(f'<span class="flower">{n+1:02d}</span>' for n in range(12)),
             "</div>",
-            zone=page.zone.bucket
+            zone=page.zone.basket
         )
         return page
 

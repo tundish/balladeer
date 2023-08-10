@@ -11,3 +11,10 @@ cite[data-role="dougal" i] {
 background-image: url(/static/skye_terrier.png);
 height: 207px;
 }
+
+div.dressing span.factory {
+background-image: url(/static/treacle_factory.png);
+background-size: cover;
+height: 16rem;
+width: 9rem;
+}
