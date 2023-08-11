@@ -34,19 +34,6 @@ text-align: left;
 margin: 0.6rem 0 0.6rem 1.2rem;
 }
 
-#grid {
-display: grid;
-grid-template-columns: 3fr 3fr 2fr 1fr 1fr 2fr 3fr 3fr;
-grid-template-rows: 3fr 4fr 3fr 4fr 6fr 1fr 10fr;
-}
-
-#content {
-grid-column-start: 1;
-grid-column-end: 2;
-grid-row-start: 1;
-grid-row-end: 2;
-}
-
 div.dressing span {
 display: inline-block;
 }
