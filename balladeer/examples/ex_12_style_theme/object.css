@@ -12,42 +12,46 @@ background-image: url(/static/skye_terrier.png);
 height: 207px;
 }
 
-div.dressing span.factory {
-background-image: url(/static/treacle_factory.png);
-background-size: cover;
-filter: drop-shadow(-0.125rem -0.125rem var(--ballad-ink-glamour, yellow));
-height: 16rem;
-width: 9rem;
-grid-column-start: 7;
-grid-column-end: 11;
-grid-row-start: 6;
-grid-row-end: 11;
+
+/* grid goes to style file */
+div.dressing {
+display: grid;
+flex: 1;
+grid-auto-flow: row;
+grid-template-columns: 28fr 1fr 1fr 3fr 1fr 3fr 2fr 1fr 3fr 3fr;
+grid-template-rows: 1fr 3fr 1fr 4fr 4fr 6fr 6fr 1fr 2fr 2fr;
+height: 12rem;
+width: 100%;
 }
 
-div.dressing span.rockery:nth-of-type(2n) {
+div.dressing span.factory {
+background-image: url(/static/treacle_factory.png);
+background-position: 100% 100%;
+background-repeat: no-repeat;
+background-size: contain;
+filter: drop-shadow(-0.125rem -0.125rem var(--ballad-ink-glamour, yellow));
+grid-column-start: span 2;
+grid-column-end: -1;
+grid-row-start: span 5;
+grid-row-end: -1;
+height: 100%;
+width: 100%;
+}
+
+div.dressing span.rockery:nth-of-type(1) {
 background-color: var(--ballad-ink-midtone, grey);
 background-size: cover;
-grid-column: auto;
-grid-row: auto;
+grid-column: 2 / span 2;
+grid-row: -1 / span 2;
 height: 4rem;
 width: 3rem;
 }
 
-/* grid goes to style file */
-
-div.dressing {
-display: grid;
-grid-auto-flow: row;
-grid-template-columns: 28fr 1fr 1fr 3fr 1fr 3fr 2fr 1fr 3fr 3fr;
-grid-template-rows: 1fr 3fr 1fr 4fr 4fr 6fr 6fr 1fr 2fr 2fr;
-height: 24rem;
-width: 100%;
+div.dressing span.rockery:nth-of-type(12) {
+background-color: var(--ballad-ink-midtone, grey);
+background-size: cover;
+grid-column: -1 / span 2;
+grid-row: -1 / span 2;
+height: 4rem;
+width: 3rem;
 }
-
-div.dressing span.factory:nth-of-type(1) {
-grid-column-start: 7;
-grid-column-end: 11;
-grid-row-start: 6;
-grid-row-end: 11;
-}
-
