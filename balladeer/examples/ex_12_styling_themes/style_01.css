@@ -33,14 +33,14 @@ grid-row: span 2 / -2;
 transform: rotateZ(30deg);
 }
 
-div.dressing span.rockery:nth-of-type(9) {
+div.dressing span.rockery:nth-of-type(4) {
 background-color: var(--ballad-ink-midtone, grey);
 grid-column: -3 / -1;
 grid-row: 4 / 5;
 z-index: -2;
 }
 
-div.dressing span.rockery:nth-of-type(10) {
+div.dressing span.rockery:nth-of-type(5) {
 background-color: var(--ballad-ink-midtone, grey);
 grid-column: -2 / -1;
 grid-row: 3 / -2;
