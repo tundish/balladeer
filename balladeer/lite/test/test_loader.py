@@ -79,7 +79,7 @@ class LoaderTests(unittest.TestCase):
 
     def test_style_files(self):
         styles = {
-            ("stool-cover.css",): "cite {color: red;}",
+            ("basics.css",): "cite {color: red;}",
             ("style-gallery.css",): "cite {color: green;}",
             ("styles", "cover.css"): "cite {color: blue;}",
             ("styles", "gallery.css"): "cite {color: black;}",
@@ -95,6 +95,7 @@ class LoaderTests(unittest.TestCase):
             with self.subTest(n=n, selection=selection):
                 staged = Loader.stage(assets, *selection)
                 self.assertIsInstance(staged, Grouping)
+                self.assertTrue(next(i for i in staged["text/css"] if i.path.name == "basics.css"), False)
                 self.assertEqual(len(staged.each), 1 + selection.count("cover") + 2 * selection.count("gallery"))
 
 

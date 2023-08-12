@@ -9,7 +9,7 @@ from balladeer.utils.themes import theme_page
 __doc__ = """
 Usage:
 
-    python -m balladeer.examples.ex_12_style_theme.main > themes.html
+    python -m balladeer.examples.ex_12_styling_themes.main > themes.html
 
 """
 
@@ -56,7 +56,7 @@ story = StoryBuilder(
     """
     ),
     Dialogue("""
-    <DOUGAL?style=3&theme=blue> "What did I see?", you will ask.  "Not very much", I answer.
+    <DOUGAL?style=03&theme=blue> "What did I see?", you will ask.  "Not very much", I answer.
 
     The old factory was there on top of the hill, but everything seemed
     craggy and very sinister, and very _blue_.
@@ -85,4 +85,4 @@ class Narrative(Session):
 
 if __name__ == "__main__":
     print(theme_page().html)
-    quick_start(balladeer.examples.ex_12_style_theme, builder=story)
+    quick_start(balladeer.examples.ex_12_styling_themes, builder=story)

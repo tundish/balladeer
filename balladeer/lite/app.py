@@ -265,8 +265,12 @@ class Session(HTTPEndpoint):
 
         page.paste(Home.meta, zone=page.zone.meta)
 
-        # Find named styles among assets.
-        page.paste(*sorted(line for line in Home.render_css_links(request, assets)), zone=page.zone.css)
+        styles = story.notes and story.notes[-1]["style"] or []
+        print(f"styles: {styles}", file=sys.stderr)
+        staged = Loader.stage(assets, *styles)
+        print(f"staged: {staged}", file=sys.stderr)
+        page.paste(*sorted(line for line in Home.render_css_links(request, staged)), zone=page.zone.css)
+
         page.paste(*Home.render_js_links(request, assets), zone=page.zone.script)
 
         theme_names = ["default"] + (story.notes[-1].get("theme", []) or [] if story.notes else [])
