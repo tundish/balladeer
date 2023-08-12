@@ -56,7 +56,7 @@ story = StoryBuilder(
     """
     ),
     Dialogue("""
-    <DOUGAL?theme=blue> "What did I see?", you will ask.  "Not very much", I answer.
+    <DOUGAL?style=3&theme=blue> "What did I see?", you will ask.  "Not very much", I answer.
 
     The old factory was there on top of the hill, but everything seemed
     craggy and very sinister, and very _blue_.

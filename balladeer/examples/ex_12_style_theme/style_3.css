@@ -1,0 +1,70 @@
+div.dressing span.factory {
+background-image: url(/static/treacle_factory.png);
+background-position: 100% 100%;
+background-repeat: no-repeat;
+background-size: contain;
+filter: drop-shadow(-0.125rem -0.125rem var(--ballad-ink-glamour, yellow));
+grid-column-start: span 6;
+grid-column-end: -1;
+grid-row-start: span 8;
+grid-row-end: -2;
+opacity: 60%;
+z-index: -1;
+}
+
+div.dressing span.rockery:nth-of-type(1) {
+background-color: var(--ballad-ink-shadows, grey);
+background-size: cover;
+grid-column: 1 / -1;
+grid-row: 1 / -1;
+z-index: -2;
+}
+
+div.dressing span.rockery:nth-of-type(2) {
+background-color: var(--ballad-ink-midtone, grey);
+background-size: cover;
+grid-column: 2 / -1;
+grid-row: span 2 / -1;
+}
+
+div.dressing span.rockery:nth-of-type(3) {
+background-color: var(--ballad-ink-shadows, grey);
+background-size: cover;
+grid-column: 2 / span 2;
+grid-row: span 2 / -2;
+transform: rotateZ(30deg);
+}
+
+div.dressing span.rockery:nth-of-type(4) {
+background-color: var(--ballad-ink-shadows, grey);
+background-size: cover;
+grid-column: 5 / 6;
+opacity: 60%;
+grid-row: span 1 / -2;
+transform: rotateZ(-30deg);
+}
+
+div.dressing span.rockery:nth-of-type(5) {
+background-color: var(--ballad-ink-gravity, grey);
+background-size: cover;
+grid-column: 8 / 9;
+opacity: 60%;
+grid-row: span 1 / -2;
+transform: rotateZ(36deg);
+}
+
+div.dressing span.rockery:nth-of-type(11) {
+background-color: var(--ballad-ink-shadows, grey);
+grid-column: 6 / 7;
+grid-row: -2 / -1;
+opacity: 30%;
+transform: rotateZ(56deg) rotateX(24deg);
+}
+
+div.dressing span.rockery:nth-of-type(12) {
+background-color: var(--ballad-ink-shadows, grey);
+grid-column: -2 / -1;
+grid-row: -2 / -1;
+opacity: 40%;
+transform: rotateZ(-30deg) rotateX(60deg);
+}
