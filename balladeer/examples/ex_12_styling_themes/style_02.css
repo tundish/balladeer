@@ -4,10 +4,10 @@ background-position: 100% 100%;
 background-repeat: no-repeat;
 background-size: contain;
 filter: drop-shadow(-0.125rem -0.125rem var(--ballad-ink-glamour, yellow));
-grid-column-start: span 6;
+grid-column-start: span 5;
 grid-column-end: -1;
-grid-row-start: span 8;
-grid-row-end: -2;
+grid-row-start: 5;
+grid-row-end: span 2;
 opacity: 60%;
 z-index: -1;
 }

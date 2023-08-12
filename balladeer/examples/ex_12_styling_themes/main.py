@@ -42,7 +42,7 @@ story = StoryBuilder(
     <DOUGAL?style=01&theme=grey> The voices were coming from that old factory on the hill.
     You know, the one where they used to make treacle.
 
-    It's been empty for years but now, it had lights on.
+    It's been empty for years but now it had lights on.
 
     """
     ),
