@@ -22,10 +22,18 @@ p {
 padding: inherit;
 }
 
-button, input {
+button {
 font-family: cursive;
 padding: 1.2rem 3rem 1.2rem 3rem;
-width: 96%;
+width: 50%;
+}
+
+input {
+font-family: cursive;
+margin-bottom: 0.5rem;
+margin-top: 0.5rem;
+padding: 1.2rem 3rem 1.2rem 3rem;
+width: 75%;
 }
 
 cite {
