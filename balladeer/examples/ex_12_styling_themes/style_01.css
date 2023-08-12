@@ -8,8 +8,6 @@ grid-column-start: -2;
 grid-column-end: -1;
 grid-row-start: 1;
 grid-row-end: 4;
-opacity: 60%;
-z-index: -1;
 }
 
 div.dressing span.rockery:nth-of-type(1) {
@@ -35,24 +33,6 @@ grid-row: span 2 / -2;
 transform: rotateZ(30deg);
 }
 
-div.dressing span.rockery:nth-of-type(4) {
-background-color: var(--ballad-ink-shadows, grey);
-background-size: cover;
-grid-column: 5 / 6;
-opacity: 60%;
-grid-row: span 1 / -2;
-transform: rotateZ(-10deg);
-}
-
-div.dressing span.rockery:nth-of-type(5) {
-background-color: var(--ballad-ink-gravity, grey);
-background-size: cover;
-grid-column: 8 / 9;
-opacity: 60%;
-grid-row: span 1 / -2;
-transform: rotateZ(16deg);
-}
-
 div.dressing span.rockery:nth-of-type(9) {
 background-color: var(--ballad-ink-midtone, grey);
 grid-column: -3 / -1;
@@ -65,20 +45,4 @@ background-color: var(--ballad-ink-midtone, grey);
 grid-column: -2 / -1;
 grid-row: 3 / -2;
 z-index: -2;
-}
-
-div.dressing span.rockery:nth-of-type(11) {
-background-color: var(--ballad-ink-shadows, grey);
-grid-column: 6 / 7;
-grid-row: -2 / -1;
-opacity: 30%;
-transform: rotateZ(46deg) rotateX(14deg);
-}
-
-div.dressing span.rockery:nth-of-type(12) {
-background-color: var(--ballad-ink-shadows, grey);
-grid-column: -2 / -1;
-grid-row: -2 / -1;
-opacity: 40%;
-transform: rotateZ(-20deg) rotateX(50deg);
 }
