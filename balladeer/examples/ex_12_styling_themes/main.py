@@ -39,7 +39,7 @@ Page.themes["blue"] = {
 
 story = StoryBuilder(
     Dialogue("""
-    <DOUGAL?theme=grey> The voices were coming from that old factory on the hill.
+    <DOUGAL?style=01&theme=grey> The voices were coming from that old factory on the hill.
     You know, the one where they used to make treacle.
 
     It's been empty for years but now, it had lights on.
@@ -47,7 +47,7 @@ story = StoryBuilder(
     """
     ),
     Dialogue("""
-    <DOUGAL?theme=grey> Well being as you know, a brave spirit, I thought I'd get a better
+    <DOUGAL?style=02&theme=grey> Well being as you know, a brave spirit, I thought I'd get a better
     look at it all.
 
     So, moving backwards so as to confuse anyone with evil intents into thinking

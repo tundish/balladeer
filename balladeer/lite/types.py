@@ -101,7 +101,7 @@ class Page:
         #   crossorigin />
 
         # NB: Prefetch gets resources for the next page.
-        # Stateful Presenter needs lookahead.
+        # Director needs lookahead?
         rv[zone.end].extend(["</body>", "</html>"])
         self.cursor = zone.body
         return rv
