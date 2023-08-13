@@ -19,7 +19,7 @@ API Documentation
    drama
    story
    scene
-   pages
+   themes
    style
    web
    changes

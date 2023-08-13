@@ -46,7 +46,7 @@ two places in the world. It inherits from :py:class:`~balladeer.lite.entity.Enti
 or a fully described feature of your story.
 
 .. literalinclude:: ../lite/test/test_types.py
-   :lines: 141-146
+   :lines: 142-147
    :dedent: 8
 
 >>> transit.description

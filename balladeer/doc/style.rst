@@ -1,6 +1,8 @@
 ..  Titling
     ##++::==~~--''``
 
+.. _`style section`:
+
 Styles
 ======
 

@@ -6,16 +6,15 @@
 Change Log
 ::::::::::
 
-0.39.0 rc
-=========
+0.39.0
+======
 
 * Allow parameter 'class' from cue which renders at blockquote level.
-* TODO: Render theme parameters as CSS root variables with 'ballad-ink-' prefix.
-  turberfield.catchphrase.render.Renderer.render_dict_to_css -> balladeer.lite.app.App
-* TODO: Allow parameter 'theme' from cue which populates root variables.
-  See balladeer.lite.director.Director.parameters.
-* TODO: Give loader module a CLI.
-* TODO: Consider adopting ColourAdapter from turberfield.dialogue.adapters (CLI only).
+* Render theme parameters as CSS root variables with 'ballad-ink-' prefix.
+* Allow parameter 'theme' from cue which populates root variables.
+* Add theme utilityu to render colour swatches.
+* Loader excludes `style` files by default.
+* Allow parameter 'style' from cue which specifies named style files.
 * Improvements to `Page.paste` method.
 * Detect sqlite files as Assets.
 
