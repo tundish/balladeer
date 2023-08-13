@@ -9,12 +9,12 @@ Change Log
 0.39.0
 ======
 
-* Allow parameter 'class' from cue which renders at blockquote level.
-* Render theme parameters as CSS root variables with 'ballad-ink-' prefix.
-* Allow parameter 'theme' from cue which populates root variables.
-* Add theme utilityu to render colour swatches.
+* Allow parameter `class` from cue which renders at blockquote level.
+* Render theme parameters as CSS root variables with `ballad-` prefix.
+* Allow parameter `theme` from cue which populates root variables.
+* Add theme utility to render colour swatches.
 * Loader excludes `style` files by default.
-* Allow parameter 'style' from cue which specifies named style files.
+* Allow parameter `style` from cue which specifies named style files.
 * Improvements to `Page.paste` method.
 * Detect sqlite files as Assets.
 

@@ -60,6 +60,7 @@ class Speech(str):
 
         .. code-block:: html
 
+            <blockquote cite="&lt;STAFF.proposing#3&gt;">
             <cite data-role="STAFF" data-directives=".proposing" data-fragments="#3">STAFF</cite>
             <p>
              What will you have, sir? The special is fish today.

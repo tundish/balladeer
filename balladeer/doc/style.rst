@@ -29,10 +29,10 @@ Every HTML page is rendered with links to the CSS files disccovered in your proj
     <link rel="stylesheet" href="/static/layout.css" />
     <link rel="stylesheet" href="/static/object.css" />
 
-Can you spot which are missing? Balladeer excludes by default any CSS file with the word `style` in its name.
-This includes its full file path, so you can choose to keep all your special CSS in a `styles` directory.
+Can you spot which are missing? Balladeer excludes by default any CSS file with the word '*style*' in its name.
+This includes its full file path, so you can choose to keep all such files in a single `styles` directory.
 
-In order to activate one of these style files, you have to specify it via the `style` parameter in dialogue:
+In order to activate one of these style files, you have to specify it via the `style` parameter in dialogue.
 You need only set a substring of the style file name in order for it to be linked.
 Of course, you can apply a theme at the same time too. 
 
