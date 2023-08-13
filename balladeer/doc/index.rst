@@ -22,6 +22,7 @@ API Documentation
    themes
    style
    web
+   screenshots
    changes
 
 .. include:: ../../README.rst

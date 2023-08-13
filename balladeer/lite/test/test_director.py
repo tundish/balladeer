@@ -669,7 +669,7 @@ class ParametersTests(unittest.TestCase):
         self.assertIsInstance(notes["style"], list)
 
     def test_theme_single(self):
-        speech = Speech("<?theme=dark>")
+        speech = Speech("<?theme=grey>Another gloomy day!")
         d = Director()
         rv = "\n".join(d.edit(speech))
         notes = next(iter(d.notes.values()), None)
