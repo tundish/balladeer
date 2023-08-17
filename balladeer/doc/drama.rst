@@ -62,7 +62,7 @@ Any other entities are supplied as positional arguments.
    Handles the SpeechMark directive 'xxxing'.
 
    :param entity: The primary entity of the directive
-   :param args: The associated entites of the directive
+   :param args: The associated entities of the directive
    :rtype: None
 
 This is a snippet from the Balladeer examples_.
