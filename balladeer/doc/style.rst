@@ -21,7 +21,7 @@ As we've seen earlier, Balladeer discovers your Story assets when it starts up::
     Discovered in ex_12_styling_themes    : skye_terrier.png                     (image/png)
     Discovered in ex_12_styling_themes    : treacle_factory.png                  (image/png)
 
-Every HTML page is rendered with links to the CSS files disccovered in your project.
+Every HTML page is rendered with links to the CSS files discovered in your project.
 
 .. code-block:: html
 
