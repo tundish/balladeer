@@ -218,7 +218,7 @@ class Adventure(Drama):
 
         """
         item.set_state(self.here)
-        item.aspect = f"It lies on the floor."
+        item.aspect = "It lies on the floor."
         yield Prologue(f"<> You drop the {item.names[0]}.")
 
     def do_hang(
