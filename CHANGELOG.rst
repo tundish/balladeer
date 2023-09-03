@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.40.0rc
+========
+
+* Some documentation fixes.
+
 0.39.0
 ======
 

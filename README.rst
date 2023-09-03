@@ -24,11 +24,11 @@ Packages
 
 #. Update the package manager within it::
 
-    ~/balladeer-app/bin/pip install -U pip wheel
+    ~/balladeer-app/bin/python -m pip install -U pip wheel
 
 #. Install (or update) Balladeer::
 
-    ~/balladeer-app/bin/pip install -U balladeer
+    ~/balladeer-app/bin/python -m pip install -U balladeer
 
 Examples
 ========
