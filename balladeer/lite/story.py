@@ -150,17 +150,18 @@ class StoryBuilder:
 
         blocks = list(self.director.rewrite(scene, roles, speech))
 
+        rv = self.Turn(scene, specs, roles, speech, blocks, self.director.notes.copy())
         # Directive handlers
-        for action, entity, entities in self.direction:
+        for n, (action, entity, entities) in enumerate(self.direction):
             method = getattr(drama, f"{drama.prefixes[1]}{action}")
             if isinstance(method, Callable):
                 try:
-                    method(entity, *entities)
+                    method(entity, *entities, ordinal=n, **rv._asdict())
                 except Exception as e:
                     warnings.warn(e)
 
         drama.set_state(Detail.none)
-        return self.Turn(scene, specs, roles, speech, blocks, self.director.notes.copy())
+        return rv
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.director.notes.clear()
