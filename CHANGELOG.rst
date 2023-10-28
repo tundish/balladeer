@@ -6,11 +6,11 @@
 Change Log
 ::::::::::
 
-0.41.0rc
-========
+0.41.0
+======
 
 * Pass Turn attributes as keyword parameters to each Drama directive handler.
-* TODO: Fix reporting of example number in About endpoints.
+* Fix content of About endpoint.
 
 0.40.0
 ======

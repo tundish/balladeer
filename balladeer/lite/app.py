@@ -50,14 +50,7 @@ from balladeer.lite.types import Page
 
 class About(HTTPEndpoint):
     async def get(self, request):
-        return PlainTextResponse(
-            "\n".join(
-                (
-                    f"Balladeer {balladeer.__version__}",
-                    "Example 10",
-                )
-            )
-        )
+        return PlainTextResponse(f"Balladeer {balladeer.__version__}\n")
 
 
 class Home(HTTPEndpoint):
