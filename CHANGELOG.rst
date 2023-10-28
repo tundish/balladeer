@@ -6,11 +6,16 @@
 Change Log
 ::::::::::
 
-0.40.0rc
+0.41.0rc
 ========
 
-* Some documentation fixes.
 * TODO: Fix reporting of example number in About endpoints.
+
+0.40.0
+======
+
+* Some documentation fixes.
+* Fix packaging of `balladeer.utils`.
 
 0.39.0
 ======
