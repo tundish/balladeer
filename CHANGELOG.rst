@@ -10,6 +10,7 @@ Change Log
 ========
 
 * Some documentation fixes.
+* TODO: Fix reporting of example number in About endpoints.
 
 0.39.0
 ======
