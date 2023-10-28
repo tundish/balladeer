@@ -1,11 +1,11 @@
 [project]
 name = "balladeer"
-version = "0.40.0"
+version = "0.41.0"
 description = "Web-enabled interactive fiction framework."
 readme = "README.rst"
 requires-python = ">=3.11"
 license = {file = "LICENSE"}
-keywords = ["speechmark"]
+keywords = ["speechmark", "story", "interactive fiction"]
 authors = [
     {name = "Tundish", email = "tundish@gigeconomy.org.uk"}
 ]
