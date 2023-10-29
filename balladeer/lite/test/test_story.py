@@ -249,14 +249,17 @@ class DirectiveTests(unittest.TestCase):
 
     class Conversation(Drama):
 
-        def __init__(self, *args, world=None, config=None, **kwargs):
+        def __init__(self, *args, config=None, world=None, **kwargs):
             super().__init__(*args, config=config, world=world, **kwargs)
             self.witness = Counter()
+            self.state = 0
 
         def on_testing(self, entity: Entity, *args: tuple[Entity], **kwargs):
+            self.state += 1
             self.witness["testing"] += 1
 
         def on_elaborating(self, entity: Entity, *args: tuple[Entity], **kwargs):
+            self.state += 1
             self.witness["elaborating"] += 1
 
 
@@ -269,11 +272,10 @@ class DirectiveTests(unittest.TestCase):
         self.assertIsInstance(self.story.context, self.Conversation)
 
     def test_directives(self):
-        n = 0
-        while n < 4:
-            self.story.context.state = n
+        for i in range(4):
             with self.story.turn() as turn:
-                n += 1
+                pass
 
+        self.assertEqual(2, self.story.context.state)
         self.assertEqual(1, self.story.context.witness["testing"])
         self.assertEqual(1, self.story.context.witness["elaborating"])
