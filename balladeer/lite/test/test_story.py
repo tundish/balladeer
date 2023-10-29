@@ -209,8 +209,8 @@ class DirectiveTests(unittest.TestCase):
     s='''
     <ALAN.elaborating> Maybe now's a good time to ask {BETH.name} a question.
         1. Ask about the weather
-        2. Ask about pets
-        3. Ask about football
+        2. Ask  about football
+        3. Ask about pets
     '''
 
     [[_.1]]
