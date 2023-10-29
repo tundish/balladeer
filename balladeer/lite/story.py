@@ -106,7 +106,6 @@ class StoryBuilder:
         else:
             # There's a note for every shot in the scene.
             # One map in the chain for every blockquote and every paragraph.
-            # return [t for i in (m.get("directives", []) for m in notes[-1].maps) for t in i]
             return [t for i in (m.get("directives", []) for n in notes for m in n.maps) for t in i]
 
     def action(self, text: str, *args, **kwargs):

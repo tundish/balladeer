@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.42.0
+======
+
+* Fix an issue which was ignoring all but the final directive of a scene.
+
 0.41.0
 ======
 
