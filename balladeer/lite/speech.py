@@ -25,7 +25,7 @@ import textwrap
 from speechmark import SpeechMark
 
 
-class Speech(str):
+class Speech:
     """
     This is a lightweight class for objects which
     represent marked-up speech.
@@ -42,6 +42,18 @@ class Speech(str):
     processor = SpeechMark()
     tag_matcher = re.compile("<[^>]+?>")
 
+    def __init__(self, value: str = ""):
+        self.value = value
+
+    def __getitem__(self, key):
+        return self.value[key]
+
+    def __bool__(self):
+        return bool(self.value)
+
+    def __str__(self):
+        return self.value
+
     @functools.cache
     def trim(self) -> str:
         """
@@ -49,7 +61,7 @@ class Speech(str):
         This method is used internally, so you won't need to call it explicitly.
 
         """
-        return textwrap.dedent(self).strip()
+        return textwrap.dedent(self.value).strip()
 
     @functools.cached_property
     def tags(self) -> str:

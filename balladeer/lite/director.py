@@ -204,7 +204,6 @@ class Director:
             self.notes[(path, index)] = self.notes[(path, index)].new_child(
                 pause=self.pause, duration=self.dwell, delay=self.delay
             )
-
             html5 = self.cite_matcher.sub(self.edit_cite, block)
 
             attrs = self.attributes(html5)

@@ -135,7 +135,10 @@ class Entity:
             if isinstance(obj, enum.Enum):
                 return {"name": obj.name, "value": obj.value}
 
-            data = dataclasses.asdict(obj)
+            try:
+                data = dataclasses.asdict(obj)
+            except TypeError:
+                return str(obj)
             data["uid"] = str(data["uid"])
             data["types"] = sorted(data.get("types", []))
             data["links"] = sorted((str(i) for i in data.get("links", [])))

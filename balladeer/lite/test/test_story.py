@@ -211,6 +211,7 @@ class DirectiveTests(unittest.TestCase):
         1. Ask about the weather
         2. Ask about pets
         3. Ask about football
+
     '''
 
     [[_.1]]
