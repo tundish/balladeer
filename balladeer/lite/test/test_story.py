@@ -274,7 +274,11 @@ class DirectiveTests(unittest.TestCase):
     def test_directives(self):
         for i in range(4):
             with self.story.turn() as turn:
-                pass
+                for n, block in turn.blocks:
+                    if n == 0:
+                        self.assertIn("conversation skills", block)
+                    elif n == 1:
+                        self.assertIn("about football", block)
 
         self.assertEqual(2, self.story.context.state)
         self.assertEqual(1, self.story.context.witness["testing"])
