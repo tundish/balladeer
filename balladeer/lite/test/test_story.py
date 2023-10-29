@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from collections import Counter
 from collections import deque
 import copy
 import itertools
@@ -25,11 +26,15 @@ import tomllib
 import unittest
 
 from balladeer.examples.ex_10_animate_media.main import Story as Story_10
+from balladeer.examples.ex_10_animate_media.main import World as World_10
+from balladeer.lite.drama import Drama
+from balladeer.lite.entity import Entity
 from balladeer.lite.loader import Loader
 from balladeer.lite.speech import Dialogue
 from balladeer.lite.story import StoryBuilder
 from balladeer.lite.types import Grouping
 from balladeer.lite.types import Page
+from balladeer.lite.world import WorldBuilder
 
 
 class StoryTests(unittest.TestCase):
@@ -150,7 +155,7 @@ class ExampleTests(unittest.TestCase):
             ''').strip()
 
         scene = Loader.Scene(content, Loader.read_toml(content))
-        story = Story_10(config={}, assets=Grouping.typewise([scene]))
+        story = Story_10(config={}, assets=Grouping.typewise([scene]), world=World_10())
         specs = story.director.specifications(scene.tables)
         self.assertEqual(story.director.rank_constraints(specs["FIGHTER_1"]), 1, specs)
         self.assertEqual(story.director.rank_constraints(specs["FIGHTER_2"]), 2, specs)
@@ -172,3 +177,103 @@ class ExampleTests(unittest.TestCase):
                         self.assertRaises(KeyError, list, rewriter)
                     elif n == 2:
                         self.assertFalse(turn.blocks, notes)
+
+
+class DirectiveTests(unittest.TestCase):
+
+    class World(WorldBuilder):
+        def build(self):
+            yield from [
+                Entity(name="Alan", type="Narrator"),
+                Entity(name="Beth", type="Gossiper"),
+            ]
+
+    scene_toml_text = textwrap.dedent("""
+    [ALAN]
+    type = "Narrator"
+
+    [BETH]
+    type = "Gossiper"
+
+    [CONVERSATION]
+    type = "Conversation"
+
+    [[_]]
+    if.CONVERSATION.state = 0
+    s='''
+    <ALAN.testing> Let's practise our conversation skills.
+    '''
+
+    [[_]]
+    if.CONVERSATION.state = 0
+    s='''
+    <ALAN.elaborating> Maybe now's a good time to ask {BETH.name} a question.
+        1. Ask about the weather
+        2. Ask about pets
+        3. Ask about football
+    '''
+
+    [[_.1]]
+    s='''
+    <BETH> Well, you never know what's it's going to do next, do you?
+    '''
+
+    [[_.2]]
+    s='''
+    <BETH.elaborating> I've got two lovely cats.
+        1. Ask about Charlie
+        2. Ask about Doodles
+    '''
+
+    [[_.2.1]]
+    s='''
+    <BETH> Charlie is the elder cat. He's a Marmalade. Very laid back.
+    '''
+
+    [[_.3]]
+    s='''
+    <BETH> I don't know anything about football at all.
+    '''
+
+    [[_.2.2]]
+    s='''
+    <BETH> Oh my goodness, Doodles. Always up to mischief!
+    '''
+
+    [[_]]
+    if.CONVERSATION.state = 1
+    s='''
+    <ALAN> OK. Conversation over.
+    '''
+    """)
+
+    class Conversation(Drama):
+
+        def __init__(self, *args, world=None, config=None, **kwargs):
+            super().__init__(*args, config=config, world=world, **kwargs)
+            self.witness = Counter()
+
+        def on_testing(self, entity: Entity, *args: tuple[Entity], **kwargs):
+            self.witness["testing"] += 1
+
+        def on_elaborating(self, entity: Entity, *args: tuple[Entity], **kwargs):
+            self.witness["elaborating"] += 1
+
+
+    def setUp(self):
+        scene_toml = Loader.read_toml(self.scene_toml_text)
+        assets = Grouping.typewise([Loader.Scene(self.scene_toml_text, scene_toml, None, None, None)])
+        world = self.World()
+        self.story = StoryBuilder(assets=assets, world=world)
+        self.story.drama = [self.Conversation(world=world)]
+        self.assertIsInstance(self.story.context, self.Conversation)
+
+    def test_directives(self):
+        n = 0
+        while n < 4:
+            self.story.context.state = n
+            with self.story.turn() as turn:
+                n += 1
+
+        self.assertEqual(1, self.story.context.witness["testing"])
+        self.assertEqual(1, self.story.context.witness["elaborating"])

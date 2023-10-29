@@ -347,17 +347,21 @@ class Director:
         speech: list[Speech] = [],
     ) -> Generator[tuple[int | None, str]]:
         n_shots = len(scene.tables.get(self.shot_key, [])) if scene else 0
+        # Give each piece of programmatic speech an ordinal outside the range of the written scene
         shot_tuples = [
             (t, n_shots + n, s)
             for n, (t, s) in enumerate(
                 (t, s) for t, v in Grouping.typewise(speech).items() for s in filter(None, v)
             )
         ]
+
+        # Create a grouping of voiced programmatic speech
         spoken = Grouping(list)
         for t, n, s in shot_tuples:
             for b in self.edit(s, roles, path=None, index=n):
                 spoken[t].append((n, b))
 
+        # Interleave programmatic and written dialogue
         spoken[Dialogue] = list(
             itertools.chain.from_iterable(
                 itertools.zip_longest(
