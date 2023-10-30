@@ -160,7 +160,7 @@ class StoryBuilder:
                 try:
                     method(entity, *entities, ordinal=n, **rv._asdict())
                 except Exception as e:
-                    warnings.warn(e)
+                    warnings.warn(str(e))
 
         drama.set_state(Detail.none)
         return rv
