@@ -48,10 +48,15 @@ class Director:
                 return value.translate(Speech.processor.escape_table)
 
     @staticmethod
-    def specify_role(spec: dict) -> tuple[set, set, dict]:
+    def specify_role(spec: dict) -> tuple[set, set, dict, dict]:
         roles = set(filter(None, spec.get("roles", []) + [spec.get("role")]))
         types = set(filter(None, spec.get("types", []) + [spec.get("type")]))
         states = {k: set(v) for k, v in spec.get("states", {}).items()}
+        attributes = {
+            k: v for k, v in spec.items()
+            if k not in ("role", "roles", "type", "types", "state", "states")
+            and v in (True, False)
+        }
         # TODO: Interpret strings inside parentheses as regex patterns
         try:
             key, value = spec["state"].split(".")
@@ -64,7 +69,7 @@ class Director:
         except (KeyError, ValueError):
             pass
 
-        return roles, states, types
+        return roles, states, types, attributes
 
     def __init__(
         self,
@@ -189,8 +194,8 @@ class Director:
             return html5
 
     def rank_constraints(self, spec: dict) -> int:
-        roles, states, types = self.specify_role(spec)
-        return sum(1 / len(v) for v in states.values()) + len(types) + len(roles)
+        roles, states, types, attributes = self.specify_role(spec)
+        return sum(1 / len(v) for v in states.values()) + len(types) + len(roles) + len(attributes)
 
     def edit(
         self,
@@ -273,7 +278,7 @@ class Director:
         )
         pool = {i: set(specs.keys()) for i in ensemble}
         for role, spec in specs.items():
-            roles, states, types = self.specify_role(spec)
+            roles, states, types, attributes = self.specify_role(spec)
             try:
                 entity = next(
                     entity
@@ -288,6 +293,10 @@ class Director:
                         k in entity.states
                         and getattr(entity.get_state(k), "name", entity.get_state(k)) in v
                         for k, v in states.items()
+                    )
+                    and all(
+                        bool(getattr(entity, k, not v)) == v
+                        for k, v in attributes.items()
                     )
                 )
             except StopIteration:
@@ -309,7 +318,7 @@ class Director:
             return Loader.Scene("", {}), {}, {}
 
     def allows(self, conditions: dict, cast: dict[str, Entity] = {}) -> bool:
-        for role, (roles, states, types) in conditions.items():
+        for role, (roles, states, types, attributes) in conditions.items():
             entity = cast[role]
             if (
                 types
@@ -324,6 +333,10 @@ class Director:
                     key = entity.get_state(state)
 
                 if key not in values:
+                    return False
+
+            for k, v in attributes.items():
+                if bool(getattr(entity, k, not v)) != v:
                     return False
 
         return True

@@ -394,7 +394,7 @@ class EnumConditionTests(unittest.TestCase):
         shot = next(iter(scene.get(director.shot_key)))
         conditions = dict(director.specify_conditions(shot))
         self.assertIn("WEATHER", conditions)
-        roles, states, types = conditions["WEATHER"]
+        roles, states, types, attributes = conditions["WEATHER"]
         self.assertIn("Weather", states)
         self.assertIn("stormy", states["Weather"])
 
@@ -409,20 +409,23 @@ class EnumConditionTests(unittest.TestCase):
         shot = next(iter(scene.get(director.shot_key)))
         conditions = dict(director.specify_conditions(shot))
         self.assertIn("WEATHER", conditions)
-        roles, states, types = conditions["WEATHER"]
+        roles, states, types, attributes = conditions["WEATHER"]
         self.assertIn("Weather", states)
         self.assertIn("stormy", states["Weather"])
         self.assertIn("misty", states["Weather"])
 
-    def test_boolean_attribute_true(self):
+    def test_boolean_attribute_true_pos(self):
         content = textwrap.dedent("""
+        [ENTITY]
+
         [[_]]
-        if.WEATHER.attr = true
+        if.ENTITY.attr = true
 
         """).strip()
         for value in (True, "a", 1, [1], dict(a=1)):
             with self.subTest(value=value):
-                self.ensemble[0].attr = value
+                for i in self.ensemble:
+                    i.attr = value
 
                 d = Director()
                 scene = tomllib.loads(content)
@@ -435,6 +438,81 @@ class EnumConditionTests(unittest.TestCase):
                 roles = dict(d.roles(specs, self.ensemble))
                 self.assertTrue(roles, (self.ensemble, specs))
                 self.assertTrue(d.allows(conditions[0], roles))
+
+    def test_boolean_attribute_false_neg(self):
+        content = textwrap.dedent("""
+        [ENTITY]
+
+        [[_]]
+        if.ENTITY.attr = false
+
+        """).strip()
+        for value in (True, "a", 1, [1], dict(a=1)):
+            with self.subTest(value=value):
+                for i in self.ensemble:
+                    i.attr = value
+
+                d = Director()
+                scene = tomllib.loads(content)
+                conditions = [dict(d.specify_conditions(shot)) for shot in scene.get(d.shot_key)]
+                self.assertEqual(1, len(conditions))
+
+                specs = d.specifications(scene)
+
+                self.assertEqual(3, len(self.ensemble))
+                roles = dict(d.roles(specs, self.ensemble))
+                self.assertTrue(roles, (self.ensemble, specs))
+                self.assertFalse(d.allows(conditions[0], roles))
+
+    def test_boolean_attribute_false_pos(self):
+        content = textwrap.dedent("""
+        [ENTITY]
+
+        [[_]]
+        if.ENTITY.attr = false
+
+        """).strip()
+        for value in (False, "", 0, [], dict()):
+            with self.subTest(value=value):
+                for i in self.ensemble:
+                    i.attr = value
+
+                d = Director()
+                scene = tomllib.loads(content)
+                conditions = [dict(d.specify_conditions(shot)) for shot in scene.get(d.shot_key)]
+                self.assertEqual(1, len(conditions))
+
+                specs = d.specifications(scene)
+
+                self.assertEqual(3, len(self.ensemble))
+                roles = dict(d.roles(specs, self.ensemble))
+                self.assertTrue(roles, (self.ensemble, specs))
+                self.assertTrue(d.allows(conditions[0], roles))
+
+    def test_boolean_attribute_true_neg(self):
+        content = textwrap.dedent("""
+        [ENTITY]
+
+        [[_]]
+        if.ENTITY.attr = true
+
+        """).strip()
+        for value in (False, "", 0, [], dict()):
+            with self.subTest(value=value):
+                for i in self.ensemble:
+                    i.attr = value
+
+                d = Director()
+                scene = tomllib.loads(content)
+                conditions = [dict(d.specify_conditions(shot)) for shot in scene.get(d.shot_key)]
+                self.assertEqual(1, len(conditions))
+
+                specs = d.specifications(scene)
+
+                self.assertEqual(3, len(self.ensemble))
+                roles = dict(d.roles(specs, self.ensemble))
+                self.assertTrue(roles, (self.ensemble, specs))
+                self.assertFalse(d.allows(conditions[0], roles))
 
 
 class RoleTests(unittest.TestCase):
