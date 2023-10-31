@@ -179,14 +179,7 @@ class ExampleTests(unittest.TestCase):
                         self.assertFalse(turn.blocks, notes)
 
 
-class DirectiveTests(unittest.TestCase):
-
-    class World(WorldBuilder):
-        def build(self):
-            yield from [
-                Entity(name="Alan", type="Narrator"),
-                Entity(name="Beth", type="Gossiper"),
-            ]
+class ConversationExample:
 
     scene_toml_text = textwrap.dedent("""
     [ALAN]
@@ -199,18 +192,17 @@ class DirectiveTests(unittest.TestCase):
     type = "Conversation"
 
     [[_]]
-    if.CONVERSATION.state = 0
     s='''
     <ALAN.testing> Let's practise our conversation skills.
     '''
 
     [[_]]
-    if.CONVERSATION.state = 0
+    if.CONVERSATION.tree = false
     s='''
-    <ALAN.elaborating> Maybe now's a good time to ask {BETH.name} a question.
-        1. Ask about the weather
-        2. Ask  about football
-        3. Ask about pets
+    <ALAN.branching> Maybe now's a good time to ask {BETH.name} a question.
+        1. Talk about the weather
+        2. Mention the football
+        3. Ask after the family
     '''
 
     [[_.1]]
@@ -220,7 +212,7 @@ class DirectiveTests(unittest.TestCase):
 
     [[_.2]]
     s='''
-    <BETH.elaborating> I've got two lovely cats.
+    <BETH.branching> I've got two lovely cats.
         1. Ask about Charlie
         2. Ask about Doodles
     '''
@@ -241,7 +233,6 @@ class DirectiveTests(unittest.TestCase):
     '''
 
     [[_]]
-    if.CONVERSATION.state = 1
     s='''
     <ALAN> OK. Conversation over.
     '''
@@ -258,10 +249,60 @@ class DirectiveTests(unittest.TestCase):
             self.state += 1
             self.witness["testing"] += 1
 
-        def on_elaborating(self, entity: Entity, *args: tuple[Entity], **kwargs):
+        def on_branching(self, entity: Entity, *args: tuple[Entity], **kwargs):
             self.state += 1
             self.witness["elaborating"] += 1
 
+    class World(WorldBuilder):
+        def build(self):
+            yield from [
+                Entity(name="Alan", type="Narrator"),
+                Entity(name="Beth", type="Gossiper"),
+            ]
+
+
+class ConversationTests(ConversationExample, unittest.TestCase):
+    def setUp(self):
+        scene_toml = Loader.read_toml(self.scene_toml_text)
+        assets = Grouping.typewise([Loader.Scene(self.scene_toml_text, scene_toml, None, None, None)])
+        world = self.World()
+        self.story = StoryBuilder(assets=assets, world=world)
+        self.story.drama = [self.Conversation(world=world)]
+        self.assertIsInstance(self.story.context, self.Conversation)
+
+    def test_directives(self):
+        for i in range(4):
+            with self.story.turn() as turn:
+                for n, block in turn.blocks:
+                    if n == 0:
+                        self.assertIn("conversation skills", block)
+                    elif n == 1:
+                        self.assertIn("about football", block)
+
+        self.assertEqual(2, self.story.context.state)
+        self.assertEqual(1, self.story.context.witness["testing"])
+        self.assertEqual(1, self.story.context.witness["elaborating"])
+
+
+class BugReproductionTests(ConversationExample, unittest.TestCase):
+    scene_toml_text = textwrap.dedent("""
+    [ALAN]
+    type = "Narrator"
+
+    [BETH]
+    type = "Gossiper"
+
+    [CONVERSATION]
+    type = "Conversation"
+
+    [[_]]
+    s='''
+    <ALAN.branching> Maybe now's a good time to ask {BETH.name} a question.
+        1. Ask about the weather
+        2. Ask about football
+        3. Ask about pets
+    '''
+    """)
 
     def setUp(self):
         scene_toml = Loader.read_toml(self.scene_toml_text)
