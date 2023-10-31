@@ -158,8 +158,9 @@ class StoryBuilder:
             method = getattr(drama, f"{drama.prefixes[1]}{action}")
             if isinstance(method, Callable):
                 try:
-                    method(entity, *entities, ordinal=n, **rv._asdict())
+                    method(entity, *entities, identifier=n, **rv._asdict())
                 except Exception as e:
+                    warnings.warn(f"Error in directive handler {method}")
                     warnings.warn(str(e))
 
         drama.set_state(Detail.none)
