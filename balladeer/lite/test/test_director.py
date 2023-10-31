@@ -414,6 +414,28 @@ class EnumConditionTests(unittest.TestCase):
         self.assertIn("stormy", states["Weather"])
         self.assertIn("misty", states["Weather"])
 
+    def test_boolean_attribute_true(self):
+        content = textwrap.dedent("""
+        [[_]]
+        if.WEATHER.attr = true
+
+        """).strip()
+        for value in (True, "a", 1, [1], dict(a=1)):
+            with self.subTest(value=value):
+                self.ensemble[0].attr = value
+
+                d = Director()
+                scene = tomllib.loads(content)
+                conditions = [dict(d.specify_conditions(shot)) for shot in scene.get(d.shot_key)]
+                self.assertEqual(1, len(conditions))
+
+                specs = d.specifications(scene)
+
+                self.assertEqual(3, len(self.ensemble))
+                roles = dict(d.roles(specs, self.ensemble))
+                self.assertTrue(roles, (self.ensemble, specs))
+                self.assertTrue(d.allows(conditions[0], roles))
+
 
 class RoleTests(unittest.TestCase):
     @enum.unique
