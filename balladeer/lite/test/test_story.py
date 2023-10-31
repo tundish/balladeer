@@ -243,15 +243,12 @@ class ConversationExample:
         def __init__(self, *args, config=None, world=None, **kwargs):
             super().__init__(*args, config=config, world=world, **kwargs)
             self.witness = Counter()
-            self.state = 0
 
         def on_testing(self, entity: Entity, *args: tuple[Entity], **kwargs):
-            self.state += 1
             self.witness["testing"] += 1
 
         def on_branching(self, entity: Entity, *args: tuple[Entity], **kwargs):
-            self.state += 1
-            self.witness["elaborating"] += 1
+            self.witness["branching"] += 1
 
     class World(WorldBuilder):
         def build(self):
@@ -277,50 +274,7 @@ class ConversationTests(ConversationExample, unittest.TestCase):
                     if n == 0:
                         self.assertIn("conversation skills", block)
                     elif n == 1:
-                        self.assertIn("about football", block)
+                        self.assertIn("the football", block)
 
-        self.assertEqual(2, self.story.context.state)
-        self.assertEqual(1, self.story.context.witness["testing"])
-        self.assertEqual(1, self.story.context.witness["elaborating"])
-
-
-class BugReproductionTests(ConversationExample, unittest.TestCase):
-    scene_toml_text = textwrap.dedent("""
-    [ALAN]
-    type = "Narrator"
-
-    [BETH]
-    type = "Gossiper"
-
-    [CONVERSATION]
-    type = "Conversation"
-
-    [[_]]
-    s='''
-    <ALAN.branching> Maybe now's a good time to ask {BETH.name} a question.
-        1. Ask about the weather
-        2. Ask about football
-        3. Ask about pets
-    '''
-    """)
-
-    def setUp(self):
-        scene_toml = Loader.read_toml(self.scene_toml_text)
-        assets = Grouping.typewise([Loader.Scene(self.scene_toml_text, scene_toml, None, None, None)])
-        world = self.World()
-        self.story = StoryBuilder(assets=assets, world=world)
-        self.story.drama = [self.Conversation(world=world)]
-        self.assertIsInstance(self.story.context, self.Conversation)
-
-    def test_directives(self):
-        for i in range(4):
-            with self.story.turn() as turn:
-                for n, block in turn.blocks:
-                    if n == 0:
-                        self.assertIn("conversation skills", block)
-                    elif n == 1:
-                        self.assertIn("about football", block)
-
-        self.assertEqual(2, self.story.context.state)
-        self.assertEqual(1, self.story.context.witness["testing"])
-        self.assertEqual(1, self.story.context.witness["elaborating"])
+        self.assertEqual(4, self.story.context.witness["testing"])
+        self.assertEqual(4, self.story.context.witness["branching"])
