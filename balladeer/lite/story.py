@@ -98,16 +98,6 @@ class StoryBuilder:
     def notes(self):
         return list(self.director.notes.values())
 
-    @property
-    def direction(self):
-        notes = self.notes
-        if not notes:
-            return []
-        else:
-            # There's a note for every shot in the scene.
-            # One map in the chain for every blockquote and every paragraph.
-            return [t for i in (m.get("directives", []) for n in notes for m in n.maps) for t in i]
-
     def action(self, text: str, *args, **kwargs):
         drama = self.context
         actions = drama.actions(
@@ -153,15 +143,18 @@ class StoryBuilder:
         blocks = list(self.director.rewrite(scene, roles, speech))
 
         rv = self.Turn(scene, specs, roles, speech, blocks, self.director.notes.copy())
-        # Directive handlers
-        for n, (action, entity, entities) in enumerate(self.direction):
-            method = getattr(drama, f"{drama.prefixes[1]}{action}")
-            if isinstance(method, Callable):
-                try:
-                    method(entity, *entities, identifier=n, **rv._asdict())
-                except Exception as e:
-                    warnings.warn(f"Error in directive handler {method}")
-                    warnings.warn(str(e))
+
+        # Directive handlersa
+        for n, (block, note) in enumerate(zip(blocks, self.notes)):
+            for m in note.maps:
+                for (action, entity, entities) in m.get("directives", []):
+                    method = getattr(drama, f"{drama.prefixes[1]}{action}")
+                    if isinstance(method, Callable):
+                        try:
+                            method(entity, *entities, identifier=n, **rv._asdict())
+                        except Exception as e:
+                            warnings.warn(f"Error in directive handler {method}")
+                            warnings.warn(str(e))
 
         drama.set_state(Detail.none)
         return rv
