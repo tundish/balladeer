@@ -144,17 +144,19 @@ class StoryBuilder:
 
         rv = self.Turn(scene, specs, roles, speech, blocks, self.director.notes.copy())
 
-        # Directive handlersa
-        for n, (block, note) in enumerate(zip(blocks, self.notes)):
+        # Directive handlers
+        n = 0
+        for block, note in zip(blocks, self.notes):
             for m in note.maps:
                 for (action, entity, entities) in m.get("directives", []):
-                    method = getattr(drama, f"{drama.prefixes[1]}{action}")
+                    method = getattr(drama, f"{drama.prefixes[1]}{action}", None)
                     if isinstance(method, Callable):
                         try:
                             method(entity, *entities, identifier=n, **rv._asdict())
                         except Exception as e:
                             warnings.warn(f"Error in directive handler {method}")
                             warnings.warn(str(e))
+                    n += 1
 
         drama.set_state(Detail.none)
         return rv

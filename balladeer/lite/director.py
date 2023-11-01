@@ -162,7 +162,7 @@ class Director:
         return html5
 
     def handle_directives(self, html5, directives: dict, path: pathlib.Path | str, index: int):
-        self.notes[(path, index)]["directives"] = [
+        directive_entry = [
             (
                 directive,
                 self.cast.get(self.role),
@@ -170,6 +170,10 @@ class Director:
             )
             for directive, roles in directives.items()
         ]
+        try:
+            self.notes[(path, index)]["directives"].extend(directive_entry)
+        except KeyError:
+            self.notes[(path, index)]["directives"] = directive_entry
         return html5
 
     def handle_mode(self, html5, mode: list[str], path: pathlib.Path | str, index: int):
