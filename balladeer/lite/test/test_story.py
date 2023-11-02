@@ -99,7 +99,7 @@ class StoryTests(unittest.TestCase):
         for n in range(2):
             with self.subTest(n=n, m=len(story.director.notes[(None, 0)].maps)):
                 with story.turn() as turn:
-                    theme_spec = story.notes[-1].get("theme")
+                    theme_spec = list(story.director.notes.values())[-1].get("theme")
                     self.assertIsInstance(theme_spec, list)
                     settings = story.settings(*theme_spec, themes=page.themes)
                     self.assertIsInstance(settings, dict)

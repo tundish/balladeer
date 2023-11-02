@@ -94,10 +94,6 @@ class StoryBuilder:
     def context(self):
         return next((reversed(sorted(self.drama, key=operator.attrgetter("state")))), None)
 
-    @property
-    def notes(self):
-        return list(self.director.notes.values())
-
     def action(self, text: str, *args, **kwargs):
         drama = self.context
         actions = drama.actions(
@@ -146,13 +142,13 @@ class StoryBuilder:
 
         # Directive handlers
         n = 0
-        for block, note in zip(blocks, self.notes):
+        for block, (key, note) in zip(blocks, self.director.notes.items()):
             for m in note.maps:
                 for (action, entity, entities) in m.get("directives", []):
                     method = getattr(drama, f"{drama.prefixes[1]}{action}", None)
                     if isinstance(method, Callable):
                         try:
-                            method(entity, *entities, identifier=n, **rv._asdict())
+                            method(entity, *entities, identifier=key, **rv._asdict())
                         except Exception as e:
                             warnings.warn(f"Error in directive handler {method}")
                             warnings.warn(str(e))
