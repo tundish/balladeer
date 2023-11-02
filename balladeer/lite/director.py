@@ -146,22 +146,22 @@ class Director:
             "offer": offer,
         }
 
-    def handle_fragments(self, html5, fragments: str, path: pathlib.Path | str, index: int):
+    def handle_fragments(self, html5, fragments: str, path: pathlib.Path | str, shot_id: int, cue_index: int):
         if not fragments:
             return html5
         elif fragments.isdigit():
-            self.notes[(path, index)]["option"] = int(fragments)
+            self.notes[(path, shot_id, cue_index)]["option"] = int(fragments)
         elif fragments.endswith("!"):
             list_block = self.ul_matcher.search(html5)
             list_items = list(self.li_matcher.findall(list_block.group()))
-            ordinal = self.counts[(path, index)] % len(list_items)
+            ordinal = self.counts[(path, shot_id, cue_index)] % len(list_items)
             choice = list_items[ordinal].replace("<li>", "").replace("</li>", "")
             html5 = self.ul_matcher.sub(choice, html5)
-            self.counts[(path, index)] += 1
+            self.counts[(path, shot_id, cue_index)] += 1
 
         return html5
 
-    def handle_directives(self, html5, directives: dict, path: pathlib.Path | str, index: int):
+    def handle_directives(self, html5, directives: dict, path: pathlib.Path | str, shot_id: int, cue_index: int):
         directive_entry = [
             (
                 directive,
@@ -171,25 +171,25 @@ class Director:
             for directive, roles in directives.items()
         ]
         try:
-            self.notes[(path, index)]["directives"].extend(directive_entry)
+            self.notes[(path, shot_id, cue_index)]["directives"].extend(directive_entry)
         except KeyError:
-            self.notes[(path, index)]["directives"] = directive_entry
+            self.notes[(path, shot_id, cue_index)]["directives"] = directive_entry
         return html5
 
-    def handle_mode(self, html5, mode: list[str], path: pathlib.Path | str, index: int):
+    def handle_mode(self, html5, mode: list[str], path: pathlib.Path | str, shot_id: int, cue_index: int):
         if mode:
-            self.notes[(path, index)]["mode"] = mode[0]
-            self.notes[(path, index)]["media"] = [i for n, i in enumerate(mode) if n]
+            self.notes[(path, shot_id, cue_index)]["mode"] = mode[0]
+            self.notes[(path, shot_id, cue_index)]["media"] = [i for n, i in enumerate(mode) if n]
 
         return html5
 
-    def handle_parameters(self, html5, parameters: dict, path: pathlib.Path | str, index: int):
+    def handle_parameters(self, html5, parameters: dict, path: pathlib.Path | str, shot_id: int, cue_index: int):
         self.pause = parameters["pause"]
         self.dwell = parameters["dwell"]
         self.offer = parameters["offer"]
-        self.notes[(path, index)]["style"] = parameters["style"]
-        self.notes[(path, index)]["theme"] = parameters["theme"]
-        self.notes[(path, index)]["offer"] = self.offer
+        self.notes[(path, shot_id, cue_index)]["style"] = parameters["style"]
+        self.notes[(path, shot_id, cue_index)]["theme"] = parameters["theme"]
+        self.notes[(path, shot_id, cue_index)]["offer"] = self.offer
 
         class_values = " ".join(parameters["class"])
         if class_values:
@@ -206,11 +206,11 @@ class Director:
         speech: Speech = Speech(),
         roles: dict = {},
         path: pathlib.Path | str = None,
-        index: int = 0,
+        shot_id: int = 0,
     ) -> Generator[str]:
         self.cast = roles.copy()
-        for block in self.bq_matcher.findall(speech.tags):
-            self.notes[(path, index)] = self.notes[(path, index)].new_child(
+        for cue_index, block in enumerate(self.bq_matcher.findall(speech.tags)):
+            self.notes[(path, shot_id, cue_index)] = self.notes[(path, shot_id, cue_index)].new_child(
                 pause=self.pause, duration=self.dwell, delay=self.delay
             )
 
@@ -219,16 +219,16 @@ class Director:
             attrs = self.attributes(html5)
 
             parameters = self.parameters(attrs)
-            html5 = self.handle_parameters(html5, parameters, path, index)
+            html5 = self.handle_parameters(html5, parameters, path, shot_id, cue_index)
 
             fragments = self.fragments(attrs)
-            html5 = self.handle_fragments(html5, fragments, path, index)
+            html5 = self.handle_fragments(html5, fragments, path, shot_id, cue_index)
 
             mode = self.mode(attrs)
-            html5 = self.handle_mode(html5, mode, path, index)
+            html5 = self.handle_mode(html5, mode, path, shot_id, cue_index)
 
             directives = self.directives(attrs)
-            html5 = self.handle_directives(html5, directives, path, index)
+            html5 = self.handle_directives(html5, directives, path, shot_id, cue_index)
 
             html5 = self.pp_matcher.sub(self.edit_para, html5)
 
@@ -375,7 +375,7 @@ class Director:
         # Create a grouping of voiced programmatic speech
         spoken = Grouping(list)
         for t, n, s in shot_tuples:
-            for b in self.edit(s, roles, path=None, index=n):
+            for b in self.edit(s, roles, path=None, shot_id=n):
                 spoken[t].append((n, b))
 
         # Interleave programmatic and written dialogue
@@ -386,7 +386,7 @@ class Director:
                     [
                         (n, html5)
                         for n, d in self.dialogue(scene, roles)
-                        for html5 in self.edit(d, roles, path=scene.path, index=n)
+                        for html5 in self.edit(d, roles, path=scene.path, shot_id=n)
                     ],
                     fillvalue=Speech(),
                 )
