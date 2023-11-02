@@ -724,7 +724,7 @@ class ParametersTests(unittest.TestCase):
         d = Director()
         rv = "\n".join(d.edit(speech))
         self.assertIn("offer", d.notes[(None, 0, 0)])
-        self.assertEqual(None, d.notes[(None, 0, 0)]["offer"])
+        self.assertEqual(1.0, d.notes[(None, 0, 0)]["offer"])
         self.assertIn("offer", d.notes[(None, 0, 1)])
         self.assertEqual(None, d.notes[(None, 0, 1)]["offer"])
         self.assertIn("delay", d.notes[(None, 0, 1)])

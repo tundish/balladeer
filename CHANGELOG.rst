@@ -10,6 +10,7 @@ Change Log
 ======
 
 * Fix an issue which was ignoring all but the final directive of a scene.
+* More robust organisation of directors notes. Key is formally `(path, shot_id, cue_index)`.
 
 0.41.0
 ======
