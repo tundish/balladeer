@@ -702,10 +702,10 @@ class ParametersTests(unittest.TestCase):
 
         d = Director()
         rv = "\n".join(d.edit(speech))
-        self.assertIn("offer", d.notes[(None, 0)])
-        self.assertEqual(None, d.notes[(None, 0)]["offer"])
-        self.assertIn("delay", d.notes[(None, 0)])
-        self.assertAlmostEqual(2.4, d.notes[(None, 0)]["delay"])
+        self.assertIn("offer", d.notes[(None, 0, 0)])
+        self.assertEqual(None, d.notes[(None, 0, 0)]["offer"])
+        self.assertIn("delay", d.notes[(None, 0, 0)])
+        self.assertAlmostEqual(2.4, d.notes[(None, 0, 0)]["delay"])
 
     def test_offer_negative(self):
         text = textwrap.dedent("""
@@ -723,10 +723,12 @@ class ParametersTests(unittest.TestCase):
 
         d = Director()
         rv = "\n".join(d.edit(speech))
-        self.assertIn("offer", d.notes[(None, 0)])
-        self.assertEqual(None, d.notes[(None, 0)]["offer"])
-        self.assertIn("delay", d.notes[(None, 0)])
-        self.assertAlmostEqual(3.9, d.notes[(None, 0)]["delay"])
+        self.assertIn("offer", d.notes[(None, 0, 0)])
+        self.assertEqual(None, d.notes[(None, 0, 0)]["offer"])
+        self.assertIn("offer", d.notes[(None, 0, 1)])
+        self.assertEqual(None, d.notes[(None, 0, 1)]["offer"])
+        self.assertIn("delay", d.notes[(None, 0, 1)])
+        self.assertAlmostEqual(3.9, d.notes[(None, 0, 1)]["delay"])
 
     def test_offer_value(self):
         text = textwrap.dedent("""
@@ -743,10 +745,10 @@ class ParametersTests(unittest.TestCase):
 
         d = Director()
         rv = "\n".join(d.edit(speech))
-        self.assertIn("offer", d.notes[(None, 0)])
-        self.assertEqual(12, d.notes[(None, 0)]["offer"])
-        self.assertIn("option", d.notes[(None, 0)])
-        self.assertEqual(2, d.notes[(None, 0)]["option"])
+        self.assertIn("offer", d.notes[(None, 0, 0)])
+        self.assertEqual(12, d.notes[(None, 0, 0)]["offer"])
+        self.assertIn("option", d.notes[(None, 0, 0)])
+        self.assertEqual(2, d.notes[(None, 0, 0)]["option"])
 
     def test_class_single(self):
         speech = Speech("<?class=warning>Watch out!")
@@ -817,7 +819,7 @@ class LoopTests(unittest.TestCase):
         self.assertEqual(0, rv.count("<li>"), rv)
         self.assertEqual(0, rv.count("</li>"))
         self.assertEqual(1, rv.count("This, or"))
-        self.assertEqual(1, d.counts[(None, 0)])
+        self.assertEqual(1, d.counts[(None, 0, 0)])
 
 
 class DirectiveTests(unittest.TestCase):
@@ -849,13 +851,13 @@ class DirectiveTests(unittest.TestCase):
 
         rv = "\n".join(d.edit(speech, roles))
 
-        self.assertIn((None, 0), d.notes)
-        self.assertEqual(1.2, d.notes[(None, 0)]["delay"])
+        self.assertIn((None, 0, 0), d.notes)
+        self.assertEqual(1.2, d.notes[(None, 0, 0)]["delay"])
 
-        self.assertIn("directives", d.notes[(None, 0)])
+        self.assertIn("directives", d.notes[(None, 0, 0)])
         self.assertEqual(
             [("announcing", roles["PHONE"], (roles["GUEST"], roles["STAFF"]))],
-            d.notes[(None, 0)]["directives"],
+            d.notes[(None, 0, 0)]["directives"],
         )
 
 
@@ -879,8 +881,8 @@ class ModeTests(unittest.TestCase):
 
         speech = Speech(text)
         edit = "\n".join(d.edit(speech, selection))
-        self.assertIn("media", d.notes[(None, 0)])
-        self.assertEqual(["slapwhack"], d.notes[(None, 0)]["media"])
+        self.assertIn("media", d.notes[(None, 0, 0)])
+        self.assertEqual(["slapwhack"], d.notes[(None, 0, 0)]["media"])
 
 
 class RewriteTests(unittest.TestCase):
@@ -964,7 +966,7 @@ class RewriteTests(unittest.TestCase):
 
         for n in range(len(rv)):
             with self.subTest(n=n):
-                note = d.notes[(None, n)]
+                note = d.notes[(None, n, 0)]
                 maps = [i for i in note.maps if i]
                 self.assertIn("entity", maps[-1])
                 self.assertIn("role", maps[-1])
