@@ -34,14 +34,25 @@ exclude_patterns = [
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme_path = ["../../../karma_sphinx_theme"]
-html_theme = "karma_sphinx_theme"
+html_theme = "alabaster"
 html_static_path = ["_static"]
 html_title = f"{project} {release}"
 html_theme_options = {
-    "navigation_depth": 2,
-    "includehidden": True,
-    "titles_only": False
+    "font_family": "Georgia, serif",
+    "head_font_family": "Georgia, serif",
+    "fixed_sidebar": True,
+    "show_powered_by": True,
 }
+html_sidebars = {'**': ['globaltoc.html', 'github.html']}
+# These folders are copied to the documentation's HTML output
+html_static_path = ['_static']
+
+# These paths are either relative to html_static_path
+# or fully qualified paths (eg. https://...)
+html_css_files = [
+    "balladeer_doc_style.css",
+]
+
+pygments_style = "sphinx"
 
 autodoc_class_signature = "separated"

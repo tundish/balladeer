@@ -1,0 +1,13 @@
+{% extends "!layout.html" %}
+{% set css_files = css_files + ['_static/balladeer_doc_style.css'] %}
+
+{# Alabaster ships a completely useless custom.css, suppress it. #}
+{%- block extrahead %}
+    <meta name="referrer" content="strict-origin">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+{% endblock %}
+
+{% block footer %}
+    {{ super() }}
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+{% endblock %}
