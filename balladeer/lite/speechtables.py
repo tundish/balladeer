@@ -36,7 +36,7 @@ class SpeechTables:
         self.tree = None
         self.ol_matcher = re.compile("<ol>.*?<\\/ol>", re.DOTALL | re.MULTILINE)
         self.li_matcher = re.compile("<li id=\"(\\d+)\">", re.DOTALL | re.MULTILINE)
-        self.pp_matcher = re.compile("<p[^>]*?>(.*?)<\\/p>", re.DOTALL)
+        self.pp_matcher = re.compile("<p[^>]*?>(.*?)<\\/p>", re.DOTALL | re.MULTILINE)
 
     @staticmethod
     def follow_path(table, path: list):
@@ -86,10 +86,6 @@ class SpeechTables:
             )
 
     def on_returning(self, entity: Entity, *args: tuple[Entity], **kwargs):
-        identifier = kwargs.pop("identifier")
-        path, shot_id, cue_index = identifier
-        turn = Turn(**kwargs)
-
         if self in args:
             if len(self.tree.shot_path) > 2:
                 self.tree.shot_path.pop(-1)
