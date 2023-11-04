@@ -4,12 +4,12 @@
 Balladeer
 +++++++++
 
-API Documentation
-:::::::::::::::::
+Documentation
+:::::::::::::
 
 .. toctree::
    :maxdepth: 1
-   :hidden:
+   :includehidden:
 
    intro
    types

@@ -39,7 +39,7 @@ In Balladeer the `interlude` gets called every turn of a
 :ref:`Story <story section>`. This makes it the ideal
 place to put game rules which are invariant.
 
-.. py:function:: drama.interlude(self, *args, **kwargs)
+.. py:function:: drama.interlude(self, *args, **kwargs):
 
    Apply rules once every story turn.
 

@@ -42,6 +42,10 @@ html_theme_options = {
     "head_font_family": "Georgia, serif",
     "fixed_sidebar": True,
     "show_powered_by": True,
+    "page_width": "112rem",
+    "sidebar_width": "12rem",
+    "show_relbars": True,
+    "show_related": True,
 }
 html_sidebars = {'**': ['globaltoc.html', 'github.html']}
 # These folders are copied to the documentation's HTML output
