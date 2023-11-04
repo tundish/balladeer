@@ -40,11 +40,11 @@ class SpeechTables:
     Tree = namedtuple("Tree", ["block", "roles", "tables", "shot_path", "menu"])
 
     def __init__(self, *args, **kwargs):
+        self.tree = None
         self.ol_matcher = re.compile("<ol>.*?<\\/ol>", re.DOTALL | re.MULTILINE)
         self.li_matcher = re.compile("<li id=\"(\\d+)\">", re.DOTALL | re.MULTILINE)
         self.pp_matcher = re.compile("<p[^>]*?>(.*?)<\\/p>", re.DOTALL)
         super().__init__(*args, **kwargs)
-        self.tree = None
 
     @staticmethod
     def follow_path(table, path: list):
@@ -59,9 +59,12 @@ class SpeechTables:
 
     @property
     def menu_options(self):
-        return list(self.tree.menu.keys()) if self.tree else []
+        try:
+            return list(self.tree.menu.keys())
+        except AttributeError:
+            return []
 
-    def option_map(self, block: str):
+    def get_option_map(self, block: str):
         list_block = self.ol_matcher.search(block)
         list_items = list(self.li_matcher.findall(list_block.group()))
         para_items = list(self.pp_matcher.findall(list_block.group()))
@@ -71,13 +74,11 @@ class SpeechTables:
         )
 
     def on_branching(self, entity: Entity, *args: tuple[Entity], **kwargs):
-        self.witness["branching"] += 1
-
         identifier = kwargs.pop("identifier")
         path, shot_id, cue_index = identifier
         turn = StoryBuilder.Turn(**kwargs)
         _, block = turn.blocks[cue_index]
-        menu = self.option_map(block)
+        menu = self.get_option_map(block)
 
         try:
             shots = self.follow_path(self.tree.tables, self.tree.shot_path)
@@ -93,10 +94,7 @@ class SpeechTables:
                 menu=menu
             )
 
-
-
     def on_returning(self, entity: Entity, *args: tuple[Entity], **kwargs):
-        self.witness["returning"] += 1
         if self in args:
             self.tree.shot_path.pop(-1)
         else:
@@ -124,12 +122,20 @@ class SpeechTables:
 
 class ConversationTests(unittest.TestCase):
 
-    ##class Conversation(Drama, SpeechTables):
+    #class Conversation(Drama, SpeechTables):
     class Conversation(SpeechTables, Drama):
         def __init__(self, *args, world=None, config=None, **kwargs):
             super().__init__(*args, config=config, world=world, **kwargs)
             self.state = 0
             self.witness = Counter()
+
+        def on_branching(self, entity: Entity, *args: tuple[Entity], **kwargs):
+            self.witness["branching"] += 1
+            super().on_branching(entity, *args, **kwargs)
+
+        def on_returning(self, entity: Entity, *args: tuple[Entity], **kwargs):
+            self.witness["returning"] += 1
+            super().on_returning(entity, *args, **kwargs)
 
     class World(WorldBuilder):
         def build(self):
