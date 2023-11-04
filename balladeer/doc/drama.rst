@@ -11,7 +11,7 @@ which Balladeer defines so that you can build your narrative.
 
 The place where you write your code is called the Drama.
 
-.. py:class:: Drama(self, *args, world=None, config=None, **kwargs)
+.. py:class:: Drama(self, *args, config=None, world=None, **kwargs)
 
 One important aspect of the Drama class is that inherits from
 :py:class:`~balladeer.lite.entity.Entity`.

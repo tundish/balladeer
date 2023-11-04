@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.43.0
+======
+
+* Created `SpeechTables` mixin and tests for conversation tree.
+
 0.42.0
 ======
 
