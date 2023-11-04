@@ -56,7 +56,7 @@ class SpeechTables:
         except AttributeError:
             return []
 
-    def get_option_map(self, block: str):
+    def get_option_mapping(self, block: str):
         list_block = self.ol_matcher.search(block)
         list_items = list(self.li_matcher.findall(list_block.group()))
         para_items = list(self.pp_matcher.findall(list_block.group()))
@@ -70,14 +70,13 @@ class SpeechTables:
         path, shot_id, cue_index = identifier
         turn = Turn(**kwargs)
         _, block = turn.blocks[cue_index]
-        menu = self.get_option_map(block)
+        menu = self.get_option_mapping(block)
 
         try:
-            shots = self.follow_path(self.tree.tables, self.tree.shot_path)
-            print(f"shots: {shots}")
+            self.tree = self.tree._replace(menu=menu, block=block)
         except AttributeError:
             # Branching is initiated from a scene file.
-            # So shot_id can be used as an index into the shot sequence.
+            # So shot_id is the index into the shot sequence of the root of the tree.
             self.tree = self.Tree(
                 block=block,
                 roles=turn.roles,
