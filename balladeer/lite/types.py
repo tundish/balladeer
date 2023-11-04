@@ -20,8 +20,12 @@
 import colorsys
 import enum
 from collections import defaultdict
+from collections import namedtuple
 import re
 import warnings
+
+
+Turn = namedtuple("Turn", ["scene", "specs", "roles", "speech", "blocks", "notes"], defaults=(None, None))
 
 
 class Page:

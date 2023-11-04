@@ -46,6 +46,7 @@ from balladeer.lite.loader import Loader
 from balladeer.lite.story import StoryBuilder
 from balladeer.lite.types import Grouping
 from balladeer.lite.types import Page
+from balladeer.lite.types import Turn
 
 
 class About(HTTPEndpoint):
@@ -112,7 +113,7 @@ class Home(HTTPEndpoint):
         yield "</style>"
 
     def compose(
-        self, request, page: Page, story: StoryBuilder = None, turn: StoryBuilder.Turn = None
+        self, request, page: Page, story: StoryBuilder = None, turn: Turn = None
     ) -> Page:
         assets = getattr(self, "assets", Grouping())
 
@@ -158,7 +159,7 @@ class Session(HTTPEndpoint):
         return HTMLResponse(page.html)
 
     def render_cues(
-        self, request, story: StoryBuilder = None, turn: StoryBuilder.Turn = None
+        self, request, story: StoryBuilder = None, turn: Turn = None
     ) -> Generator[str]:
         for n, (index, html5) in enumerate(turn.blocks):
             yield '<div class="ballad cue">'
@@ -247,7 +248,7 @@ class Session(HTTPEndpoint):
         """)
 
     def compose(
-        self, request, page: Page, story: StoryBuilder = None, turn: StoryBuilder.Turn = None
+        self, request, page: Page, story: StoryBuilder = None, turn: Turn = None
     ) -> Page:
         assets = getattr(self, "assets", Grouping())
 

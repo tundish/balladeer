@@ -31,15 +31,12 @@ from balladeer.lite.drama import Drama
 from balladeer.lite.loader import Loader
 from balladeer.lite.speech import Speech
 from balladeer.lite.types import Detail
+from balladeer.lite.types import Turn
 from balladeer.lite.types import Grouping
 from balladeer.lite.world import WorldBuilder
 
 
 class StoryBuilder:
-
-    Turn = namedtuple(
-        "Turn", ["scene", "specs", "roles", "speech", "blocks", "notes"], defaults=(None, None)
-    )
 
     @staticmethod
     def settings(*names, themes={}) -> dict:
@@ -138,7 +135,7 @@ class StoryBuilder:
 
         blocks = list(self.director.rewrite(scene, roles, speech))
 
-        rv = self.Turn(scene, specs, roles, speech, blocks, self.director.notes.copy())
+        rv = Turn(scene, specs, roles, speech, blocks, self.director.notes.copy())
 
         # Directive handlers
         n = 0
