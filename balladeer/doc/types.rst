@@ -10,7 +10,7 @@ types are extremely powerful and often sufficient just by
 themselves.
 
 Balladeer tries to minimize the number of classes you
-need to learn. It's less than a dozen in total.
+need to learn. It's about a dozen in total.
 
 Here are two which are fundamental to the Balladeer
 philosophy. We will see them in use soon. So let's get some

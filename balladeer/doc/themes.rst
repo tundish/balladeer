@@ -12,7 +12,7 @@ CSS
 The best way to change how your Story looks is to apply CSS rules to the HTML5 output.
 
 The examples have some CSS files to get you started. I recommend separate files for different purposes.
-Here's my own naming convention, which you are welcome to adopt for yourself.
+Here's my own naming convention which you can adopt; or develop another as you wish.
 
 ==========  =======================================================================
 CSS file    Focus
@@ -30,7 +30,7 @@ Class
 You can assign CSS classes to your dialogue using the `class` parameter like so:
 
 .. literalinclude:: ../lite/test/test_director.py
-    :lines: 652
+    :lines: 754
     :dedent: 8
 
 That will include your class in the HTML containing the speech::
@@ -48,7 +48,7 @@ The Balladeer :py:class:`~balladeer.lite.types.Page` class has a `themes` dictio
 your CSS settings under convenient labels.
 
 .. literalinclude:: ../lite/types.py
-    :lines: 27-40
+    :lines: 31-44
 
 This default theme is rendered into each HTML page like so:
 
@@ -74,7 +74,7 @@ You can modify the default, or create themes of your own simply by adding them t
 Balladeer switches the theme for you when you want to depart from the default:
 
 .. literalinclude:: ../lite/test/test_director.py
-    :lines: 672
+    :lines: 774
     :dedent: 8
 
 .. _CSS variables: https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties

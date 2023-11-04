@@ -9,7 +9,9 @@ Change Log
 0.43.0
 ======
 
+* Condition specifications now evaluate simple attributes as boolean.
 * Created `SpeechTables` mixin and tests for conversation tree.
+* New Sphinx theme for documentation.
 
 0.42.0
 ======

@@ -51,7 +51,7 @@ class ConversationTests(unittest.TestCase):
         def build(self):
             yield from [
                 Entity(name="Alan", type="Narrator"),
-                Entity(name="Beth", type="Gossiper"),
+                Entity(name="Beth", type="CatOwner"),
             ]
 
     scene_toml_text = textwrap.dedent("""
@@ -59,7 +59,7 @@ class ConversationTests(unittest.TestCase):
     type = "Narrator"
 
     [BETH]
-    type = "Gossiper"
+    type = "CatOwner"
 
     [CONVERSATION]
     type = "Conversation"
