@@ -101,14 +101,14 @@ class ConversationTests(unittest.TestCase):
     <BETH> Charlie is the elder cat. He's a Marmalade. Very laid back.
     '''
 
-    [_.3]
-    s='''
-    <BETH> I don't know anything about football at all.
-    '''
-
     [_.2.2]
     s='''
     <BETH.returning@CONVERSATION> Oh my goodness, Doodles. Always up to mischief!
+    '''
+
+    [_.3]
+    s='''
+    <BETH> I don't know anything about football at all.
     '''
 
     [[_]]

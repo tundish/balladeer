@@ -18,6 +18,7 @@ Documentation
    map
    speech
    drama
+   conversation
    story
    scene
    themes
