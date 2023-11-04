@@ -73,7 +73,7 @@ class SpeechTables:
         menu = self.get_option_mapping(block)
 
         try:
-            self.tree = self.tree._replace(menu=menu, block=block)
+            self.tree = self.tree._replace(block=block, menu=menu)
         except AttributeError:
             # Branching is initiated from a scene file.
             # So shot_id is the index into the shot sequence of the root of the tree.
@@ -86,8 +86,17 @@ class SpeechTables:
             )
 
     def on_returning(self, entity: Entity, *args: tuple[Entity], **kwargs):
+        identifier = kwargs.pop("identifier")
+        path, shot_id, cue_index = identifier
+        turn = Turn(**kwargs)
+
         if self in args:
-            self.tree.shot_path.pop(-1)
+            if len(self.tree.shot_path) > 2:
+                self.tree.shot_path.pop(-1)
+                shot = self.follow_path(self.tree.tables, self.tree.shot_path)
+                text = shot.get("s", "")
+                if text:
+                    self.speech.append(Dialogue(text))
         else:
             self.tree = None
 
@@ -107,5 +116,4 @@ class SpeechTables:
             if director.allows(conditions, self.tree.roles):
                 self.tree.shot_path.append(key)
                 text = shot.get(director.dialogue_key, "")
-                print(f"text: {text}")
                 yield Dialogue(text)

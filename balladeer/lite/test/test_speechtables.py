@@ -19,7 +19,6 @@
 
 
 from collections import Counter
-import pprint
 import textwrap
 import unittest
 
@@ -109,11 +108,11 @@ class ConversationTests(unittest.TestCase):
 
     [_.2.2]
     s='''
-    <BETH> Oh my goodness, Doodles. Always up to mischief!
+    <BETH.returning@CONVERSATION> Oh my goodness, Doodles. Always up to mischief!
     '''
 
     [[_]]
-    if.CONVERSATION.state = 2
+    if.CONVERSATION.state = 3
     if.CONVERSATION.tree = false
     s='''
     <ALAN> OK. Conversation over.
@@ -123,7 +122,6 @@ class ConversationTests(unittest.TestCase):
 
     def setUp(self):
         scene_toml = Loader.read_toml(self.scene_toml_text)
-        pprint.pprint(scene_toml)
         assets = Grouping.typewise([Loader.Scene(self.scene_toml_text, scene_toml, None, None, None)])
         world = self.World()
         self.story = StoryBuilder(assets=assets, world=world)
@@ -163,24 +161,87 @@ class ConversationTests(unittest.TestCase):
                         self.assertEqual(1, self.story.context.witness["branching"])
                         self.assertTrue(self.story.context.tree)
                         self.assertFalse(turn.blocks)
+                    elif n == 4:
+                        action = self.story.action("1")
+                        self.assertIsNone(action)
+                        self.assertEqual(1, self.story.context.witness["branching"])
+                        self.assertIsNone(self.story.context.tree)
 
-    def test_double_branch(self):
+                        self.assertEqual(1, len(turn.blocks), turn.blocks)
+                        self.assertIn("Conversation over", turn.blocks[0][1])
+
+    def test_single_branch(self):
         n_turns = 5
         for n in range(n_turns):
             with self.story.turn() as turn:
                 with self.subTest(n=n):
                     self.story.context.state = n
                     options = self.story.context.options(self.story.context.ensemble)
-                    action = self.story.action("2")
                     if n == 0:
+                        action = self.story.action("1")
                         self.assertEqual(0, self.story.context.witness["branching"])
                         self.assertIsNone(self.story.context.tree)
                         self.assertIsNone(action)
                     if n == 1:
+                        action = self.story.action("1")
                         self.assertEqual(0, self.story.context.witness["branching"])
                         self.assertIsNone(self.story.context.tree)
                         self.assertIsNone(action)
                     elif n == 2:
+                        action = self.story.action("1")
+                        fn, args, kwargs = action
+                        self.assertEqual({"option": "1"}, kwargs)
+                        self.assertEqual(1, self.story.context.witness["branching"])
+                        self.assertTrue(self.story.context.tree)
+                        self.assertEqual(3, len(turn.blocks), turn.blocks)
+                        self.assertIn("Let's practise", turn.blocks[0][1])
+                        self.assertIn("I'll let you carry on", turn.blocks[2][1])
+                        shot_id, block = turn.blocks[1]
+                        self.assertIn("a good time to ask", block)
+
+                        self.assertEqual(1, self.story.context.witness["branching"])
+                        self.assertTrue(self.story.context.tree)
+                        menu = self.story.context.tree.menu
+                        self.assertTrue({str(i) for i in range(1, 4)}.issubset(set(menu.keys())))
+                        self.assertIn("Ask about football", menu)
+                    elif n == 3:
+                        action = self.story.action("1")
+                        self.assertIsNone(action)
+                        self.assertEqual({"option": "1"}, kwargs)
+                        self.assertEqual(1, self.story.context.witness["branching"])
+                        self.assertIsNone(self.story.context.tree)
+
+                        self.assertEqual(2, len(turn.blocks), turn.blocks)
+                        shot_id, block = turn.blocks[0]
+                        self.assertIn("you never know", block)
+                    elif n == 4:
+                        action = self.story.action("1")
+                        self.assertIsNone(action)
+                        self.assertEqual(1, self.story.context.witness["branching"])
+                        self.assertIsNone(self.story.context.tree)
+
+                        self.assertEqual(1, len(turn.blocks), turn.blocks)
+                        self.assertIn("Conversation over", turn.blocks[0][1])
+
+    def test_double_branch_with_returning(self):
+        n_turns = 7
+        for n in range(n_turns):
+            with self.story.turn() as turn:
+                with self.subTest(n=n):
+                    self.story.context.state = n
+                    options = self.story.context.options(self.story.context.ensemble)
+                    if n == 0:
+                        action = self.story.action("2")
+                        self.assertEqual(0, self.story.context.witness["branching"])
+                        self.assertIsNone(self.story.context.tree)
+                        self.assertIsNone(action)
+                    if n == 1:
+                        action = self.story.action("2")
+                        self.assertEqual(0, self.story.context.witness["branching"])
+                        self.assertIsNone(self.story.context.tree)
+                        self.assertIsNone(action)
+                    elif n == 2:
+                        action = self.story.action("2")
                         fn, args, kwargs = action
                         self.assertEqual({"option": "2"}, kwargs)
                         self.assertEqual(1, self.story.context.witness["branching"])
@@ -197,6 +258,7 @@ class ConversationTests(unittest.TestCase):
                         self.assertTrue({str(i) for i in range(1, 4)}.issubset(set(menu.keys())))
                         self.assertIn("Ask about football", menu)
                     elif n == 3:
+                        action = self.story.action("2")
                         fn, args, kwargs = action
                         self.assertEqual({"option": "2"}, kwargs)
                         self.assertEqual(2, self.story.context.witness["branching"])
@@ -206,6 +268,7 @@ class ConversationTests(unittest.TestCase):
                         shot_id, block = turn.blocks[0]
                         self.assertIn("two lovely cats", block)
                     elif n == 4:
+                        action = self.story.action("2")
                         fn, args, kwargs = action
                         self.assertEqual({"option": "2"}, kwargs)
                         self.assertEqual(2, self.story.context.witness["branching"])
@@ -214,3 +277,19 @@ class ConversationTests(unittest.TestCase):
                         self.assertEqual(1, len(turn.blocks), turn.blocks)
                         shot_id, block = turn.blocks[0]
                         self.assertIn("Doodles. Always up to mischief!", block)
+                    elif n == 5:
+                        action = self.story.action("1")
+                        fn, args, kwargs = action
+                        self.assertEqual({"option": "1"}, kwargs)
+                        self.assertEqual(3, self.story.context.witness["branching"])
+                        self.assertTrue(self.story.context.tree)
+                        self.assertEqual(2, len(turn.blocks), turn.blocks)
+                        self.assertIn("two lovely cats", turn.blocks[0][1])
+                    elif n == 6:
+                        action = self.story.action("1")
+                        fn, args, kwargs = action
+                        self.assertEqual({"option": "1"}, kwargs)
+                        self.assertEqual(4, self.story.context.witness["branching"])
+                        self.assertTrue(self.story.context.tree)
+                        self.assertEqual(2, len(turn.blocks), turn.blocks)
+                        self.assertIn("Charlie is the elder cat", turn.blocks[1][1])
