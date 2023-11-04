@@ -25,15 +25,15 @@ from balladeer.lite.loader import Loader
 from balladeer.lite.performance import Performance
 
 
-class Drama(Entity, Performance):
-    def __init__(self, *args, world=None, config=None, **kwargs):
-        super().__init__(**kwargs)
-        self.world = world
-        self.config = config
+class Drama(Performance, Entity):
+    def __init__(self, *args, **kwargs):
+        self.config = kwargs.pop("config", None)
+        self.world = kwargs.pop("world", None)
         self.speech = deque(args) or list()
         self.prompt = ""
         self.tooltip = "Enter a command, or type 'help' for a list of options."
         self.prefixes = ("do_", "on_")
+        super().__init__(**kwargs)
 
     @property
     def ensemble(self):

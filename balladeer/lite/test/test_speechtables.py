@@ -40,11 +40,11 @@ class SpeechTables:
     Tree = namedtuple("Tree", ["block", "roles", "tables", "shot_path", "menu"])
 
     def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.tree = None
         self.ol_matcher = re.compile("<ol>.*?<\\/ol>", re.DOTALL | re.MULTILINE)
         self.li_matcher = re.compile("<li id=\"(\\d+)\">", re.DOTALL | re.MULTILINE)
         self.pp_matcher = re.compile("<p[^>]*?>(.*?)<\\/p>", re.DOTALL)
-        super().__init__(*args, **kwargs)
 
     @staticmethod
     def follow_path(table, path: list):
@@ -122,10 +122,9 @@ class SpeechTables:
 
 class ConversationTests(unittest.TestCase):
 
-    #class Conversation(Drama, SpeechTables):
     class Conversation(SpeechTables, Drama):
-        def __init__(self, *args, world=None, config=None, **kwargs):
-            super().__init__(*args, config=config, world=world, **kwargs)
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
             self.state = 0
             self.witness = Counter()
 
