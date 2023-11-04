@@ -54,5 +54,6 @@ html_css_files = [
 ]
 
 pygments_style = "sphinx"
+todo_include_todos = True
 
 autodoc_class_signature = "separated"

@@ -16,4 +16,62 @@ font-family: serif;
 font-size: 1.2rem;
 }
 
+div.body p, div.body dd, div.body li, div.body blockquote {
+    -moz-hyphens: inherit;
+    -ms-hyphens: inherit;
+    -webkit-hyphens: inherit;
+    hyphens: inherit;
+}
+
+
+div.body {
+    max-width: 128rem;
+}
+
+div.body h1 {
+    color: hsl(203.39, 96.72%, 11.96%);
+    font-size: 1.4rem;
+}
+div.body h2 { font-size: 1.2rem; }
+div.body h3 { font-size: 1.0rem; }
+
+div[class*="highlight-"] {
+    margin-right: 0.4rem;
+}
+
+pre {
+font-size: 0.9rem;
+padding-bottom: 1.2rem;
+padding-top: 1.2rem;
+}
+
+.py {
+font-size: 0.9rem;
+}
+
+dl.py {
+margin-top: 1.8rem;
+}
+
+dl.py dt.sig {
+font-family: monospace;
+padding-bottom: 0.4rem;
+padding-top: 0.4;
+}
+
+dl.py dt {
+font-family: sans-serif;
+padding-bottom: 0.4rem;
+padding-top: 0.4;
+}
+
+dl.py dd {
+padding-bottom: 0.4rem;
+padding-top: 0.4;
+}
+
+dl.py p {
+padding-bottom: 0.4rem;
+padding-top: 0.4rem;
+}
 
