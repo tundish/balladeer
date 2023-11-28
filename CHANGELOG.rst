@@ -6,6 +6,12 @@
 Change Log
 ::::::::::
 
+0.44.0rc
+========
+
+* Make Turn a module-level type.
+* Better handling of empty Stories.
+
 0.43.0
 ======
 
