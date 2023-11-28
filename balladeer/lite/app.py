@@ -259,20 +259,21 @@ class Session(HTTPEndpoint):
 
         page.paste(Home.meta, zone=page.zone.meta)
 
-        styles = story.notes and story.notes[-1]["style"] or []
+        notes = getattr(story, "notes", [])
+        styles = notes and notes[-1].get("style", [])
         staged = Loader.stage(assets, *styles)
         page.paste(*sorted(line for line in Home.render_css_links(request, staged)), zone=page.zone.css)
 
         page.paste(*Home.render_js_links(request, assets), zone=page.zone.script)
 
-        theme_names = ["default"] + (story.notes[-1].get("theme", []) or [] if story.notes else [])
+        theme_names = ["default"] + (notes and notes[-1].get("theme", []))
         settings = story.settings(*theme_names, themes=page.themes)
         page.paste(*Home.render_css_vars(settings), zone=page.zone.theme)
 
         html5 = "\n".join(self.render_cues(request, story, turn))
         page.paste("<main>", html5, "</main>", zone=page.zone.main)
 
-        offer = story.notes and story.notes[-1]["offer"]
+        offer = notes and notes[-1]["offer"]
         if offer:
             page.paste(self.render_refresh(request.url, story.notes[-1]), zone=page.zone.meta)
         else:
