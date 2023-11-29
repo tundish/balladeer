@@ -259,7 +259,7 @@ class Session(HTTPEndpoint):
 
         page.paste(Home.meta, zone=page.zone.meta)
 
-        notes = getattr(story, "notes", [])
+        notes = list(turn.notes.values())
         styles = notes and notes[-1].get("style", [])
         staged = Loader.stage(assets, *styles)
         page.paste(*sorted(line for line in Home.render_css_links(request, staged)), zone=page.zone.css)
@@ -275,7 +275,7 @@ class Session(HTTPEndpoint):
 
         offer = notes and notes[-1]["offer"]
         if offer:
-            page.paste(self.render_refresh(request.url, story.notes[-1]), zone=page.zone.meta)
+            page.paste(self.render_refresh(request.url, notes[-1]), zone=page.zone.meta)
         else:
             page.paste(self.render_inputs_to_command(request, story), zone=page.zone.inputs)
 

@@ -10,7 +10,7 @@ Change Log
 ========
 
 * Make Turn a module-level type.
-* Better handling of empty Stories.
+* Fix bug in App after Turn refactoring.
 
 0.43.0
 ======
