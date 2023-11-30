@@ -154,8 +154,15 @@ class MapBuilder:
         self.home = Home = enum.Enum("Home", spots, type=State)
         self.spot = Spot = enum.Enum("Spot", spots, type=State)
         self.exit = Exit = enum.Enum("Exit", spots, type=State)
-        self.transits = list(self.build())
+        self.transits = []
         self.routes = {}
+        try:
+            self.make()
+        except Exception:
+            pass
+
+    def make(self):
+        self.transits = list(self.build())
 
     @property
     def topology(self) -> Generator[tuple[State, State, Entity, State]]:

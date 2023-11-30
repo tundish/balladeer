@@ -50,7 +50,6 @@ class StoryBuilder:
         config=None,
         assets: Grouping = Grouping(),
         world: WorldBuilder = None,
-        drama: [list | deque] = None,
         **kwargs,
     ):
         self.uid = uuid.uuid4()
@@ -60,10 +59,15 @@ class StoryBuilder:
 
         self.world = world or WorldBuilder()
 
-        self.drama = drama or deque([])
-        self.drama.extend(self.build())
-
+        self.drama = deque([])
         self.director = Director(**kwargs)
+        try:
+            self.make()
+        except Exception:
+            pass
+
+    def make(self):
+        self.drama = deque(self.build())
 
     def __deepcopy__(self, memo):
         rv = self.__class__(*self.speech, self.config, self.assets)

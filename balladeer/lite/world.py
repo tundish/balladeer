@@ -47,6 +47,15 @@ class WorldBuilder:
         self.map = map
         self.config = config
 
+        self.entities = []
+        self.typewise = Grouping()
+
+        try:
+            self.make()
+        except Exception:
+            pass
+
+    def make(self):
         self.entities = list(self.build())
         self.typewise = Grouping.typewise(self.entities)
 

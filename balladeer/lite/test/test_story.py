@@ -84,17 +84,28 @@ class StoryTests(unittest.TestCase):
                 self.assertNotEqual(a_d.uid, b_d.uid)
 
     def test_story_copy_map(self):
+        witness = dict()
 
         class Map(MapBuilder):
             def build(self):
+                nonlocal witness
+                witness[self] = True
                 yield Transit().set_state(self.exit.a, self.into.b)
                 yield Transit().set_state(self.exit.b, self.into.a)
 
         class World(WorldBuilder):
             def build(self):
+                nonlocal witness
+                witness[self] = bool(self.map)
                 yield Entity()
                 yield Entity()
                 yield Entity()
+
+        class Story(StoryBuilder):
+            def build(self):
+                nonlocal witness
+                witness[self] = bool(self.world.map)
+                yield Drama()
 
         spots = {
             "a": ["A", "a"],
@@ -102,7 +113,7 @@ class StoryTests(unittest.TestCase):
         }
         m = Map(spots)
         w = World(map=m)
-        a = StoryBuilder(world=w)
+        a = Story(world=w)
         b = copy.deepcopy(a)
 
         self.assertEqual(3, len(a.world.entities))
@@ -124,6 +135,9 @@ class StoryTests(unittest.TestCase):
                 self.assertFalse(any(transit.names is i.names for i in b.world.map.transits))
                 self.assertFalse(any(transit.states is i.states for i in b.world.map.transits))
                 self.assertFalse(any(transit.types is i.types for i in b.world.map.transits))
+
+        self.assertEqual(6, len(witness), witness)
+        self.assertTrue(all(witness.values()), witness)
 
     def test_theme(self):
         page = Page()
