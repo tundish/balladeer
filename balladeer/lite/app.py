@@ -367,9 +367,6 @@ def quick_start(
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
-    # TODO: Builder rename
-    # Extract magic from StoryBuilder init.
-    # Add auto_build param to MapB, WorldB, StoryB
     if isinstance(module, str):
         module = pathlib.Path(module)
         module = module.parent if module.is_file() else module

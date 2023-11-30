@@ -10,7 +10,10 @@ Change Log
 ========
 
 * Make Turn a module-level type.
-* Fix bug in App after Turn refactoring.
+* Fixed a bug in App after Turn refactoring.
+* All class discovery magic refactored to quick_start function.
+* All Builder classes have a make method now.
+* Fixed a bug in `Story.__deepcopy__`.
 
 0.43.0
 ======
