@@ -27,6 +27,8 @@ import unittest
 
 from balladeer.examples.ex_10_animate_media.main import Story as Story_10
 from balladeer.examples.ex_10_animate_media.main import World as World_10
+from balladeer.lite.compass import MapBuilder
+from balladeer.lite.compass import Transit
 from balladeer.lite.drama import Drama
 from balladeer.lite.entity import Entity
 from balladeer.lite.loader import Loader
@@ -57,7 +59,7 @@ class StoryTests(unittest.TestCase):
                 else:
                     self.assertFalse(turn.blocks, turn)
 
-    def test_story_copy(self):
+    def test_story_copy_drama(self):
         a = StoryBuilder(
             Dialogue("<> Knock, knock."),
             Dialogue("<> Who's there?"),
@@ -77,15 +79,51 @@ class StoryTests(unittest.TestCase):
                     any(set(drama.active).intersection(set(i.active)) for i in b.drama)
                 )
 
+        for a_d, b_d in zip(a.drama, b.drama):
+            with self.subTest(a_d=a_d, b_d=b_d):
+                self.assertNotEqual(a_d.uid, b_d.uid)
+
+    def test_story_copy_map(self):
+
+        class Map(MapBuilder):
+            def build(self):
+                yield Transit().set_state(self.exit.a, self.into.b)
+                yield Transit().set_state(self.exit.b, self.into.a)
+
+        class World(WorldBuilder):
+            def build(self):
+                yield Entity()
+                yield Entity()
+                yield Entity()
+
+        spots = {
+            "a": ["A", "a"],
+            "b": ["B", "b"],
+        }
+        m = Map(spots)
+        w = World(map=m)
+        a = StoryBuilder(world=w)
+        b = copy.deepcopy(a)
+
+        self.assertEqual(3, len(a.world.entities))
         for entity in a.world.entities:
             with self.subTest(a=a, b=b, entity=entity):
                 self.assertFalse(any(entity.names is i.names for i in b.world.entities))
                 self.assertFalse(any(entity.states is i.states for i in b.world.entities))
                 self.assertFalse(any(entity.types is i.types for i in b.world.entities))
 
-        for a_d, b_d in zip(a.drama, b.drama):
-            with self.subTest(a_d=a_d, b_d=b_d):
-                self.assertNotEqual(a_d.uid, b_d.uid)
+        self.assertTrue(a.world.map)
+        self.assertTrue(b.world.map)
+        self.assertIs(a.world.map.spot, b.world.map.spot)
+        self.assertIs(a.world.map.exit, b.world.map.exit)
+        self.assertIs(a.world.map.into, b.world.map.into)
+        self.assertIs(a.world.map.home, b.world.map.home)
+
+        for transit in a.world.map.transits:
+            with self.subTest(a=a, b=b, transit=transit):
+                self.assertFalse(any(transit.names is i.names for i in b.world.map.transits))
+                self.assertFalse(any(transit.states is i.states for i in b.world.map.transits))
+                self.assertFalse(any(transit.types is i.types for i in b.world.map.transits))
 
     def test_theme(self):
         page = Page()
