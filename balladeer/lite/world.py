@@ -58,6 +58,7 @@ class WorldBuilder:
     def make(self):
         self.entities = list(self.build())
         self.typewise = Grouping.typewise(self.entities)
+        return self
 
     @property
     def statewise(self) -> Grouping:

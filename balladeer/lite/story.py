@@ -68,13 +68,13 @@ class StoryBuilder:
 
     def make(self):
         self.drama = deque(self.build())
+        return self
 
     def __deepcopy__(self, memo):
-        rv = self.__class__(*self.speech, self.config, self.assets)
-        rv.world = copy.deepcopy(self.world, memo)
-        for drama in (d for d in rv.drama if hasattr(d, "active")):
-            del drama.active  # Will be regenerated on demand
-
+        config = copy.deepcopy(self.config)
+        m = self.world.map and copy.deepcopy(self.world.map).make()
+        w = self.world.__class__ (map=m, config=config)
+        rv = self.__class__(*self.speech, config=config, assets=self.assets, world=w)
         return rv
 
     def build(self):

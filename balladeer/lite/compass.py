@@ -163,6 +163,7 @@ class MapBuilder:
 
     def make(self):
         self.transits = list(self.build())
+        return self
 
     @property
     def topology(self) -> Generator[tuple[State, State, Entity, State]]:
