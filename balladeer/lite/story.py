@@ -25,7 +25,6 @@ import operator
 import uuid
 import warnings
 
-from balladeer.lite.compass import MapBuilder
 from balladeer.lite.director import Director
 from balladeer.lite.drama import Drama
 from balladeer.lite.loader import Loader
@@ -58,14 +57,8 @@ class StoryBuilder:
         self.speech = deque(speech)
         self.config = config
         self.assets = assets.copy()
-        if not world:
-            map_type = next(reversed(MapBuilder.__subclasses__()), MapBuilder)
-            world_type = next(reversed(WorldBuilder.__subclasses__()), WorldBuilder)
-            self.world = world_type(
-                map_type(getattr(map_type, "spots", {}), config=config), config=config
-            )
-        else:
-            self.world = world
+
+        self.world = world or WorldBuilder()
 
         self.drama = drama or deque([])
         self.drama.extend(self.build())

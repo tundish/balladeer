@@ -154,7 +154,7 @@ class MapBuilder:
         self.home = Home = enum.Enum("Home", spots, type=State)
         self.spot = Spot = enum.Enum("Spot", spots, type=State)
         self.exit = Exit = enum.Enum("Exit", spots, type=State)
-        self.transits = list(self.make())
+        self.transits = list(self.build())
         self.routes = {}
 
     @property
@@ -254,6 +254,3 @@ class MapBuilder:
 
     def build(self) -> Generator[Transit]:
         return ()
-
-    def make(self):
-        yield from self.build()

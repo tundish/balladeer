@@ -43,10 +43,12 @@ from starlette.staticfiles import StaticFiles
 import balladeer
 from balladeer.lite.entity import Entity
 from balladeer.lite.loader import Loader
+from balladeer.lite.compass import MapBuilder
 from balladeer.lite.story import StoryBuilder
 from balladeer.lite.types import Grouping
 from balladeer.lite.types import Page
 from balladeer.lite.types import Turn
+from balladeer.lite.world import WorldBuilder
 
 
 class About(HTTPEndpoint):
@@ -126,11 +128,7 @@ class Home(HTTPEndpoint):
 class Start(HTTPEndpoint):
     async def post(self, request):
         state = request.app.state
-        try:
-            story = state.story_builder(state.config, assets=getattr(self, "assets", []))
-        except TypeError:
-            story = copy.deepcopy(state.story_builder)
-
+        story = copy.deepcopy(state.story_builder)
         state.sessions[story.uid] = story
         return RedirectResponse(
             url=request.url_for("session", session_id=story.uid), status_code=303
@@ -361,13 +359,17 @@ async def app_factory(
 
 
 def quick_start(
-    module: [str | ModuleType] = "", resource="", story_builder=None, host="localhost", port=8080
+    module: [str | ModuleType] = "", resource="",
+    story_builder=None,
+    host="localhost", port=8080,
+    config=None,
 ):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
     # TODO: Builder rename
-    # Extract magic from StorryBuilder init.
+    # Extract magic from StoryBuilder init.
+    # Add auto_build param to MapB, WorldB, StoryB
     if isinstance(module, str):
         module = pathlib.Path(module)
         module = module.parent if module.is_file() else module
@@ -397,6 +399,18 @@ def quick_start(
                 )
 
     story_builder = story_builder or next(reversed(StoryBuilder.__subclasses__()), StoryBuilder)
+    if isinstance(story_builder, type):
+        map_type = next(reversed(MapBuilder.__subclasses__()), MapBuilder)
+        world_type = next(reversed(WorldBuilder.__subclasses__()), WorldBuilder)
+        print(
+            f"Found builder types for {story_builder.__name__} ({world_type.__name__}, {map_type.__name__})",
+            file=sys.stderr
+        )
+        world = world_type(
+            map_type(getattr(map_type, "spots", {}), config=config), config=config
+        )
+        story_builder = story_builder(config=config, assets=assets, world=world)
+
     app = loop.run_until_complete(
         app_factory(
             assets=assets, story_builder=story_builder, static=locations and min(locations), loop=loop
