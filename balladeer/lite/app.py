@@ -127,9 +127,9 @@ class Start(HTTPEndpoint):
     async def post(self, request):
         state = request.app.state
         try:
-            story = state.builder(state.config, assets=getattr(self, "assets", []))
+            story = state.story_builder(state.config, assets=getattr(self, "assets", []))
         except TypeError:
-            story = copy.deepcopy(state.builder)
+            story = copy.deepcopy(state.story_builder)
 
         state.sessions[story.uid] = story
         return RedirectResponse(
@@ -316,7 +316,7 @@ class Assembly(HTTPEndpoint):
 
 async def app_factory(
     assets: list = [],
-    builder: StoryBuilder = None,
+    story_builder: StoryBuilder = None,
     config: dict = None,
     routes: list = None,
     static: pathlib.Path = None,
@@ -353,7 +353,7 @@ async def app_factory(
 
     app = Starlette(routes=routes)
     app.state.static = static
-    app.state.builder = builder or next(reversed(StoryBuilder.__subclasses__()), StoryBuilder)
+    app.state.story_builder = story_builder
     app.state.config = config
     app.state.sessions = {}
 
@@ -361,11 +361,13 @@ async def app_factory(
 
 
 def quick_start(
-    module: [str | ModuleType] = "", resource="", builder=None, host="localhost", port=8080
+    module: [str | ModuleType] = "", resource="", story_builder=None, host="localhost", port=8080
 ):
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
 
+    # TODO: Builder rename
+    # Extract magic from StorryBuilder init.
     if isinstance(module, str):
         module = pathlib.Path(module)
         module = module.parent if module.is_file() else module
@@ -394,9 +396,10 @@ def quick_start(
                     file=sys.stderr,
                 )
 
+    story_builder = story_builder or next(reversed(StoryBuilder.__subclasses__()), StoryBuilder)
     app = loop.run_until_complete(
         app_factory(
-            assets=assets, builder=builder, static=locations and min(locations), loop=loop
+            assets=assets, story_builder=story_builder, static=locations and min(locations), loop=loop
         )
     )
     settings = hypercorn.Config.from_mapping({"bind": f"{host}:{port}", "errorlog": "-"})
