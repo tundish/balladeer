@@ -6,8 +6,8 @@
 Change Log
 ::::::::::
 
-0.44.0rc
-========
+0.44.0
+======
 
 * Make Turn a module-level type.
 * Fixed a bug in App after Turn refactoring.
