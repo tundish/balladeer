@@ -117,10 +117,11 @@ class Home(HTTPEndpoint):
     def compose(
         self, request, page: Page, story: StoryBuilder = None, turn: Turn = None
     ) -> Page:
-        assets = getattr(self, "assets", Grouping())
-
         page.paste(self.meta, zone=page.zone.meta)
-        page.paste(*[line for line in self.render_css_links(request, assets)], zone=page.zone.css)
+
+        assets = getattr(self, "assets", Grouping())
+        staged = Loader.stage(assets)
+        page.paste(*sorted(line for line in Home.render_css_links(request, staged)), zone=page.zone.css)
         page.paste(self.body, zone=page.zone.body)
         return page
 
