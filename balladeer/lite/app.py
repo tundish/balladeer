@@ -414,7 +414,7 @@ def quick_start(
     config=None,
 ):
     assets = discover_assets(module, resource)
-    locations = collect_static_paths(assets)
+    paths = collect_static_paths(assets)
     story_builder = make_story_builder(story_builder, assets=assets, config=config)
 
     loop = asyncio.new_event_loop()
@@ -422,7 +422,7 @@ def quick_start(
 
     app = loop.run_until_complete(
         app_factory(
-            assets=assets, story_builder=story_builder, static=locations and min(locations), loop=loop
+            assets=assets, story_builder=story_builder, static=paths and min(paths), loop=loop
         )
     )
     settings = hypercorn.Config.from_mapping({"bind": f"{host}:{port}", "errorlog": "-"})
