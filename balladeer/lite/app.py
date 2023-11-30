@@ -258,13 +258,13 @@ class Session(HTTPEndpoint):
         page.paste(Home.meta, zone=page.zone.meta)
 
         notes = list(turn.notes.values())
-        styles = notes and notes[-1].get("style", [])
+        styles = notes and notes[-1].get("style", []) or []
         staged = Loader.stage(assets, *styles)
         page.paste(*sorted(line for line in Home.render_css_links(request, staged)), zone=page.zone.css)
 
         page.paste(*Home.render_js_links(request, assets), zone=page.zone.script)
 
-        theme_names = ["default"] + (notes and notes[-1].get("theme", []))
+        theme_names = ["default"] + (notes and notes[-1].get("theme", []) or [])
         settings = story.settings(*theme_names, themes=page.themes)
         page.paste(*Home.render_css_vars(settings), zone=page.zone.theme)
 
