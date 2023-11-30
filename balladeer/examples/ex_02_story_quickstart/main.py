@@ -14,4 +14,4 @@ story = StoryBuilder(
 
 
 if __name__ == "__main__":
-    quick_start(builder=story)
+    quick_start(story_builder=story)

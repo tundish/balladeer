@@ -86,4 +86,4 @@ class Narrative(Session):
 
 if __name__ == "__main__":
     print(theme_page().html)
-    quick_start(balladeer.examples.ex_12_styling_themes, builder=story)
+    quick_start(balladeer.examples.ex_12_styling_themes, story_builder=story)
