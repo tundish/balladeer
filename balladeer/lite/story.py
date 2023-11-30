@@ -48,7 +48,7 @@ class StoryBuilder:
         self,
         *speech: tuple[Speech],
         config=None,
-        assets: Grouping = Grouping(),
+        assets: Grouping = Grouping(list),
         world: WorldBuilder = None,
         **kwargs,
     ):

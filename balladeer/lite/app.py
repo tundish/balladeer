@@ -358,29 +358,23 @@ async def app_factory(
     return app
 
 
-def quick_start(
-    module: [str | ModuleType] = "", resource="",
-    story_builder=None,
-    host="localhost", port=8080,
-    config=None,
-):
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-
+def discover_assets(module: [str | ModuleType], resource: str):
     if isinstance(module, str):
         module = pathlib.Path(module)
         module = module.parent if module.is_file() else module
 
     try:
-        assets = Grouping.typewise(Loader.discover(module, resource))
+        return Grouping.typewise(Loader.discover(module, resource))
     except ValueError:
-        assets = Grouping(list)
+        return Grouping(list)
 
-    locations = set()
+
+def collect_static_paths(assets: Grouping):
+    rv = set()
     for k, v in assets.items():
         if isinstance(k, str):
             for asset in v:
-                locations.add(asset.path.parent)
+                rv.add(asset.path.parent)
                 print(
                     f"Discovered in {asset.path.parent.name:<24}: {asset.path.name:<36} ({k})",
                     file=sys.stderr,
@@ -394,7 +388,10 @@ def quick_start(
                     ),
                     file=sys.stderr,
                 )
+    return rv
 
+
+def make_story_builder(story_builder: StoryBuilder | type, assets=None, config=None):
     story_builder = story_builder or next(reversed(StoryBuilder.__subclasses__()), StoryBuilder)
     if isinstance(story_builder, type):
         map_type = next(reversed(MapBuilder.__subclasses__()), MapBuilder)
@@ -407,6 +404,21 @@ def quick_start(
             map_type(getattr(map_type, "spots", {}), config=config), config=config
         )
         story_builder = story_builder(config=config, assets=assets, world=world)
+    return story_builder
+
+
+def quick_start(
+    module: [str | ModuleType] = "", resource="",
+    story_builder: StoryBuilder | type = None,
+    host="localhost", port=8080,
+    config=None,
+):
+    assets = discover_assets(module, resource)
+    locations = collect_static_paths(assets)
+    story_builder = make_story_builder(story_builder, assets=assets, config=config)
+
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
 
     app = loop.run_until_complete(
         app_factory(
