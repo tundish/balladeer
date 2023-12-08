@@ -155,6 +155,7 @@ class Detail(State, enum.Enum):
     none = "Reset"
     hide = "Hidden"
     info = "Information requested"
+    goal = "Detail of story goals"
     home = "Detail of home"
     held = "Detail of inventory"
     into = "Detail of entrances"

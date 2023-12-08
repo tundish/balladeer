@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.45.0rc
+========
+
+* Added `goal` to Detail state.
+
 0.44.0
 ======
 
