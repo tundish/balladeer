@@ -98,15 +98,22 @@ def diagram():
     for track in tracks:
         n += 1
         yield f'<div class="row" id="row-{n:02d}" style="display:flex; flex-direction:row">'
-        arcs = sorted((arc for node in track for arc in node.entry), key=sorter)
-        yield from (Fruition.label(arc) for arc in arcs)
+        yield from (f'<div class="node">{node.name}</div>' for node in track)
         yield "</div>"
 
-        n += 1
-        yield f'<div class="row" id="row-{n:02d}" style="display:flex; flex-direction:row">'
-        arcs = sorted((arc for node in track for arc in node.exits), key=sorter)
-        yield from (Fruition.label(arc) for arc in arcs)
-        yield "</div>"
+        if track is not tracks[1]:
+            n += 1
+            yield f'<div class="row" id="row-{n:02d}" style="display:flex; flex-direction:row">'
+            arcs = sorted((arc for node in track for arc in node.entry), key=sorter)
+            yield from (Fruition.label(arc) for arc in arcs)
+            yield "</div>"
+
+        else:
+            n += 1
+            yield f'<div class="row" id="row-{n:02d}" style="display:flex; flex-direction:row">'
+            arcs = sorted((arc for node in track for arc in node.exits), key=sorter)
+            yield from (Fruition.label(arc) for arc in arcs)
+            yield "</div>"
 
 
 def static_page() -> Page:
