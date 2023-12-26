@@ -85,21 +85,28 @@ def diagram():
     nodes = Fruition.build_nodes()
     for node in nodes:
         node.width = len(" ".join(Fruition.label(arc) for arc in node.entry + node.exits))
+    width = sum(i.width for i in nodes) + len(nodes)
 
-    rows = [
+    tracks = [
         [node for node in nodes if not node.exits],
         [node for node in nodes if node.exits],
         [node for node in nodes if not node.exits],
     ]
 
+    n = 0
     sorter = operator.attrgetter("key")
-    for n, row in enumerate(rows):
+    for track in tracks:
+        n += 1
         yield f'<div class="row" id="row-{n:02d}" style="display:flex; flex-direction:row">'
-        for node in row:
-            arcs = sorted(node.entry, key=sorter) + sorted(node.exits, key=sorter)
-            yield from (Fruition.label(arc) for arc in arcs)
+        arcs = sorted((arc for node in track for arc in node.entry), key=sorter)
+        yield from (Fruition.label(arc) for arc in arcs)
         yield "</div>"
-    width = sum(i.width for i in nodes) + len(nodes)
+
+        n += 1
+        yield f'<div class="row" id="row-{n:02d}" style="display:flex; flex-direction:row">'
+        arcs = sorted((arc for node in track for arc in node.exits), key=sorter)
+        yield from (Fruition.label(arc) for arc in arcs)
+        yield "</div>"
 
 
 def static_page() -> Page:
