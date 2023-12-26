@@ -90,7 +90,7 @@ def diagram():
 
     sorter = operator.attrgetter("key")
     for n, row in enumerate(rows):
-        yield f'<div class="row" id="row-{n:02d}">'
+        yield f'<div class="row" id="row-{n:02d}" style="display:flex; flex-direction:row">'
         for node in row:
             arcs = sorted(node.entry, key=sorter) + sorted(node.exits, key=sorter)
             yield from (Fruition.label(arc) for arc in arcs)
