@@ -6,44 +6,51 @@ from collections import namedtuple
 import dataclasses
 import sys
 
-Arc = namedtuple("Arc", ["exit", "actor", "name", "into"])
-Node = namedtuple("Node", ["name", "entry", "exits"])
+class Graph:
+    arcs = []
 
-arcs = [
-    Arc("inception", "head", "propose", "elaboration"),
-    Arc("elaboration", "head", "abandon", "withdrawn"),
-    Arc("elaboration", "hand", "decline", "withdrawn"),
-    Arc("elaboration", "hand", "suggest", "discussion"),
-    Arc("elaboration", "hand", "promise", "construction"),
-    Arc("discussion", "head", "counter", "elaboration"),
-    Arc("discussion", "head", "confirm", "construction"),
-    Arc("discussion", "head", "abandon", "withdrawn"),
-    Arc("discussion", "hand", "decline", "withdrawn"),
-    Arc("construction", "hand", "disavow", "defaulted"),
-    Arc("construction", "hand", "disavow", "defaulted"),
-    Arc("construction", "hand", "deliver", "transition"),
-    Arc("transition", "head", "condemn", "construction"),
-    Arc("transition", "head", "abandon", "cancelled"),
-    Arc("transition", "head", "declare", "completion"),
-]
+    Arc = namedtuple("Arc", ["exit", "actor", "name", "into", "key"], defaults=[None])
 
+    @dataclasses.dataclass
+    class Node:
+        name: str
+        entry: list = dataclasses.field(default_factory=list)
+        exits: list = dataclasses.field(default_factory=list)
 
-@dataclasses.dataclass
-class Node:
-    name: str
-    entry: list[Arc] = dataclasses.field(default_factory=list)
-    exits: list[Arc] = dataclasses.field(default_factory=list)
+    @classmethod
+    def build_nodes(cls, arcs: list = None) -> dict:
+        arcs = cls.arcs if arcs is None else arcs
+
+        keys = {}
+        rv = dict()
+        for arc in arcs:
+            arc = arc._replace(key=keys.setdefault(arc.actor, len(keys)))
+            rv.setdefault(arc.exit, cls.Node(arc.exit)).exits.append(arc)
+            rv.setdefault(arc.into, cls.Node(arc.into)).entry.append(arc)
+        return rv
 
 
-def build_nodes(arcs: list):
-    rv = dict()
-    for arc in arcs:
-        rv.setdefault(arc.exit, Node(arc.exit)).exits.append(arc)
-        rv.setdefault(arc.into, Node(arc.into)).entry.append(arc)
-    return rv
+class Fruition(Graph):
+    arcs = [
+        Graph.Arc("inception", "head", "propose", "elaboration"),
+        Graph.Arc("elaboration", "head", "abandon", "withdrawn"),
+        Graph.Arc("elaboration", "hand", "decline", "withdrawn"),
+        Graph.Arc("elaboration", "hand", "suggest", "discussion"),
+        Graph.Arc("elaboration", "hand", "promise", "construction"),
+        Graph.Arc("discussion", "head", "counter", "elaboration"),
+        Graph.Arc("discussion", "head", "confirm", "construction"),
+        Graph.Arc("discussion", "head", "abandon", "withdrawn"),
+        Graph.Arc("discussion", "hand", "decline", "withdrawn"),
+        Graph.Arc("construction", "hand", "disavow", "defaulted"),
+        Graph.Arc("construction", "hand", "disavow", "defaulted"),
+        Graph.Arc("construction", "hand", "deliver", "transition"),
+        Graph.Arc("transition", "head", "condemn", "construction"),
+        Graph.Arc("transition", "head", "abandon", "cancelled"),
+        Graph.Arc("transition", "head", "declare", "completion"),
+    ]
 
 
 if __name__ == "__main__":
-    assert len(arcs) == 15
-    nodes = build_nodes(arcs)
+    assert len(Fruition.arcs) == 15
+    nodes = Fruition.build_nodes()
     print(nodes)
