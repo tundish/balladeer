@@ -1,10 +1,30 @@
 #!/usr/bin/env python3
 #   encoding: UTF-8
 
-from collections import defaultdict
+# This is part of the Balladeer library.
+# Copyright (C) 2024 D E Haynes
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+import argparse
 from collections import namedtuple
 import dataclasses
+import operator
 import sys
+
+from balladeer.lite.types import Page
+
 
 class Graph:
     arcs = []
@@ -16,6 +36,7 @@ class Graph:
         name: str
         entry: list = dataclasses.field(default_factory=list)
         exits: list = dataclasses.field(default_factory=list)
+        width: int = None
 
     @classmethod
     def build_nodes(cls, arcs: list = None) -> dict:
@@ -47,7 +68,7 @@ class Fruition(Graph):
         Graph.Arc("discussion", "head", "abandon", "withdrawn"),
         Graph.Arc("discussion", "hand", "decline", "withdrawn"),
         Graph.Arc("construction", "hand", "disavow", "defaulted"),
-        Graph.Arc("construction", "hand", "disavow", "defaulted"),
+        Graph.Arc("construction", "head", "abandon", "cancelled"),
         Graph.Arc("construction", "hand", "deliver", "transition"),
         Graph.Arc("transition", "head", "condemn", "construction"),
         Graph.Arc("transition", "head", "abandon", "cancelled"),
@@ -55,7 +76,17 @@ class Fruition(Graph):
     ]
 
 
-if __name__ == "__main__":
+def static_page() -> Page:
+    page = Page()
+    return page
+
+
+def parser(usage=__doc__):
+    rv = argparse.ArgumentParser(usage)
+    return rv
+
+
+def main(args):
     assert len(Fruition.arcs) == 15
     nodes = Fruition.build_nodes()
     rows = [
@@ -64,4 +95,23 @@ if __name__ == "__main__":
         [node for node in nodes if not node.exits],
     ]
 
-    print(*rows, sep="\n")
+    sorter = operator.attrgetter("key")
+    for row in rows:
+        for node in row:
+            arcs = sorted(node.entry, key=sorter) + sorted(node.exits, key=sorter)
+            node.width = len(" ".join(Fruition.label(arc) for arc in arcs))
+    print(*nodes, sep="\n")
+    print(sum(i.width for i in nodes) + len(nodes) + 1)
+    page = static_page()
+    print(page.html)
+    return 0
+
+
+def run():
+    p = parser()
+    args = p.parse_args()
+    rv = main(args)
+    sys.exit(rv)
+
+if __name__ == "__main__":
+    run()

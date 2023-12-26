@@ -52,7 +52,7 @@ def swatch(name, theme):
     yield "</tbody></table>"
 
 
-def theme_page() -> Page:
+def static_page() -> Page:
     page = Page()
     style = textwrap.dedent("""
     <style>
@@ -84,7 +84,7 @@ def parser(usage=__doc__):
 
 
 def main(args):
-    page = theme_page()
+    page = static_page()
     print(page.html)
     return 0
 
