@@ -22,6 +22,7 @@ from collections import namedtuple
 import dataclasses
 import operator
 import sys
+import textwrap
 
 from balladeer.lite.types import Page
 
@@ -53,7 +54,7 @@ class Graph:
     @staticmethod
     def label(arc: Arc):
         stem = arc.name.rstrip("e")
-        return f"{arc.actor}.{stem}ing"
+        return f'<span class="actor">{arc.actor}</span>.<span class="gerund">{stem}ing</span>'
 
 
 class Fruition(Graph):
@@ -77,17 +78,6 @@ class Fruition(Graph):
 
 
 def static_page() -> Page:
-    page = Page()
-    return page
-
-
-def parser(usage=__doc__):
-    rv = argparse.ArgumentParser(usage)
-    return rv
-
-
-def main(args):
-    assert len(Fruition.arcs) == 15
     nodes = Fruition.build_nodes()
     rows = [
         [node for node in nodes if not node.exits],
@@ -100,8 +90,37 @@ def main(args):
         for node in row:
             arcs = sorted(node.entry, key=sorter) + sorted(node.exits, key=sorter)
             node.width = len(" ".join(Fruition.label(arc) for arc in arcs))
+
     print(*nodes, sep="\n")
-    print(sum(i.width for i in nodes) + len(nodes) + 1)
+    print(sum(i.width for i in nodes) + len(nodes))
+    page = Page()
+    style = textwrap.dedent("""
+    <style>
+    body {
+    background-color: silver;
+    font-family: sans;
+    font-size: 0.8rem;
+    margin: 1.2rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1.2rem;
+    text-align: center;
+    width: 80%;
+    }
+    </style>
+    """).strip()
+    page.paste(style, zone=page.zone.style)
+    #page.paste(*swatch(name, palette), zone=page.zone.body)
+    return page
+
+
+def parser(usage=__doc__):
+    rv = argparse.ArgumentParser(usage)
+    return rv
+
+
+def main(args):
+    assert len(Fruition.arcs) == 15
     page = static_page()
     print(page.html)
     return 0
