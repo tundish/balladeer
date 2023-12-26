@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
 #   encoding: UTF-8
 
+from collections import defaultdict
 from collections import namedtuple
+import dataclasses
 import sys
 
 Arc = namedtuple("Arc", ["exit", "actor", "name", "into"])
+Node = namedtuple("Node", ["name", "entry", "exits"])
 
 arcs = [
     Arc("inception", "head", "propose", "elaboration"),
@@ -24,6 +27,21 @@ arcs = [
     Arc("transition", "head", "declare", "completion"),
 ]
 
+
+@dataclasses.dataclass
+class Node:
+    name: str
+    entry: list = []
+    exits: list = []
+
+
+def build_nodes(arcs: list):
+    rv = dict()
+    for arc in arcs:
+        getattr(rv.setdefault(arc.exit, Node(arc.exit)), arc.actor, []).append(arc)
+        yield
+
 if __name__ == "__main__":
     assert len(arcs) == 15
-    print(arcs)
+    nodes = list(build_nodes(arcs))
+    print(nodes)
