@@ -31,17 +31,19 @@ arcs = [
 @dataclasses.dataclass
 class Node:
     name: str
-    entry: list = []
-    exits: list = []
+    entry: list[Arc] = dataclasses.field(default_factory=list)
+    exits: list[Arc] = dataclasses.field(default_factory=list)
 
 
 def build_nodes(arcs: list):
     rv = dict()
     for arc in arcs:
-        getattr(rv.setdefault(arc.exit, Node(arc.exit)), arc.actor, []).append(arc)
-        yield
+        rv.setdefault(arc.exit, Node(arc.exit)).exits.append(arc)
+        rv.setdefault(arc.into, Node(arc.into)).entry.append(arc)
+    return rv
+
 
 if __name__ == "__main__":
     assert len(arcs) == 15
-    nodes = list(build_nodes(arcs))
+    nodes = build_nodes(arcs)
     print(nodes)
