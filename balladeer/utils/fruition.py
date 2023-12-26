@@ -77,8 +77,11 @@ class Fruition(Graph):
     ]
 
 
-def static_page() -> Page:
+def diagram():
     nodes = Fruition.build_nodes()
+    for node in nodes:
+        node.width = len(" ".join(Fruition.label(arc) for arc in node.entry + node.exits))
+
     rows = [
         [node for node in nodes if not node.exits],
         [node for node in nodes if node.exits],
@@ -86,13 +89,16 @@ def static_page() -> Page:
     ]
 
     sorter = operator.attrgetter("key")
-    for row in rows:
+    for n, row in enumerate(rows):
+        yield f'<div class="row" id="row-{n:02d}">'
         for node in row:
             arcs = sorted(node.entry, key=sorter) + sorted(node.exits, key=sorter)
-            node.width = len(" ".join(Fruition.label(arc) for arc in arcs))
+            yield from (Fruition.label(arc) for arc in arcs)
+        yield "</div>"
+    width = sum(i.width for i in nodes) + len(nodes)
 
-    print(*nodes, sep="\n")
-    print(sum(i.width for i in nodes) + len(nodes))
+
+def static_page() -> Page:
     page = Page()
     style = textwrap.dedent("""
     <style>
@@ -110,7 +116,7 @@ def static_page() -> Page:
     </style>
     """).strip()
     page.paste(style, zone=page.zone.style)
-    #page.paste(*swatch(name, palette), zone=page.zone.body)
+    page.paste(*diagram(), zone=page.zone.body)
     return page
 
 
