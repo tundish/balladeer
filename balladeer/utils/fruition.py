@@ -27,7 +27,12 @@ class Graph:
             arc = arc._replace(key=keys.setdefault(arc.actor, len(keys)))
             rv.setdefault(arc.exit, cls.Node(arc.exit)).exits.append(arc)
             rv.setdefault(arc.into, cls.Node(arc.into)).entry.append(arc)
-        return rv
+        return list(rv.values())
+
+    @staticmethod
+    def label(arc: Arc):
+        stem = arc.name.rstrip("e")
+        return f"{arc.actor}.{stem}ing"
 
 
 class Fruition(Graph):
@@ -53,4 +58,10 @@ class Fruition(Graph):
 if __name__ == "__main__":
     assert len(Fruition.arcs) == 15
     nodes = Fruition.build_nodes()
-    print(nodes)
+    rows = [
+        [node for node in nodes if not node.exits],
+        [node for node in nodes if node.exits],
+        [node for node in nodes if not node.exits],
+    ]
+
+    print(*rows, sep="\n")
