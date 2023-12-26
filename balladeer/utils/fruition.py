@@ -52,9 +52,13 @@ class Graph:
         return list(rv.values())
 
     @staticmethod
-    def label(arc: Arc):
-        stem = arc.name.rstrip("e")
-        return f'<span class="actor">{arc.actor}</span>.<span class="gerund">{stem}ing</span>'
+    def label(arc: Arc, actor=False, gerund=False):
+        prefix = f'<span class="actor">{arc.actor}</span>.' if actor else ""
+        if gerund:
+            stem = arc.name.rstrip("e")
+            return f'{prefix}<span class="directive">{stem}ing</span>'
+        else:
+            return f'{prefix}<span class="directive">{arc.name}</span>'
 
 
 class Fruition(Graph):
