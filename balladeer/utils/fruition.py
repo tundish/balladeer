@@ -112,6 +112,7 @@ def diagram():
 
     n = 0
     sorter = operator.attrgetter("key")
+    yield '<div class="diagram">'
     for t, track in enumerate(tracks):
         if t == 0:
             n += 1
@@ -150,6 +151,8 @@ def diagram():
             yield from (f'<div class="node">{node.name}</div>' for node in track)
             yield "</div>"
 
+    yield "</div>"
+
 
 def static_page() -> Page:
     page = Page()
@@ -165,6 +168,10 @@ def static_page() -> Page:
     padding: 1.2rem;
     text-align: center;
     width: 80%;
+    }
+    div.diagram {
+    display: grid;
+    grid-template-rows: 25% 25% 25% 25%;
     }
     </style>
     """).strip()
