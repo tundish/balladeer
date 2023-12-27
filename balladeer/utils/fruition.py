@@ -110,14 +110,14 @@ def diagram(nodes: dict, reflect=False):
     sorter = operator.attrgetter("key")
     yield '<div class="diagram">'
 
-    r = 1
+    r = 2
+    spans = {}
     for n, row in enumerate(rows):
         c = 1
-        s = 1
 
         if row is spine:
             for node in row:
-                s = len(node.exits)
+                s = max(1, len(node.exits))
                 yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
 
                 arcs = sorted((i for i in node.exits), key=sorter)
@@ -128,10 +128,13 @@ def diagram(nodes: dict, reflect=False):
                             f'{Fruition.label(arc)}</div>'
                         )
                     else:
+                        offset = -1 if arc.hops < 0 else 1
                         yield (
-                            f'<div class="arc" style="grid-row: {r}; grid-column: {c + s}">'
+                            f'<div class="arc" style="grid-row: {r + offset}; grid-column: {c + s}">'
                             f'{Fruition.label(arc)}</div>'
                         )
+                        c += 1
+                spans[node.name] = (c, s)
                 c += s
             r += 1
 
@@ -140,13 +143,8 @@ def diagram(nodes: dict, reflect=False):
             for node in row:
                 s = len(node.entry)
                 yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
+                spans[node.name] = (c, s)
                 c += s
-
-            r += 1
-            arcs = sorted((arc for node in row for arc in node.entry), key=sorter)
-            for arc in arcs:
-                pass
-                #yield f'<div class="arc" style="grid-row: {r}">{Fruition.label(arc)}</div>'
 
     yield "</div>"
 
@@ -169,7 +167,7 @@ def static_page(nodes: dict) -> Page:
     }
     div.diagram {
     display: grid;
-    grid-template-columns: repeat(15, 1fr);
+    grid-template-columns: repeat(30, 1fr);
     }
     </style>
     """).strip()
