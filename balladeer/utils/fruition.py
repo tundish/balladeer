@@ -87,32 +87,51 @@ def diagram():
         node.width = len(" ".join(Fruition.label(arc) for arc in node.entry + node.exits))
     width = sum(i.width for i in nodes) + len(nodes)
 
+    spine = [node for node in nodes if node.exits] + [nodes[-1]]
     tracks = [
-        [node for node in nodes if not node.exits],
-        [node for node in nodes if node.exits],
-        [node for node in nodes if not node.exits],
+        [node for node in nodes if node not in spine],
+        spine,
+        [node for node in nodes if node not in spine],
     ]
 
     n = 0
     sorter = operator.attrgetter("key")
-    for track in tracks:
-        n += 1
-        yield f'<div class="row" id="row-{n:02d}" style="display:flex; flex-direction:row">'
-        yield from (f'<div class="node">{node.name}</div>' for node in track)
-        yield "</div>"
+    for t, track in enumerate(tracks):
+        if t == 0:
+            n += 1
+            yield f'<div class="row" id="row-{n:02d}" style="display:flex; flex-direction:row">'
+            yield from (f'<div class="node">{node.name}</div>' for node in track)
+            yield "</div>"
 
-        if track is not tracks[1]:
             n += 1
             yield f'<div class="row" id="row-{n:02d}" style="display:flex; flex-direction:row">'
             arcs = sorted((arc for node in track for arc in node.entry), key=sorter)
             yield from (Fruition.label(arc) for arc in arcs)
             yield "</div>"
 
+        elif t == 1:
+            n += 1
+            yield f'<div class="row" id="row-{n:02d}" style="display:flex; flex-direction:row">'
+
+            for node in track:
+                yield f'<div class="node">{node.name}</div>'
+                yield f'<div class="arcs">'
+                for arc in node.exits:
+                    yield Fruition.label(arc)
+                yield "</div>"
+
+            yield "</div>"
+
         else:
             n += 1
             yield f'<div class="row" id="row-{n:02d}" style="display:flex; flex-direction:row">'
-            arcs = sorted((arc for node in track for arc in node.exits), key=sorter)
+            arcs = sorted((arc for node in track for arc in node.entry), key=sorter)
             yield from (Fruition.label(arc) for arc in arcs)
+            yield "</div>"
+
+            n += 1
+            yield f'<div class="row" id="row-{n:02d}" style="display:flex; flex-direction:row">'
+            yield from (f'<div class="node">{node.name}</div>' for node in track)
             yield "</div>"
 
 
@@ -155,6 +174,7 @@ def run():
     args = p.parse_args()
     rv = main(args)
     sys.exit(rv)
+
 
 if __name__ == "__main__":
     run()
