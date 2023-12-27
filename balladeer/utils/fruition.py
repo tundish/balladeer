@@ -124,7 +124,7 @@ def diagram(nodes: dict, reflect=False):
                 for n, arc in enumerate(arcs):
                     if arc.fail:
                         yield (
-                            f'<div class="arc" style="grid-row: {r + 1}; grid-column: {c + n}">'
+                            f'<div class="arc fail" style="grid-row: {r + 2}; grid-column: {c + n}">'
                             f'{Fruition.label(arc)}</div>'
                         )
                     else:
@@ -136,7 +136,7 @@ def diagram(nodes: dict, reflect=False):
                         c += 1
                 spans[node.name] = (c, s)
                 c += s
-            r += 1
+            r += 2
 
         else:
             r += 1
@@ -147,10 +147,10 @@ def diagram(nodes: dict, reflect=False):
                 c += s
 
     yield "</div>"
+    print(f"Spans: {spans}", file=sys.stderr)
 
 
 def static_page(nodes: dict) -> Page:
-    print(len(nodes), file=sys.stderr)
     page = Page()
     style = textwrap.dedent("""
     <style>
@@ -184,8 +184,9 @@ def parser(usage=__doc__):
 def main(args):
     assert len(Fruition.arcs) == 15
     nodes = Fruition.build_nodes()
-    pprint.pprint(nodes, stream=sys.stderr)
     page = static_page(nodes)
+    pprint.pprint(nodes, stream=sys.stderr)
+    print(len(nodes), file=sys.stderr)
     print(page.html)
     return 0
 
