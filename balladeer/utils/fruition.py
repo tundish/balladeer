@@ -18,9 +18,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import argparse
-from collections import namedtuple
 import dataclasses
 import operator
+import pprint
 import sys
 import textwrap
 
@@ -30,25 +30,34 @@ from balladeer.lite.types import Page
 class Graph:
     arcs = []
 
-    Arc = namedtuple("Arc", ["exit", "actor", "name", "into", "key"], defaults=[None])
+    @dataclasses.dataclass
+    class Arc:
+        exit: str
+        actor: str
+        name: str
+        into: str
+        key: int = None
+        hops: int = None
+        spine: bool = None
 
     @dataclasses.dataclass
     class Node:
         name: str
         entry: list = dataclasses.field(default_factory=list)
         exits: list = dataclasses.field(default_factory=list)
-        width: int = None
+        size: int = None
 
     @classmethod
-    def build_nodes(cls, arcs: list = None) -> dict:
+    def build_nodes(cls, arcs: list = None) -> list:
         arcs = cls.arcs if arcs is None else arcs
 
         keys = {}
         rv = dict()
         for arc in arcs:
-            arc = arc._replace(key=keys.setdefault(arc.actor, len(keys)))
+            arc.key = keys.setdefault(arc.actor, len(keys))
             rv.setdefault(arc.exit, cls.Node(arc.exit)).exits.append(arc)
             rv.setdefault(arc.into, cls.Node(arc.into)).entry.append(arc)
+
         return list(rv.values())
 
     @staticmethod
@@ -83,9 +92,15 @@ class Fruition(Graph):
 
 def diagram():
     nodes = Fruition.build_nodes()
+    sequence = [i.name for i in nodes]
     for node in nodes:
-        node.width = len(" ".join(Fruition.label(arc) for arc in node.entry + node.exits))
-    width = sum(i.width for i in nodes) + len(nodes)
+        arcs = node.entry + node.exits
+        node.size = len(" ".join(Fruition.label(arc) for arc in arcs))
+        for arc in arcs:
+            arc.hops = sequence.index(arc.into) - sequence.index(arc.exit)
+
+    pprint.pprint(nodes, stream=sys.stderr)
+    width = sum(i.size for i in nodes) + len(nodes)
 
     spine = [node for node in nodes if node.exits] + [nodes[-1]]
     tracks = [
