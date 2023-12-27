@@ -90,8 +90,7 @@ class Fruition(Graph):
     ]
 
 
-def diagram():
-    nodes = Fruition.build_nodes()
+def diagram(nodes: dict):
     sequence = list(nodes.keys())
     for node in nodes.values():
         arcs = node.entry + node.exits
@@ -100,7 +99,6 @@ def diagram():
             arc.hops = sequence.index(arc.into) - sequence.index(arc.exit)
             arc.fail = not bool(nodes[arc.into].exits)
 
-    pprint.pprint(nodes, stream=sys.stderr)
     width = sum(i.size for i in nodes.values()) + len(nodes)
 
     spine = [node for node in nodes.values() if node.exits] + [nodes[sequence[-1]]]
@@ -116,45 +114,47 @@ def diagram():
     for t, track in enumerate(tracks):
         if t == 0:
             n += 1
-            yield f'<div class="row" id="row-{n:02d}" style="display:flex; flex-direction:row">'
+            #yield f'<div class="row" id="row-{n:02d}" style="">'
             yield from (f'<div class="node">{node.name}</div>' for node in track)
-            yield "</div>"
+            #yield "</div>"
 
             n += 1
-            yield f'<div class="row" id="row-{n:02d}" style="display:flex; flex-direction:row">'
+            #yield f'<div class="row" id="row-{n:02d}" style="">'
             arcs = sorted((arc for node in track for arc in node.entry), key=sorter)
-            yield from (Fruition.label(arc) for arc in arcs)
-            yield "</div>"
+            for arc in arcs:
+                yield f'<div>{Fruition.label(arc)}</div>'
+            #yield "</div>"
 
         elif t == 1:
             n += 1
-            yield f'<div class="row" id="row-{n:02d}" style="display:flex; flex-direction:row">'
+            #yield f'<div class="row" id="row-{n:02d}" style="">'
 
             for node in track:
                 yield f'<div class="node">{node.name}</div>'
                 yield f'<div class="arcs">'
-                for arc in node.exits:
-                    yield Fruition.label(arc)
+                for arc in arcs:
+                    yield f'<div>{Fruition.label(arc)}</div>'
                 yield "</div>"
 
-            yield "</div>"
+            #yield "</div>"
 
         else:
             n += 1
-            yield f'<div class="row" id="row-{n:02d}" style="display:flex; flex-direction:row">'
+            #yield f'<div class="row" id="row-{n:02d}" style="">'
             arcs = sorted((arc for node in track for arc in node.entry), key=sorter)
             yield from (Fruition.label(arc) for arc in arcs)
-            yield "</div>"
+            #yield "</div>"
 
             n += 1
-            yield f'<div class="row" id="row-{n:02d}" style="display:flex; flex-direction:row">'
+            #yield f'<div class="row" id="row-{n:02d}" style="">'
             yield from (f'<div class="node">{node.name}</div>' for node in track)
-            yield "</div>"
+           # yield "</div>"
 
     yield "</div>"
 
 
-def static_page() -> Page:
+def static_page(nodes: dict) -> Page:
+    print(len(nodes), file=sys.stderr)
     page = Page()
     style = textwrap.dedent("""
     <style>
@@ -171,12 +171,12 @@ def static_page() -> Page:
     }
     div.diagram {
     display: grid;
-    grid-template-rows: 25% 25% 25% 25%;
+    grid-template-columns: repeat(15, 1fr);
     }
     </style>
     """).strip()
     page.paste(style, zone=page.zone.style)
-    page.paste(*diagram(), zone=page.zone.body)
+    page.paste(*diagram(nodes), zone=page.zone.body)
     return page
 
 
@@ -187,7 +187,9 @@ def parser(usage=__doc__):
 
 def main(args):
     assert len(Fruition.arcs) == 15
-    page = static_page()
+    nodes = Fruition.build_nodes()
+    pprint.pprint(nodes, stream=sys.stderr)
+    page = static_page(nodes)
     print(page.html)
     return 0
 
