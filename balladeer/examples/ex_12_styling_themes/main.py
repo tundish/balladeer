@@ -5,7 +5,7 @@ from balladeer import Page
 from balladeer import Session
 from balladeer import StoryBuilder
 from balladeer import Turn
-from balladeer.utils.themes import theme_page
+from balladeer.utils.themes import static_page
 
 __doc__ = """
 Usage:
@@ -85,5 +85,5 @@ class Narrative(Session):
 
 
 if __name__ == "__main__":
-    print(theme_page().html)
+    print(static_page().html)
     quick_start(balladeer.examples.ex_12_styling_themes, story_builder=story)
