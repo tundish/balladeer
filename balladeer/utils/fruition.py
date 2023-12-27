@@ -38,7 +38,7 @@ class Graph:
         into: str
         key: int = None
         hops: int = None
-        spine: bool = None
+        fail: bool = None
 
     @dataclasses.dataclass
     class Node:
@@ -58,7 +58,7 @@ class Graph:
             rv.setdefault(arc.exit, cls.Node(arc.exit)).exits.append(arc)
             rv.setdefault(arc.into, cls.Node(arc.into)).entry.append(arc)
 
-        return list(rv.values())
+        return rv
 
     @staticmethod
     def label(arc: Arc, actor=False, gerund=False):
@@ -92,21 +92,22 @@ class Fruition(Graph):
 
 def diagram():
     nodes = Fruition.build_nodes()
-    sequence = [i.name for i in nodes]
-    for node in nodes:
+    sequence = list(nodes.keys())
+    for node in nodes.values():
         arcs = node.entry + node.exits
         node.size = len(" ".join(Fruition.label(arc) for arc in arcs))
         for arc in arcs:
             arc.hops = sequence.index(arc.into) - sequence.index(arc.exit)
+            arc.fail = not bool(nodes[arc.into].exits)
 
     pprint.pprint(nodes, stream=sys.stderr)
-    width = sum(i.size for i in nodes) + len(nodes)
+    width = sum(i.size for i in nodes.values()) + len(nodes)
 
-    spine = [node for node in nodes if node.exits] + [nodes[-1]]
+    spine = [node for node in nodes.values() if node.exits] + [nodes[sequence[-1]]]
     tracks = [
-        [node for node in nodes if node not in spine],
+        [node for node in nodes.values() if node not in spine],
         spine,
-        [node for node in nodes if node not in spine],
+        [node for node in nodes.values() if node not in spine],
     ]
 
     n = 0
