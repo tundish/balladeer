@@ -102,7 +102,7 @@ def diagram(nodes: dict):
     width = sum(i.size for i in nodes.values()) + len(nodes)
 
     spine = [node for node in nodes.values() if node.exits] + [nodes[sequence[-1]]]
-    tracks = [
+    rows = [
         [node for node in nodes.values() if node not in spine],
         spine,
         [node for node in nodes.values() if node not in spine],
@@ -111,44 +111,28 @@ def diagram(nodes: dict):
     n = 0
     sorter = operator.attrgetter("key")
     yield '<div class="diagram">'
-    for t, track in enumerate(tracks):
-        if t == 0:
-            n += 1
-            #yield f'<div class="row" id="row-{n:02d}" style="">'
-            yield from (f'<div class="node">{node.name}</div>' for node in track)
-            #yield "</div>"
+    for n, row in enumerate(rows):
+        r = n + 1
+        if n == 0:
+            yield from (f'<div class="node" style="grid-row: {r}">{node.name}</div>' for node in row)
 
-            n += 1
-            #yield f'<div class="row" id="row-{n:02d}" style="">'
-            arcs = sorted((arc for node in track for arc in node.entry), key=sorter)
+            r += 1
+            arcs = sorted((arc for node in row for arc in node.entry), key=sorter)
             for arc in arcs:
-                yield f'<div>{Fruition.label(arc)}</div>'
-            #yield "</div>"
+                pass
+                #yield f'<div class="arc" style="grid-row: {r}">{Fruition.label(arc)}</div>'
 
-        elif t == 1:
-            n += 1
-            #yield f'<div class="row" id="row-{n:02d}" style="">'
-
-            for node in track:
-                yield f'<div class="node">{node.name}</div>'
-                yield f'<div class="arcs">'
-                for arc in arcs:
-                    yield f'<div>{Fruition.label(arc)}</div>'
-                yield "</div>"
-
-            #yield "</div>"
+        elif n == 1:
+            r += 1
+            for node in row:
+                yield f'<div class="node" style="grid-row: {r}">{node.name}</div>'
+                arcs = sorted((arc for node in row for arc in node.exits), key=sorter)
+                #for arc in arcs:
+                #    yield f'<div class="arc" style="grid-row: {r}">{Fruition.label(arc)}</div>'
 
         else:
-            n += 1
-            #yield f'<div class="row" id="row-{n:02d}" style="">'
-            arcs = sorted((arc for node in track for arc in node.entry), key=sorter)
-            yield from (Fruition.label(arc) for arc in arcs)
-            #yield "</div>"
-
-            n += 1
-            #yield f'<div class="row" id="row-{n:02d}" style="">'
-            yield from (f'<div class="node">{node.name}</div>' for node in track)
-           # yield "</div>"
+            r += 1
+            yield from (f'<div class="node" style="grid-row: {r}">{node.name}</div>' for node in row)
 
     yield "</div>"
 
