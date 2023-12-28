@@ -119,20 +119,14 @@ def diagram(nodes: dict, reflect=False):
                 spans[node.name] = (c, s)
                 yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
 
-                arcs = sorted((i for i in node.exits), key=sorter)
+                arcs = sorted((i for i in node.exits if not i.fail), key=sorter)
                 for n, arc in enumerate(arcs):
-                    if arc.fail:
-                        yield (
-                            f'<div class="arc fail" style="grid-row: {r + 2}; grid-column: {c + n}">'
-                            f'{Fruition.label(arc)}</div>'
-                        )
-                    else:
-                        offset = -1 if arc.hops < 0 else 1
-                        yield (
-                            f'<div class="arc" style="grid-row: {r + offset}; grid-column: {c + s}">'
-                            f'{Fruition.label(arc)}</div>'
-                        )
-                        c += 1
+                    offset = -1 if arc.hops < 0 else 1
+                    yield (
+                        f'<div class="arc" style="grid-row: {r + offset}; grid-column: {c + s}">'
+                        f'{Fruition.label(arc)}</div>'
+                    )
+                    c += 1
                 c += s
             r += 2
 
@@ -143,8 +137,13 @@ def diagram(nodes: dict, reflect=False):
                 priors = [nodes[arc.exit] for arc in node.entry]
                 c = min(spans[prior.name][0] for prior in priors) + 1
                 s = len(node.entry)
-                yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
                 spans[node.name] = (c, s)
+                for n, arc in enumerate(node.entry):
+                    yield (
+                        f'<div class="arc fail" style="grid-row: {r + 1}; grid-column: {c + n}">'
+                        f'{Fruition.label(arc)}</div>'
+                    )
+                yield f'<div class="node" style="grid-row: {r + 2}; grid-column: {c} / span {s}">{node.name}</div>'
                 c += s
 
     yield "</div>"
