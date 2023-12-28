@@ -45,10 +45,10 @@ class Graph:
         name: str
         entry: list = dataclasses.field(default_factory=list)
         exits: list = dataclasses.field(default_factory=list)
-        size: int = None
+        size: int = 0
 
     @classmethod
-    def build_nodes(cls, arcs: list = None) -> list:
+    def build_nodes(cls, arcs: list = None) -> tuple[list, dict]:
         arcs = cls.arcs if arcs is None else arcs
 
         keys = {}
@@ -58,7 +58,15 @@ class Graph:
             rv.setdefault(arc.exit, cls.Node(arc.exit)).exits.append(arc)
             rv.setdefault(arc.into, cls.Node(arc.into)).entry.append(arc)
 
-        return rv
+        sequence = list(rv.keys())
+        for node in rv.values():
+            arcs = node.entry + node.exits
+            for arc in arcs:
+                arc.hops = sequence.index(arc.into) - sequence.index(arc.exit)
+                arc.fail = not (bool(rv[arc.into].exits) or arc.into == sequence[-1])
+                node.size += len(cls.label(arc))
+
+        return arcs, rv
 
     @staticmethod
     def label(arc: Arc, actor=False, gerund=False):
@@ -91,17 +99,7 @@ class Fruition(Graph):
 
 
 def diagram(nodes: dict, reflect=False):
-    sequence = list(nodes.keys())
-    for node in nodes.values():
-        arcs = node.entry + node.exits
-        node.size = len(" ".join(Fruition.label(arc) for arc in arcs))
-        for arc in arcs:
-            arc.hops = sequence.index(arc.into) - sequence.index(arc.exit)
-            arc.fail = not (bool(nodes[arc.into].exits) or arc.into == sequence[-1])
-
-    width = sum(i.size for i in nodes.values()) + len(nodes)
-
-    spine = [node for node in nodes.values() if node.exits] + [nodes[sequence[-1]]]
+    spine = [node for n, node in enumerate(nodes.values()) if node.exits or n + 1 == len(nodes)]
     rows = [spine, tuple(node for node in nodes.values() if node not in spine)]
     if reflect:
         rows.insert(0, rows[-1])
@@ -150,11 +148,12 @@ def diagram(nodes: dict, reflect=False):
     print(f"Spans: {spans}", file=sys.stderr)
 
 
-def static_page(nodes: dict) -> Page:
+def static_page(arcs: list, nodes: dict) -> Page:
     page = Page()
-    style = textwrap.dedent("""
+    n_cols = len(arcs) + len(nodes)
+    style = textwrap.dedent(f"""
     <style>
-    body {
+    body {{
     background-color: silver;
     font-family: sans;
     font-size: 0.8rem;
@@ -164,11 +163,11 @@ def static_page(nodes: dict) -> Page:
     padding: 1.2rem;
     text-align: center;
     width: 80%;
-    }
-    div.diagram {
+    }}
+    div.diagram {{
     display: grid;
-    grid-template-columns: repeat(30, 1fr);
-    }
+    grid-template-columns: repeat({n_cols}, 1fr);
+    }}
     </style>
     """).strip()
     page.paste(style, zone=page.zone.style)
@@ -182,11 +181,10 @@ def parser(usage=__doc__):
 
 
 def main(args):
+    arcs, nodes = Fruition.build_nodes()
     assert len(Fruition.arcs) == 15
-    nodes = Fruition.build_nodes()
-    page = static_page(nodes)
+    page = static_page(arcs, nodes)
     pprint.pprint(nodes, stream=sys.stderr)
-    print(len(nodes), file=sys.stderr)
     print(page.html)
     return 0
 
