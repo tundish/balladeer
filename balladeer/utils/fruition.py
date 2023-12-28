@@ -151,22 +151,31 @@ def diagram(nodes: dict, reflect=False):
 def static_page(arcs: list, nodes: dict) -> Page:
     page = Page()
     n_cols = len(arcs) + len(nodes)
+    w_cols = max(len(k) for k in nodes)
     style = textwrap.dedent(f"""
     <style>
     body {{
     background-color: silver;
     font-family: sans;
-    font-size: 0.8rem;
+    font-size: 2rem;
     margin: 1.2rem;
     margin-left: auto;
     margin-right: auto;
     padding: 1.2rem;
     text-align: center;
-    width: 80%;
+    width: 100%;
     }}
     div.diagram {{
+    align-content: space-around;
     display: grid;
-    grid-template-columns: repeat({n_cols}, 1fr);
+    grid-template-columns: repeat({n_cols}, {w_cols}rem);
+    justify-content: space-evenly;
+    }}
+    div.arc {{
+    padding: 1.4rem;
+    }}
+    div.node {{
+    border: 1px solid black;
     }}
     </style>
     """).strip()
