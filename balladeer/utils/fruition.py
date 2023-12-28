@@ -116,6 +116,7 @@ def diagram(nodes: dict, reflect=False):
         if row is spine:
             for node in row:
                 s = max(1, len([arc for arc in node.exits if arc.fail]))
+                spans[node.name] = (c, s)
                 yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
 
                 arcs = sorted((i for i in node.exits), key=sorter)
@@ -132,13 +133,15 @@ def diagram(nodes: dict, reflect=False):
                             f'{Fruition.label(arc)}</div>'
                         )
                         c += 1
-                spans[node.name] = (c, s)
                 c += s
             r += 2
 
         else:
+            # TODO: fail arcs written here.
             r += 1
             for node in row:
+                priors = [nodes[arc.exit] for arc in node.entry]
+                c = min(spans[prior.name][0] for prior in priors) + 1
                 s = len(node.entry)
                 yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
                 spans[node.name] = (c, s)
