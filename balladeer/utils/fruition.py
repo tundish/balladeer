@@ -115,7 +115,7 @@ def diagram(nodes: dict, reflect=False):
 
         if row is spine:
             for node in row:
-                s = max(1, len(node.exits))
+                s = max(1, len([arc for arc in node.exits if arc.fail]))
                 yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
 
                 arcs = sorted((i for i in node.exits), key=sorter)
@@ -157,7 +157,7 @@ def static_page(arcs: list, nodes: dict) -> Page:
     body {{
     background-color: silver;
     font-family: sans;
-    font-size: 2rem;
+    font-size: 1rem;
     margin: 1.2rem;
     margin-left: auto;
     margin-right: auto;
@@ -172,10 +172,13 @@ def static_page(arcs: list, nodes: dict) -> Page:
     justify-content: space-evenly;
     }}
     div.arc {{
-    padding: 1.4rem;
+    padding-bottom: 1.4rem;
+    padding-top: 1.4rem;
     }}
     div.node {{
     border: 1px solid black;
+    padding-bottom: 1.4rem;
+    padding-top: 1.4rem;
     }}
     </style>
     """).strip()
