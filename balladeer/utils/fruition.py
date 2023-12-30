@@ -157,7 +157,7 @@ class Diagram:
             n = 0
             for arc in arcs:
                 row = r + n - offset
-                col = c + s if arc.hops > 0 else c - s + 1
+                col = c + s if arc.hops > 0 else c - 1
                 cols = range(self.spans[arc.exit].stop, self.spans[arc.into].start)
                 while any(self.grid[row].get(col) for col in cols):
                     row += 1
@@ -192,7 +192,7 @@ class Diagram:
     def static_page(self) -> Page:
         layout = list(self.layout(self.nodes))
         page = Page()
-        n_cols = len(self.arcs) + len(self.nodes)
+        n_cols = sum(self.spans[node.name].step for node in self.spine) + len(self.spine)
         style = textwrap.dedent(f"""
         <style>
         * {{
