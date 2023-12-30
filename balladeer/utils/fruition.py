@@ -162,6 +162,7 @@ class Diagram:
         print(f"Spans: {self.spans}", file=sys.stderr)
 
     def static_page(self) -> Page:
+        layout = list(self.layout(self.nodes))
         page = Page()
         n_cols = len(self.arcs) + len(self.nodes)
         style = textwrap.dedent(f"""
@@ -200,7 +201,7 @@ class Diagram:
         </style>
         """).strip()
         page.paste(style, zone=page.zone.style)
-        page.paste(*self.layout(self.nodes), zone=page.zone.body)
+        page.paste(*layout, zone=page.zone.body)
         return page
 
 
