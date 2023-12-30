@@ -148,11 +148,14 @@ class Diagram:
             yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
 
             arcs = sorted((i for i in node.exits if not i.fail), key=self.key, reverse=True)
-            for n, arc in enumerate(arcs):
+            n = 0
+            for arc in arcs:
+                row = r + n - offset
                 yield (
                     f'<div class="arc" style="grid-row: {r + n - offset}; grid-column: {c + s}">'
                     f'{self.label(arc)}</div>'
                 )
+                n += 1
             c += s + 1
 
     def draw_end_nodes(self, nodes, r=1):
