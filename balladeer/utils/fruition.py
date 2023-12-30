@@ -137,9 +137,10 @@ class Diagram:
             yield from self.draw_end_nodes(end_nodes, r=3 + height)
 
     def draw_spine_nodes(self, nodes, r=1):
+        overlaps = self.overlaps(nodes)
+        offset = max(overlaps.values()) // 2
+        r += offset
         c = 1
-
-        print(f"Overlaps: ", self.overlaps(nodes), file=sys.stderr)
         yield '<div class="diagram">'
         for node in nodes:
             s = max(1, len([arc for arc in node.exits if arc.fail]))
@@ -147,15 +148,12 @@ class Diagram:
             yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
 
             arcs = sorted((i for i in node.exits if not i.fail), key=self.key, reverse=True)
-            offset = len(arcs) // -2
             for n, arc in enumerate(arcs):
                 yield (
-                    f'<div class="arc" style="grid-row: {r + n + offset}; grid-column: {c + s}">'
+                    f'<div class="arc" style="grid-row: {r + n - offset}; grid-column: {c + s}">'
                     f'{self.label(arc)}</div>'
                 )
-                c += 1
-            c += s
-        r += 2
+            c += s + 1
 
     def draw_end_nodes(self, nodes, r=1):
         # TODO: fail arcs written here.
