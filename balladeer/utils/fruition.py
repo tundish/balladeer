@@ -21,6 +21,7 @@ import argparse
 import dataclasses
 import operator
 import pprint
+import statistics
 import sys
 import textwrap
 
@@ -96,6 +97,22 @@ class Diagram:
         self.spans = {}
 
     @staticmethod
+    def overlaps(nodes: list[Graph.Node]) -> int:
+        rv = {}
+        n = 0
+        for node in nodes:
+            n += len([arc for arc in node.exits if not arc.fail and arc.hops > 0])
+            n -= len([arc for arc in node.exits if not arc.fail and arc.hops < 0])
+            n -= len([arc for arc in node.entry if arc.hops > 0])
+            n += len([arc for arc in node.entry if arc.hops < 0])
+            rv[node.name] = n
+        return rv
+
+    @staticmethod
+    def key(arc: Graph.Arc):
+        return (arc.hops, arc.key)
+
+    @staticmethod
     def label(arc: Graph.Arc, actor=False, gerund=False):
         prefix = f'<span class="actor">{arc.actor}</span>.' if actor else ""
         if gerund:
@@ -119,23 +136,21 @@ class Diagram:
             yield from self.draw_end_nodes(end_nodes, rank=2)
 
     def draw_spine_nodes(self, nodes, rank=0):
-        n = 0
-        sorter = operator.attrgetter("key")
-        yield '<div class="diagram">'
-
         r = 1 + rank * 2
         c = 1
 
+        print(f"Overlaps: ", self.overlaps(nodes), file=sys.stderr)
+        yield '<div class="diagram">'
         for node in nodes:
             s = max(1, len([arc for arc in node.exits if arc.fail]))
             self.spans[node.name] = slice(c, c + s, s)
             yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
 
-            arcs = sorted((i for i in node.exits if not i.fail), key=sorter)
+            arcs = sorted((i for i in node.exits if not i.fail), key=self.key, reverse=True)
+            offset = len(arcs) // -2
             for n, arc in enumerate(arcs):
-                offset = -1 if arc.hops < 0 else 1
                 yield (
-                    f'<div class="arc" style="grid-row: {r + offset}; grid-column: {c + s}">'
+                    f'<div class="arc" style="grid-row: {r + n + offset}; grid-column: {c + s}">'
                     f'{self.label(arc)}</div>'
                 )
                 c += 1
