@@ -108,51 +108,55 @@ class Diagram:
     def spine(self):
         return [node for n, node in enumerate(self.nodes.values()) if node.exits or n + 1 == len(self.nodes)]
 
-    def layout(self, nodes: dict, reflect=False):
-        rows = [self.spine, tuple(node for node in nodes.values() if node not in self.spine)]
-        if reflect:
-            rows.insert(0, rows[-1])
+    def layout(self, nodes: dict, ranks=2):
+        end_nodes = tuple(node for node in nodes.values() if node not in self.spine)
+        if ranks == 2:
+            yield from self.draw_spine_nodes(self.spine, rank=0)
+            yield from self.draw_end_nodes(end_nodes, rank=1)
+        elif ranks == 3:
+            yield from self.draw_spine_nodes(self.spine, rank=1)
+            yield from self.draw_end_nodes(end_nodes, rank=0)
+            yield from self.draw_end_nodes(end_nodes, rank=2)
 
+    def draw_spine_nodes(self, nodes, rank=0):
         n = 0
         sorter = operator.attrgetter("key")
         yield '<div class="diagram">'
 
-        r = 2
-        for n, row in enumerate(rows):
-            c = 1
+        r = 1 + rank * 2
+        c = 1
 
-            if row == self.spine:
-                for node in row:
-                    s = max(1, len([arc for arc in node.exits if arc.fail]))
-                    self.spans[node.name] = (c, s)
-                    yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
+        for node in nodes:
+            s = max(1, len([arc for arc in node.exits if arc.fail]))
+            self.spans[node.name] = (c, s)
+            yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
 
-                    arcs = sorted((i for i in node.exits if not i.fail), key=sorter)
-                    for n, arc in enumerate(arcs):
-                        offset = -1 if arc.hops < 0 else 1
-                        yield (
-                            f'<div class="arc" style="grid-row: {r + offset}; grid-column: {c + s}">'
-                            f'{self.label(arc)}</div>'
-                        )
-                        c += 1
-                    c += s
-                r += 2
+            arcs = sorted((i for i in node.exits if not i.fail), key=sorter)
+            for n, arc in enumerate(arcs):
+                offset = -1 if arc.hops < 0 else 1
+                yield (
+                    f'<div class="arc" style="grid-row: {r + offset}; grid-column: {c + s}">'
+                    f'{self.label(arc)}</div>'
+                )
+                c += 1
+            c += s
+        r += 2
 
-            else:
-                # TODO: fail arcs written here.
-                r += 1
-                for node in row:
-                    priors = [nodes[arc.exit] for arc in node.entry]
-                    c = min(self.spans[prior.name][0] for prior in priors) + 1
-                    s = len(node.entry)
-                    self.spans[node.name] = (c, s)
-                    for n, arc in enumerate(node.entry):
-                        yield (
-                            f'<div class="arc fail" style="grid-row: {r + 1}; grid-column: {c + n}">'
-                            f'{self.label(arc)}</div>'
-                        )
-                    yield f'<div class="node" style="grid-row: {r + 2}; grid-column: {c} / span {s}">{node.name}</div>'
-                    c += s
+    def draw_end_nodes(self, nodes, rank=0):
+        # TODO: fail arcs written here.
+        r = 1 + rank * 2
+        for node in nodes:
+            priors = [self.nodes[arc.exit] for arc in node.entry]
+            c = min(self.spans[prior.name][0] for prior in priors) + 1
+            s = len(node.entry)
+            self.spans[node.name] = (c, s)
+            for n, arc in enumerate(node.entry):
+                yield (
+                    f'<div class="arc fail" style="grid-row: {r + 1}; grid-column: {c + n}">'
+                    f'{self.label(arc)}</div>'
+                )
+            yield f'<div class="node" style="grid-row: {r + 2}; grid-column: {c} / span {s}">{node.name}</div>'
+            c += s
 
         yield "</div>"
         print(f"Spans: {self.spans}", file=sys.stderr)
