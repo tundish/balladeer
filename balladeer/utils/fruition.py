@@ -126,17 +126,17 @@ class Diagram:
         return [node for n, node in enumerate(self.nodes.values()) if node.exits or n + 1 == len(self.nodes)]
 
     def layout(self, nodes: dict, ranks=2):
+        height = max(self.overlaps(self.spine).values())
         end_nodes = tuple(node for node in nodes.values() if node not in self.spine)
         if ranks == 2:
-            yield from self.draw_spine_nodes(self.spine, rank=0)
-            yield from self.draw_end_nodes(end_nodes, rank=1)
+            yield from self.draw_spine_nodes(self.spine, r=1)
+            yield from self.draw_end_nodes(end_nodes, r=1 + height)
         elif ranks == 3:
-            yield from self.draw_spine_nodes(self.spine, rank=1)
-            yield from self.draw_end_nodes(end_nodes, rank=0)
-            yield from self.draw_end_nodes(end_nodes, rank=2)
+            yield from self.draw_spine_nodes(self.spine, r=3)
+            yield from self.draw_end_nodes(end_nodes, r=1)
+            yield from self.draw_end_nodes(end_nodes, r=3 + height)
 
-    def draw_spine_nodes(self, nodes, rank=0):
-        r = 1 + rank * 2
+    def draw_spine_nodes(self, nodes, r=1):
         c = 1
 
         print(f"Overlaps: ", self.overlaps(nodes), file=sys.stderr)
@@ -157,9 +157,8 @@ class Diagram:
             c += s
         r += 2
 
-    def draw_end_nodes(self, nodes, rank=0):
+    def draw_end_nodes(self, nodes, r=1):
         # TODO: fail arcs written here.
-        r = 1 + rank * 2
         for node in nodes:
             priors = [self.nodes[arc.exit] for arc in node.entry]
             c = min(self.spans[prior.name].start for prior in priors) + 1
