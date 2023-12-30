@@ -45,7 +45,6 @@ class Graph:
         name: str
         entry: list = dataclasses.field(default_factory=list)
         exits: list = dataclasses.field(default_factory=list)
-        size: int = 0
 
     @classmethod
     def build_nodes(cls, arcs: list = None) -> tuple[list, dict]:
@@ -64,18 +63,8 @@ class Graph:
             for arc in arcs:
                 arc.hops = sequence.index(arc.into) - sequence.index(arc.exit)
                 arc.fail = not (bool(rv[arc.into].exits) or arc.into == sequence[-1])
-                node.size += len(cls.label(arc))
 
         return arcs, rv
-
-    @staticmethod
-    def label(arc: Arc, actor=False, gerund=False):
-        prefix = f'<span class="actor">{arc.actor}</span>.' if actor else ""
-        if gerund:
-            stem = arc.name.rstrip("e")
-            return f'{prefix}<span class="directive">{stem}ing</span>'
-        else:
-            return f'{prefix}<span class="directive">{arc.name}</span>'
 
 
 class Fruition(Graph):
@@ -98,99 +87,114 @@ class Fruition(Graph):
     ]
 
 
-def diagram(nodes: dict, reflect=False):
-    spine = [node for n, node in enumerate(nodes.values()) if node.exits or n + 1 == len(nodes)]
-    rows = [spine, tuple(node for node in nodes.values() if node not in spine)]
-    if reflect:
-        rows.insert(0, rows[-1])
+class Diagram:
 
-    n = 0
-    sorter = operator.attrgetter("key")
-    yield '<div class="diagram">'
+    def __init__(self, arcs: list, nodes: dict, grid=None):
+        self.arcs = arcs
+        self.nodes = nodes
+        self.grid = grid or {}
 
-    r = 2
-    spans = {}
-    for n, row in enumerate(rows):
-        c = 1
-
-        if row is spine:
-            for node in row:
-                s = max(1, len([arc for arc in node.exits if arc.fail]))
-                spans[node.name] = (c, s)
-                yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
-
-                arcs = sorted((i for i in node.exits if not i.fail), key=sorter)
-                for n, arc in enumerate(arcs):
-                    offset = -1 if arc.hops < 0 else 1
-                    yield (
-                        f'<div class="arc" style="grid-row: {r + offset}; grid-column: {c + s}">'
-                        f'{Fruition.label(arc)}</div>'
-                    )
-                    c += 1
-                c += s
-            r += 2
-
+    @staticmethod
+    def label(arc: Graph.Arc, actor=False, gerund=False):
+        prefix = f'<span class="actor">{arc.actor}</span>.' if actor else ""
+        if gerund:
+            stem = arc.name.rstrip("e")
+            return f'{prefix}<span class="directive">{stem}ing</span>'
         else:
-            # TODO: fail arcs written here.
-            r += 1
-            for node in row:
-                priors = [nodes[arc.exit] for arc in node.entry]
-                c = min(spans[prior.name][0] for prior in priors) + 1
-                s = len(node.entry)
-                spans[node.name] = (c, s)
-                for n, arc in enumerate(node.entry):
-                    yield (
-                        f'<div class="arc fail" style="grid-row: {r + 1}; grid-column: {c + n}">'
-                        f'{Fruition.label(arc)}</div>'
-                    )
-                yield f'<div class="node" style="grid-row: {r + 2}; grid-column: {c} / span {s}">{node.name}</div>'
-                c += s
+            return f'{prefix}<span class="directive">{arc.name}</span>'
 
-    yield "</div>"
-    print(f"Spans: {spans}", file=sys.stderr)
+    def layout(self, nodes: dict, reflect=False):
+        spine = [node for n, node in enumerate(nodes.values()) if node.exits or n + 1 == len(nodes)]
+        rows = [spine, tuple(node for node in nodes.values() if node not in spine)]
+        if reflect:
+            rows.insert(0, rows[-1])
 
+        n = 0
+        sorter = operator.attrgetter("key")
+        yield '<div class="diagram">'
 
-def static_page(arcs: list, nodes: dict) -> Page:
-    page = Page()
-    n_cols = len(arcs) + len(nodes)
-    style = textwrap.dedent(f"""
-    <style>
-    * {{
-    box-sizing: border-box;
-    border: 0;
-    font: inherit;
-    font-size: 0.8em;
-    line-height: 1em;
-    margin: 0;
-    outline: 0;
-    padding: 0;
-    text-decoration: none;
-    vertical-align: baseline;
-    }}
-    body {{
-    background-color: silver;
-    text-align: center;
-    }}
-    div.diagram {{
-    align-content: space-around;
-    display: grid;
-    grid-template-columns: repeat({n_cols}, 1fr);
-    justify-content: space-evenly;
-    }}
-    div.arc {{
-    padding-bottom: 1.4rem;
-    padding-top: 1.4rem;
-    }}
-    div.node {{
-    border: 1px solid black;
-    padding-bottom: 1.4rem;
-    padding-top: 1.4rem;
-    }}
-    </style>
-    """).strip()
-    page.paste(style, zone=page.zone.style)
-    page.paste(*diagram(nodes), zone=page.zone.body)
-    return page
+        r = 2
+        spans = {}
+        for n, row in enumerate(rows):
+            c = 1
+
+            if row is spine:
+                for node in row:
+                    s = max(1, len([arc for arc in node.exits if arc.fail]))
+                    spans[node.name] = (c, s)
+                    yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
+
+                    arcs = sorted((i for i in node.exits if not i.fail), key=sorter)
+                    for n, arc in enumerate(arcs):
+                        offset = -1 if arc.hops < 0 else 1
+                        yield (
+                            f'<div class="arc" style="grid-row: {r + offset}; grid-column: {c + s}">'
+                            f'{self.label(arc)}</div>'
+                        )
+                        c += 1
+                    c += s
+                r += 2
+
+            else:
+                # TODO: fail arcs written here.
+                r += 1
+                for node in row:
+                    priors = [nodes[arc.exit] for arc in node.entry]
+                    c = min(spans[prior.name][0] for prior in priors) + 1
+                    s = len(node.entry)
+                    spans[node.name] = (c, s)
+                    for n, arc in enumerate(node.entry):
+                        yield (
+                            f'<div class="arc fail" style="grid-row: {r + 1}; grid-column: {c + n}">'
+                            f'{self.label(arc)}</div>'
+                        )
+                    yield f'<div class="node" style="grid-row: {r + 2}; grid-column: {c} / span {s}">{node.name}</div>'
+                    c += s
+
+        yield "</div>"
+        print(f"Spans: {spans}", file=sys.stderr)
+
+    def static_page(self) -> Page:
+        page = Page()
+        n_cols = len(self.arcs) + len(self.nodes)
+        style = textwrap.dedent(f"""
+        <style>
+        * {{
+        box-sizing: border-box;
+        border: 0;
+        font: inherit;
+        font-size: 0.8em;
+        line-height: 1em;
+        margin: 0;
+        outline: 0;
+        padding: 0;
+        text-decoration: none;
+        vertical-align: baseline;
+        }}
+        body {{
+        background-color: silver;
+        text-align: center;
+        }}
+        div.diagram {{
+        align-content: space-around;
+        display: grid;
+        grid-template-columns: repeat({n_cols}, 1fr);
+        justify-content: space-evenly;
+        }}
+        div.arc {{
+        padding-bottom: 1.4rem;
+        padding-top: 1.4rem;
+        }}
+        div.node {{
+        border: 1px solid black;
+        padding-bottom: 1.4rem;
+        padding-top: 1.4rem;
+        }}
+        </style>
+        """).strip()
+        page.paste(style, zone=page.zone.style)
+        page.paste(*self.layout(self.nodes), zone=page.zone.body)
+        return page
 
 
 def parser(usage=__doc__):
@@ -201,8 +205,9 @@ def parser(usage=__doc__):
 def main(args):
     arcs, nodes = Fruition.build_nodes()
     assert len(Fruition.arcs) == 15
-    page = static_page(arcs, nodes)
-    pprint.pprint(nodes, stream=sys.stderr)
+    diagram = Diagram(arcs, nodes)
+    page = diagram.static_page()
+    pprint.pprint(diagram.nodes, stream=sys.stderr)
     print(page.html)
     return 0
 
