@@ -157,13 +157,14 @@ class Diagram:
             n = 0
             for arc in arcs:
                 row = r + n - offset
+                col = c + s if arc.hops > 0 else c - s + 1
                 cols = range(self.spans[arc.exit].stop, self.spans[arc.into].start)
                 while any(self.grid[row].get(col) for col in cols):
                     row += 1
                     n += 1
 
                 yield (
-                    f'<div class="arc" style="grid-row: {row}; grid-column: {c + s}">'
+                    f'<div class="arc" style="grid-row: {row}; grid-column: {col}">'
                     f'{self.label(arc)}</div>'
                 )
                 for col in cols:
