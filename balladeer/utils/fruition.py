@@ -93,6 +93,7 @@ class Diagram:
         self.arcs = arcs
         self.nodes = nodes
         self.grid = grid or {}
+        self.spans = {}
 
     @staticmethod
     def label(arc: Graph.Arc, actor=False, gerund=False):
@@ -103,9 +104,12 @@ class Diagram:
         else:
             return f'{prefix}<span class="directive">{arc.name}</span>'
 
+    @property
+    def spine(self):
+        return [node for n, node in enumerate(self.nodes.values()) if node.exits or n + 1 == len(self.nodes)]
+
     def layout(self, nodes: dict, reflect=False):
-        spine = [node for n, node in enumerate(nodes.values()) if node.exits or n + 1 == len(nodes)]
-        rows = [spine, tuple(node for node in nodes.values() if node not in spine)]
+        rows = [self.spine, tuple(node for node in nodes.values() if node not in self.spine)]
         if reflect:
             rows.insert(0, rows[-1])
 
@@ -114,14 +118,13 @@ class Diagram:
         yield '<div class="diagram">'
 
         r = 2
-        spans = {}
         for n, row in enumerate(rows):
             c = 1
 
-            if row is spine:
+            if row == self.spine:
                 for node in row:
                     s = max(1, len([arc for arc in node.exits if arc.fail]))
-                    spans[node.name] = (c, s)
+                    self.spans[node.name] = (c, s)
                     yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
 
                     arcs = sorted((i for i in node.exits if not i.fail), key=sorter)
@@ -140,9 +143,9 @@ class Diagram:
                 r += 1
                 for node in row:
                     priors = [nodes[arc.exit] for arc in node.entry]
-                    c = min(spans[prior.name][0] for prior in priors) + 1
+                    c = min(self.spans[prior.name][0] for prior in priors) + 1
                     s = len(node.entry)
-                    spans[node.name] = (c, s)
+                    self.spans[node.name] = (c, s)
                     for n, arc in enumerate(node.entry):
                         yield (
                             f'<div class="arc fail" style="grid-row: {r + 1}; grid-column: {c + n}">'
@@ -152,7 +155,7 @@ class Diagram:
                     c += s
 
         yield "</div>"
-        print(f"Spans: {spans}", file=sys.stderr)
+        print(f"Spans: {self.spans}", file=sys.stderr)
 
     def static_page(self) -> Page:
         page = Page()
