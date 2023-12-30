@@ -18,6 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import argparse
+from collections import defaultdict
 import dataclasses
 import operator
 import pprint
@@ -93,7 +94,7 @@ class Diagram:
     def __init__(self, arcs: list, nodes: dict, grid=None):
         self.arcs = arcs
         self.nodes = nodes
-        self.grid = grid or {}
+        self.grid = grid or defaultdict(dict)
         self.spans = {}
 
     @staticmethod
@@ -140,13 +141,18 @@ class Diagram:
         overlaps = self.overlaps(nodes)
         offset = max(overlaps.values()) // 2
         r += offset
-        c = 1
         yield '<div class="diagram">'
+
+        c = 1
         for node in nodes:
             s = max(1, len([arc for arc in node.exits if arc.fail]))
             self.spans[node.name] = slice(c, c + s, s)
             yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
+            c += s + 1
 
+        for node in nodes:
+            c = self.spans[node.name].start
+            s = self.spans[node.name].step
             arcs = sorted((i for i in node.exits if not i.fail), key=self.key, reverse=True)
             n = 0
             for arc in arcs:
@@ -155,8 +161,9 @@ class Diagram:
                     f'<div class="arc" style="grid-row: {r + n - offset}; grid-column: {c + s}">'
                     f'{self.label(arc)}</div>'
                 )
+                for col in range(self.spans[arc.exit].stop, self.spans[arc.into].start):
+                    self.grid[row][col] = True
                 n += 1
-            c += s + 1
 
     def draw_end_nodes(self, nodes, r=1):
         # TODO: fail arcs written here.
@@ -174,7 +181,7 @@ class Diagram:
             c += s
 
         yield "</div>"
-        print(f"Spans: {self.spans}", file=sys.stderr)
+        print(f"Grid: {self.grid}", file=sys.stderr)
 
     def static_page(self) -> Page:
         layout = list(self.layout(self.nodes))
