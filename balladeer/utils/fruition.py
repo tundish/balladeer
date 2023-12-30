@@ -157,11 +157,16 @@ class Diagram:
             n = 0
             for arc in arcs:
                 row = r + n - offset
+                cols = range(self.spans[arc.exit].stop, self.spans[arc.into].start)
+                while any(self.grid[row].get(col) for col in cols):
+                    row += 1
+                    n += 1
+
                 yield (
-                    f'<div class="arc" style="grid-row: {r + n - offset}; grid-column: {c + s}">'
+                    f'<div class="arc" style="grid-row: {row}; grid-column: {c + s}">'
                     f'{self.label(arc)}</div>'
                 )
-                for col in range(self.spans[arc.exit].stop, self.spans[arc.into].start):
+                for col in cols:
                     self.grid[row][col] = True
                 n += 1
 
