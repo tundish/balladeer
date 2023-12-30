@@ -153,24 +153,28 @@ def diagram(nodes: dict, reflect=False):
 def static_page(arcs: list, nodes: dict) -> Page:
     page = Page()
     n_cols = len(arcs) + len(nodes)
-    w_cols = max(len(k) for k in nodes)
     style = textwrap.dedent(f"""
     <style>
+    * {{
+    box-sizing: border-box;
+    border: 0;
+    font: inherit;
+    font-size: 0.8em;
+    line-height: 1em;
+    margin: 0;
+    outline: 0;
+    padding: 0;
+    text-decoration: none;
+    vertical-align: baseline;
+    }}
     body {{
     background-color: silver;
-    font-family: sans;
-    font-size: 1rem;
-    margin: 1.2rem;
-    margin-left: auto;
-    margin-right: auto;
-    padding: 1.2rem;
     text-align: center;
-    width: 100%;
     }}
     div.diagram {{
     align-content: space-around;
     display: grid;
-    grid-template-columns: repeat({n_cols}, {w_cols}rem);
+    grid-template-columns: repeat({n_cols}, 1fr);
     justify-content: space-evenly;
     }}
     div.arc {{
