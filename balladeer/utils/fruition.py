@@ -128,7 +128,7 @@ class Diagram:
 
         for node in nodes:
             s = max(1, len([arc for arc in node.exits if arc.fail]))
-            self.spans[node.name] = (c, s)
+            self.spans[node.name] = slice(c, c + s, s)
             yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
 
             arcs = sorted((i for i in node.exits if not i.fail), key=sorter)
@@ -147,9 +147,9 @@ class Diagram:
         r = 1 + rank * 2
         for node in nodes:
             priors = [self.nodes[arc.exit] for arc in node.entry]
-            c = min(self.spans[prior.name][0] for prior in priors) + 1
+            c = min(self.spans[prior.name].start for prior in priors) + 1
             s = len(node.entry)
-            self.spans[node.name] = (c, s)
+            self.spans[node.name] = slice(c, c + s, s)
             for n, arc in enumerate(node.entry):
                 yield (
                     f'<div class="arc fail" style="grid-row: {r + 1}; grid-column: {c + n}">'
