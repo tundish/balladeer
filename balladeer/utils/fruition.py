@@ -172,13 +172,9 @@ class Diagram:
                 n += 1
 
     def draw_end_nodes(self, nodes, r=1):
-        # TODO: fail arcs written here.
         for node in nodes:
-            priors = [self.nodes[arc.exit] for arc in node.entry]
-            c = min(self.spans[prior.name].start for prior in priors)
-            s = max(self.spans[prior.name].stop for prior in priors) - c
-            yield f'<div class="node" style="grid-row: {r + 2}; grid-column: {c} / span {s}">{node.name}</div>'
-            self.spans[node.name] = slice(c, c + s, s)
+            priors = {self.nodes[arc.exit].name: self.nodes[arc.exit] for arc in node.entry}
+            c = min(self.spans[prior.name].start for prior in priors.values())
 
             bridges = {i.name: [arc for arc in i.exits if arc in node.entry] for i in self.nodes.values()}
             for node_name, arcs in bridges.items():
@@ -188,6 +184,10 @@ class Diagram:
                         f'<div class="arc fail" style="grid-row: {r + 1}; grid-column: {col}">'
                         f'{self.label(arc)}</div>'
                     )
+
+            s = col - c + 1
+            yield f'<div class="node" style="grid-row: {r + 2}; grid-column: {c} / span {s}">{node.name}</div>'
+            self.spans[node.name] = slice(c, c + s, s)
 
         yield "</div>"
         print(f"Grid: {self.grid}", file=sys.stderr)
