@@ -134,7 +134,7 @@ class Diagram:
             yield from self.draw_end_nodes(end_nodes, r=1 + height)
         elif ranks == 3:
             yield from self.draw_spine_nodes(self.spine, r=3)
-            yield from self.draw_end_nodes(end_nodes, r=1)
+            yield from self.draw_end_nodes(end_nodes, r=2, n=-1)
             yield from self.draw_end_nodes(end_nodes, r=3 + height)
 
     def draw_spine_nodes(self, nodes, r=1):
@@ -171,7 +171,7 @@ class Diagram:
                     self.grid[row][col] = True
                 n += 1
 
-    def draw_end_nodes(self, nodes, r=1):
+    def draw_end_nodes(self, nodes, r=1, n=1):
         col = 0
         for node in nodes:
             priors = {self.nodes[arc.exit].name: self.nodes[arc.exit] for arc in node.entry}
@@ -179,22 +179,22 @@ class Diagram:
 
             bridges = {i.name: [arc for arc in i.exits if arc in node.entry] for i in self.nodes.values()}
             for node_name, arcs in bridges.items():
-                for n, arc in enumerate(arcs):
-                    col = max(c, self.spans[node_name].start) + n
+                for a, arc in enumerate(arcs):
+                    col = max(c, self.spans[node_name].start) + a
                     yield (
-                        f'<div class="arc fail" style="grid-row: {r + 1}; grid-column: {col}">'
+                        f'<div class="arc fail" style="grid-row: {r + n}; grid-column: {col}">'
                         f'{self.label(arc)}</div>'
                     )
 
             s = col - c + 1
-            yield f'<div class="node" style="grid-row: {r + 2}; grid-column: {c} / span {s}">{node.name}</div>'
+            yield f'<div class="node" style="grid-row: {r + 2 * n}; grid-column: {c} / span {s}">{node.name}</div>'
             self.spans[node.name] = slice(c, c + s, s)
 
         yield "</div>"
         print(f"Grid: {self.grid}", file=sys.stderr)
 
-    def static_page(self) -> Page:
-        layout = list(self.layout(self.nodes))
+    def static_page(self, ranks=2) -> Page:
+        layout = list(self.layout(self.nodes, ranks=ranks))
         page = Page()
         n_cols = sum(self.spans[node.name].step for node in self.spine) + len(self.spine)
         style = textwrap.dedent(f"""
@@ -239,6 +239,7 @@ class Diagram:
 
 def parser(usage=__doc__):
     rv = argparse.ArgumentParser(usage)
+    rv.add_argument("--ranks", type=int, default = 2, help="Number of state ranks")
     return rv
 
 
@@ -246,7 +247,7 @@ def main(args):
     arcs, nodes = Fruition.build_nodes()
     assert len(Fruition.arcs) == 15
     diagram = Diagram(arcs, nodes)
-    page = diagram.static_page()
+    page = diagram.static_page(ranks=args.ranks)
     pprint.pprint(diagram.nodes, stream=sys.stderr)
     print(page.html)
     return 0
