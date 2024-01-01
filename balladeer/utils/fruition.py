@@ -175,16 +175,19 @@ class Diagram:
         # TODO: fail arcs written here.
         for node in nodes:
             priors = [self.nodes[arc.exit] for arc in node.entry]
-            c = min(self.spans[prior.name].start for prior in priors) + 1
-            s = len(node.entry)
-            self.spans[node.name] = slice(c, c + s, s)
-            for n, arc in enumerate(node.entry):
-                yield (
-                    f'<div class="arc fail" style="grid-row: {r + 1}; grid-column: {c + n}">'
-                    f'{self.label(arc)}</div>'
-                )
+            c = min(self.spans[prior.name].start for prior in priors)
+            s = max(self.spans[prior.name].stop for prior in priors) - c
             yield f'<div class="node" style="grid-row: {r + 2}; grid-column: {c} / span {s}">{node.name}</div>'
-            c += s
+            self.spans[node.name] = slice(c, c + s, s)
+
+            bridges = {i.name: [arc for arc in i.exits if arc in node.entry] for i in self.nodes.values()}
+            for node_name, arcs in bridges.items():
+                for n, arc in enumerate(arcs):
+                    col = self.spans[node_name].start + n
+                    yield (
+                        f'<div class="arc fail" style="grid-row: {r + 1}; grid-column: {col}">'
+                        f'{self.label(arc)}</div>'
+                    )
 
         yield "</div>"
         print(f"Grid: {self.grid}", file=sys.stderr)
