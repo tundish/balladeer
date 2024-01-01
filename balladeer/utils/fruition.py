@@ -172,14 +172,15 @@ class Diagram:
                 n += 1
 
     def draw_end_nodes(self, nodes, r=1):
+        col = 0
         for node in nodes:
             priors = {self.nodes[arc.exit].name: self.nodes[arc.exit] for arc in node.entry}
-            c = min(self.spans[prior.name].start for prior in priors.values())
+            c = max(col + 1, min(self.spans[prior.name].start for prior in priors.values()))
 
             bridges = {i.name: [arc for arc in i.exits if arc in node.entry] for i in self.nodes.values()}
             for node_name, arcs in bridges.items():
                 for n, arc in enumerate(arcs):
-                    col = self.spans[node_name].start + n
+                    col = max(c, self.spans[node_name].start) + n
                     yield (
                         f'<div class="arc fail" style="grid-row: {r + 1}; grid-column: {col}">'
                         f'{self.label(arc)}</div>'
