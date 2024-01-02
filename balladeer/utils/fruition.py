@@ -151,6 +151,7 @@ class Diagram:
             yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
             c += s + 1
 
+        # Decide unique position of each arc label
         for node in nodes:
             c = self.spans[node.name].start
             s = self.spans[node.name].step
@@ -168,29 +169,33 @@ class Diagram:
                     row += 1
                     n += 1
 
+                # Store span of each arc
                 self.grid[row][col] = arc
                 for col in cols:
                     self.grid[row][col] = self.grid[row].get(col) or True
                 n += 1
 
+        # With each arc in place, spread them vertically if possible
         for node_name, span in self.spans.items():
             arcs = [
-                (r, span.stop, self.grid[r].get(span.stop))
+                (r, span.stop, self.grid[r][span.stop])
                 for r in range(r - offset, r + offset)
                 if span.stop in self.grid[r]
+                and isinstance(self.grid[r].get(span.stop), Graph.Arc)
             ]
             if not arcs: continue
             row = arcs[-1][0]
             col = arcs[-1][1]
 
-            print(arcs, file=sys.stderr)
             if self.grid[row + 1].get(col):
                 continue
 
-            if (len(arcs) == 1 and row == r - offset) or (len(arcs) == 2 and row == r - offset):
+            if (len(arcs) == 1 and row == r - offset) or (len(arcs) == 2 and row == r - offset + 1):
                 self.grid[row][col] = None
                 self.grid[row + 1][col] = arcs[-1][2]
+                continue
 
+        # Write each arc
         for row, items in self.grid.items():
             for col, item in items.items():
                 if isinstance(item, Graph.Arc):
@@ -217,8 +222,6 @@ class Diagram:
             s = col - c + 1
             yield f'<div class="node" style="grid-row: {r + 2 * n}; grid-column: {c} / span {s}">{node.name}</div>'
             self.spans[node.name] = slice(c, c + s, s)
-
-        print(f"Grid: {self.grid}", file=sys.stderr)
 
     def static_page(self, ranks=2) -> Page:
         layout = list(self.layout(self.nodes, ranks=ranks))
