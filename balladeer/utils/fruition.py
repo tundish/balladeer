@@ -156,21 +156,48 @@ class Diagram:
             s = self.spans[node.name].step
             arcs = sorted((i for i in node.exits if not i.fail), key=self.key, reverse=True)
             n = 0
-            for arc in arcs:
+            for a, arc in enumerate(arcs):
                 row = r + n - offset
                 col = c + s if arc.hops > 0 else c - 1
-                cols = range(self.spans[arc.exit].stop, self.spans[arc.into].start)
+                if arc.hops > 0:
+                    cols = range(self.spans[arc.exit].stop, self.spans[arc.into].start, 1)
+                else:
+                    cols = range(self.spans[arc.exit].start - 1, self.spans[arc.into].stop -1 , -1)
+
                 while any(self.grid[row].get(col) for col in cols):
                     row += 1
                     n += 1
 
-                yield (
-                    f'<div class="arc" style="grid-row: {row}; grid-column: {col}">'
-                    f'{self.label(arc)}</div>'
-                )
+                self.grid[row][col] = arc
                 for col in cols:
-                    self.grid[row][col] = True
+                    self.grid[row][col] = self.grid[row].get(col) or True
                 n += 1
+
+        for node_name, span in self.spans.items():
+            arcs = [
+                (r, span.stop, self.grid[r].get(span.stop))
+                for r in range(r - offset, r + offset)
+                if span.stop in self.grid[r]
+            ]
+            if not arcs: continue
+            row = arcs[-1][0]
+            col = arcs[-1][1]
+
+            print(arcs, file=sys.stderr)
+            if self.grid[row + 1].get(col):
+                continue
+
+            if (len(arcs) == 1 and row == r - offset) or (len(arcs) == 2 and row == r - offset):
+                self.grid[row][col] = None
+                self.grid[row + 1][col] = arcs[-1][2]
+
+        for row, items in self.grid.items():
+            for col, item in items.items():
+                if isinstance(item, Graph.Arc):
+                    yield (
+                        f'<div class="arc" style="grid-row: {row}; grid-column: {col}">'
+                        f'{self.label(item)}</div>'
+                    )
 
     def draw_end_nodes(self, nodes, r=1, n=1):
         col = 0
