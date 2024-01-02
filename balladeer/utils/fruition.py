@@ -129,19 +129,20 @@ class Diagram:
     def layout(self, nodes: dict, ranks=2):
         height = max(self.overlaps(self.spine).values())
         end_nodes = tuple(node for node in nodes.values() if node not in self.spine)
+        yield '<div class="diagram">'
         if ranks == 2:
             yield from self.draw_spine_nodes(self.spine, r=1)
             yield from self.draw_end_nodes(end_nodes, r=1 + height)
         elif ranks == 3:
             yield from self.draw_spine_nodes(self.spine, r=3)
-            yield from self.draw_end_nodes(end_nodes, r=2, n=-1)
+            yield from self.draw_end_nodes(end_nodes, r=3, n=-1)
             yield from self.draw_end_nodes(end_nodes, r=3 + height)
+        yield "</div>"
 
     def draw_spine_nodes(self, nodes, r=1):
         overlaps = self.overlaps(nodes)
         offset = max(overlaps.values()) // 2
         r += offset
-        yield '<div class="diagram">'
 
         c = 1
         for node in nodes:
@@ -190,7 +191,6 @@ class Diagram:
             yield f'<div class="node" style="grid-row: {r + 2 * n}; grid-column: {c} / span {s}">{node.name}</div>'
             self.spans[node.name] = slice(c, c + s, s)
 
-        yield "</div>"
         print(f"Grid: {self.grid}", file=sys.stderr)
 
     def static_page(self, ranks=2) -> Page:
