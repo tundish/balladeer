@@ -225,10 +225,16 @@ class Diagram:
             for node_name, arcs in bridges.items():
                 for a, arc in enumerate(arcs):
                     col = max(c, self.spans[node_name][0].start) + a
-                    yield (
-                        f'<div class="arc fail {arc.actor}" style="grid-row: {r + n}; grid-column: {col}">'
-                        f'{self.label(arc)}</div>'
-                    )
+                    if n < 0:
+                        yield (
+                            f'<div class="arc {arc.actor} fail upper" style="grid-row: {r + n}; grid-column: {col}">'
+                            f'{self.label(arc)}</div>'
+                        )
+                    else:
+                        yield (
+                            f'<div class="arc {arc.actor} fail lower" style="grid-row: {r + n}; grid-column: {col}">'
+                            f'{self.label(arc)}</div>'
+                        )
 
             s = col - c + 1
             yield f'<div class="node" style="grid-row: {r + 2 * n}; grid-column: {c} / span {s}">{node.name}</div>'
@@ -271,7 +277,7 @@ class Diagram:
         }}
         div.arc {{
         background-color: var(--ballad-ink-glamour, yellow);
-        font-family: cursive;
+        font-family: sans-serif;
         font-weight: lighter;
         height: 2rem;
         margin-bottom: 0.8rem;
@@ -279,9 +285,19 @@ class Diagram:
         padding-bottom: 0.4rem;
         padding-top: 0.4rem;
         }}
+        div.arc.ltr{{
+        border-radius: 0 1.2rem 1.2rem 0;
+        }}
+        div.arc.rtl{{
+        border-radius: 1.2rem 0 0 1.2rem;
+        }}
         div.arc.fail {{
-        border-right: 0.5px solid black;
-        border-top: none;
+        }}
+        div.arc.fail.lower{{
+        border-radius: 0 0 1.2rem 1.2rem;
+        }}
+        div.arc.fail.upper{{
+        border-radius: 1.2rem 1.2rem 0 0 ;
         }}
         div.arc.hand {{
         background-color: var(--ballad-ink-glamour, yellow);
@@ -289,6 +305,7 @@ class Diagram:
         div.arc.head {{
         background-color: var(--ballad-ink-hilight, blue);
         color: var(--ballad-ink-washout, white);
+        font-weight: bolder;
         }}
         div.node {{
         background-color: var(--ballad-ink-washout, white);
