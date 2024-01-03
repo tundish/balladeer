@@ -96,7 +96,7 @@ class Diagram:
     def __init__(self, nodes: dict, grid=None):
         self.nodes = nodes
         self.grid = grid or defaultdict(dict)
-        self.spans = {}
+        self.spans = defaultdict(list)
 
     @staticmethod
     def overlaps(nodes: list[Graph.Node]) -> int:
@@ -148,23 +148,23 @@ class Diagram:
         c = 1
         for node in nodes:
             s = max(1, len([arc for arc in node.exits if arc.fail]))
-            self.spans[node.name] = slice(c, c + s, s)
+            self.spans[node.name].append(slice(c, c + s, s))
             yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
             c += s + 1
 
         # Decide unique position of each arc label
         for node in nodes:
-            c = self.spans[node.name].start
-            s = self.spans[node.name].step
+            c = self.spans[node.name][0].start
+            s = self.spans[node.name][0].step
             arcs = sorted((i for i in node.exits if not i.fail), key=self.key, reverse=True)
             n = 0
             for a, arc in enumerate(arcs):
                 row = r + n - offset
                 col = c + s if arc.hops > 0 else c - 1
                 if arc.hops > 0:
-                    cols = range(self.spans[arc.exit].stop, self.spans[arc.into].start, 1)
+                    cols = range(self.spans[arc.exit][0].stop, self.spans[arc.into][0].start, 1)
                 else:
-                    cols = range(self.spans[arc.exit].start - 1, self.spans[arc.into].stop -1 , -1)
+                    cols = range(self.spans[arc.exit][0].start - 1, self.spans[arc.into][0].stop -1 , -1)
 
                 while any(self.grid[row].get(col) for col in cols):
                     row += 1
@@ -177,24 +177,25 @@ class Diagram:
                 n += 1
 
         # With each arc in place, spread them vertically if possible
-        for node_name, span in self.spans.items():
-            arcs = [
-                (r, span.stop, self.grid[r][span.stop])
-                for r in range(r - offset, r + offset)
-                if span.stop in self.grid[r]
-                and isinstance(self.grid[r].get(span.stop), Graph.Arc)
-            ]
-            if not arcs: continue
-            row = arcs[-1][0]
-            col = arcs[-1][1]
+        for node_name, spans in self.spans.items():
+            for span in spans:
+                arcs = [
+                    (r, span.stop, self.grid[r][span.stop])
+                    for r in range(r - offset, r + offset)
+                    if span.stop in self.grid[r]
+                    and isinstance(self.grid[r].get(span.stop), Graph.Arc)
+                ]
+                if not arcs: continue
+                row = arcs[-1][0]
+                col = arcs[-1][1]
 
-            if self.grid[row + 1].get(col):
-                continue
+                if self.grid[row + 1].get(col):
+                    continue
 
-            if (len(arcs) == 1 and row == r - offset) or (len(arcs) == 2 and row == r - offset + 1):
-                self.grid[row][col] = None
-                self.grid[row + 1][col] = arcs[-1][2]
-                continue
+                if (len(arcs) == 1 and row == r - offset) or (len(arcs) == 2 and row == r - offset + 1):
+                    self.grid[row][col] = None
+                    self.grid[row + 1][col] = arcs[-1][2]
+                    continue
 
         # Write each arc
         for row, items in self.grid.items():
@@ -209,12 +210,12 @@ class Diagram:
         col = 0
         for node in nodes:
             priors = {self.nodes[arc.exit].name: self.nodes[arc.exit] for arc in node.entry}
-            c = max(col + 1, min(self.spans[prior.name].start for prior in priors.values()))
+            c = max(col + 1, min(self.spans[prior.name][0].start for prior in priors.values()))
 
             bridges = {i.name: [arc for arc in i.exits if arc in node.entry] for i in self.nodes.values()}
             for node_name, arcs in bridges.items():
                 for a, arc in enumerate(arcs):
-                    col = max(c, self.spans[node_name].start) + a
+                    col = max(c, self.spans[node_name][0].start) + a
                     yield (
                         f'<div class="arc fail" style="grid-row: {r + n}; grid-column: {col}">'
                         f'{self.label(arc)}</div>'
@@ -222,7 +223,7 @@ class Diagram:
 
             s = col - c + 1
             yield f'<div class="node" style="grid-row: {r + 2 * n}; grid-column: {c} / span {s}">{node.name}</div>'
-            self.spans[node.name] = slice(c, c + s, s)
+            self.spans[node.name].append(slice(c, c + s, s))
 
     def static_page(self, ranks=2) -> Page:
         layout = list(self.layout(self.nodes, ranks=ranks))
@@ -231,7 +232,7 @@ class Diagram:
         settings = StoryBuilder.settings("default", themes=page.themes)
         page.paste(*Home.render_css_vars(settings), zone=page.zone.theme)
 
-        n_cols = sum(self.spans[node.name].step for node in self.spine) + len(self.spine)
+        n_cols = sum(self.spans[node.name][0].step for node in self.spine) + len(self.spine)
         style = textwrap.dedent(f"""
         <style>
         * {{
