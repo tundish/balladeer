@@ -242,14 +242,14 @@ class Diagram:
         settings = StoryBuilder.settings("default", themes=page.themes)
         page.paste(*Home.render_css_vars(settings), zone=page.zone.theme)
 
-        n_cols = sum(self.spans[node.name][0].step for node in self.spine) + len(self.spine)
+        n_cols = sum(self.spans[node.name][0].step for node in self.spine) + len(self.spine) - 1
         style = textwrap.dedent(f"""
         <style>
         * {{
         box-sizing: border-box;
         border: 0;
         font: inherit;
-        font-size: 0.8em;
+        font-size: 1em;
         line-height: 1em;
         margin: 0;
         outline: 0;
@@ -259,6 +259,8 @@ class Diagram:
         }}
         body {{
         background-color: silver;
+        margin-bottom: 0.8rem;
+        margin-top: 0.8rem;
         text-align: center;
         }}
         div.diagram {{
@@ -271,6 +273,9 @@ class Diagram:
         div.arc {{
         background-color: var(--ballad-ink-glamour, yellow);
         font-family: cursive;
+        height: 2rem;
+        margin-bottom: 0.8rem;
+        margin-top: 0.8rem;
         padding-bottom: 0.4rem;
         padding-top: 0.4rem;
         }}
@@ -281,10 +286,18 @@ class Diagram:
         }}
         div.node {{
         background-color: var(--ballad-ink-washout, white);
-        border: 1px solid black;
+        border: 0.2rem solid black;
+        border-radius: 0.1rem;
         font-family: sans-serif;
-        padding-bottom: 1.4rem;
-        padding-top: 1.4rem;
+        font-weight: bolder;
+        height: 20vh;
+        margin-left: 0.3rem;
+        margin-right: 0.3rem;
+        min-width: 11rem;
+        padding-left: 0.6rem;
+        padding-top: 0.4rem;
+        text-align: left;
+        text-transform: capitalize;
         }}
         </style>
         """).strip()
