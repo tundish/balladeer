@@ -129,27 +129,33 @@ class Diagram:
 
     def layout(self, nodes: dict, ranks=2, extend=False):
         height = max(self.overlaps(self.spine).values())
+        above = 3 if extend else 0
+        below = height + 1 if extend else 0
         end_nodes = tuple(node for node in nodes.values() if node not in self.spine)
         yield '<div class="diagram">'
         if ranks == 2:
-            yield from self.draw_spine_nodes(self.spine, r=1, extend=extend)
+            yield from self.draw_spine_nodes(self.spine, r=1, above=0, below=below)
             yield from self.draw_end_nodes(end_nodes, r=1 + height)
         elif ranks == 3:
-            yield from self.draw_spine_nodes(self.spine, r=3, extend=extend)
+            yield from self.draw_spine_nodes(self.spine, r=3, above=above, below=below)
             yield from self.draw_end_nodes(end_nodes, r=3, n=-1)
             yield from self.draw_end_nodes(end_nodes, r=3 + height)
         yield "</div>"
 
-    def draw_spine_nodes(self, nodes, r: int, extend: bool):
+    def draw_spine_nodes(self, nodes, r: int, above: int, below: int):
+        print(f"Below: {below}", file=sys.stderr)
         overlaps = self.overlaps(nodes)
         offset = max(overlaps.values()) // 2
         r += offset
 
         c = 1
-        for node in nodes:
+        for n, node in enumerate(nodes):
             s = max(1, len([arc for arc in node.exits if arc.fail]))
             self.spans[node.name].append(slice(c, c + s, s))
-            yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
+            if n in (0, len(nodes) - 1):
+                yield f'<div class="node" style="grid-row: {r - above} / span {r + below}; grid-column: {c} / span {s}">{node.name}</div>'
+            else:
+                yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
             c += s + 1
 
         # Decide unique position of each arc label
@@ -313,7 +319,7 @@ class Diagram:
         border-radius: 0.1rem;
         font-family: sans-serif;
         font-weight: bolder;
-        height: 20vh;
+        min-height: 20vh;
         margin-left: 0.3rem;
         margin-right: 0.3rem;
         min-width: 11rem;
@@ -332,7 +338,7 @@ class Diagram:
 def parser(usage=__doc__):
     rv = argparse.ArgumentParser(usage)
     rv.add_argument("--ranks", type=int, default=2, help="Number of state ranks")
-    rv.add_argument("--extend", action="store_true", default=False, help="Extend terminal states")
+    rv.add_argument("--extend", action="store_true", default=False, help="Extend terminal states [False]")
     return rv
 
 
