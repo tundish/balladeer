@@ -28,6 +28,7 @@ import textwrap
 
 from balladeer.lite.app import Home
 from balladeer.lite.story import StoryBuilder
+from balladeer.lite.types import Fruition
 from balladeer.lite.types import Page
 
 
@@ -71,23 +72,23 @@ class Graph:
         return rv
 
 
-class Fruition(Graph):
+class Conversation(Graph):
     arcs = [
-        Graph.Arc("inception", "head", "propose", "elaboration"),
-        Graph.Arc("elaboration", "head", "abandon", "withdrawn"),
-        Graph.Arc("elaboration", "hand", "decline", "withdrawn"),
-        Graph.Arc("elaboration", "hand", "suggest", "discussion"),
-        Graph.Arc("elaboration", "hand", "promise", "construction"),
-        Graph.Arc("discussion", "head", "counter", "elaboration"),
-        Graph.Arc("discussion", "head", "confirm", "construction"),
-        Graph.Arc("discussion", "head", "abandon", "withdrawn"),
-        Graph.Arc("discussion", "hand", "decline", "withdrawn"),
-        Graph.Arc("construction", "hand", "disavow", "defaulted"),
-        Graph.Arc("construction", "head", "abandon", "cancelled"),
-        Graph.Arc("construction", "hand", "deliver", "transition"),
-        Graph.Arc("transition", "head", "condemn", "construction"),
-        Graph.Arc("transition", "head", "abandon", "cancelled"),
-        Graph.Arc("transition", "head", "declare", "completion"),
+        Graph.Arc(Fruition.inception, "head", "propose", Fruition.elaboration),
+        Graph.Arc(Fruition.elaboration, "head", "abandon", Fruition.withdrawn),
+        Graph.Arc(Fruition.elaboration, "hand", "decline", Fruition.withdrawn),
+        Graph.Arc(Fruition.elaboration, "hand", "suggest", Fruition.discussion),
+        Graph.Arc(Fruition.elaboration, "hand", "promise", Fruition.construction),
+        Graph.Arc(Fruition.discussion, "head", "counter", Fruition.elaboration),
+        Graph.Arc(Fruition.discussion, "head", "confirm", Fruition.construction),
+        Graph.Arc(Fruition.discussion, "head", "abandon", Fruition.withdrawn),
+        Graph.Arc(Fruition.discussion, "hand", "decline", Fruition.withdrawn),
+        Graph.Arc(Fruition.construction, "hand", "disavow", Fruition.defaulted),
+        Graph.Arc(Fruition.construction, "head", "abandon", Fruition.cancelled),
+        Graph.Arc(Fruition.construction, "hand", "deliver", Fruition.transition),
+        Graph.Arc(Fruition.transition, "head", "condemn", Fruition.construction),
+        Graph.Arc(Fruition.transition, "head", "abandon", Fruition.cancelled),
+        Graph.Arc(Fruition.transition, "head", "declare", Fruition.completion),
     ]
 
 
@@ -153,9 +154,9 @@ class Diagram:
             s = max(1, len([arc for arc in node.exits if arc.fail]))
             self.spans[node.name].append(slice(c, c + s, s))
             if n in (0, len(nodes) - 1):
-                yield f'<div class="node" style="grid-row: {r - above} / span {r + below}; grid-column: {c} / span {s}">{node.name}</div>'
+                yield f'<div class="node" style="grid-row: {r - above} / span {r + below}; grid-column: {c} / span {s}">{node.name.name}</div>'
             else:
-                yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name}</div>'
+                yield f'<div class="node" style="grid-row: {r}; grid-column: {c} / span {s}">{node.name.name}</div>'
             c += s + 1
 
         # Decide unique position of each arc label
@@ -243,7 +244,7 @@ class Diagram:
                         )
 
             s = col - c + 1
-            yield f'<div class="node" style="grid-row: {r + 2 * n}; grid-column: {c} / span {s}">{node.name}</div>'
+            yield f'<div class="node" style="grid-row: {r + 2 * n}; grid-column: {c} / span {s}">{node.name.name}</div>'
             self.spans[node.name].append(slice(c, c + s, s))
 
     def static_page(self, ranks=2, extend=False) -> Page:
@@ -343,7 +344,7 @@ def parser(usage=__doc__):
 
 
 def main(args):
-    nodes = Fruition.build_nodes()
+    nodes = Conversation.build_nodes()
     diagram = Diagram(nodes)
     page = diagram.static_page(ranks=args.ranks, extend=args.extend)
     pprint.pprint(diagram.nodes, stream=sys.stderr)
