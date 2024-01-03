@@ -34,7 +34,7 @@ from balladeer.lite.types import Page
 class Graph:
     arcs = []
 
-    @dataclasses.dataclass
+    @dataclasses.dataclass(unsafe_hash=True)
     class Arc:
         exit: str
         actor: str
@@ -172,6 +172,7 @@ class Diagram:
 
                 # Store span of each arc
                 self.grid[row][col] = arc
+                self.spans[arc].append(slice(c, c + len(cols), len(cols)))
                 for col in cols:
                     self.grid[row][col] = self.grid[row].get(col) or True
                 n += 1
@@ -193,18 +194,27 @@ class Diagram:
                     continue
 
                 if (len(arcs) == 1 and row == r - offset) or (len(arcs) == 2 and row == r - offset + 1):
+                    arc = arcs[-1][2]
                     self.grid[row][col] = None
-                    self.grid[row + 1][col] = arcs[-1][2]
+                    self.grid[row + 1][col] = arc
                     continue
 
         # Write each arc
         for row, items in self.grid.items():
             for col, item in items.items():
                 if isinstance(item, Graph.Arc):
-                    yield (
-                        f'<div class="arc" style="grid-row: {row}; grid-column: {col}">'
-                        f'{self.label(item)}</div>'
-                    )
+                    s = self.spans[item][-1]
+                    print(f"S: {s}", file=sys.stderr)
+                    if item.hops > 0:
+                        yield (
+                            f'<div class="arc ltr" style="grid-row: {row}; grid-column: {col} / span {s.step}">'
+                            f'{self.label(item)}</div>'
+                        )
+                    else:
+                        yield (
+                            f'<div class="arc rtl" style="grid-row: {row}; grid-column: {col} / span {s.step}">'
+                            f'{self.label(item)}</div>'
+                        )
 
     def draw_end_nodes(self, nodes, r=1, n=1):
         col = 0
@@ -260,6 +270,7 @@ class Diagram:
         }}
         div.arc {{
         background-color: var(--ballad-ink-glamour, yellow);
+        font-family: cursive;
         padding-bottom: 0.4rem;
         padding-top: 0.4rem;
         }}
@@ -271,6 +282,7 @@ class Diagram:
         div.node {{
         background-color: var(--ballad-ink-washout, white);
         border: 1px solid black;
+        font-family: sans-serif;
         padding-bottom: 1.4rem;
         padding-top: 1.4rem;
         }}
