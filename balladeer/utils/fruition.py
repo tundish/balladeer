@@ -127,20 +127,20 @@ class Diagram:
     def spine(self):
         return [node for n, node in enumerate(self.nodes.values()) if node.exits or n + 1 == len(self.nodes)]
 
-    def layout(self, nodes: dict, ranks=2):
+    def layout(self, nodes: dict, ranks=2, extend=False):
         height = max(self.overlaps(self.spine).values())
         end_nodes = tuple(node for node in nodes.values() if node not in self.spine)
         yield '<div class="diagram">'
         if ranks == 2:
-            yield from self.draw_spine_nodes(self.spine, r=1)
+            yield from self.draw_spine_nodes(self.spine, r=1, extend=extend)
             yield from self.draw_end_nodes(end_nodes, r=1 + height)
         elif ranks == 3:
-            yield from self.draw_spine_nodes(self.spine, r=3)
+            yield from self.draw_spine_nodes(self.spine, r=3, extend=extend)
             yield from self.draw_end_nodes(end_nodes, r=3, n=-1)
             yield from self.draw_end_nodes(end_nodes, r=3 + height)
         yield "</div>"
 
-    def draw_spine_nodes(self, nodes, r=1):
+    def draw_spine_nodes(self, nodes, r: int, extend: bool):
         overlaps = self.overlaps(nodes)
         offset = max(overlaps.values()) // 2
         r += offset
@@ -240,8 +240,8 @@ class Diagram:
             yield f'<div class="node" style="grid-row: {r + 2 * n}; grid-column: {c} / span {s}">{node.name}</div>'
             self.spans[node.name].append(slice(c, c + s, s))
 
-    def static_page(self, ranks=2) -> Page:
-        layout = list(self.layout(self.nodes, ranks=ranks))
+    def static_page(self, ranks=2, extend=False) -> Page:
+        layout = list(self.layout(self.nodes, ranks=ranks, extend=extend))
 
         page = Page()
         settings = StoryBuilder.settings("default", themes=page.themes)
@@ -331,15 +331,15 @@ class Diagram:
 
 def parser(usage=__doc__):
     rv = argparse.ArgumentParser(usage)
-    rv.add_argument("--ranks", type=int, default = 2, help="Number of state ranks")
+    rv.add_argument("--ranks", type=int, default=2, help="Number of state ranks")
+    rv.add_argument("--extend", action="store_true", default=False, help="Extend terminal states")
     return rv
 
 
 def main(args):
     nodes = Fruition.build_nodes()
-    assert len(Fruition.arcs) == 15
     diagram = Diagram(nodes)
-    page = diagram.static_page(ranks=args.ranks)
+    page = diagram.static_page(ranks=args.ranks, extend=args.extend)
     pprint.pprint(diagram.nodes, stream=sys.stderr)
     print(page.html)
     return 0
