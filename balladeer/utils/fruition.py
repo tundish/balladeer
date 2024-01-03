@@ -26,6 +26,8 @@ import statistics
 import sys
 import textwrap
 
+from balladeer.lite.app import Home
+from balladeer.lite.story import StoryBuilder
 from balladeer.lite.types import Page
 
 
@@ -225,7 +227,11 @@ class Diagram:
 
     def static_page(self, ranks=2) -> Page:
         layout = list(self.layout(self.nodes, ranks=ranks))
+
         page = Page()
+        settings = StoryBuilder.settings("default", themes=page.themes)
+        page.paste(*Home.render_css_vars(settings), zone=page.zone.theme)
+
         n_cols = sum(self.spans[node.name].step for node in self.spine) + len(self.spine)
         style = textwrap.dedent(f"""
         <style>
@@ -252,10 +258,12 @@ class Diagram:
         justify-content: space-evenly;
         }}
         div.arc {{
+        background-color: var(--ballad-ink-washout, white);
         padding-bottom: 1.4rem;
         padding-top: 1.4rem;
         }}
         div.node {{
+        background-color: var(--ballad-ink-glamour, yellow);
         border: 1px solid black;
         padding-bottom: 1.4rem;
         padding-top: 1.4rem;
