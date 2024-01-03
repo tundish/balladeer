@@ -259,8 +259,14 @@ class Diagram:
         }}
         div.arc {{
         background-color: var(--ballad-ink-washout, white);
+        border-top: 1px dashed black;
         padding-bottom: 0.4rem;
         padding-top: 0.4rem;
+        }}
+        div.fail {{
+        background-color: var(--ballad-ink-washout, white);
+        border-right: 1px dashed black;
+        border-top: none;
         }}
         div.node {{
         background-color: var(--ballad-ink-glamour, yellow);
