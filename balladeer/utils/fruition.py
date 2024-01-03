@@ -68,7 +68,7 @@ class Graph:
                 arc.hops = sequence.index(arc.into) - sequence.index(arc.exit)
                 arc.fail = not (bool(rv[arc.into].exits) or arc.into == sequence[-1])
 
-        return arcs, rv
+        return rv
 
 
 class Fruition(Graph):
@@ -93,8 +93,7 @@ class Fruition(Graph):
 
 class Diagram:
 
-    def __init__(self, arcs: list, nodes: dict, grid=None):
-        self.arcs = arcs
+    def __init__(self, nodes: dict, grid=None):
         self.nodes = nodes
         self.grid = grid or defaultdict(dict)
         self.spans = {}
@@ -259,8 +258,8 @@ class Diagram:
         }}
         div.arc {{
         background-color: var(--ballad-ink-washout, white);
-        padding-bottom: 1.4rem;
-        padding-top: 1.4rem;
+        padding-bottom: 0.4rem;
+        padding-top: 0.4rem;
         }}
         div.node {{
         background-color: var(--ballad-ink-glamour, yellow);
@@ -282,9 +281,9 @@ def parser(usage=__doc__):
 
 
 def main(args):
-    arcs, nodes = Fruition.build_nodes()
+    nodes = Fruition.build_nodes()
     assert len(Fruition.arcs) == 15
-    diagram = Diagram(arcs, nodes)
+    diagram = Diagram(nodes)
     page = diagram.static_page(ranks=args.ranks)
     pprint.pprint(diagram.nodes, stream=sys.stderr)
     print(page.html)
