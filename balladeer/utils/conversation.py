@@ -144,7 +144,6 @@ class Diagram:
         yield "</div>"
 
     def draw_spine_nodes(self, nodes, r: int, above: int, below: int):
-        print(f"Below: {below}", file=sys.stderr)
         overlaps = self.overlaps(nodes)
         offset = max(overlaps.values()) // 2
         r += offset
@@ -299,6 +298,8 @@ class Diagram:
         border-radius: 1.2rem 0 0 1.2rem;
         }}
         div.arc.fail {{
+        margin-left: 0.3rem;
+        margin-right: 0.3rem;
         }}
         div.arc.fail.lower{{
         border-radius: 0 0 1.2rem 1.2rem;
@@ -308,6 +309,7 @@ class Diagram:
         }}
         div.arc.hand {{
         background-color: var(--ballad-ink-glamour, yellow);
+        font-weight: bolder;
         }}
         div.arc.head {{
         background-color: var(--ballad-ink-hilight, blue);
