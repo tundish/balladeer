@@ -255,21 +255,21 @@ class Diagram:
         align-content: space-around;
         display: grid;
         grid-template-columns: repeat({n_cols}, 1fr);
+        grid-gap: 0.1rem;
         justify-content: space-evenly;
         }}
         div.arc {{
-        background-color: var(--ballad-ink-washout, white);
-        border-top: 1px dashed black;
+        background-color: var(--ballad-ink-glamour, yellow);
         padding-bottom: 0.4rem;
         padding-top: 0.4rem;
         }}
         div.fail {{
-        background-color: var(--ballad-ink-washout, white);
-        border-right: 1px dashed black;
+        background-color: var(--ballad-ink-glamour, yellow);
+        border-right: 0.5px solid black;
         border-top: none;
         }}
         div.node {{
-        background-color: var(--ballad-ink-glamour, yellow);
+        background-color: var(--ballad-ink-washout, white);
         border: 1px solid black;
         padding-bottom: 1.4rem;
         padding-top: 1.4rem;
