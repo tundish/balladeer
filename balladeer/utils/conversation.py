@@ -268,10 +268,31 @@ class Diagram:
         text-decoration: none;
         vertical-align: baseline;
         }}
+        @page {{
+        size: 29.7cm 21cm;
+        }}
+        @media print {{
+        body {{
+        background-color: white;
+        margin: 0;
+        box-shadow: 0;
+        }}
+        div.arc {{
+        font-size: 0.5rem;
+        margin-left: 0.2rem;
+        margin-right: 0.2rem;
+        z-index: -1;
+        }}
+        div.arc.ltr::after {{
+        content: " >";
+        }}
+        div.arc.rtl::before {{
+        content: "< ";
+        }}
+        }}
         body {{
         background-color: silver;
-        margin-bottom: 0.8rem;
-        margin-top: 0.8rem;
+        margin-top: 6rem;
         text-align: center;
         }}
         div.diagram {{
@@ -285,11 +306,10 @@ class Diagram:
         background-color: var(--ballad-ink-glamour, yellow);
         font-family: sans-serif;
         font-weight: lighter;
-        height: 2rem;
-        margin-bottom: 0.8rem;
-        margin-top: 0.8rem;
-        padding-bottom: 0.4rem;
-        padding-top: 0.4rem;
+        font-size: 0.8rem;
+        max-height: 1.7rem;
+        margin-bottom: 0.2rem;
+        margin-top: 0.2rem;
         }}
         div.arc.ltr{{
         border-radius: 0 1.2rem 1.2rem 0;
@@ -300,6 +320,8 @@ class Diagram:
         div.arc.fail {{
         margin-left: 0.3rem;
         margin-right: 0.3rem;
+        padding-bottom: 0.4rem;
+        padding-top: 0.4rem;
         }}
         div.arc.fail.lower{{
         border-radius: 0 0 1.2rem 1.2rem;
@@ -309,12 +331,10 @@ class Diagram:
         }}
         div.arc.hand {{
         background-color: var(--ballad-ink-glamour, yellow);
-        font-weight: bolder;
         }}
         div.arc.head {{
         background-color: var(--ballad-ink-hilight, blue);
         color: var(--ballad-ink-washout, white);
-        font-weight: bolder;
         }}
         div.node {{
         background-color: var(--ballad-ink-washout, white);
@@ -325,7 +345,7 @@ class Diagram:
         min-height: 20vh;
         margin-left: 0.3rem;
         margin-right: 0.3rem;
-        min-width: 11rem;
+        min-width: 10rem;
         padding-left: 0.6rem;
         padding-top: 0.4rem;
         text-align: left;
