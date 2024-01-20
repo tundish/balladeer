@@ -17,6 +17,21 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+"""
+
+A visualization of how the 'Basic Conversation for Action'
+(Terry Winograd and Fernando Flores) can be implemented using Fruition states.
+
+You can drive such interactions in Balladeer by making the transitions from SpeechMark directives.
+
+ie: To 'abandon':
+
+    <ACTOR.abandoning@CONVERSATION> You know what, let's just forget this ever happened.
+
+The diagram is generated as HTML on stdout. It seems to print to A4 landscape at a zoom of about 69%.
+
+"""
+
 import argparse
 from collections import defaultdict
 import dataclasses
@@ -360,8 +375,14 @@ class Diagram:
 
 def parser(usage=__doc__):
     rv = argparse.ArgumentParser(usage)
-    rv.add_argument("--ranks", type=int, default=2, help="Number of state ranks")
-    rv.add_argument("--extend", action="store_true", default=False, help="Extend terminal states [False]")
+    rv.add_argument(
+        "--ranks", type=int, default=2,
+        help="Number of state ranks. Set to 3 for a big wall display [2]"
+    )
+    rv.add_argument(
+        "--extend", action="store_true", default=False,
+        help="Extend terminal states [False]"
+    )
     return rv
 
 
