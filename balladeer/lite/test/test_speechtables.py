@@ -31,9 +31,9 @@ from balladeer import StoryBuilder
 from balladeer import WorldBuilder
 
 
-class ConversationTests(unittest.TestCase):
+class InteractionTests(unittest.TestCase):
 
-    class Conversation(SpeechTables, Drama):
+    class Interaction(SpeechTables, Drama):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
             self.state = 0
@@ -61,19 +61,19 @@ class ConversationTests(unittest.TestCase):
     [BETH]
     type = "CatOwner"
 
-    [CONVERSATION]
-    type = "Conversation"
+    [INTERACTION]
+    type = "Interaction"
 
     [[_]]
-    if.CONVERSATION.state = 0
-    if.CONVERSATION.tree = false
+    if.INTERACTION.state = 0
+    if.INTERACTION.tree = false
     s='''
     <ALAN> What shall we do?
     '''
 
     [[_]]
-    if.CONVERSATION.state = 1
-    if.CONVERSATION.tree = false
+    if.INTERACTION.state = 1
+    if.INTERACTION.tree = false
     s='''
     <ALAN> Let's practise our conversation skills.
     <ALAN.branching> Maybe now's a good time to ask {BETH.name} a question.
@@ -103,7 +103,7 @@ class ConversationTests(unittest.TestCase):
 
     [_.2.2]
     s='''
-    <BETH.returning@CONVERSATION> Oh my goodness, Doodles. Always up to mischief!
+    <BETH.returning@INTERACTION> Oh my goodness, Doodles. Always up to mischief!
     '''
 
     [_.3]
@@ -112,10 +112,10 @@ class ConversationTests(unittest.TestCase):
     '''
 
     [[_]]
-    if.CONVERSATION.state = 3
-    if.CONVERSATION.tree = false
+    if.INTERACTION.state = 3
+    if.INTERACTION.tree = false
     s='''
-    <ALAN> OK. Conversation over.
+    <ALAN> OK. Interaction over.
     '''
     """)
 
@@ -125,8 +125,8 @@ class ConversationTests(unittest.TestCase):
         assets = Grouping.typewise([Loader.Scene(self.scene_toml_text, scene_toml, None, None, None)])
         world = self.World()
         self.story = StoryBuilder(assets=assets, world=world)
-        self.story.drama = [self.Conversation(world=world)]
-        self.assertIsInstance(self.story.context, self.Conversation)
+        self.story.drama = [self.Interaction(world=world)]
+        self.assertIsInstance(self.story.context, self.Interaction)
 
     def test_no_command(self):
         n_turns = 4
@@ -168,7 +168,7 @@ class ConversationTests(unittest.TestCase):
                         self.assertIsNone(self.story.context.tree)
 
                         self.assertEqual(1, len(turn.blocks), turn.blocks)
-                        self.assertIn("Conversation over", turn.blocks[0][1])
+                        self.assertIn("Interaction over", turn.blocks[0][1])
 
     def test_single_branch(self):
         n_turns = 5
@@ -221,7 +221,7 @@ class ConversationTests(unittest.TestCase):
                         self.assertIsNone(self.story.context.tree)
 
                         self.assertEqual(1, len(turn.blocks), turn.blocks)
-                        self.assertIn("Conversation over", turn.blocks[0][1])
+                        self.assertIn("Interaction over", turn.blocks[0][1])
 
     def test_double_branch_with_returning(self):
         n_turns = 7
