@@ -162,6 +162,7 @@ class Session(HTTPEndpoint):
     ) -> Generator[str]:
         for n, (index, html5) in enumerate(turn.blocks):
             yield '<div class="ballad cue">'
+            # TODO: Add sanitizer method
             yield html5
             try:
                 notes = turn.notes[(turn.scene.path, index)]
