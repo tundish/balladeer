@@ -22,6 +22,7 @@ from balladeer.lite.compass import MapBuilder
 from balladeer.lite.drama import Drama
 from balladeer.lite.entity import Entity
 from balladeer.lite.loader import Loader
+from balladeer.lite.presenter import Presenter
 from balladeer.lite.speech import Dialogue
 from balladeer.lite.speech import Epilogue
 from balladeer.lite.speech import Prologue

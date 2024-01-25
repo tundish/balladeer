@@ -44,6 +44,7 @@ import balladeer
 from balladeer.lite.entity import Entity
 from balladeer.lite.loader import Loader
 from balladeer.lite.compass import MapBuilder
+from balladeer.lite.presenter import Presenter
 from balladeer.lite.story import StoryBuilder
 from balladeer.lite.types import Grouping
 from balladeer.lite.types import Page
@@ -160,10 +161,11 @@ class Session(HTTPEndpoint):
     def render_cues(
         self, request, story: StoryBuilder = None, turn: Turn = None
     ) -> Generator[str]:
+
+        presenter = Presenter()
         for n, (index, html5) in enumerate(turn.blocks):
             yield '<div class="ballad cue">'
-            # TODO: Add sanitizer method
-            yield html5
+            yield presenter.sanitize(html5)
             try:
                 notes = turn.notes[(turn.scene.path, index)]
                 cue = [m for m in reversed(notes.maps) if m.get("type") == "cue"][n]
