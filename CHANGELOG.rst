@@ -10,6 +10,7 @@ Change Log
 ========
 
 * Added `goal` to Detail state.
+* Added a utility to generate Conversation diagram.
 * TODO: Insert 'target="_blank" rel="noopener noreferrer"' into hyperlinks.
 
 0.44.0

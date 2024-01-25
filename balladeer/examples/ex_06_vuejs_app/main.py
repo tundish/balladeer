@@ -30,6 +30,7 @@ from balladeer import Speech
 from balladeer import StoryBuilder
 from balladeer import Page
 from balladeer import State
+from balladeer import Turn
 from balladeer import WorldBuilder
 
 
@@ -103,7 +104,7 @@ class Story(StoryBuilder):
 
 class Song(Session):
     def compose(
-        self, request, page: Page, story: StoryBuilder = None, turn: StoryBuilder.Turn = None
+        self, request, page: Page, story: StoryBuilder = None, turn: Turn = None
     ) -> Page:
         page.paste(
             '<div id="app"><diorama v-bind:ensemble="ensemble"></diorama></div>',
