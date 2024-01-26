@@ -35,7 +35,7 @@ from balladeer import quick_start
 
 
 __doc__ = """
-python3 -m balladeer.examples.ex_06_vuejs_app.main
+python3 -m balladeer.examples.ex_08_vuejs_extra.main
 
 """
 
