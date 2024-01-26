@@ -162,10 +162,9 @@ class Session(HTTPEndpoint):
         self, request, story: StoryBuilder = None, turn: Turn = None
     ) -> Generator[str]:
 
-        presenter = Presenter()
         for n, (index, html5) in enumerate(turn.blocks):
             yield '<div class="ballad cue">'
-            yield presenter.sanitize(html5)
+            yield request.app.state.presenter.sanitize(html5)
             try:
                 notes = turn.notes[(turn.scene.path, index)]
                 cue = [m for m in reversed(notes.maps) if m.get("type") == "cue"][n]
@@ -353,11 +352,14 @@ async def app_factory(
     if static:
         routes.append(Mount("/static", app=StaticFiles(directory=static), name="static"))
 
+    presenter = next(reversed(Presenter.__subclasses__()), Presenter)
+
     app = Starlette(routes=routes)
     app.state.static = static
     app.state.story_builder = story_builder
     app.state.config = config
     app.state.sessions = {}
+    app.state.presenter = presenter()
 
     return app
 
