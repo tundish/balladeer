@@ -77,8 +77,8 @@ class StoryBuilder:
         rv = self.__class__(*self.speech, config=config, assets=self.assets, world=w)
         return rv
 
-    def build(self):
-        drama_classes = Drama.__subclasses__()
+    def build(self, *args: tuple[type]):
+        drama_classes = args or Drama.__subclasses__()
         if self.speech or not drama_classes:
             yield Drama(*self.speech, world=self.world, config=self.config)
         else:
