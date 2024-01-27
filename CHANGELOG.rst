@@ -13,6 +13,7 @@ Change Log
 * Added a utility to generate Conversation diagram.
 * Add a Presenter class for sanitization of HTML output.
 * Insert 'target="_blank" rel="noopener noreferrer"' into hyperlinks.
+* WorldBuilder default behaviour is to create Entities from asset specs.
 
 0.44.0
 ======

@@ -14,6 +14,7 @@ except importlib.metadata.PackageNotFoundError:
 
 
 from balladeer.lite.app import Session
+from balladeer.lite.app import discover_assets
 from balladeer.lite.app import quick_start
 from balladeer.lite.compass import Compass
 from balladeer.lite.compass import Traffic

@@ -364,7 +364,7 @@ async def app_factory(
     return app
 
 
-def discover_assets(module: [str | ModuleType], resource: str):
+def discover_assets(module: [str | ModuleType], resource: str = "") -> Grouping:
     if isinstance(module, str):
         module = pathlib.Path(module)
         module = module.parent if module.is_file() else module
