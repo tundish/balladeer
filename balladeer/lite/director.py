@@ -27,6 +27,7 @@ import itertools
 import pathlib
 import re
 import string
+import sys
 import urllib.parse
 
 
@@ -312,11 +313,11 @@ class Director:
     def specifications(self, toml: dict):
         return {k: v for k, v in toml.items() if isinstance(v, dict) and k != self.shot_key}
 
-    def selection(self, scripts, ensemble: list[Entity] = [], roles=1):
+    def selection(self, scripts, ensemble: list[Entity] = []):
         for scene in scripts:
             specs = self.specifications(scene.tables)
             roles = dict(self.roles(specs, ensemble))
-            if len(roles) == len(specs):
+            if len(specs) and len(roles) == len(specs):
                 return scene, specs, roles
         else:
             return Loader.Scene("", {}), {}, {}

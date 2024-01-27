@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.46.0rc
+========
+
+* Fixed a bug casting invalid scene files.
+
 0.45.0
 ======
 
