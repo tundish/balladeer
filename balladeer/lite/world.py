@@ -20,9 +20,11 @@
 from collections import defaultdict
 from collections.abc import Generator
 import enum
+import warnings
 
 from balladeer.lite.compass import MapBuilder
 from balladeer.lite.entity import Entity
+from balladeer.lite.loader import Loader
 from balladeer.lite.types import Grouping
 from balladeer.lite.types import State
 
@@ -43,7 +45,10 @@ class WorldBuilder:
        :dedent: 8
 
     """
-    def __init__(self, map: MapBuilder=None, config: dict=None):
+
+    specs = set()
+
+    def __init__(self, map: MapBuilder=None, config: dict  = None, assets: Grouping = None):
         self.map = map
         self.config = config
 
@@ -51,13 +56,33 @@ class WorldBuilder:
         self.typewise = Grouping()
 
         try:
-            self.make()
-        except Exception:
-            pass
+            self.make(assets)
+        except Exception as e:
+            warnings.warn(str(e))
 
-    def make(self):
+    def discover_spec_params(self, assets):
+        "Search all assets for role specifications"
+        for item in assets.all:
+            if isinstance(item, Loader.Scene):
+                for role, table in item.tables.items():
+                    if isinstance(table, dict):
+                        yield frozenset(table.items())
+
+    def build_to_spec(self, specs):
+        "Generate standin entities according to spec"
+        for params in specs:
+            entity = Entity(**dict(params))
+            entity.types.add("Spec")
+            yield entity
+
+    def make(self, assets: Grouping = None):
+        assets = assets or Grouping(list)
+        self.assets = assets
+        if not self.specs:
+            self.specs.update(set(self.discover_spec_params(self.assets)))
         self.entities = list(self.build())
         self.typewise = Grouping.typewise(self.entities)
+
         return self
 
     @property
@@ -81,4 +106,5 @@ class WorldBuilder:
         Override this method to generate Entities.
 
         """
-        return ()
+        yield from self.build_to_spec(self.specs)
+
