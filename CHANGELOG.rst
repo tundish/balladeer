@@ -6,8 +6,8 @@
 Change Log
 ::::::::::
 
-0.45.0rc
-========
+0.45.0
+======
 
 * Added `goal` to Detail state.
 * Added a utility to generate Conversation diagram.
