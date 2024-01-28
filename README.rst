@@ -17,18 +17,18 @@ Virtual Environment
 
 #. First make a fresh Python virtual environment::
 
-    python3 -m venv ~/balladeer-app
+    python3 -m venv ~/ballad
 
 Packages
 --------
 
 #. Update the package manager within it::
 
-    ~/balladeer-app/bin/python -m pip install -U pip wheel
+    ~/ballad/bin/python -m pip install -U pip wheel
 
 #. Install (or update) Balladeer::
 
-    ~/balladeer-app/bin/python -m pip install -U balladeer
+    ~/ballad/bin/python -m pip install -U balladeer
 
 Examples
 ========
@@ -42,7 +42,7 @@ Examples
 
 #. Run the example like this::
 
-    ~/balladeer-app/bin/python -m main
+    ~/ballad/bin/python -m main
 
     Hello, World!
 
