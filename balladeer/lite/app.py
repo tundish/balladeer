@@ -55,7 +55,8 @@ from balladeer.lite.world import WorldBuilder
 
 class About(HTTPEndpoint):
     async def get(self, request):
-        return PlainTextResponse(f"Balladeer {balladeer.__version__}\n")
+        text = getattr(self, "metadata", {}).get("about", f"Balladeer {balladeer.__version__}\n")
+        return PlainTextResponse(text)
 
 
 class Home(HTTPEndpoint):
@@ -332,10 +333,10 @@ async def app_factory(
         session=next(reversed(Session.__subclasses__()), Session),
         assembly=next(reversed(Assembly.__subclasses__()), Assembly),
         command=next(reversed(Command.__subclasses__()), Command),
-        **kwargs,
     )
     for endpt in endpoints.values():
         endpt.assets = assets.copy()
+        endpt.metadata = kwargs.copy()
 
     routes = routes or [
         Route("/", endpoints["home"], name="home"),
@@ -424,6 +425,7 @@ def quick_start(
     story_builder: StoryBuilder | type = None,
     host="localhost", port=8080,
     config=None,
+    **kwargs
 ):
     assets = discover_assets(module, resource)
     paths = collect_static_paths(assets)
@@ -434,7 +436,7 @@ def quick_start(
 
     app = loop.run_until_complete(
         app_factory(
-            assets=assets, story_builder=story_builder, static=paths and min(paths), loop=loop
+            assets=assets, story_builder=story_builder, static=paths and min(paths), loop=loop, **kwargs
         )
     )
     settings = hypercorn.Config.from_mapping({"bind": f"{host}:{port}", "errorlog": "-"})

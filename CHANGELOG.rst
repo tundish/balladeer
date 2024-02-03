@@ -13,6 +13,7 @@ Change Log
 * `discover_assets` sorts by path.
 * Ensure `types` is a set when building to spec.
 * Fix bug to ensure all spec `types` required for a role.
+* Populate endpoint metadata from quick_start keyword arguments.
 
 0.45.0
 ======
