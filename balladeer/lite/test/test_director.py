@@ -541,6 +541,19 @@ class RoleTests(unittest.TestCase):
             Entity(name="Rusty", type="Weapon"),
         ]
 
+    def test_all_types_required(self):
+        text = """
+        [CHIMERA]
+        types = ["Canine", "Feline"]
+
+        """
+        scene = tomllib.loads(text)
+        self.assertIsInstance(scene, dict)
+
+        director = Director()
+        rv = dict(director.roles(scene, self.ensemble))
+        self.assertFalse(rv)
+
     def test_rank_constraints(self):
         roles = {
             "A": {},

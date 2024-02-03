@@ -291,7 +291,7 @@ class Director:
                     if role in jobs
                     and (
                         not types
-                        or entity.types.intersection(types)
+                        or entity.types.issuperset(types)
                         or entity.__class__.__name__ in types
                     )
                     and all(
