@@ -30,7 +30,7 @@ Class
 You can assign CSS classes to your dialogue using the `class` parameter like so:
 
 .. literalinclude:: ../lite/test/test_director.py
-    :lines: 754
+    :lines: 767
     :dedent: 8
 
 That will include your class in the HTML containing the speech::
@@ -74,7 +74,7 @@ You can modify the default, or create themes of your own simply by adding them t
 Balladeer switches the theme for you when you want to depart from the default:
 
 .. literalinclude:: ../lite/test/test_director.py
-    :lines: 774
+    :lines: 787
     :dedent: 8
 
 .. _CSS variables: https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties

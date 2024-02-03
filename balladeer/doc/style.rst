@@ -37,5 +37,5 @@ You need only set a substring of the style file name in order for it to be linke
 Of course, you can apply a theme at the same time too. 
 
 .. literalinclude:: ../examples/ex_12_styling_themes/main.py
-    :lines: 58-66
+    :lines: 60-66
 
