@@ -21,6 +21,7 @@ import asyncio
 from collections.abc import Generator
 import copy
 import json
+import operator
 import pathlib
 import sys
 import textwrap
@@ -370,7 +371,12 @@ def discover_assets(module: [str | ModuleType], resource: str = "") -> Grouping:
         module = module.parent if module.is_file() else module
 
     try:
-        return Grouping.typewise(Loader.discover(module, resource))
+        return Grouping.typewise(
+            sorted(
+                Loader.discover(module, resource),
+                key=operator.attrgetter("path")
+            )
+        )
     except ValueError:
         return Grouping(list)
 

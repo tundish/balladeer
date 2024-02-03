@@ -10,6 +10,7 @@ Change Log
 ========
 
 * Fixed a bug casting invalid scene files.
+* `discover_asssets` sorts by path.
 
 0.45.0
 ======
