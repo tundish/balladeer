@@ -58,6 +58,9 @@ class SpeechTables:
 
     def get_option_mapping(self, block: str):
         list_block = self.ol_matcher.search(block)
+        if list_block is None:
+            return {}
+
         list_items = list(self.li_matcher.findall(list_block.group()))
         para_items = list(self.pp_matcher.findall(list_block.group()))
         return dict(
