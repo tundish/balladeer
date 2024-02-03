@@ -66,7 +66,8 @@ class WorldBuilder:
             if isinstance(item, Loader.Scene):
                 for role, table in item.tables.items():
                     if isinstance(table, dict):
-                        yield frozenset(table.items())
+                        params = {k: tuple(v) if isinstance(v, list) else v for k, v in table.items()}
+                        yield frozenset(params.items())
 
     def build_to_spec(self, specs):
         "Generate standin entities according to spec"
