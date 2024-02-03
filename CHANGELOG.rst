@@ -6,8 +6,8 @@
 Change Log
 ::::::::::
 
-0.46.0rc
-========
+0.46.0
+======
 
 * Fixed a bug casting invalid scene files.
 * `discover_assets` sorts by path.
