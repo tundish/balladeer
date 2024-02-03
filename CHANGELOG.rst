@@ -14,6 +14,7 @@ Change Log
 * Ensure `types` is a set when building to spec.
 * Fix bug to ensure all spec `types` required for a role.
 * Populate endpoint metadata from quick_start keyword arguments.
+* App session renders options list for command.
 
 0.45.0
 ======

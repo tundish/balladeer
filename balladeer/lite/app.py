@@ -244,11 +244,19 @@ class Session(HTTPEndpoint):
             autofocus="autofocus"
             type="text"
             title="{story.context.tooltip}"
+            list="ballad-command-form-input-list"
             />
             <button type="submit">Enter</button>
             </fieldset>
             </form>
         """)
+
+    def render_options_for_command(self, request, story):
+        options = sorted(story.context.options(story.context.ensemble).keys())
+        yield ""
+        yield '<datalist id="ballad-command-form-input-list">'
+        yield from (f'<option value="{i}"></option>' for i in options)
+        yield "</datalist>"
 
     def compose(
         self, request, page: Page, story: StoryBuilder = None, turn: Turn = None
@@ -281,6 +289,7 @@ class Session(HTTPEndpoint):
             page.paste(self.render_refresh(request.url, notes[-1]), zone=page.zone.meta)
         else:
             page.paste(self.render_inputs_to_command(request, story), zone=page.zone.inputs)
+            page.paste("\n".join(self.render_options_for_command(request, story)), zone=page.zone.asides)
 
         return page
 
