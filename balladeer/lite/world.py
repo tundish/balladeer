@@ -72,6 +72,7 @@ class WorldBuilder:
         "Generate standin entities according to spec"
         for params in specs:
             entity = Entity(**dict(params))
+            entity.types = set(entity.types)
             entity.types.add("Spec")
             yield entity
 

@@ -11,6 +11,7 @@ Change Log
 
 * Fixed a bug casting invalid scene files.
 * `discover_assets` sorts by path.
+* Ensure `types` is a set when building to spec.
 
 0.45.0
 ======

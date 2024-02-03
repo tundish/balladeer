@@ -46,3 +46,17 @@ class WorldBuilderTests(unittest.TestCase):
         self.assertEqual(3, len(world.entities))
         self.assertEqual(len(world.entities), len(world.typewise.each))
         self.assertEqual(set(world.entities), set(world.typewise.each))
+
+    def test_build_to_spec(self):
+        world = WorldBuilder()
+        for spec  in (
+            dict(name="a", type="b"),
+            dict(names=["a"], type="b"),
+            dict(name="a", types={"b"}),
+            dict(names=["a"], types={"b"}),
+            dict(name="a", types=["b"]),
+            dict(names=["a"], types=["b"]),
+        ):
+            with self.subTest(spec=spec):
+                entity = next(world.build_to_spec([spec]))
+                self.assertEqual(entity, Entity(name="a", types={"Spec", "b"}))
