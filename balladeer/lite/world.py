@@ -19,6 +19,7 @@
 
 from collections import defaultdict
 from collections.abc import Generator
+import dataclasses
 import enum
 import warnings
 
@@ -72,7 +73,11 @@ class WorldBuilder:
     def build_to_spec(self, specs):
         "Generate standin entities according to spec"
         for params in specs:
-            entity = Entity(**dict(params))
+            try:
+                entity = Entity(**dict(params))
+            except TypeError:
+                # Unexpected keyword argument
+                continue
             entity.types = set(entity.types)
             entity.types.add("Spec")
             yield entity

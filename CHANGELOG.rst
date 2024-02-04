@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.47.0rc
+========
+
+* Better error handling when building to spec.
+
 0.46.0
 ======
 
