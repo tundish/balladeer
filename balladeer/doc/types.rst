@@ -4,13 +4,11 @@
 Basics
 ======
 
-Python is a very flexible language. It supports object
-oriented design, but at the same time its standard data
-types are extremely powerful and often sufficient just by
-themselves.
+Python is a language with very powerful data types.
+Once you `know them`_ you can achieve a great deal in only a few lines of code.
 
-Balladeer tries to minimize the number of classes you
-need to learn. It's about a dozen in total.
+Balladeer is a domain-specific framework which will help you structure your code in
+order to best tell your story. It's a simple object-oriented library with about a dozen classes in total.
 
 Here are two which are fundamental to the Balladeer
 philosophy. We will see them in use soon. So let's get some
@@ -62,3 +60,4 @@ is for.
    :members:
    :member-order: bysource
 
+.. _know them: https://docs.python.org/3/library/stdtypes.html
