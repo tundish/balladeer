@@ -45,7 +45,7 @@ You can control when to terminate the interaction by adding a directive to any o
 
     * A simple ``returning`` directive will end the interaction completely.
       The ``tree`` attribute of your Drama class will evaluate **False** once more.
-    * A ``returning`` directive which targets the Drama object eg: ``returning@CONVERSATION`` will
+    * A ``returning`` directive which targets the Drama object eg: ``returning@INTERACTION`` will
       hop back up to the previous branching node and stay in the dialogue tree.
 
 .. literalinclude:: ../lite/test/test_speechtables.py
