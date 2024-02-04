@@ -70,11 +70,14 @@ class WorldBuilder:
                         params = {k: tuple(v) if isinstance(v, list) else v for k, v in table.items()}
                         yield frozenset(params.items())
 
-    def build_to_spec(self, specs):
+    def build_to_spec(self, specs, ignore=("state", "states")):
         "Generate standin entities according to spec"
         for params in specs:
+            kwargs = dict(params)
+            for key in ignore:
+                kwargs.pop(key, None)
             try:
-                entity = Entity(**dict(params))
+                entity = Entity(**kwargs)
             except TypeError:
                 # Unexpected keyword argument
                 continue
