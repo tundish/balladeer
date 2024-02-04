@@ -50,7 +50,12 @@ your CSS settings under convenient labels.
 .. literalinclude:: ../lite/types.py
     :lines: 31-44
 
-This default theme is rendered into each HTML page like so:
+You can modify the default, or create themes of your own simply by adding them to the `themes` dictionary.
+
+.. literalinclude:: ../examples/ex_12_styling_themes/main.py
+    :lines: 16-26
+
+A theme is rendered into each HTML page like so:
 
 .. code-block:: html
 
@@ -65,11 +70,6 @@ This default theme is rendered into each HTML page like so:
     --ballad-ink-glamour: hsl(50.00, 0%, 100%);
     }
     </style>
-
-You can modify the default, or create themes of your own simply by adding them to the `themes` dictionary.
-
-.. literalinclude:: ../examples/ex_12_styling_themes/main.py
-    :lines: 16-26
 
 Balladeer switches the theme for you when you want to depart from the default:
 
