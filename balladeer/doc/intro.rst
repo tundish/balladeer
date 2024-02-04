@@ -6,7 +6,7 @@ Introduction
 
 Thanks for choosing Balladeer for your next writing project!
 
-You will be steering the vessel, of course. All I did was pick the crew.
+Your job is to steer the vessel. All I did was pick the crew.
 And here they are:
 
 Python_
@@ -20,18 +20,13 @@ HTML5_
 CSS3_
     Powerful styling rules for layouts, themes and animation.
 
+Each of them is a force of nature.
 The challenge I had was to stop this bunch from fighting.
 
-It took me a while to find the right role for each of these special talents.
-Then I had to put them all together without there being any friction.
-In the same way a waveguide finds the match between an amplifier and an antenna.
-Or how a gearbox couples an engine to a loaded axle.
+It took half a gallon of rum and three ounces of butter.
+They are all working together now; hardly any friction at all.
 
-So there was me, five salty seadogs, half a gallon of rum, and three ounces of butter.
-I gave them their duties, set them to work and now they're getting along just fine.
-
-If you're reading this any time after June 2023, we'll have completed our trials
-and stand ready for action.
+We completed our sea trials in June 2023. And now we are ready for action.
 
     Balladeer is a great option for every kind of mission.
 
