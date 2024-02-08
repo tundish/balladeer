@@ -10,7 +10,7 @@ Change Log
 ======
 
 * Better error handling when building to spec.
-* Page creates outer div for zones (by default; basket, banner, and inputs).
+* Page creates outer div for zones (by default; basket, inputs, svg, and bucket).
 
 0.46.0
 ======

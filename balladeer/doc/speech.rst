@@ -12,7 +12,7 @@ Writing
 ~~~~~~~
 
 In the previous sections we saw how a few simple principles provide the potential for an extremely
-detailed interactive model.
+detailed object model.
 
 Imagine the possibilities. We could generate thousands of entities to populate our world.
 Perhaps we might automate the process in clever ways. Using Python, maybe ingest some real-world data
@@ -34,7 +34,7 @@ Here are some suggestions for a good Entity:
 * A newspaper which prints articles from a parallel reality.
 * A kettle that whistles tunes.
 * A statue which comes alive and murders people.
-* A bulletproof car with the calm authority of an English Butler.
+* A bulletproof car with the calm authority of an English butler.
 
 In other words; *characters*. And the primary medium for your characters is Speech.
 
