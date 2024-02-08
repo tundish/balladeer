@@ -106,19 +106,28 @@ class Page:
         self.structure[zone].extend(filter(None, args))
         return self
 
-    def contents(self, zone):
+    def contents(self, zone: Zone):
         values = self.structure.get(zone, [])
+        if any(values) and zone.name in self.divs:
+            yield ""
+            yield f'<div id="ballad-zone-{zone.name}" class="ballad zone">'
+
         for seq in values:
-            for gen in seq:
-                if isinstance(gen, str):
-                    yield gen
-                else:
-                    yield from gen
+            if not seq:
+                continue
+
+            if isinstance(seq, str):
+                yield seq
+            else:
+                yield from seq
+
+        if any(values) and zone.name in self.divs:
+            yield f"</div>"
 
     @property
     def html(self):
         return "\n".join(
-            "\n".join(self.contents(zone)) for zone in self.structure
+            filter(None, ("\n".join(self.contents(zone)) for zone in self.structure))
         )
 
 
