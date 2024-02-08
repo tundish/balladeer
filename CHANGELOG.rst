@@ -10,6 +10,7 @@ Change Log
 ========
 
 * Better error handling when building to spec.
+* TODO: div wraps for certain zones; basket, banner, app, asides, inputs, svg, bucket, legals
 
 0.46.0
 ======

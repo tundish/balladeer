@@ -85,8 +85,9 @@ class Page:
         legals = "End content and links"
         end = "Closing tags"
 
-    def __init__(self, zone=Zone):
+    def __init__(self, zone=Zone, divs=("basket", "inputs", "bucket")):
         self.zone = zone
+        self.divs = divs
         self.cursor = next(iter(zone), None)
         self.structure = self.setup(zone)
 
@@ -96,16 +97,6 @@ class Page:
         rv[zone.html].append("<html>")
         rv[zone.head].append("<head>")
         rv[zone.body].extend(["</head>", "<body>"])
-        # Sort links by type, eg: css, js, font, etc
-        # <link
-        #   rel="preload"
-        #   href="fonts/zantroke-webfont.woff2"
-        #   as="font"
-        #   type="font/woff2"
-        #   crossorigin />
-
-        # NB: Prefetch gets resources for the next page.
-        # Director needs lookahead?
         rv[zone.end].extend(["</body>", "</html>"])
         self.cursor = zone.body
         return rv
@@ -115,17 +106,21 @@ class Page:
         self.structure[zone].extend(filter(None, args))
         return self
 
+    def contents(self, zone):
+        values = self.structure.get(zone, [])
+        for seq in values:
+            for gen in seq:
+                if isinstance(gen, str):
+                    yield gen
+                else:
+                    yield from gen
+
     @property
     def html(self):
-        try:
-            return "\n".join(
-                gen if isinstance(gen, str) else "\n".join(gen)
-                for seq in self.structure.values()
-                for gen in seq
-            )
-        except TypeError:
-            warnings.warn("Check paste calls for non-keyword zones")
-            raise
+        return "\n".join(
+            "\n".join(self.contents(zone)) for zone in self.structure
+        )
+
 
 class State:
     """
