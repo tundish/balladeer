@@ -6,8 +6,8 @@
 Change Log
 ::::::::::
 
-0.47.0rc
-========
+0.47.0
+======
 
 * Better error handling when building to spec.
 * Page creates outer div for zones (by default; basket, banner, and inputs).

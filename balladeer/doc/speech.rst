@@ -8,17 +8,18 @@ The role of most of our literature is, it seems, to destroy the world.
 
 -- Jean Paul Gustave Ricoeur
 
-Modelling
-~~~~~~~~~
+Writing
+~~~~~~~
 
 In the previous sections we saw how a few simple principles provide the potential for an extremely
-detailed world model.
+detailed interactive model.
 
-Python is such a powerful language. We could generate thousands of entities with which to populate
-our story. Perhaps we might automate the process in clever ways. Maybe ingest some real-world data
+Imagine the possibilities. We could generate thousands of entities to populate our world.
+Perhaps we might automate the process in clever ways. Using Python, maybe ingest some real-world data
 sets and synthesize an analogue of our home town or city.
 
-Would that be a good approach? I shouldn't think so. It doesn't really help tell your story.
+Would that be a good approach? It's tempting, but I tend to think not.
+None of that really helps you tell your story.
 
 If you forget to create an Entity for the knife which kills Caesar, what does it matter?
 During the scene of the murder, Brutus always comes up with one anyway.

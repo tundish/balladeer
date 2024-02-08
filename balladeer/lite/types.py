@@ -85,7 +85,7 @@ class Page:
         legals = "End content and links"
         end = "Closing tags"
 
-    def __init__(self, zone=Zone, divs=("basket", "inputs", "bucket")):
+    def __init__(self, zone=Zone, divs=("basket", "inputs", "svg", "bucket")):
         self.zone = zone
         self.divs = divs
         self.cursor = next(iter(zone), None)
