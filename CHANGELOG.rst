@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.48.0rc
+========
+
+* To make for better grouping, Fruition no longer inherits from IntEnum.
+
 0.47.0
 ======
 

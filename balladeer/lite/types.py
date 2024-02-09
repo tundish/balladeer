@@ -171,7 +171,7 @@ class Detail(State, enum.Enum):
     quit = "Story ending"
 
 
-class Fruition(State, enum.IntEnum):
+class Fruition(State, enum.Enum):
     """
     Adapted from 'Understanding Computers and Cognition'
     by Terry Winograd and Fernando Flores,
