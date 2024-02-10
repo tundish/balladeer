@@ -6,11 +6,11 @@
 Change Log
 ::::::::::
 
-0.48.0rc
-========
+0.48.0
+======
 
 * To make for better grouping, Fruition no longer inherits from IntEnum.
-* More robust building of specs with complex state.
+* More robust building of specs with multiple states.
 
 0.47.0
 ======
