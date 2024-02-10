@@ -61,14 +61,27 @@ class WorldBuilder:
         except Exception as e:
             warnings.warn(str(e))
 
+    def preserve_spec_params(self, table):
+        params = table.copy()
+        for k, v in table.items():
+            if isinstance(v, list):
+                params[k] = tuple(sorted(v))
+            elif isinstance(v, dict):
+                params[k] = self.preserve_spec_params(v)
+        return frozenset(params.items())
+
     def discover_spec_params(self, assets):
         "Search all assets for role specifications"
         for item in assets.all:
             if isinstance(item, Loader.Scene):
                 for role, table in item.tables.items():
                     if isinstance(table, dict):
-                        params = {k: tuple(v) if isinstance(v, list) else v for k, v in table.items()}
-                        yield frozenset(params.items())
+                        try:
+                            yield self.preserve_spec_params(table)
+                        except TypeError as e:
+                            warnings.warn(
+                                f"In file {item.path}: Role '{role}' has unhashable specs: {params}"
+                            )
 
     def build_to_spec(self, specs, ignore=("state", "states")):
         "Generate standin entities according to spec"
