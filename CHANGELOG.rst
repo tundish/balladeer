@@ -9,7 +9,8 @@ Change Log
 0.49.0rc
 ========
 
-* TODO: Remove dependency on turberfield-utils
+* Fix button attribute from Home endpoint.
+* TODO: Remove dependency on turberfield-utils.
 
 0.48.0
 ======

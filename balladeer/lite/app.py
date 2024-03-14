@@ -68,7 +68,7 @@ class Home(HTTPEndpoint):
 
     body = textwrap.dedent("""
     <form role="form" action="/sessions" method="POST" name="ballad-form-start">
-    <button action="submit">Begin</button>
+    <button type="submit">Begin</button>
     </form>
     """).strip()
 
