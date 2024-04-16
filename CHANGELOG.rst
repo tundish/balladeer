@@ -11,8 +11,8 @@ Change Log
 
 * TODO: Remove dependency on turberfield-utils.
 
-0.49.0rc
-========
+0.49.0
+======
 
 * Fix button attribute from Home endpoint.
 * Add 'label' to cue parameters.
