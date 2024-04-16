@@ -770,12 +770,10 @@ class ParametersTests(unittest.TestCase):
         self.assertTrue(rv.startswith('<blockquote id="hello-world" '), rv)
 
     def test_label_illegal(self):
-        # id must begin with a letter ([A-Za-z]) and may be followed by any number of
-        # letters, digits ([0-9]), hyphens ("-"), underscores ("_"), colons (":"), and periods (".")
-        speech = Speech("<?label=h.e/l?l,o&-w+o:r;l&d>Hello, world!")
+        speech = Speech("<?label=h.e/l?l,o-w+o:r;l^d>Hello, world!")
         d = Director()
         rv = "\n".join(d.edit(speech))
-        self.assertTrue(rv.startswith('<blockquote class="hello-world" '), rv)
+        self.assertTrue(rv.startswith('<blockquote id="hello-world" '), rv)
 
     def test_class_single(self):
         speech = Speech("<?class=warning>Watch out!")
@@ -817,7 +815,7 @@ class FormatterTests(unittest.TestCase):
         rv = formatter.format("{0!e}", "<D&D/>")
         self.assertEqual(rv, "&lt;D&amp;D/&gt;")
 
-    def test_conversion_formats(self):
+    def test_rot13_conversion(self):
         formatter = Director.Formatter()
         val = "rot13"
         val = formatter.format("{0!x}", val)

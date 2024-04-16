@@ -100,6 +100,7 @@ class Director:
         self.cast = None
         self.role = None
 
+        self.safe_chars = set(string.ascii_letters + string.digits + "-_")
         self.bq_matcher = re.compile("<blockquote.*?<\\/blockquote>", re.DOTALL)
         self.tag_matcher = re.compile("<[^>]+?>")
         self.cite_matcher = re.compile(
@@ -143,6 +144,7 @@ class Director:
             offer = None
 
         return {
+            "label": params.get("label", ""),
             "class": params.get("class", []),
             "style": params.get("style", []),
             "theme": params.get("theme"),
@@ -199,9 +201,12 @@ class Director:
 
         class_values = " ".join(parameters["class"])
         if class_values:
-            return html5.replace("<blockquote", f'<blockquote class="{class_values}"', 1)
-        else:
-            return html5
+            html5 = html5.replace("<blockquote", f'<blockquote class="{class_values}"', 1)
+        if parameters["label"]:
+            label = "".join(i for i in "".join(parameters["label"]) if i in self.safe_chars)
+            html5 = html5.replace("<blockquote", f'<blockquote id="{label}"', 1)
+
+        return html5
 
     def rank_constraints(self, spec: dict) -> int:
         roles, states, types, attributes = self.specify_role(spec)

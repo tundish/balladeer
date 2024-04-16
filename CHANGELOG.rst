@@ -6,13 +6,17 @@
 Change Log
 ::::::::::
 
+0.50.0rc
+========
+
+* TODO: Remove dependency on turberfield-utils.
+
 0.49.0rc
 ========
 
 * Fix button attribute from Home endpoint.
 * Add 'label' to cue parameters.
-* Change to formatting in Speech; `!e` does HTML entity substitution, `!x` performs ROT13 translation.
-* TODO: Remove dependency on turberfield-utils.
+* Change to formatting within Speech; `!e` does HTML entity substitution, `!x` performs ROT13 translation.
 
 0.48.0
 ======
