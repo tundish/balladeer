@@ -114,7 +114,7 @@ class EditTests(unittest.TestCase):
         text = textwrap.dedent("""
         <FIGHTER_1>
 
-            I don't like the way you use me, {FIGHTER_2.name!a}!
+            I don't like the way you use me, {FIGHTER_2.name!e}!
 
         """).strip()
         director = Director()
@@ -807,10 +807,23 @@ class ParametersTests(unittest.TestCase):
 
 
 class FormatterTests(unittest.TestCase):
-    def test_conversion_formats(self):
+    def test_standard_formats(self):
         formatter = Director.Formatter()
         rv = formatter.format("{0:0=6.3f}", 1.2)
         self.assertEqual(rv, "01.200")
+
+    def test_entity_conversion(self):
+        formatter = Director.Formatter()
+        rv = formatter.format("{0!e}", "<D&D/>")
+        self.assertEqual(rv, "&lt;D&amp;D/&gt;")
+
+    def test_conversion_formats(self):
+        formatter = Director.Formatter()
+        val = "rot13"
+        val = formatter.format("{0!x}", val)
+        self.assertEqual(val, "ebg13")
+        val = formatter.format("{0!x}", val)
+        self.assertEqual(val, "rot13")
 
 
 class LoopTests(unittest.TestCase):

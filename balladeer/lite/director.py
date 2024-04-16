@@ -18,6 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 
+import codecs
 from collections.abc import Generator
 from collections import ChainMap
 from collections import Counter
@@ -43,10 +44,14 @@ from balladeer.lite.types import Grouping
 class Director:
     class Formatter(string.Formatter):
         def convert_field(self, value: str, conversion: str) -> str:
-            if conversion != "a":
-                return super().convert_field(value, conversion)
-            else:
+            if conversion == "e":
                 return value.translate(Speech.processor.escape_table)
+            elif conversion == "x":
+                codec = codecs.lookup("rot13")
+                rv, length = codec.decode(value)
+                return rv
+            else:
+                return super().convert_field(value, conversion)
 
     @staticmethod
     def specify_role(spec: dict) -> tuple[set, set, dict, dict]:
