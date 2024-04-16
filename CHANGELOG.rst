@@ -10,6 +10,7 @@ Change Log
 ========
 
 * Fix button attribute from Home endpoint.
+* Add 'label' to cue parameters.
 * TODO: Remove dependency on turberfield-utils.
 
 0.48.0

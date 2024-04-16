@@ -763,6 +763,20 @@ class ParametersTests(unittest.TestCase):
         self.assertIn("option", d.notes[(None, 0, 0)])
         self.assertEqual(2, d.notes[(None, 0, 0)]["option"])
 
+    def test_label_legal(self):
+        speech = Speech("<?label=hello-world>Hello, world!")
+        d = Director()
+        rv = "\n".join(d.edit(speech))
+        self.assertTrue(rv.startswith('<blockquote id="hello-world" '), rv)
+
+    def test_label_illegal(self):
+        # id must begin with a letter ([A-Za-z]) and may be followed by any number of
+        # letters, digits ([0-9]), hyphens ("-"), underscores ("_"), colons (":"), and periods (".")
+        speech = Speech("<?label=h.e/l?l,o&-w+o:r;l&d>Hello, world!")
+        d = Director()
+        rv = "\n".join(d.edit(speech))
+        self.assertTrue(rv.startswith('<blockquote class="hello-world" '), rv)
+
     def test_class_single(self):
         speech = Speech("<?class=warning>Watch out!")
         d = Director()
@@ -790,6 +804,13 @@ class ParametersTests(unittest.TestCase):
         notes = next(iter(d.notes.values()), None)
         self.assertIn("theme", notes, notes)
         self.assertIsInstance(notes["theme"], list)
+
+
+class FormatterTests(unittest.TestCase):
+    def test_conversion_formats(self):
+        formatter = Director.Formatter()
+        rv = formatter.format("{0:0=6.3f}", 1.2)
+        self.assertEqual(rv, "01.200")
 
 
 class LoopTests(unittest.TestCase):
