@@ -52,7 +52,7 @@ The rest of the scene file consists of a `table array`_ of shots. The key for th
 In other words, something that looks like this:
 
 .. literalinclude:: ../lite/test/test_director.py
-    :lines: 847-851
+    :lines: 879-883
     :dedent: 12
 
 Conditions
