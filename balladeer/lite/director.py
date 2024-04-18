@@ -100,7 +100,7 @@ class Director:
         self.cast = None
         self.role = None
 
-        self.safe_chars = set(string.ascii_letters + string.digits + "-_")
+        self.safe_chars = set(string.ascii_letters + string.digits + "-")
         self.bq_matcher = re.compile("<blockquote.*?<\\/blockquote>", re.DOTALL)
         self.tag_matcher = re.compile("<[^>]+?>")
         self.cite_matcher = re.compile(

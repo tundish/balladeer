@@ -770,7 +770,7 @@ class ParametersTests(unittest.TestCase):
         self.assertTrue(rv.startswith('<blockquote id="hello-world" '), rv)
 
     def test_label_illegal(self):
-        speech = Speech("<?label=h.e/l?l,o-w+o:r;l^d>Hello, world!")
+        speech = Speech("<?label=_h.e/l?l,o-w+o:r;l^d>Hello, world!")
         d = Director()
         rv = "\n".join(d.edit(speech))
         self.assertTrue(rv.startswith('<blockquote id="hello-world" '), rv)
