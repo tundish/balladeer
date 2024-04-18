@@ -9,6 +9,7 @@ Change Log
 0.50.0rc
 ========
 
+* Minor fixes in app compose helper methods to improve testability.
 * TODO: Remove dependency on turberfield-utils.
 
 0.49.0
