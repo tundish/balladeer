@@ -258,16 +258,19 @@ class Session(HTTPEndpoint):
         yield from (f'<option value="{i}"></option>' for i in options)
         yield "</datalist>"
 
+    def render_title(self, request, story, turn):
+        try:
+            return f"<title>{story.title}</title>"
+        except AttributeError:
+            return "<title>Story</title>"
+
     def compose(
         self, request, page: Page, story: StoryBuilder = None, turn: Turn = None
     ) -> Page:
         assets = getattr(self, "assets", Grouping())
 
-        try:
-            page.paste(f"<title>{story.title}</title>", zone=page.zone.title)
-        except AttributeError:
-            page.paste("<title>Story</title>", zone=page.zone.title)
-
+        title = self.render_title(request, story, turn)
+        page.paste(title, zone=page.zone.title)
         page.paste(Home.meta, zone=page.zone.meta)
 
         notes = list(turn.notes.values())

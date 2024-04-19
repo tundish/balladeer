@@ -10,6 +10,7 @@ Change Log
 ========
 
 * Minor fixes in app compose helper methods to improve testability.
+* Extra delegates methods for page composition.
 * TODO: Remove dependency on turberfield-utils.
 
 0.49.0
