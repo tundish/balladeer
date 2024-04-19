@@ -161,7 +161,7 @@ class Session(HTTPEndpoint):
         return HTMLResponse(page.html)
 
     def render_cues(
-        self, request, story: StoryBuilder = None, turn: Turn = None
+        self, request, story: StoryBuilder = None, turn: Turn = None, page: Page = None
     ) -> Generator[str]:
 
         for n, (index, html5) in enumerate(turn.blocks):
@@ -284,7 +284,7 @@ class Session(HTTPEndpoint):
         settings = story.settings(*theme_names, themes=page.themes)
         page.paste(*Home.render_css_vars(settings), zone=page.zone.theme)
 
-        html5 = "\n".join(self.render_cues(request, story, turn))
+        html5 = "\n".join(self.render_cues(request, story, turn, page))
         page.paste("<main>", html5, "</main>", zone=page.zone.main)
 
         offer = notes and notes[-1]["offer"]
