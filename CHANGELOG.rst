@@ -6,12 +6,16 @@
 Change Log
 ::::::::::
 
-0.50.0rc
+0.51.0rc
 ========
 
-* Minor fixes in app compose helper methods to improve testability.
-* Extra delegates methods for page composition.
 * TODO: Remove dependency on turberfield-utils.
+
+0.50.0
+======
+
+* Minor fixes in app compose helper methods to improve testability.
+* Extra delegate methods for page composition.
 
 0.49.0
 ======
