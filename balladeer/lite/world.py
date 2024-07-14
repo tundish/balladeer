@@ -49,7 +49,7 @@ class WorldBuilder:
 
     specs = set()
 
-    def __init__(self, map: MapBuilder=None, config: dict  = None, assets: Grouping = None):
+    def __init__(self, map: MapBuilder=None, config: dict  = None, assets: Grouping = None, **kwargs):
         self.map = map
         self.config = config
 
@@ -57,7 +57,7 @@ class WorldBuilder:
         self.typewise = Grouping()
 
         try:
-            self.make(assets)
+            self.make(assets, **kwargs)
         except Exception as e:
             warnings.warn(str(e))
 
@@ -98,12 +98,12 @@ class WorldBuilder:
             entity.types.add("Spec")
             yield entity
 
-    def make(self, assets: Grouping = None):
+    def make(self, assets: Grouping = None, **kwargs):
         assets = assets or Grouping(list)
         self.assets = assets
         if not self.specs:
             self.specs.update(set(self.discover_spec_params(self.assets)))
-        self.entities = list(self.build())
+        self.entities = list(self.build(**kwargs))
         self.typewise = Grouping.typewise(self.entities)
 
         return self
@@ -124,7 +124,7 @@ class WorldBuilder:
                 rv[str(state)].append(entity)
         return rv
 
-    def build(self) -> Generator[Entity]:
+    def build(self, **kwargs) -> Generator[Entity]:
         """
         Override this method to generate Entities.
 
