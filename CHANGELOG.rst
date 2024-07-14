@@ -16,6 +16,8 @@ Change Log
 
 * Allow parameter passing into MapBuilder.
 * Allow parameter passing into WorldBuilder.
+* Allow parameter passing into StoryBuilder.
+* Allow parameter passing into Drama.
 * Expose Fruition type.
 
 0.50.0

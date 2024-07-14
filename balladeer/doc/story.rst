@@ -14,8 +14,8 @@ It is a generator of :py:class:`~balladeer.lite.drama.Drama`  objects.
 .. code-block:: python
 
     class Story(StoryBuilder):
-        def build(self):
-            yield Drama(world=self.world, config=self.config).set_state(Detail.none)
+        def build(self, **kwargs):
+            yield Drama(world=self.world, config=self.config, **kwargs).set_state(Detail.none)
 
 
 The public API is under development and not documented at this time.

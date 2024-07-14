@@ -57,17 +57,17 @@ class StoryBuilder:
         self.config = config
         self.assets = assets.copy()
 
-        self.world = world or WorldBuilder()
+        self.world = world or WorldBuilder(**kwargs)
 
         self.drama = deque([])
         self.director = Director(**kwargs)
         try:
-            self.make()
+            self.make(**kwargs)
         except Exception:
             pass
 
-    def make(self):
-        self.drama = deque(self.build())
+    def make(self, **kwargs):
+        self.drama = deque(self.build(**kwargs))
         return self
 
     def __deepcopy__(self, memo):
@@ -77,12 +77,12 @@ class StoryBuilder:
         rv = self.__class__(*self.speech, config=config, assets=self.assets, world=w)
         return rv
 
-    def build(self, *args: tuple[type]):
+    def build(self, *args: tuple[type], **kwargs):
         drama_classes = args or Drama.__subclasses__()
         if self.speech or not drama_classes:
             yield Drama(*self.speech, world=self.world, config=self.config)
         else:
-            yield from (d(world=self.world, config=self.config) for d in drama_classes)
+            yield from (d(world=self.world, config=self.config, **kwargs) for d in drama_classes)
 
     @property
     def context(self):
