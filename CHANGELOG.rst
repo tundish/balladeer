@@ -11,8 +11,8 @@ Change Log
 
 * TODO: Remove dependency on turberfield-utils.
 
-0.51.0rc
-========
+0.51.0
+======
 
 * Allow parameter passing into MapBuilder.
 * Allow parameter passing into WorldBuilder.
