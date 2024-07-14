@@ -6,10 +6,16 @@
 Change Log
 ::::::::::
 
-0.51.0rc
+0.52.0rc
 ========
 
 * TODO: Remove dependency on turberfield-utils.
+
+0.51.0rc
+========
+
+* TODO: Allow parameter passing into MapBuilder.
+* TODO: Expose Fruition type.
 
 0.50.0
 ======
