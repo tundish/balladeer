@@ -147,7 +147,7 @@ class MapBuilder:
        :dedent: 4
 
     """
-    def __init__(self, spots: dict, config=None):
+    def __init__(self, spots: dict, config=None, **kwargs):
         self.config = config
         global Into, Home, Spot, Exit
         self.into = Into = enum.Enum("Into", spots, type=State)
@@ -157,12 +157,12 @@ class MapBuilder:
         self.transits = []
         self.routes = {}
         try:
-            self.make()
+            self.make(**kwargs)
         except Exception:
             pass
 
-    def make(self):
-        self.transits = list(self.build())
+    def make(self, **kwargs):
+        self.transits = list(self.build(**kwargs))
         return self
 
     @property
@@ -260,5 +260,5 @@ class MapBuilder:
         self.routes[(start.name, end.name)] = rv
         return rv
 
-    def build(self) -> Generator[Transit]:
+    def build(self, **kwargs) -> Generator[Transit]:
         return ()

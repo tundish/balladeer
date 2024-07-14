@@ -50,7 +50,7 @@ class MapTests(unittest.TestCase):
             "inventory": ["inventory"],
         }
 
-        def build(self):
+        def build(self, **kwargs):
             yield from [
                 Transit(name="bedroom door").set_state(
                     self.exit.bedroom, self.into.hall, Traffic.flowing

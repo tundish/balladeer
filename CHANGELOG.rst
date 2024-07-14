@@ -14,7 +14,7 @@ Change Log
 0.51.0rc
 ========
 
-* TODO: Allow parameter passing into MapBuilder.
+* Allow parameter passing into MapBuilder.
 * TODO: Expose Fruition type.
 
 0.50.0
