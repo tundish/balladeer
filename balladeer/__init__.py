@@ -31,6 +31,7 @@ from balladeer.lite.speech import Speech
 from balladeer.lite.speechtables import SpeechTables
 from balladeer.lite.story import StoryBuilder
 from balladeer.lite.types import Detail
+from balladeer.lite.types import Fruition
 from balladeer.lite.types import Grouping
 from balladeer.lite.types import Page
 from balladeer.lite.types import State

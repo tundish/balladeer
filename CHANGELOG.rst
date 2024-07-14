@@ -15,7 +15,8 @@ Change Log
 ========
 
 * Allow parameter passing into MapBuilder.
-* TODO: Expose Fruition type.
+* Allow parameter passing into WorldBuilder.
+* Expose Fruition type.
 
 0.50.0
 ======
