@@ -10,6 +10,7 @@ Change Log
 ========
 
 * TODO: Remove dependency on turberfield-utils.
+* Better use of kwarg parameters.
 
 0.51.0
 ======

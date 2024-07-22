@@ -61,10 +61,7 @@ class StoryBuilder:
 
         self.drama = deque([])
         self.director = Director(**kwargs)
-        try:
-            self.make(**kwargs)
-        except Exception:
-            pass
+        self.make(**kwargs)
 
     def make(self, **kwargs):
         self.drama = deque(self.build(**kwargs))

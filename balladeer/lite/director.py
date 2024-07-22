@@ -85,6 +85,7 @@ class Director:
         dwell: float = 0.1,
         delay: float = 0,
         offer: float = None,
+        **kwargs
     ):
         self.fmtr = self.Formatter()
         self.counts = Counter()
@@ -122,7 +123,7 @@ class Director:
         return dict(self.attr_matcher.findall(text))
 
     def fragments(self, attrs: dict) -> str:
-        # NOTE: Sunject to change
+        # NOTE: Subject to change
         return html.unescape(attrs.get("fragments", "")).lstrip("#")
 
     def directives(self, attrs: dict) -> dict[str, list[str]]:

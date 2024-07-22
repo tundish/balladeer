@@ -156,10 +156,7 @@ class MapBuilder:
         self.exit = Exit = enum.Enum("Exit", spots, type=State)
         self.transits = []
         self.routes = {}
-        try:
-            self.make(**kwargs)
-        except Exception:
-            pass
+        self.make(**kwargs)
 
     def make(self, **kwargs):
         self.transits = list(self.build(**kwargs))
