@@ -153,7 +153,7 @@ class Session(HTTPEndpoint):
         page = Page()
         with story.turn() as turn:
             if not turn.blocks:
-                warnings.warn(f"Unable to cast {story.context.ensemble}")
+                warnings.warn(f"Unable to cast {story.context.ensemble} in context {story.context}")
                 return RedirectResponse(url=request.url_for("home"), status_code=300)
 
             page = self.compose(request, page, story, turn)
