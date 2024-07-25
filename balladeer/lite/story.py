@@ -68,8 +68,8 @@ class StoryBuilder:
         return self
 
     def __deepcopy__(self, memo):
-        config = copy.deepcopy(self.config)
-        m = self.world.map and copy.deepcopy(self.world.map).make()
+        config = copy.deepcopy(self.config, memo)
+        m = self.world.map and copy.deepcopy(self.world.map, memo).make()
         w = self.world.__class__ (map=m, config=config, assets=self.assets)
         rv = self.__class__(*self.speech, config=config, assets=self.assets, world=w)
         return rv
