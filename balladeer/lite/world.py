@@ -129,5 +129,5 @@ class WorldBuilder:
         Override this method to generate Entities.
 
         """
-        yield from self.build_to_spec(self.specs)
+        yield from []
 
