@@ -113,7 +113,7 @@ class Entity:
 
     def __deepcopy__(self, memo):
         return self.__class__(
-            name=self.names.copy(),
+            names=self.names.copy(),
             types=self.types.copy(),
             states=self.states.copy(),
             links=self.links.copy(),

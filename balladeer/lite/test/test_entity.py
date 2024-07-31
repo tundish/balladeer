@@ -17,6 +17,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+import copy
 import enum
 import json
 import unittest
@@ -45,6 +46,11 @@ class TestComparisons(unittest.TestCase):
         a = Entity(name="a")
         b = Entity(name="b")
         self.assertNotEqual(a, b)
+
+    def test_copy(self):
+        a = Entity(name="a")
+        b = copy.deepcopy(a)
+        self.assertEqual(a, b)
 
 
 class TestAttributes(unittest.TestCase):
