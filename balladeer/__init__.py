@@ -37,3 +37,5 @@ from balladeer.lite.types import Page
 from balladeer.lite.types import State
 from balladeer.lite.types import Turn
 from balladeer.lite.world import WorldBuilder
+
+from busker.stager import Stager
