@@ -16,6 +16,9 @@ Change Log
 
 * WorldBuilder does not generate any entities by default.
 * Better use of kwarg parameters.
+* Fix a bug in deep copy of Entity.
+* Add busker as a dependency
+* Use busker.stager to load stage files.
 
 0.51.0
 ======

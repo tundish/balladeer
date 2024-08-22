@@ -27,6 +27,7 @@ import tomllib
 from typing import Mapping
 
 from balladeer.lite.types import Grouping
+from busker.stager import Stager
 
 
 class Loader:
@@ -37,7 +38,8 @@ class Loader:
         defaults=[None, None, None],
     )
     Storage = namedtuple("Storage", ["resource", "path", "stats"], defaults=[None])
-    Structure = namedtuple("Sructure", ["text", "data", "resource", "path", "stats"], defaults=[None, None, None])
+    Staging = namedtuple("Staging", ["text", "data", "resource", "path", "stats"], defaults=[None, None, None])
+    Structure = namedtuple("Structure", ["text", "data", "resource", "path", "stats"], defaults=[None, None, None])
 
     @staticmethod
     def discover(
@@ -46,6 +48,7 @@ class Loader:
         suffixes={
             ".db": Storage,
             ".scene.toml": Scene,
+            ".stage.toml": Staging,
             ".toml": Structure,
         },
         avoid=["__pycache__", "node_modules"],
@@ -72,6 +75,11 @@ class Loader:
                 with importlib.resources.as_file(path) as f:
                     text = f.read_text(encoding="utf8")
                     data = Loader.read_toml(text)
+                    yield typ(text, data, resource, path, f.stat())
+            elif typ == Loader.Staging:
+                with importlib.resources.as_file(path) as f:
+                    text = f.read_text(encoding="utf8")
+                    data = next(Stager.load(text))
                     yield typ(text, data, resource, path, f.stat())
             elif typ:
                 with importlib.resources.as_file(path) as f:
