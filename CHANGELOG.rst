@@ -11,8 +11,8 @@ Change Log
 
 * TODO: Remove dependency on turberfield-utils.
 
-0.52.0rc
-========
+0.52.0
+======
 
 * WorldBuilder does not generate any entities by default.
 * Better use of kwarg parameters.
