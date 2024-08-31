@@ -10,6 +10,7 @@ Change Log
 ========
 
 * TODO: Remove dependency on turberfield-utils.
+* Added reporting of Loader.staging discovery.
 
 0.52.0
 ======

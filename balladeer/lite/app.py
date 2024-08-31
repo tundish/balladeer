@@ -404,12 +404,12 @@ def collect_static_paths(assets: Grouping):
                     f"Discovered in {asset.path.parent.name:<24}: {asset.path.name:<36} ({k})",
                     file=sys.stderr,
                 )
-        elif k is Loader.Scene:
-            for scene in v:
+        elif k in (Loader.Scene, Loader.Staging):
+            for item in v:
                 print(
                     (
-                        f"Discovered in {scene.path.parent.name:<24}:"
-                        f" {scene.path.name:<36} ({k.__name__})"
+                        f"Discovered in {item.path.parent.name:<24}:"
+                        f" {item.path.name:<36} ({k.__name__})"
                     ),
                     file=sys.stderr,
                 )
