@@ -100,10 +100,10 @@ class Conversation(Graph):
         Graph.Arc(Fruition.discussion, "hand", "decline", Fruition.withdrawn),
         Graph.Arc(Fruition.construction, "hand", "disavow", Fruition.defaulted),
         Graph.Arc(Fruition.construction, "head", "abandon", Fruition.cancelled),
-        Graph.Arc(Fruition.construction, "hand", "deliver", Fruition.transition),
-        Graph.Arc(Fruition.transition, "head", "condemn", Fruition.construction),
-        Graph.Arc(Fruition.transition, "head", "abandon", Fruition.cancelled),
-        Graph.Arc(Fruition.transition, "head", "declare", Fruition.completion),
+        Graph.Arc(Fruition.construction, "hand", "deliver", Fruition.evaluation),
+        Graph.Arc(Fruition.evaluation, "head", "condemn", Fruition.construction),
+        Graph.Arc(Fruition.evaluation, "head", "abandon", Fruition.cancelled),
+        Graph.Arc(Fruition.evaluation, "head", "declare", Fruition.completion),
     ]
 
 
