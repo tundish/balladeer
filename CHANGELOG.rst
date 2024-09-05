@@ -11,6 +11,7 @@ Change Log
 
 * TODO: Remove dependency on turberfield-utils.
 * Added reporting of Loader.staging discovery.
+* Added `evaluation` as an alias for `Fruition.transition`.
 
 0.52.0
 ======

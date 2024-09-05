@@ -183,6 +183,7 @@ class Fruition(State, enum.Enum):
     elaboration = 2
     construction = 3
     transition = 4
+    evaluation = 4
     completion = 5
     discussion = 6
     defaulted = 7
