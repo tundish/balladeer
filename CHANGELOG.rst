@@ -6,10 +6,10 @@
 Change Log
 ::::::::::
 
-0.53.0rc
-========
+0.53.0
+======
 
-* TODO: Remove dependency on turberfield-utils.
+* ballader.lite no longer depends on turberfield-utils.
 * Added reporting of Loader.staging discovery.
 * Added `evaluation` as an alias for `Fruition.transition`.
 

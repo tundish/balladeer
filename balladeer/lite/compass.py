@@ -23,9 +23,8 @@ from collections.abc import Generator
 import enum
 import itertools
 
-from turberfield.utils.homogeneous import vector
-
 from balladeer.lite.entity import Entity
+from balladeer.lite.homogeneous import vector
 from balladeer.lite.types import State
 
 
