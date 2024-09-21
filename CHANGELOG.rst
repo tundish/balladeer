@@ -9,8 +9,8 @@ Change Log
 0.54.0
 ======
 
-* Add `resident` module and tests
-* Add `storystager` module and tests
+* Add `resident` module and tests.
+* Add `storystager` module and tests.
 * `discover_assets` accepts keyword arguments.
 * `storybuilder` module renamed from `story`.
 
