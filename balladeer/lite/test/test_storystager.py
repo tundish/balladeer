@@ -46,7 +46,6 @@ class StoryTests(unittest.TestCase):
         assets = discover_assets(busker, "test", ignore=[])
         self.assertTrue(assets[Loader.Staging])
         self.story = self.TestStory(assets=assets)
-        print(f"{assets[Loader.Staging]=}")
 
     def test_make(self):
         self.assertIsInstance(getattr(self.story, "stager"), Stager)
@@ -57,7 +56,7 @@ class StoryTests(unittest.TestCase):
 
         # self.assertTrue(self.story.world.entities)
         self.assertTrue(self.story.world.map.transits)
-        self.assertTrue(
+        self.assertFalse(
             any(len(i.names) > 1 for i in self.story.world.map.transits),
             self.story.world.map.transits
         )
@@ -141,9 +140,10 @@ class StoryTests(unittest.TestCase):
         assets = Grouping.typewise([
             stage
             for rule in StagerTests.rules
-            if (stage := Loader.Staging(text=rule, data=next(Stager.load(rule)))).data["realm"] == "rotu"
+            if (stage := Loader.Staging(text=rule, data=next(Stager.load(rule)))).data["realm"] == "busker"
         ])
-        s = self.story
+        self.assertEqual(len(assets[Loader.Staging]), 2)
+        s = self.TestStory(assets=assets)
         for n, _ in enumerate(s.stager.puzzles):
             d = s.context
             with self.subTest(n=n, d=d):
@@ -156,6 +156,6 @@ class StoryTests(unittest.TestCase):
                 if d.name == "h":
                     self.assertIn(d.get_state(Fruition), (Fruition.inception, Fruition.completion))
                 else:
-                    self.assertEqual(d.get_state(Fruition), Fruition.inception)
+                    self.assertEqual(d.get_state(Fruition), Fruition.inception, d)
                 d.set_state(Fruition.completion)
                 s.turn()

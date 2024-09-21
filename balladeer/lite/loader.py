@@ -51,7 +51,7 @@ class Loader:
             ".stage.toml": Staging,
             ".toml": Structure,
         },
-        avoid=["__pycache__", "node_modules"],
+        avoid=["tmp", "__pycache__", "node_modules"],
         ignore=[re.compile("^test_.*")],
     ):
         if isinstance(package, Path):
@@ -60,7 +60,9 @@ class Loader:
             paths = list(importlib.resources.files(package).joinpath(resource).iterdir())
 
         for path in paths:
-            if path.is_dir() and path.name not in avoid:
+            if path.is_dir() and path.name in avoid:
+                continue
+            elif path.is_dir():
                 yield from Loader.discover(path, resource, suffixes, avoid, ignore)
             elif any(i.match(path.name) for i in ignore):
                 continue
