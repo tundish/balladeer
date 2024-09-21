@@ -6,12 +6,13 @@
 Change Log
 ::::::::::
 
-0.54.0 rc
-=========
+0.54.0
+======
 
 * Add `resident` module and tests
 * Add `storystager` module and tests
 * `discover_assets` accepts keyword arguments.
+* `storybuilder` module renamed from `story`.
 
 0.53.0
 ======

@@ -33,7 +33,7 @@ from balladeer.lite.drama import Drama
 from balladeer.lite.entity import Entity
 from balladeer.lite.loader import Loader
 from balladeer.lite.speech import Dialogue
-from balladeer.lite.story import StoryBuilder
+from balladeer.lite.storybuilder import StoryBuilder
 from balladeer.lite.types import Grouping
 from balladeer.lite.types import Page
 from balladeer.lite.world import WorldBuilder

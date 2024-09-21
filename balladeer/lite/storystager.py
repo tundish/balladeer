@@ -31,7 +31,7 @@ from balladeer.lite.types import Grouping
 from balladeer.lite.loader import Loader
 from balladeer.lite.compass import MapBuilder
 from balladeer.lite.speech import Speech
-from balladeer.lite.story import StoryBuilder
+from balladeer.lite.storybuilder import StoryBuilder
 from balladeer.lite.compass import Transit
 from balladeer.lite.compass import Traffic
 from balladeer.lite.world import WorldBuilder

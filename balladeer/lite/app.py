@@ -46,7 +46,7 @@ from balladeer.lite.entity import Entity
 from balladeer.lite.loader import Loader
 from balladeer.lite.compass import MapBuilder
 from balladeer.lite.presenter import Presenter
-from balladeer.lite.story import StoryBuilder
+from balladeer.lite.storybuilder import StoryBuilder
 from balladeer.lite.types import Grouping
 from balladeer.lite.types import Page
 from balladeer.lite.types import Turn
