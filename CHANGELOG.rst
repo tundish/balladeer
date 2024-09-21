@@ -6,6 +6,12 @@
 Change Log
 ::::::::::
 
+0.54.0 rc
+=========
+
+* Add `resident` module and tests
+* Add `storystager` module and tests
+
 0.53.0
 ======
 

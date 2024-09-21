@@ -27,9 +27,11 @@ from balladeer.lite.presenter import Presenter
 from balladeer.lite.speech import Dialogue
 from balladeer.lite.speech import Epilogue
 from balladeer.lite.speech import Prologue
+from balladeer.lite.resident import Resident
 from balladeer.lite.speech import Speech
 from balladeer.lite.speechtables import SpeechTables
 from balladeer.lite.story import StoryBuilder
+from balladeer.lite.storystager import StoryStager
 from balladeer.lite.types import Detail
 from balladeer.lite.types import Fruition
 from balladeer.lite.types import Grouping
