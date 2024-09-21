@@ -11,6 +11,7 @@ Change Log
 
 * Add `resident` module and tests
 * Add `storystager` module and tests
+* `discover_assets` accepts keyword arguments.
 
 0.53.0
 ======

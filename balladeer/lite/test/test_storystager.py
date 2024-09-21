@@ -43,7 +43,7 @@ class StoryTests(unittest.TestCase):
         pass
 
     def setUp(self):
-        assets = discover_assets(busker, "")
+        assets = discover_assets(busker, "test", ignore=[])
         self.assertTrue(assets[Loader.Staging])
         self.story = self.TestStory(assets=assets)
         print(f"{assets[Loader.Staging]=}")

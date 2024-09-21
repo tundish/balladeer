@@ -378,7 +378,7 @@ async def app_factory(
     return app
 
 
-def discover_assets(module: [str | ModuleType], resource: str = "") -> Grouping:
+def discover_assets(module: [str | ModuleType], resource: str = "", **kwargs) -> Grouping:
     if isinstance(module, str):
         module = pathlib.Path(module)
         module = module.parent if module.is_file() else module
@@ -386,7 +386,7 @@ def discover_assets(module: [str | ModuleType], resource: str = "") -> Grouping:
     try:
         return Grouping.typewise(
             sorted(
-                Loader.discover(module, resource),
+                Loader.discover(module, resource, **kwargs),
                 key=operator.attrgetter("path")
             )
         )
