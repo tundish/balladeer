@@ -10,6 +10,7 @@ Change Log
 =========
 
 * Improved behaviour in StoryStager for populating types.
+* Minor improvement to asset path reporting.
 
 0.54.0
 ======
