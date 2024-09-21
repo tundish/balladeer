@@ -33,18 +33,20 @@ from balladeer import Stager
 from balladeer import Traffic
 from balladeer import Transit
 
+import busker
 from busker.test.test_stager import StagerTests
 
 
 class StoryTests(unittest.TestCase):
 
-    class Story(StoryStager):
+    class TestStory(StoryStager):
         pass
 
     def setUp(self):
-        assets = discover_assets(balladeer, "")
+        assets = discover_assets(busker, "")
         self.assertTrue(assets[Loader.Staging])
-        self.story = Story(assets=assets)
+        self.story = self.TestStory(assets=assets)
+        print(f"{assets[Loader.Staging]=}")
 
     def test_make(self):
         self.assertIsInstance(getattr(self.story, "stager"), Stager)
@@ -141,7 +143,7 @@ class StoryTests(unittest.TestCase):
             for rule in StagerTests.rules
             if (stage := Loader.Staging(text=rule, data=next(Stager.load(rule)))).data["realm"] == "rotu"
         ])
-        s = Story(assets=assets)
+        s = self.story
         for n, _ in enumerate(s.stager.puzzles):
             d = s.context
             with self.subTest(n=n, d=d):
