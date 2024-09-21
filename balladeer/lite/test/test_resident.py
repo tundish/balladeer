@@ -57,11 +57,11 @@ class ResidentTests(unittest.TestCase):
     def test_scripts(self):
         selector = {
             "paths": [
-                "balladeer/scenes/0[01]/*.scene.toml",
+                "balladeer/examples/ex_1[01]_*/*.scene.toml"
             ],
         }
 
-        assets = discover_assets(balladeer, "scenes")
+        assets = discover_assets(balladeer, "examples")
         scenes = assets.get(Loader.Scene, [])
 
         drama = self.TestResident(selector=selector)
@@ -71,8 +71,9 @@ class ResidentTests(unittest.TestCase):
         self.assertEqual(
             witness,
             set((
-                ("scenes", "00", "0.scene.toml"),
-                ("scenes", "00", "a.scene.toml"),
-                ("scenes", "01", "a.scene.toml"),
+                ("examples", "ex_10_animate_media", "argument.scene.toml"),
+                ("examples", "ex_11_inventory_compass", "cloakroom.scene.toml"),
+                ("examples", "ex_11_inventory_compass", "bar.scene.toml"),
+                ("examples", "ex_11_inventory_compass", "foyer.scene.toml"),
             ))
         )
