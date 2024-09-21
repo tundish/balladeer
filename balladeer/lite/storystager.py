@@ -111,18 +111,19 @@ class StoryStager(StoryBuilder):
 
         for item in puzzle.get("items"):
             item_names = [i for i in [item.get("name")] + item.get("names", []) if i]
-            item_types = [self.item_type(i) for i in [item.get("type")] + item.get("types", []) if i]
+            item_types = list(filter(None, [item.get("type")] + item.get("types", [])))
+            item_type = next((self.item_type(i) for i in item_types), Entity)
             states = [self.item_state(i, pool=pool) for i in item.get("states", [])]
-            entity = item_types[0](
+            entity = item_type(
                 names=item_names,
-                types={i.__name__ for i in item_types},
+                types={i for i in item_types if i != item_type.__name__},
                 links={puzzle.get("name")},
                 sketch=item.get("sketch", ""),
                 aspect=item.get("aspect", ""),
                 revert=item.get("revert", ""),
             ).set_state(*states)
 
-            if Transit in item_types:
+            if item_type is Transit:
                 self.world.map.transits.append(entity)
             else:
                 self.world.entities.append(entity)

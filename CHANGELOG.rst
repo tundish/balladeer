@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.55.0 rc
+=========
+
+* Improved behaviour in StoryStager for populating types.
+
 0.54.0
 ======
 
