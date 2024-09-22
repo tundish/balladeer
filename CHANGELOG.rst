@@ -11,6 +11,7 @@ Change Log
 
 * Improved behaviour in StoryStager for populating types.
 * Minor improvement to asset path reporting.
+* Case conversion on StoryStager state lookup.
 
 0.54.0
 ======

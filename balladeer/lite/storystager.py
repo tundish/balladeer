@@ -54,15 +54,22 @@ class StoryStager(StoryBuilder):
 
         try:
             cls = lookup[name]
-            return cls[value]
-        except KeyError as e:
+        except KeyError:
             return default
+
+        try:
+            return cls[value]
+        except KeyError:
+            try:
+                return cls[value.upper()]
+            except KeyError:
+                return default
 
     @classmethod
     def item_type(cls, name: str, default=Entity):
         name = name or ""
         return {
-            cls.__name__.lower(): cls for cls in cls.types
+            typ.__name__.lower(): typ for typ in cls.types
         }.get(name.lower(), default)
 
     def __init__(

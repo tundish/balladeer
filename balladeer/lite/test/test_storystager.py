@@ -23,6 +23,7 @@ import enum
 import unittest
 
 import balladeer
+from balladeer import Compass
 from balladeer import discover_assets
 from balladeer import Entity
 from balladeer import Fruition
@@ -54,12 +55,13 @@ class StoryTests(unittest.TestCase):
 
         self.assertTrue(issubclass(self.story.world.map.spot, enum.Enum))
 
-        # self.assertTrue(self.story.world.entities)
         self.assertTrue(self.story.world.map.transits)
         self.assertFalse(
             any(len(i.names) > 1 for i in self.story.world.map.transits),
             self.story.world.map.transits
         )
+        self.assertEqual(len([i for i in self.story.world.map.transits if i.get_state(Traffic)]), 9)
+        self.assertEqual(len([i for i in self.story.world.map.transits if i.get_state(Compass)]), 8)
         self.assertGreater(len(self.story.world.map.spot), 1, list(self.story.world.map.spot))
 
         self.assertFalse(
