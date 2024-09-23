@@ -6,13 +6,14 @@
 Change Log
 ::::::::::
 
-0.55.0 rc
-=========
+0.55.0
+======
 
 * Improved behaviour in StoryStager for populating types.
 * Minor improvement to asset path reporting.
 * Case conversion on StoryStager state lookup.
 * Expect Events from busker.
+* New method `monitor_context` to process Events.
 
 0.54.0
 ======
