@@ -151,9 +151,10 @@ class StoryStager(StoryBuilder):
                 Fruition.withdrawn, Fruition.defaulted, Fruition.cancelled, Fruition.completion
             }:
                 events = list(self.stager.terminate(realm, name, state.name))
-                for target_realm, target_name, spec in events:
-                    target_state = self.item_state(spec)
-                    self.drama[target_realm, target_name].set_state(target_state)
+                for event in events:
+                    if isinstance(event.target, str):
+                        state = self.item_state(event.payload)
+                        self.drama[event.realm, event.target].set_state(state)
 
         try:
             self.context.interlude(*args, **kwargs)
