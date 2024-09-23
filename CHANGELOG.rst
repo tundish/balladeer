@@ -12,6 +12,7 @@ Change Log
 * Improved behaviour in StoryStager for populating types.
 * Minor improvement to asset path reporting.
 * Case conversion on StoryStager state lookup.
+* Expect Events from busker.
 
 0.54.0
 ======

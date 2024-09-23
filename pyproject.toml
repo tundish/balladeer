@@ -18,7 +18,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
 ]
 dependencies = [
-    "busker >= 0.13.0",
+    "busker >= 0.14.0",
     "hypercorn",
     "python-multipart",
     "speechmark >= 0.10.0",
