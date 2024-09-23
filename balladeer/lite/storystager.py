@@ -143,18 +143,30 @@ class StoryStager(StoryBuilder):
         drama = [self.drama[(realm, name)] for realm, name in self.stager.active] or list(self.drama.values())
         return next((reversed(sorted(drama, key=operator.attrgetter("state")))), None)
 
+    def monitor_context(
+        self,
+        realm: str,
+        name: str,
+        drama: Drama,
+        terminal={Fruition.withdrawn, Fruition.defaulted, Fruition.cancelled, Fruition.completion}
+    ):
+        pool = [self.world.map.home, self.world.map.into, self.world.map.exit, self.world.map.spot]
+        if (state := drama.get_state(Fruition)) in terminal:
+            for event in self.stager.terminate(realm, name, state.name):
+                state = self.item_state(event.payload, pool=pool)
+                if isinstance(event.target, str):
+                    self.drama[event.realm, event.target].set_state(state)
+                else:
+                    entities = [
+                        entity.set_state(state)
+                        for entity in drama.ensemble
+                        if set(event.target) <= entity.types
+                    ]
+
     def turn(self, *args, **kwargs):
         for realm, name in self.stager.active.copy():
             drama = self.drama[(realm, name)]
-
-            if (state := drama.get_state(Fruition)) in {
-                Fruition.withdrawn, Fruition.defaulted, Fruition.cancelled, Fruition.completion
-            }:
-                events = list(self.stager.terminate(realm, name, state.name))
-                for event in events:
-                    if isinstance(event.target, str):
-                        state = self.item_state(event.payload)
-                        self.drama[event.realm, event.target].set_state(state)
+            self.monitor_context(realm, name, drama)
 
         try:
             self.context.interlude(*args, **kwargs)
