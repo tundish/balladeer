@@ -20,9 +20,11 @@
 import asyncio
 from collections.abc import Generator
 import copy
+import functools
 import json
 import operator
 import pathlib
+import re
 import sys
 import textwrap
 from types import ModuleType
@@ -140,6 +142,9 @@ class Start(HTTPEndpoint):
 
 
 class Session(HTTPEndpoint):
+
+    code_matcher = re.compile(f"(<code.*?>)(.*?)(<\\/code>)", re.DOTALL)
+
     async def get(self, request):
         session_id = request.path_params["session_id"]
         state = request.app.state
@@ -160,13 +165,39 @@ class Session(HTTPEndpoint):
 
         return HTMLResponse(page.html)
 
+    @staticmethod
+    def convert_code_into_action(match: re.Match, request=None, story=None, turn=None, page = None):
+        text = f"{match[2]}".replace(" ", "-")
+        try:
+            url = request.url_for("command", session_id=story.uid)
+            form = textwrap.dedent(f"""
+            <form role="form" action="{url}" method="post" id="ballad-action-form-{text}" class="ballad action">
+            <input type="hidden" name="ballad-command-form-input-text" value="{match[2]}" />
+            </form>
+            """)
+            page.paste(form, zone=page.zone.inputs)
+        except AttributeError:
+            pass
+        return f'<button form="ballad-action-form-{text}" class="ballad action" type="submit">{match[2]}</button>'
+
     def render_cues(
         self, request, story: StoryBuilder = None, turn: Turn = None, page: Page = None
     ) -> Generator[str]:
 
+        apply_actions = functools.partial(
+            self.convert_code_into_action,
+            request=request,
+            story=story,
+            turn=turn,
+            page=page
+        )
+
         for n, (index, html5) in enumerate(turn.blocks):
             yield '<div class="ballad cue">'
+
+            html5 = self.code_matcher.sub(apply_actions, html5)
             yield request.app.state.presenter.sanitize(html5)
+
             try:
                 notes = turn.notes[(turn.scene.path, index)]
                 cue = [m for m in reversed(notes.maps) if m.get("type") == "cue"][n]
