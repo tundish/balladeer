@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.56.0 rc
+=========
+
+* By default, text in `code` emphasis is expanded into a form/button which posts the text as a command.
+
 0.55.0
 ======
 
