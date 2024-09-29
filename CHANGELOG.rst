@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.57.0rc
+========
+
+* TODO: NamedTuple for return type of Map options.
+
 0.56.0
 ======
 
