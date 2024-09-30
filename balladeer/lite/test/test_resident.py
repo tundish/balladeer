@@ -33,6 +33,8 @@ from busker.stager import Stager
 
 class ResidentTests(unittest.TestCase):
 
+    Spot = enum.Enum("Spot", {"kitchen": ["kitchen"], "hall": ["hallway"], "cloaks": ["cloakroom", "toilet"]})
+
     class TestResident(Resident, Drama):
         pass
 
@@ -40,13 +42,12 @@ class ResidentTests(unittest.TestCase):
 
         def build(self, *args, **kwargs):
             yield Entity(type="Rukus").set_state(4)
-            yield Entity(type="Focus").set_state(1)
+            yield Entity(type="Focus").set_state(1, ResidentTests.Spot.kitchen)
             yield Entity(type="Focus").set_state(3)
             yield Entity(type="Focus").set_state(2)
 
     def test_is_resident(self):
         Colour = enum.Enum("Colour", ["red", "blue", "green", "yellow"])
-        Spot = enum.Enum("Spot", {"kitchen": ["kitchen"], "hall": ["hallway"], "cloaks": ["cloakroom", "toilet"]})
 
         selector = {
             "states": [
@@ -62,8 +63,8 @@ class ResidentTests(unittest.TestCase):
         self.assertTrue(drama.is_resident(Colour.green))
         self.assertFalse(drama.is_resident(Colour.red))
 
-        self.assertFalse(drama.is_resident(Colour.red, Spot.kitchen))
-        self.assertTrue(drama.is_resident(Colour.green, Spot.kitchen))
+        self.assertFalse(drama.is_resident(Colour.red, self.Spot.kitchen))
+        self.assertTrue(drama.is_resident(Colour.green, self.Spot.kitchen))
 
     def test_scripts(self):
         selector = {
@@ -89,10 +90,19 @@ class ResidentTests(unittest.TestCase):
             ))
         )
 
-    def test_focus(self):
+    def test_focus_no_selector(self):
         world = self.TestWorld()
         drama = self.TestResident(world=world)
 
         focus = drama.focus
         self.assertEqual(focus.get_state(), 3)
         self.assertIn("Focus", focus.types)
+
+    def test_focus_with_selector(self):
+        world = self.TestWorld(selector=dict(states=["spot.kitchen"]))
+        drama = self.TestResident(world=world)
+
+        focus = drama.focus
+        self.assertEqual(focus.get_state(), 1)
+        self.assertIn("Focus", focus.types)
+

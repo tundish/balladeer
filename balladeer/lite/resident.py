@@ -29,8 +29,12 @@ class Resident:
         self.selector = selector | {"states": set(selector.get("states", []))}
         super().__init__(*args, **kwargs)
 
+    @property
+    def focus(self):
+        return next((i for i in self.world.typewise.get("Focus", []) if self.is_resident(i.get_state("Spot"))), None)
+
     def is_resident(self, *args: tuple[enum.Enum]):
-        return all(str(i).lower() in self.selector["states"] for i in args)
+        return all(str(i).lower() in states for i in args if (states := self.selector["states"]) and i is not None)
 
     def scripts(self, assets: list):
         return [
