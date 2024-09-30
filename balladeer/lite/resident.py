@@ -19,6 +19,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import enum
+import operator
 
 from balladeer.lite.loader import Loader
 
@@ -31,10 +32,12 @@ class Resident:
 
     @property
     def focus(self):
-        return next((i for i in self.world.typewise.get("Focus", []) if self.is_resident(i.get_state("Spot"))), None)
+        selected = [i for i in self.world.typewise.get("Focus", []) if self.is_resident(i.get_state("Spot"))]
+        return next(reversed(sorted(selected, key=operator.attrgetter("state"))), None)
 
     def is_resident(self, *args: tuple[enum.Enum]):
-        return all(str(i).lower() in states for i in args if (states := self.selector["states"]) and i is not None)
+        states = self.selector["states"]
+        return all(str(i).lower() in states for i in args if i or states)
 
     def scripts(self, assets: list):
         return [
