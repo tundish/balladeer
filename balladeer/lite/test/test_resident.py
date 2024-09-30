@@ -39,8 +39,10 @@ class ResidentTests(unittest.TestCase):
     class TestWorld(WorldBuilder):
 
         def build(self, *args, **kwargs):
-            yield Entity().set_state(1)
-            yield Entity().set_state(2)
+            yield Entity(type="Rukus").set_state(4)
+            yield Entity(type="Focus").set_state(1)
+            yield Entity(type="Focus").set_state(3)
+            yield Entity(type="Focus").set_state(2)
 
     def test_is_resident(self):
         Colour = enum.Enum("Colour", ["red", "blue", "green", "yellow"])
@@ -90,3 +92,7 @@ class ResidentTests(unittest.TestCase):
     def test_focus(self):
         world = self.TestWorld()
         drama = self.TestResident(world=world)
+
+        focus = drama.focus
+        self.assertEqual(focus.get_state(), 3)
+        self.assertIn("Focus", focus.types)
