@@ -23,15 +23,24 @@ import unittest
 
 import balladeer
 from balladeer import discover_assets
+from balladeer import Drama
+from balladeer import Entity
 from balladeer import Loader
 from balladeer import Resident
+from balladeer import WorldBuilder
 from busker.stager import Stager
 
 
 class ResidentTests(unittest.TestCase):
 
-    class TestResident(Resident):
+    class TestResident(Resident, Drama):
         pass
+
+    class TestWorld(WorldBuilder):
+
+        def build(self, *args, **kwargs):
+            yield Entity().set_state(1)
+            yield Entity().set_state(2)
 
     def test_is_resident(self):
         Colour = enum.Enum("Colour", ["red", "blue", "green", "yellow"])
@@ -77,3 +86,7 @@ class ResidentTests(unittest.TestCase):
                 ("examples", "ex_11_inventory_compass", "foyer.scene.toml"),
             ))
         )
+
+    def test_focus(self):
+        world = self.TestWorld()
+        drama = self.TestResident(world=world)
