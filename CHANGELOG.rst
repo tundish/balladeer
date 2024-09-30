@@ -9,7 +9,7 @@ Change Log
 0.57.0rc
 ========
 
-* TODO: NamedTuple for return type of Map options.
+* Resident exits are named tuples.
 * Resident mixin class provides `focus` property.
 
 0.56.0

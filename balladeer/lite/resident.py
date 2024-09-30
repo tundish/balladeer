@@ -18,6 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+from collections import namedtuple
 import enum
 import operator
 
@@ -25,6 +26,8 @@ from balladeer.lite.loader import Loader
 
 
 class Resident:
+
+    Move = namedtuple("Move", ["heading", "spot", "via"])
 
     def __init__(self, *args, selector: dict[str, list] = {}, **kwargs):
         self.selector = selector | {"states": set(selector.get("states", []))}
@@ -34,6 +37,11 @@ class Resident:
     def focus(self):
         selected = [i for i in self.world.typewise.get("Focus", []) if self.is_resident(i.get_state("Spot"))]
         return next(reversed(sorted(selected, key=operator.attrgetter("state"))), None)
+
+    @property
+    def exits(self):
+        spot = self.focus.get_state("Spot")
+        return [self.Move(*option) for option in sorted(self.world.map.options(spot), key=str)]
 
     def is_resident(self, *args: tuple[enum.Enum]):
         states = self.selector["states"]
