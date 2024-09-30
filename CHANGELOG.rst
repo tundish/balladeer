@@ -10,6 +10,7 @@ Change Log
 ========
 
 * TODO: NamedTuple for return type of Map options.
+* Resident mixin class provides `focus` property.
 
 0.56.0
 ======
