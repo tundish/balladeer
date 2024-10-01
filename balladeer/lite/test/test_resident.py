@@ -23,7 +23,6 @@ import unittest
 
 import balladeer
 from balladeer import discover_assets
-from balladeer import Drama
 from balladeer import Entity
 from balladeer import Loader
 from balladeer import Resident
@@ -35,7 +34,7 @@ class ResidentTests(unittest.TestCase):
 
     Spot = enum.Enum("Spot", {"kitchen": ["kitchen"], "hall": ["hallway"], "cloaks": ["cloakroom", "toilet"]})
 
-    class TestResident(Resident, Drama):
+    class TestResident(Resident):
         pass
 
     class TestWorld(WorldBuilder):

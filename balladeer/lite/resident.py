@@ -22,15 +22,17 @@ from collections import namedtuple
 import enum
 import operator
 
+from balladeer import Drama
 from balladeer.lite.loader import Loader
 
 
-class Resident:
+class Resident(Drama):
 
     Move = namedtuple("Move", ["heading", "spot", "via"])
 
     def __init__(self, *args, selector: dict[str, list] = {}, **kwargs):
         self.selector = selector | {"states": set(selector.get("states", []))}
+        self.selector["paths"] = self.selector.get("paths", [])
         super().__init__(*args, **kwargs)
 
     @property
@@ -49,5 +51,6 @@ class Resident:
 
     def scripts(self, assets: list):
         return [
-            i for i in assets if isinstance(i, Loader.Scene) and any(i.path.match(p) for p in self.selector["paths"])
+            i for i in assets
+            if isinstance(i, Loader.Scene) and any(i.path.match(p) for p in self.selector["paths"])
         ]

@@ -104,6 +104,7 @@ class StoryStager(StoryBuilder):
         puzzle = self.stager.gather_puzzle(realm, name)
         drama_type = self.item_type(puzzle.get("type"), default=Drama)
         states = [self.item_state(f"{k}.{v}", pool=pool) for k, v in puzzle.get("init", {}).items()]
+        # TODO: selector
         drama = drama_type(
             *self.speech,
             config=self.config,
