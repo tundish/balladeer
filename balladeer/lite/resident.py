@@ -52,5 +52,7 @@ class Resident(Drama):
     def scripts(self, assets: list):
         return [
             i for i in assets
-            if isinstance(i, Loader.Scene) and any(i.path.match(p) for p in self.selector["paths"])
+            if isinstance(i, Loader.Scene)
+            and any(i.path.match(p) for p in self.selector["paths"])
+            or not self.selector["paths"]
         ]
