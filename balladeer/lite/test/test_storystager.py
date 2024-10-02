@@ -25,10 +25,12 @@ import unittest
 import balladeer
 from balladeer import Compass
 from balladeer import discover_assets
+from balladeer import Drama
 from balladeer import Entity
 from balladeer import Fruition
 from balladeer import Grouping
 from balladeer import Loader
+from balladeer import Resident
 from balladeer import StoryStager
 from balladeer import Stager
 from balladeer import Traffic
@@ -41,7 +43,7 @@ from busker.test.test_stager import StagerTests
 class StoryTests(unittest.TestCase):
 
     class TestStory(StoryStager):
-        pass
+        types = [Drama, Entity, Resident, Transit]
 
     def setUp(self):
         assets = discover_assets(busker, "test", ignore=[])
@@ -148,9 +150,13 @@ class StoryTests(unittest.TestCase):
         s = self.TestStory(assets=assets)
         for n, _ in enumerate(s.stager.puzzles):
             d = s.context
+            print(f"{d=}")
             with self.subTest(n=n, d=d):
                 if n == 0:
                     self.assertEqual(d.name, "a")
+                    self.assertTrue(hasattr(d, "selector"), d)
+                    self.assertIsInstance(d.selector, dict)
+                    self.assertTrue(d.selector)
                     d.set_state(Fruition.completion)
                     s.turn()
                     continue

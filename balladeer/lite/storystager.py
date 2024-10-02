@@ -30,6 +30,7 @@ from balladeer.lite.types import Fruition
 from balladeer.lite.types import Grouping
 from balladeer.lite.loader import Loader
 from balladeer.lite.compass import MapBuilder
+from balladeer.lite.resident import Resident
 from balladeer.lite.speech import Speech
 from balladeer.lite.storybuilder import StoryBuilder
 from balladeer.lite.compass import Transit
@@ -102,9 +103,8 @@ class StoryStager(StoryBuilder):
     def build(self, realm: str, name: str, **kwargs):
         pool = [self.world.map.home, self.world.map.into, self.world.map.exit, self.world.map.spot]
         puzzle = self.stager.gather_puzzle(realm, name)
-        drama_type = self.item_type(puzzle.get("type"), default=Drama)
+        drama_type = self.item_type(puzzle.get("type"), default=Resident)
         states = [self.item_state(f"{k}.{v}", pool=pool) for k, v in puzzle.get("init", {}).items()]
-        # TODO: selector
         drama = drama_type(
             *self.speech,
             config=self.config,
@@ -115,6 +115,7 @@ class StoryStager(StoryBuilder):
             sketch=puzzle.get("sketch", ""),
             aspect=puzzle.get("aspect", ""),
             revert=puzzle.get("revert", ""),
+            #selector=puzzle.get("selector", {}),
         ).set_state(0, *states)
 
         for item in puzzle.get("items"):
@@ -141,8 +142,14 @@ class StoryStager(StoryBuilder):
 
     @property
     def context(self):
-        drama = [d for realm, name in self.stager.active if getattr(d := self.drama[(realm, name)], "focus", True)] or list(self.drama.values())
-        return next((reversed(sorted(drama, key=operator.attrgetter("state")))), None)
+        active = [self.drama[(realm, name)] for realm, name in self.stager.active]
+        drama = sorted(
+            [d for d in active if getattr(d, "focus", True)],
+            key=operator.attrgetter("state"),
+            reverse=True
+        )
+        drama = drama or list(self.drama.values())
+        return next(iter(drama), None)
 
     def monitor_context(
         self,
