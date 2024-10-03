@@ -143,12 +143,13 @@ class StoryStager(StoryBuilder):
     @property
     def context(self):
         active = [self.drama[(realm, name)] for realm, name in self.stager.active]
+
         drama = sorted(
             [d for d in active if getattr(d, "focus", True)],
             key=operator.attrgetter("state"),
             reverse=True
         )
-        drama = drama or list(self.drama.values())
+        drama = drama or active
         return next(iter(drama), None)
 
     def monitor_context(
