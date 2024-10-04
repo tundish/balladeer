@@ -151,19 +151,17 @@ class StoryTests(unittest.TestCase):
         for n, _ in enumerate(set(s.stager.puzzles)):
             d = s.context
             with self.subTest(n=n, d=d):
-                print(f"{d=} {d.selector}")
                 if n == 0:
                     self.assertEqual(d.name, "a")
                     self.assertTrue(hasattr(d, "selector"), d)
                     self.assertIsInstance(d.selector, dict)
-                    self.assertTrue(d.selector)
+                    self.assertEqual(set(d.selector), {"states", "paths"})
+                    self.assertEqual(d.selector["states"], set(["spot.kitchen", "spot.hall"]))
                     d.set_state(Fruition.completion)
                     s.turn()
                     continue
 
-                if d.name == "h":
-                    self.assertIn(d.get_state(Fruition), (Fruition.inception, Fruition.completion))
-                else:
-                    self.assertEqual(d.get_state(Fruition), Fruition.inception, d)
+                self.assertEqual(d.get_state(Fruition), Fruition.inception, d)
                 d.set_state(Fruition.completion)
-                s.turn()
+                if n + 1 < len(set(s.stager.puzzles)):
+                    s.turn()

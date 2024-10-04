@@ -115,7 +115,7 @@ class StoryStager(StoryBuilder):
             sketch=puzzle.get("sketch", ""),
             aspect=puzzle.get("aspect", ""),
             revert=puzzle.get("revert", ""),
-            #selector=puzzle.get("selector", {}),
+            selector=puzzle.get("selector", {}),
         ).set_state(0, *states)
 
         for item in puzzle.get("items"):
