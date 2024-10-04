@@ -159,6 +159,7 @@ class Session(HTTPEndpoint):
         with story.turn() as turn:
             if not turn.blocks:
                 warnings.warn(f"Unable to cast {story.context.ensemble} in context {story.context}")
+                warnings.warn(f"Check selector - {getattr(story.context, 'selector')}")
                 return RedirectResponse(url=request.url_for("home"), status_code=300)
 
             page = self.compose(request, page, story, turn)

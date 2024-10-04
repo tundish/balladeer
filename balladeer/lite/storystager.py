@@ -22,6 +22,7 @@ import copy
 import enum
 import operator
 import warnings
+import sys
 
 from balladeer.lite.compass import Compass
 from balladeer.lite.drama import Drama
