@@ -6,11 +6,12 @@
 Change Log
 ::::::::::
 
-0.57.0rc
-========
+0.57.0
+======
 
-* Resident exits are named tuples.
-* Resident mixin class provides `focus` property.
+* Resident exits are named-tuples.
+* Resident class provides `focus` property.
+* Multiple fixes to StoryStager.
 
 0.56.0
 ======
