@@ -148,10 +148,10 @@ class StoryTests(unittest.TestCase):
         ])
         self.assertEqual(len(assets[Loader.Staging]), 2)
         s = self.TestStory(assets=assets)
-        for n, _ in enumerate(s.stager.puzzles):
+        for n, _ in enumerate(set(s.stager.puzzles)):
             d = s.context
-            print(f"{d=}")
             with self.subTest(n=n, d=d):
+                print(f"{d=} {d.selector}")
                 if n == 0:
                     self.assertEqual(d.name, "a")
                     self.assertTrue(hasattr(d, "selector"), d)
