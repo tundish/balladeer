@@ -81,7 +81,7 @@ class Loader:
             elif typ == Loader.Staging:
                 with importlib.resources.as_file(path) as f:
                     text = f.read_text(encoding="utf8")
-                    data = next(Stager.load(text))
+                    data = next(Stager.load(text))  # TODO: new signature
                     yield typ(text, data, resource, path, f.stat())
             elif typ:
                 with importlib.resources.as_file(path) as f:
@@ -106,6 +106,7 @@ class Loader:
 
     @staticmethod
     def read_toml(text: str, resource="", path=None):
+        # TODO: use busker.proofer.read_toml
         try:
             return tomllib.loads(text)
         except tomllib.TOMLDecodeError as e:

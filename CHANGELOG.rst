@@ -11,6 +11,7 @@ Change Log
 
 * Rename some internal methods.
 * Doc fixes.
+* TODO: Integrate Loader with  busker.proofer
 
 0.57.0
 ======
