@@ -6,6 +6,12 @@
 Change Log
 ::::::::::
 
+0.58.0rc
+========
+
+* Rename some internal methods.
+* Doc fixes.
+
 0.57.0
 ======
 

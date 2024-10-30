@@ -93,10 +93,10 @@ class LoaderTests(unittest.TestCase):
 
         for n, selection in enumerate(((), ("cover",), ("gallery",), ("cover", "gallery"))):
             with self.subTest(n=n, selection=selection):
-                staged = Loader.stage(assets, *selection)
-                self.assertIsInstance(staged, Grouping)
-                self.assertTrue(next(i for i in staged["text/css"] if i.path.name == "basics.css"), False)
-                self.assertEqual(len(staged.each), 1 + selection.count("cover") + 2 * selection.count("gallery"))
+                styled = Loader.style(assets, *selection)
+                self.assertIsInstance(styled, Grouping)
+                self.assertTrue(next(i for i in styled["text/css"] if i.path.name == "basics.css"), False)
+                self.assertEqual(len(styled.each), 1 + selection.count("cover") + 2 * selection.count("gallery"))
 
 
 class SceneTests(unittest.TestCase):

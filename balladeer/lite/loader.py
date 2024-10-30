@@ -94,7 +94,7 @@ class Loader:
         return "style" not in str(asset.path)
 
     @staticmethod
-    def stage(assets: Grouping[str, list[Asset]], *args, predicate=None) -> Grouping[str, list[Asset]]:
+    def style(assets: Grouping[str, list[Asset]], *args, predicate=None) -> Grouping[str, list[Asset]]:
         assert isinstance(assets, Mapping), type(assets)
         predicate = predicate or Loader.ignore_style
 

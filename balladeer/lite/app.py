@@ -125,8 +125,8 @@ class Home(HTTPEndpoint):
         page.paste(self.meta, zone=page.zone.meta)
 
         assets = getattr(self, "assets", Grouping())
-        staged = Loader.stage(assets)
-        page.paste(*sorted(line for line in Home.render_css_links(request, staged)), zone=page.zone.css)
+        styled = Loader.style(assets)
+        page.paste(*sorted(line for line in Home.render_css_links(request, styled)), zone=page.zone.css)
         page.paste(self.body, zone=page.zone.body)
         return page
 
@@ -307,8 +307,8 @@ class Session(HTTPEndpoint):
 
         notes = list(turn.notes.values())
         styles = notes and notes[-1].get("style", []) or []
-        staged = Loader.stage(assets, *styles)
-        page.paste(*sorted(line for line in Home.render_css_links(request, staged)), zone=page.zone.css)
+        styled = Loader.style(assets, *styles)
+        page.paste(*sorted(line for line in Home.render_css_links(request, styled)), zone=page.zone.css)
 
         page.paste(*Home.render_js_links(request, assets), zone=page.zone.script)
 
