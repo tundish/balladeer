@@ -11,8 +11,8 @@ Change Log
 
 * Rename some internal methods.
 * Doc fixes.
+* Fix a bug where Prologue cues disrupted SpeechTable menus.
 * TODO: Integrate Loader with  busker.proofer
-* TODO: Investigate how generated Prologue disrupts SpeechTables.
 
 0.57.0
 ======
