@@ -219,9 +219,11 @@ class Director:
         roles: dict = {},
         path: pathlib.Path | str = None,
         shot_id: int = 0,
+        cue_offset: int = 0,
     ) -> Generator[str]:
         self.cast = roles.copy()
         for cue_index, block in enumerate(self.bq_matcher.findall(speech.tags)):
+            cue_index += cue_offset
             self.notes[(path, shot_id, cue_index)] = self.notes[(path, shot_id, cue_index)].new_child(
                 pause=self.pause, duration=self.dwell, delay=self.delay
             )
@@ -391,6 +393,7 @@ class Director:
                 spoken[t].append((n, b))
 
         # Interleave programmatic and written dialogue
+        cue_offset = len(spoken[Prologue])
         spoken[Dialogue] = list(
             itertools.chain.from_iterable(
                 itertools.zip_longest(
@@ -398,7 +401,7 @@ class Director:
                     [
                         (n, html5)
                         for n, d in self.dialogue(scene, roles)
-                        for html5 in self.edit(d, roles, path=scene.path, shot_id=n)
+                        for html5 in self.edit(d, roles, path=scene.path, shot_id=n, cue_offset=cue_offset)
                     ],
                     fillvalue=Speech(),
                 )
