@@ -26,6 +26,7 @@ from balladeer import Drama
 from balladeer import Entity
 from balladeer import Grouping
 from balladeer import Loader
+from balladeer import Prologue
 from balladeer import SpeechTables
 from balladeer import StoryBuilder
 from balladeer import WorldBuilder
@@ -293,3 +294,49 @@ class InteractionTests(unittest.TestCase):
                         self.assertTrue(self.story.context.tree)
                         self.assertEqual(2, len(turn.blocks), turn.blocks)
                         self.assertIn("Charlie is the elder cat", turn.blocks[1][1])
+
+    def test_generated_prologue(self):
+        n_turns = 4
+        for n in range(n_turns):
+            drama = self.story.context
+            drama.speech.append(Prologue(f"<>Turn number {n}"))
+            with self.story.turn() as turn:
+                self.story.context.state = n
+                options = self.story.context.options(self.story.context.ensemble)
+                with self.subTest(n=n):
+                    if n == 0:
+                        shot_id, block = turn.blocks[0]
+                        self.assertIn("What shall we do?", block)
+                        self.assertEqual(0, self.story.context.witness["branching"])
+                        self.assertIsNone(self.story.context.tree)
+                    if n == 1:
+                        shot_id, block = turn.blocks[0]
+                        self.assertIn("What shall we do?", block)
+                        self.assertEqual(0, self.story.context.witness["branching"])
+                        self.assertIsNone(self.story.context.tree)
+                    elif n == 2:
+                        self.assertEqual(4, len(turn.blocks), turn.blocks)
+                        self.assertIn("Let's practise", turn.blocks[0][1])
+                        self.assertIn("I'll let you carry on", turn.blocks[2][1])
+                        shot_id, block = turn.blocks[1]
+                        self.assertIn("a good time to ask", block)
+
+                        self.assertEqual(1, self.story.context.witness["branching"])
+                        self.assertTrue(self.story.context.tree)
+                        menu = self.story.context.tree.menu
+                        self.assertTrue({str(i) for i in range(1, 4)}.issubset(set(menu.keys())))
+                        self.assertIn("Ask about football", menu)
+                    elif n == 3:
+                        self.assertEqual(1, self.story.context.witness["branching"])
+                        self.assertTrue(self.story.context.tree)
+                        menu = self.story.context.tree.menu
+                        print(f"{menu=}")
+                    elif n == 4:
+                        action = self.story.action("1")
+                        self.assertIsNone(action)
+                        self.assertEqual(1, self.story.context.witness["branching"])
+                        self.assertIsNone(self.story.context.tree)
+
+                        self.assertEqual(1, len(turn.blocks), turn.blocks)
+                        self.assertIn("Interaction over", turn.blocks[0][1])
+
