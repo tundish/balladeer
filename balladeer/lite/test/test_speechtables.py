@@ -405,3 +405,61 @@ class InteractionTests(unittest.TestCase):
                         self.assertEqual(1, len(turn.blocks), turn.blocks)
                         self.assertIn("Interaction over", turn.blocks[0][1])
 
+    def test_generated_prologue_multiple_cues(self):
+        n_turns = 4
+        for n in range(n_turns):
+            drama = self.story.context
+            drama.speech.append(Prologue(f"<>Turn number {n}\n<>Second cue"))
+            with self.story.turn() as turn:
+                self.story.context.state = n
+                options = self.story.context.options(self.story.context.ensemble)
+                with self.subTest(n=n):
+                    if n == 0:
+                        shot_id, block = turn.blocks[0]
+                        self.assertIn("Turn number 0", block)
+                        shot_id, block = turn.blocks[1]
+                        self.assertIn("Second cue", block)
+                        shot_id, block = turn.blocks[2]
+                        self.assertIn("What shall we do?", block)
+                        self.assertEqual(0, self.story.context.witness["branching"])
+                        self.assertIsNone(self.story.context.tree)
+                    if n == 1:
+                        shot_id, block = turn.blocks[0]
+                        self.assertIn("Turn number 1", block)
+                        shot_id, block = turn.blocks[1]
+                        self.assertIn("Second cue", block)
+                        shot_id, block = turn.blocks[2]
+                        self.assertIn("What shall we do?", block)
+                        self.assertEqual(0, self.story.context.witness["branching"])
+                        self.assertIsNone(self.story.context.tree)
+                    elif n == 2:
+                        shot_id, block = turn.blocks[0]
+                        self.assertIn("Turn number 2", block)
+                        shot_id, block = turn.blocks[1]
+                        self.assertIn("Second cue", block)
+                        shot_id, block = turn.blocks[2]
+                        self.assertEqual(5, len(turn.blocks), turn.blocks)
+                        self.assertIn("Let's practise", block)
+                        shot_id, block = turn.blocks[3]
+                        self.assertIn("a good time to ask", block)
+
+                        self.assertEqual(1, self.story.context.witness["branching"])
+                        self.assertTrue(self.story.context.tree)
+                        menu = self.story.context.tree.menu
+                        self.assertTrue({str(i) for i in range(1, 4)}.issubset(set(menu.keys())), menu)
+                        self.assertIn("Ask about football", menu)
+
+                        self.assertIn("I'll let you carry on", turn.blocks[4][1])
+                    elif n == 3:
+                        self.assertEqual(1, self.story.context.witness["branching"])
+                        self.assertTrue(self.story.context.tree)
+                        menu = self.story.context.tree.menu
+                    elif n == 4:
+                        action = self.story.action("1")
+                        self.assertIsNone(action)
+                        self.assertEqual(1, self.story.context.witness["branching"])
+                        self.assertIsNone(self.story.context.tree)
+
+                        self.assertEqual(1, len(turn.blocks), turn.blocks)
+                        self.assertIn("Interaction over", turn.blocks[0][1])
+
