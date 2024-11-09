@@ -49,6 +49,6 @@ You can control when to terminate the interaction by adding a directive to any o
       hop back up to the previous branching node and stay in the dialogue tree.
 
 .. literalinclude:: ../lite/test/test_speechtables.py
-    :lines: 58-119
+    :lines: 59-126
     :dedent: 4
 
