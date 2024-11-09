@@ -12,7 +12,8 @@ Change Log
 * Rename some internal methods.
 * Doc fixes.
 * Fix a bug where Prologue cues disrupted SpeechTable menus.
-* TODO: Integrate Loader with  busker.proofer
+* Fix a bug which left tags in SpeechTable branching options.
+* TODO: Integrate Loader with busker.proofer
 
 0.57.0
 ======
