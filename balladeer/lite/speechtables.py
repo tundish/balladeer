@@ -37,6 +37,7 @@ class SpeechTables:
         self.ol_matcher = re.compile("<ol>.*?<\\/ol>", re.DOTALL | re.MULTILINE)
         self.li_matcher = re.compile("<li id=\"(\\d+)\">", re.DOTALL | re.MULTILINE)
         self.pp_matcher = re.compile("<p[^>]*?>(.*?)<\\/p>", re.DOTALL | re.MULTILINE)
+        self.tag_matcher = re.compile("<\\/?(code|em|strong)>")
 
     @staticmethod
     def follow_path(table, path: list):
@@ -62,7 +63,10 @@ class SpeechTables:
             return {}
 
         list_items = list(self.li_matcher.findall(list_block.group()))
-        para_items = list(self.pp_matcher.findall(list_block.group()))
+        para_items = [
+            self.tag_matcher.sub("", para)
+            for para in self.pp_matcher.findall(list_block.group())
+        ]
         return dict(
             {k: v for k, v in zip(para_items, list_items)},
             **{v: v for k, v in zip(para_items, list_items)}

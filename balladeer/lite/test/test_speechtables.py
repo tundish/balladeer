@@ -274,6 +274,8 @@ class InteractionTests(unittest.TestCase):
                         self.assertEqual(1, len(turn.blocks), turn.blocks)
                         shot_id, block = turn.blocks[0]
                         self.assertIn("three lovely cats", block)
+                        self.assertIn("<code>Ask about Doodles</code>", block)
+                        self.assertFalse(any("<code>" in i for i in options), options)
                     elif n == 4:
                         action = self.story.action("2")
                         fn, args, kwargs = action
@@ -292,6 +294,8 @@ class InteractionTests(unittest.TestCase):
                         self.assertTrue(self.story.context.tree)
                         self.assertEqual(2, len(turn.blocks), turn)
                         self.assertIn("three lovely cats", turn.blocks[0][1])
+                        self.assertIn("<strong>Ask about Elektra</strong>", turn.blocks[0][1])
+                        self.assertFalse(any("<strong>" in i for i in options), options)
                     elif n == 6:
                         action = self.story.action("1")
                         fn, args, kwargs = action
@@ -308,6 +312,8 @@ class InteractionTests(unittest.TestCase):
                         self.assertTrue(self.story.context.tree)
                         self.assertEqual(2, len(turn.blocks), turn.blocks)
                         self.assertIn("three lovely cats", turn.blocks[0][1])
+                        self.assertIn("<em>Ask about Charlie</em>", turn.blocks[0][1])
+                        self.assertFalse(any("<em>" in i for i in options), options)
                     elif n == 8:
                         action = self.story.action("1")
                         fn, args, kwargs = action
@@ -316,7 +322,6 @@ class InteractionTests(unittest.TestCase):
                         self.assertTrue(self.story.context.tree)
                         self.assertEqual(2, len(turn.blocks), turn.blocks)
                         self.assertIn("Charlie is the elder", turn.blocks[1][1])
-
 
     def test_generated_prologue(self):
         n_turns = 4
