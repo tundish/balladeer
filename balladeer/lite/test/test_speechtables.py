@@ -92,19 +92,25 @@ class InteractionTests(unittest.TestCase):
 
     [_.2]
     s='''
-    <BETH.branching> I've got two lovely cats.
-        1. Ask about Charlie
-        2. Ask about Doodles
+    <BETH.branching> I've got three lovely cats.
+        1. *Ask about Charlie*
+        2. `Ask about Doodles`
+        3. _Ask about Elektra_
     '''
 
     [_.2.1]
     s='''
-    <BETH> Charlie is the elder cat. He's a Marmalade. Very laid back.
+    <BETH.returning@INTERACTION> Charlie is the elder cat. He's a Marmalade. Very laid back.
     '''
 
     [_.2.2]
     s='''
     <BETH.returning@INTERACTION> Oh my goodness, Doodles. Always up to mischief!
+    '''
+
+    [_.2.3]
+    s='''
+    <BETH.returning@INTERACTION> The thing about Elektra is, she's always somewhere else.
     '''
 
     [_.3]
@@ -225,7 +231,7 @@ class InteractionTests(unittest.TestCase):
                         self.assertIn("Interaction over", turn.blocks[0][1])
 
     def test_double_branch_with_returning(self):
-        n_turns = 7
+        n_turns = 9
         for n in range(n_turns):
             with self.story.turn() as turn:
                 with self.subTest(n=n):
@@ -267,7 +273,7 @@ class InteractionTests(unittest.TestCase):
 
                         self.assertEqual(1, len(turn.blocks), turn.blocks)
                         shot_id, block = turn.blocks[0]
-                        self.assertIn("two lovely cats", block)
+                        self.assertIn("three lovely cats", block)
                     elif n == 4:
                         action = self.story.action("2")
                         fn, args, kwargs = action
@@ -279,13 +285,13 @@ class InteractionTests(unittest.TestCase):
                         shot_id, block = turn.blocks[0]
                         self.assertIn("Doodles. Always up to mischief!", block)
                     elif n == 5:
-                        action = self.story.action("1")
+                        action = self.story.action("3")
                         fn, args, kwargs = action
-                        self.assertEqual({"option": "1"}, kwargs)
+                        self.assertEqual({"option": "3"}, kwargs)
                         self.assertEqual(3, self.story.context.witness["branching"])
                         self.assertTrue(self.story.context.tree)
-                        self.assertEqual(2, len(turn.blocks), turn.blocks)
-                        self.assertIn("two lovely cats", turn.blocks[0][1])
+                        self.assertEqual(2, len(turn.blocks), turn)
+                        self.assertIn("three lovely cats", turn.blocks[0][1])
                     elif n == 6:
                         action = self.story.action("1")
                         fn, args, kwargs = action
@@ -293,7 +299,24 @@ class InteractionTests(unittest.TestCase):
                         self.assertEqual(4, self.story.context.witness["branching"])
                         self.assertTrue(self.story.context.tree)
                         self.assertEqual(2, len(turn.blocks), turn.blocks)
-                        self.assertIn("Charlie is the elder cat", turn.blocks[1][1])
+                        self.assertIn("The thing about Elektra", turn.blocks[1][1])
+                    elif n == 7:
+                        action = self.story.action("1")
+                        fn, args, kwargs = action
+                        self.assertEqual({"option": "1"}, kwargs)
+                        self.assertEqual(5, self.story.context.witness["branching"])
+                        self.assertTrue(self.story.context.tree)
+                        self.assertEqual(2, len(turn.blocks), turn.blocks)
+                        self.assertIn("three lovely cats", turn.blocks[0][1])
+                    elif n == 8:
+                        action = self.story.action("1")
+                        fn, args, kwargs = action
+                        self.assertEqual({"option": "1"}, kwargs)
+                        self.assertEqual(6, self.story.context.witness["branching"])
+                        self.assertTrue(self.story.context.tree)
+                        self.assertEqual(2, len(turn.blocks), turn.blocks)
+                        self.assertIn("Charlie is the elder", turn.blocks[1][1])
+
 
     def test_generated_prologue(self):
         n_turns = 4
