@@ -124,6 +124,7 @@ class StoryStager(StoryBuilder):
             item_types = list(filter(None, [item.get("type")] + item.get("types", [])))
             item_type = next((self.item_type(i) for i in item_types), Entity)
             states = [self.item_state(i, pool=pool) for i in item.get("states", [])]
+            # TODO: Reuse entities if they are not of type Mob, so they can link to multiple puzzles.
             entity = item_type(
                 names=item_names,
                 types={i for i in item_types if i != item_type.__name__},
