@@ -169,11 +169,11 @@ class StoryStager(StoryBuilder):
             events = self.stager.terminate(realm, name, state.name, done=False)
 
         for event in events:
-            payload = self.item_state(event.payload, pool=pool)
             trigger = self.item_state(event.trigger, pool=[Fruition])
             if state != trigger:
                 continue
 
+            payload = self.item_state(event.payload, pool=pool)
             if isinstance(event.target, str):
                 self.drama[event.realm, event.target].set_state(payload)
             else:
