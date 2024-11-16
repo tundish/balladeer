@@ -13,6 +13,8 @@ Change Log
 * Doc fixes.
 * Fix a bug where Prologue cues disrupted SpeechTable menus.
 * Fix a bug which left tags in SpeechTable branching options.
+* Call Stager.terminate method for both terminal and non-terminal states.
+* Fix trigger bug in Stager.monitor_context.
 * TODO: Integrate Loader with busker.proofer
 
 0.57.0

@@ -25,17 +25,18 @@ import warnings
 import sys
 
 from balladeer.lite.compass import Compass
+from balladeer.lite.compass import MapBuilder
+from balladeer.lite.compass import Transit
+from balladeer.lite.compass import Traffic
 from balladeer.lite.drama import Drama
 from balladeer.lite.entity import Entity
-from balladeer.lite.types import Fruition
-from balladeer.lite.types import Grouping
 from balladeer.lite.loader import Loader
-from balladeer.lite.compass import MapBuilder
 from balladeer.lite.resident import Resident
 from balladeer.lite.speech import Speech
 from balladeer.lite.storybuilder import StoryBuilder
-from balladeer.lite.compass import Transit
-from balladeer.lite.compass import Traffic
+from balladeer.lite.types import Detail
+from balladeer.lite.types import Fruition
+from balladeer.lite.types import Grouping
 from balladeer.lite.world import WorldBuilder
 from busker.stager import Stager
 
@@ -102,7 +103,7 @@ class StoryStager(StoryBuilder):
         } or {(None, None): Drama(*self.speech, config=self.config, world=self.world)}
 
     def build(self, realm: str, name: str, **kwargs):
-        pool = [self.world.map.home, self.world.map.into, self.world.map.exit, self.world.map.spot]
+        pool = [self.world.map.home, self.world.map.into, self.world.map.exit, self.world.map.spot, Detail]
         puzzle = self.stager.gather_puzzle(realm, name)
         drama_type = self.item_type(puzzle.get("type"), default=Resident)
         states = [self.item_state(f"{k}.{v}", pool=pool) for k, v in puzzle.get("init", {}).items()]
@@ -161,18 +162,26 @@ class StoryStager(StoryBuilder):
         drama: Drama,
         terminal={Fruition.withdrawn, Fruition.defaulted, Fruition.cancelled, Fruition.completion}
     ):
-        pool = [self.world.map.home, self.world.map.into, self.world.map.exit, self.world.map.spot]
+        pool = [self.world.map.home, self.world.map.into, self.world.map.exit, self.world.map.spot, Detail]
         if (state := drama.get_state(Fruition)) in terminal:
-            for event in self.stager.terminate(realm, name, state.name):
-                state = self.item_state(event.payload, pool=pool)
-                if isinstance(event.target, str):
-                    self.drama[event.realm, event.target].set_state(state)
-                else:
-                    entities = [
-                        entity.set_state(state)
-                        for entity in drama.ensemble
-                        if set(event.target) <= entity.types
-                    ]
+            events = self.stager.terminate(realm, name, state.name, done=True)
+        else:
+            events = self.stager.terminate(realm, name, state.name, done=False)
+
+        for event in events:
+            payload = self.item_state(event.payload, pool=pool)
+            trigger = self.item_state(event.trigger, pool=[Fruition])
+            if state != trigger:
+                continue
+
+            if isinstance(event.target, str):
+                self.drama[event.realm, event.target].set_state(payload)
+            else:
+                entities = [
+                    entity.set_state(payload)
+                    for entity in drama.ensemble
+                    if set(event.target) <= entity.types
+                ]
 
     def turn(self, *args, **kwargs):
         for realm, name in self.stager.active.copy():
