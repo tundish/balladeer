@@ -198,24 +198,25 @@ class Fruition(State, enum.Enum):
                 cancelled=("cancellation", ""),
             ),
             evaluation=dict(
-                elaboration="porposal",
+                completion=("adoption", ""),
+                construction=("refusal", ""),
+                cancelled=("cancellation", ""),
             ),
             completion=dict(
-                elaboration="porposal",
             ),
             discussion=dict(
-                elaboration="porposal",
+                elaboration=("clarification", ""),
+                construction=("confirmation", ""),
+                withdrawn=("withdrawal", "disinclination"),
             ),
             defaulted=dict(
-                elaboration="porposal",
             ),
             withdrawn=dict(
-                elaboration="porposal",
             ),
             cancelled=dict(
-                elaboration="porposal",
             ),
         )
+        return table.get(tail.name, {}).get(head.name, ("", ""))
 
     inception = 1
     elaboration = 2

@@ -18,6 +18,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 import enum
+import itertools
 import unittest
 
 from balladeer.lite.compass import Traffic
@@ -214,7 +215,7 @@ class ColourTests(unittest.TestCase):
                 self.assertEqual([128, 64, 32, 1], rgba)
 
 
-class ColourTests(unittest.TestCase):
+class FruitionTests(unittest.TestCase):
 
     def test_transition_valid(self):
         self.assertEqual(Fruition.transition(Fruition.inception, Fruition.elaboration)[0], "proposal")
@@ -232,3 +233,11 @@ class ColourTests(unittest.TestCase):
         self.assertEqual(Fruition.transition(Fruition.evaluation, Fruition.construction)[0], "refusal")
         self.assertEqual(Fruition.transition(Fruition.evaluation, Fruition.cancelled)[0], "cancellation")
         self.assertEqual(Fruition.transition(Fruition.evaluation, Fruition.completion)[0], "adoption")
+
+    def test_transition_invalid(self):
+        for tail, head in itertools.product(
+            (Fruition.inception, Fruition.completion, Fruition.defaulted, Fruition.withdrawn, Fruition.cancelled),
+            repeat=2
+        ):
+            with self.subTest(tail=tail, head=head):
+                self.assertEqual(Fruition.transition(tail, head), ("", ""))
