@@ -24,6 +24,7 @@ from balladeer.lite.compass import Traffic
 from balladeer.lite.compass import Transit
 from balladeer.lite.entity import Entity
 from balladeer.lite.loader import Loader
+from balladeer.lite.types import Fruition
 from balladeer.lite.types import Grouping
 from balladeer.lite.types import Page
 from balladeer.lite.types import State
@@ -211,3 +212,23 @@ class ColourTests(unittest.TestCase):
             with self.subTest(text=text):
                 rgba = Page.css_rgba(text)
                 self.assertEqual([128, 64, 32, 1], rgba)
+
+
+class ColourTests(unittest.TestCase):
+
+    def test_transition_valid(self):
+        self.assertEqual(Fruition.transition(Fruition.inception, Fruition.elaboration)[0], "proposal")
+        self.assertEqual(Fruition.transition(Fruition.elaboration, Fruition.withdrawn)[0], "withdrawal")
+        self.assertEqual(Fruition.transition(Fruition.elaboration, Fruition.withdrawn)[1], "disinclination")
+        self.assertEqual(Fruition.transition(Fruition.elaboration, Fruition.construction)[1], "promise")
+        self.assertEqual(Fruition.transition(Fruition.elaboration, Fruition.discussion)[1], "offer")
+        self.assertEqual(Fruition.transition(Fruition.discussion, Fruition.elaboration)[0], "clarification")
+        self.assertEqual(Fruition.transition(Fruition.discussion, Fruition.construction)[0], "confirmation")
+        self.assertEqual(Fruition.transition(Fruition.discussion, Fruition.withdrawn)[0], "withdrawal")
+        self.assertEqual(Fruition.transition(Fruition.discussion, Fruition.withdrawn)[1], "disinclination")
+        self.assertEqual(Fruition.transition(Fruition.construction, Fruition.defaulted)[1], "disavowal")
+        self.assertEqual(Fruition.transition(Fruition.construction, Fruition.cancelled)[0], "cancellation")
+        self.assertEqual(Fruition.transition(Fruition.construction, Fruition.evaluation)[1], "delivery")
+        self.assertEqual(Fruition.transition(Fruition.evaluation, Fruition.construction)[0], "refusal")
+        self.assertEqual(Fruition.transition(Fruition.evaluation, Fruition.cancelled)[0], "cancellation")
+        self.assertEqual(Fruition.transition(Fruition.evaluation, Fruition.completion)[0], "adoption")

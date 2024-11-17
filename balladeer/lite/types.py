@@ -177,13 +177,50 @@ class Fruition(State, enum.Enum):
     by Terry Winograd and Fernando Flores,
     fig 5.1: The basic conversation for action.
 
+    See also: https://tundish.github.io/junkdlc/1-dialogue-and-action.html
+
     """
+
+    @staticmethod
+    def transition(tail: "Fruition", head: "Fruition") -> tuple[str, str]:
+        table = dict(
+            inception=dict(
+                elaboration=("proposal", ""),
+            ),
+            elaboration=dict(
+                construction=("", "promise"),
+                discussion=("", "offer"),
+                withdrawn=("withdrawal", "disinclination"),
+            ),
+            construction=dict(
+                evaluation=("", "delivery"),
+                defaulted=("", "disavowal"),
+                cancelled=("cancellation", ""),
+            ),
+            evaluation=dict(
+                elaboration="porposal",
+            ),
+            completion=dict(
+                elaboration="porposal",
+            ),
+            discussion=dict(
+                elaboration="porposal",
+            ),
+            defaulted=dict(
+                elaboration="porposal",
+            ),
+            withdrawn=dict(
+                elaboration="porposal",
+            ),
+            cancelled=dict(
+                elaboration="porposal",
+            ),
+        )
 
     inception = 1
     elaboration = 2
     construction = 3
     evaluation = 4
-    transition = 4
     completion = 5
     discussion = 6
     defaulted = 7
