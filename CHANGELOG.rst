@@ -15,6 +15,7 @@ Change Log
 * Fix a bug which left tags in SpeechTable branching options.
 * Call Stager.terminate method for both terminal and non-terminal states.
 * Fix trigger bug in Stager.monitor_context.
+* Add transition method to Fruition type.
 * TODO: Integrate Loader with busker.proofer
 
 0.57.0
