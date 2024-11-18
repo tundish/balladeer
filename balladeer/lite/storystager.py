@@ -175,7 +175,11 @@ class StoryStager(StoryBuilder):
 
             payload = self.item_state(event.payload, pool=pool)
             if isinstance(event.target, str):
-                self.drama[event.realm, event.target].set_state(payload)
+                entity  = self.drama[event.realm, event.target]
+                fruition = entity.get_state(Fruition)
+                if fruition and isinstance(payload, Fruition) and not any(Fruition.transitions(fruition, payload)):
+                    continue
+                entity.set_state(payload)
             else:
                 entities = [
                     entity.set_state(payload)
