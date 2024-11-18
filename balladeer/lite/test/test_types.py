@@ -217,27 +217,27 @@ class ColourTests(unittest.TestCase):
 
 class FruitionTests(unittest.TestCase):
 
-    def test_transition_valid(self):
-        self.assertEqual(Fruition.transition(Fruition.inception, Fruition.elaboration)[0], "proposal")
-        self.assertEqual(Fruition.transition(Fruition.elaboration, Fruition.withdrawn)[0], "withdrawal")
-        self.assertEqual(Fruition.transition(Fruition.elaboration, Fruition.withdrawn)[1], "disinclination")
-        self.assertEqual(Fruition.transition(Fruition.elaboration, Fruition.construction)[1], "promise")
-        self.assertEqual(Fruition.transition(Fruition.elaboration, Fruition.discussion)[1], "offer")
-        self.assertEqual(Fruition.transition(Fruition.discussion, Fruition.elaboration)[0], "clarification")
-        self.assertEqual(Fruition.transition(Fruition.discussion, Fruition.construction)[0], "confirmation")
-        self.assertEqual(Fruition.transition(Fruition.discussion, Fruition.withdrawn)[0], "withdrawal")
-        self.assertEqual(Fruition.transition(Fruition.discussion, Fruition.withdrawn)[1], "disinclination")
-        self.assertEqual(Fruition.transition(Fruition.construction, Fruition.defaulted)[1], "disavowal")
-        self.assertEqual(Fruition.transition(Fruition.construction, Fruition.cancelled)[0], "cancellation")
-        self.assertEqual(Fruition.transition(Fruition.construction, Fruition.evaluation)[1], "delivery")
-        self.assertEqual(Fruition.transition(Fruition.evaluation, Fruition.construction)[0], "refusal")
-        self.assertEqual(Fruition.transition(Fruition.evaluation, Fruition.cancelled)[0], "cancellation")
-        self.assertEqual(Fruition.transition(Fruition.evaluation, Fruition.completion)[0], "adoption")
+    def test_transitions_valid(self):
+        self.assertEqual(Fruition.transitions(Fruition.inception, Fruition.elaboration)[0], "proposal")
+        self.assertEqual(Fruition.transitions(Fruition.elaboration, Fruition.withdrawn)[0], "withdrawal")
+        self.assertEqual(Fruition.transitions(Fruition.elaboration, Fruition.withdrawn)[1], "disinclination")
+        self.assertEqual(Fruition.transitions(Fruition.elaboration, Fruition.construction)[1], "promise")
+        self.assertEqual(Fruition.transitions(Fruition.elaboration, Fruition.discussion)[1], "offer")
+        self.assertEqual(Fruition.transitions(Fruition.discussion, Fruition.elaboration)[0], "clarification")
+        self.assertEqual(Fruition.transitions(Fruition.discussion, Fruition.construction)[0], "confirmation")
+        self.assertEqual(Fruition.transitions(Fruition.discussion, Fruition.withdrawn)[0], "withdrawal")
+        self.assertEqual(Fruition.transitions(Fruition.discussion, Fruition.withdrawn)[1], "disinclination")
+        self.assertEqual(Fruition.transitions(Fruition.construction, Fruition.defaulted)[1], "disavowal")
+        self.assertEqual(Fruition.transitions(Fruition.construction, Fruition.cancelled)[0], "cancellation")
+        self.assertEqual(Fruition.transitions(Fruition.construction, Fruition.evaluation)[1], "delivery")
+        self.assertEqual(Fruition.transitions(Fruition.evaluation, Fruition.construction)[0], "refusal")
+        self.assertEqual(Fruition.transitions(Fruition.evaluation, Fruition.cancelled)[0], "cancellation")
+        self.assertEqual(Fruition.transitions(Fruition.evaluation, Fruition.completion)[0], "adoption")
 
-    def test_transition_invalid(self):
+    def test_transitions_invalid(self):
         for tail, head in itertools.product(
             (Fruition.inception, Fruition.completion, Fruition.defaulted, Fruition.withdrawn, Fruition.cancelled),
             repeat=2
         ):
             with self.subTest(tail=tail, head=head):
-                self.assertEqual(Fruition.transition(tail, head), ("", ""))
+                self.assertEqual(Fruition.transitions(tail, head), ("", ""))

@@ -182,7 +182,8 @@ class Fruition(State, enum.Enum):
     """
 
     @staticmethod
-    def transition(tail: "Fruition", head: "Fruition") -> tuple[str, str]:
+    def transitions(state: "Fruition", target: "Fruition") -> tuple[str, str]:
+        "Returns transitions (head and hand) linking a pair of Fruition states."
         table = dict(
             inception=dict(
                 elaboration=("proposal", ""),
@@ -216,7 +217,7 @@ class Fruition(State, enum.Enum):
             cancelled=dict(
             ),
         )
-        return table.get(tail.name, {}).get(head.name, ("", ""))
+        return table.get(state.name, {}).get(target.name, ("", ""))
 
     inception = 1
     elaboration = 2
