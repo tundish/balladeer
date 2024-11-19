@@ -181,6 +181,7 @@ class StoryStager(StoryBuilder):
                     continue
                 entity.set_state(payload)
             else:
+                # TODO: Create testable method for updating entities from payload dictionary.
                 entities = [
                     entity.set_state(payload)
                     for entity in drama.ensemble
