@@ -174,8 +174,8 @@ class StoryStager(StoryBuilder):
                 continue
 
             payload = self.item_state(event.payload, pool=pool)
-            if isinstance(event.target, str):
-                entity  = self.drama[event.realm, event.target]
+            if isinstance(event.targets, str):
+                entity = self.drama[event.realm, event.targets]
                 fruition = entity.get_state(Fruition)
                 if fruition and isinstance(payload, Fruition) and not any(Fruition.transitions(fruition, payload)):
                     continue
@@ -184,7 +184,7 @@ class StoryStager(StoryBuilder):
                 entities = [
                     entity.set_state(payload)
                     for entity in drama.ensemble
-                    if set(event.target) <= entity.types
+                    if set(event.targets) <= entity.types
                 ]
 
     def turn(self, *args, **kwargs):
