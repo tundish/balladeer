@@ -16,6 +16,7 @@ Change Log
 * Call Stager.terminate method for both terminal and non-terminal states.
 * Fix trigger bug in Stager.monitor_context.
 * Add transition method to Fruition type.
+* Add update method to Entity.
 * TODO: Integrate Loader with busker.proofer
 
 0.57.0
