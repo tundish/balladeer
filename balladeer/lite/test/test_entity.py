@@ -179,3 +179,31 @@ class TestSerialization(unittest.TestCase):
         self.assertEqual(2, len(data), data)
         data = json.loads(s)
         self.assertTrue(data)
+
+
+class TestUpdate(unittest.TestCase):
+    class Time(enum.Enum):
+        early = 0
+        later = 1
+        never = 2
+
+    class Quality(enum.Enum):
+        low = 0
+        med = 1
+        lux = 2
+
+    class Cost(enum.Enum):
+        risible = 0
+        regular = 1
+        ruinous = 2
+
+    def test_update_state(self):
+        e = Entity().set_state(self.Time.early)
+        e.update(state=self.Time.later)
+        self.assertEqual(e.get_state(self.Time), self.Time.later)
+
+    def test_update_states(self):
+        e = Entity().set_state(self.Time.early)
+        e.update(states=[self.Time.later, self.Quality.low])
+        self.assertEqual(e.get_state(self.Time), self.Time.later)
+        self.assertEqual(e.get_state(self.Quality), self.Quality.low)

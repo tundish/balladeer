@@ -225,3 +225,6 @@ class Entity:
     def state(self, value):
         return self.set_state(value)
 
+    def update(self, state=None, states=[], links=None, sketch=None, aspect=None, revert=None):
+        for s in filter(None, states + [state]):
+            self.set_state(s)
