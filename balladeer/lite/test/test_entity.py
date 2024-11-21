@@ -212,3 +212,11 @@ class TestUpdate(unittest.TestCase):
         e = Entity(links={"a"})
         e.update(links={"b", "c"})
         self.assertEqual(e.links, {"a", "b", "c"})
+
+    def test_update_description(self):
+        e = Entity(sketch="A bit {aspect}, I think." , aspect=self.Time.early.name)
+        self.assertEqual(e.description, "A bit early, I think.")
+
+        e.update(aspect=self.Time.later.name, revert=e.aspect)
+        self.assertEqual(e.description, "A bit later, I think.")
+        self.assertEqual(e.revert, "early")

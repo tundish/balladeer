@@ -225,8 +225,13 @@ class Entity:
     def state(self, value):
         return self.set_state(value)
 
-    def update(self, state=None, states=[], links: set | list = None, sketch=None, aspect=None, revert=None):
+    def update(self, state=None, states=[], links: set | list = None, **kwargs):
         for s in filter(None, states + [state]):
             self.set_state(s)
         if isinstance(links, (set, list)):
             self.links.update(set(links))
+
+        for attr in ("aspect", "revert", "sketch"):
+            value = kwargs.get(attr)
+            if isinstance(value, str):
+                setattr(self, attr, value)
