@@ -207,3 +207,8 @@ class TestUpdate(unittest.TestCase):
         e.update(states=[self.Time.later, self.Quality.low])
         self.assertEqual(e.get_state(self.Time), self.Time.later)
         self.assertEqual(e.get_state(self.Quality), self.Quality.low)
+
+    def test_update_links(self):
+        e = Entity(links={"a"})
+        e.update(links={"b", "c"})
+        self.assertEqual(e.links, {"a", "b", "c"})
