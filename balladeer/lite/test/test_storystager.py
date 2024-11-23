@@ -197,6 +197,7 @@ class StoryTests(unittest.TestCase):
         b = story.drama[("balladeer", "b")]
         c = story.world.typewise["Furniture"][0]
 
+        # First checks on initialization
         self.assertEqual(a.get_state(Fruition), Fruition.inception)
         self.assertEqual(b.get_state(Fruition), None)
         self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
@@ -210,6 +211,33 @@ class StoryTests(unittest.TestCase):
         self.assertEqual(a.get_state(Fruition), Fruition.inception)
         self.assertEqual(b.get_state(Fruition), None)
         self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
+
+        # Progress puzzle a but no chain yet
+        a.set_state(Fruition.elaboration)
+        story.monitor_context("balladeer", "a", story.context)
+
+        self.assertEqual(a.get_state(Fruition), Fruition.elaboration)
+        self.assertEqual(b.get_state(Fruition), None)
+        self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
+
+        story.monitor_context("balladeer", "b", story.context)
+        self.assertEqual(a.get_state(Fruition), Fruition.elaboration)
+        self.assertEqual(b.get_state(Fruition), None)
+        self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
+
+        # Progress puzzle to activate chain
+        a.set_state(Fruition.construction)
+        story.monitor_context("balladeer", "a", story.context)
+
+        self.assertEqual(a.get_state(Fruition), Fruition.construction)
+        self.assertEqual(b.get_state(Fruition), Fruition.inception)
+        self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
+
+        story.monitor_context("balladeer", "b", story.context)
+        self.assertEqual(a.get_state(Fruition), Fruition.construction)
+        self.assertEqual(b.get_state(Fruition), Fruition.inception)
+        self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
+
         print(f"{c=}")
 
     def test_story_turn(self):
