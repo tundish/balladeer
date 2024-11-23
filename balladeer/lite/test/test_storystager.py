@@ -252,7 +252,7 @@ class StoryTests(unittest.TestCase):
 
         self.assertEqual(a.get_state(Fruition), Fruition.evaluation)
         self.assertEqual(b.get_state(Fruition), Fruition.inception)
-        self.assertEqual(c.get_state(Detail), Detail.glow)
+        self.assertEqual(c.get_state(Detail), Detail.glow, c)
         self.assertEqual(c.description, "a striped deckchair, looks like a nice spot to rest")
 
         story.monitor_context("test_monitor_context", "b", story.context)

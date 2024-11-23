@@ -190,7 +190,8 @@ class StoryStager(StoryBuilder):
                     else:
                         entity.set_state(payload)
                 elif isinstance(payload, dict):
-                    # TODO: states
+                    states = list(filter(None, payload.pop("states", []) + [payload.pop("state", "")]))
+                    print(f"{states=}")
                     entity.update(**payload)
 
     def turn(self, *args, **kwargs):
