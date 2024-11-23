@@ -165,11 +165,11 @@ class StoryTests(unittest.TestCase):
             type = "Focus"
             states = ["spot.drive"]
 
-            [puzzles.chain.completion]
+            [puzzles.chain.construction]
             "b" = "Fruition.inception"
 
             [[puzzles.events]]
-            trigger = "Fruition.discussion"
+            trigger = "Fruition.evaluation"
             targets = ["Furniture"]
             payload = {aspect = "a nice spot to rest"}
             message = "Hint at use of deckchair"
@@ -192,11 +192,25 @@ class StoryTests(unittest.TestCase):
         self.assertIn(("balladeer", "a"), story.drama)
         self.assertIn(("balladeer", "b"), story.drama)
         self.assertIsInstance(story.context, Resident)
-        deckchair = story.world.typewise["Furniture"][0]
 
-        self.assertEqual(deckchair.description, "a striped deckchair, looks like it doesn't get much use")
-        print(f"{deckchair=}")
-        self.fail(story.context.ensemble)
+        a = story.drama[("balladeer", "a")]
+        b = story.drama[("balladeer", "b")]
+        c = story.world.typewise["Furniture"][0]
+
+        self.assertEqual(a.get_state(Fruition), Fruition.inception)
+        self.assertEqual(b.get_state(Fruition), None)
+        self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
+
+        story.monitor_context("balladeer", "a", story.context)
+        self.assertEqual(a.get_state(Fruition), Fruition.inception)
+        self.assertEqual(b.get_state(Fruition), None)
+        self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
+
+        story.monitor_context("balladeer", "b", story.context)
+        self.assertEqual(a.get_state(Fruition), Fruition.inception)
+        self.assertEqual(b.get_state(Fruition), None)
+        self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
+        print(f"{c=}")
 
     def test_story_turn(self):
         assets = Grouping.typewise([
