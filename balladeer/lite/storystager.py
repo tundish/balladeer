@@ -160,12 +160,13 @@ class StoryStager(StoryBuilder):
         realm: str,
         name: str,
         drama: Drama,
-        terminal={Fruition.withdrawn, Fruition.defaulted, Fruition.cancelled, Fruition.completion}
+        terminal={Fruition.withdrawn, Fruition.defaulted, Fruition.cancelled, Fruition.completion},
+        pool=[Detail, Fruition]
     ):
         state = drama.get_state(Fruition)
         events = self.stager.terminate(realm, name, state.name, done=(state in terminal))
 
-        pool = [self.world.map.home, self.world.map.into, self.world.map.exit, self.world.map.spot, Detail]
+        pool = pool + [self.world.map.home, self.world.map.into, self.world.map.exit, self.world.map.spot]
         for event in events:
             trigger = self.item_state(event.trigger, pool=[Fruition])
             if state != trigger:
