@@ -20,6 +20,7 @@
 
 import copy
 import enum
+import textwrap
 import unittest
 
 import balladeer
@@ -139,6 +140,27 @@ class StoryTests(unittest.TestCase):
             for b in s.stager.strands.values():
                 with self.subTest(a=a, b=b):
                     self.assertIsNot(a, b)
+
+    def test_monitor_context(self):
+        text = textwrap.dedent("""
+            label = "Repo of the Unknown part 1"
+            realm = "busker"
+
+            [[puzzles]]
+            name = "a"
+
+            [puzzles.init]
+            Fruition = "inception"
+
+            [puzzles.state.spot]
+            drive = ["Drive"]
+            patio = ["Patio"]
+        """)
+        data = next(Stager.load(text))
+        stage = Loader.Staging(text, data)
+        assets = Grouping.typewise([stage])
+        story = self.TestStory(assets=assets)
+        self.fail(story)
 
     def test_story_turn(self):
         assets = Grouping.typewise([

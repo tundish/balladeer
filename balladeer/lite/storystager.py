@@ -162,12 +162,10 @@ class StoryStager(StoryBuilder):
         drama: Drama,
         terminal={Fruition.withdrawn, Fruition.defaulted, Fruition.cancelled, Fruition.completion}
     ):
-        pool = [self.world.map.home, self.world.map.into, self.world.map.exit, self.world.map.spot, Detail]
-        if (state := drama.get_state(Fruition)) in terminal:
-            events = self.stager.terminate(realm, name, state.name, done=True)
-        else:
-            events = self.stager.terminate(realm, name, state.name, done=False)
+        state = drama.get_state(Fruition)
+        events = self.stager.terminate(realm, name, state.name, done=(state in terminal))
 
+        pool = [self.world.map.home, self.world.map.into, self.world.map.exit, self.world.map.spot, Detail]
         for event in events:
             trigger = self.item_state(event.trigger, pool=[Fruition])
             if state != trigger:
@@ -181,12 +179,10 @@ class StoryStager(StoryBuilder):
                     continue
                 entity.set_state(payload)
             else:
-                # TODO: Create testable method for updating entities from payload dictionary.
-                entities = [
-                    entity.set_state(payload)
-                    for entity in drama.ensemble
-                    if set(event.targets) <= entity.types
-                ]
+                targets = set(event.targets)
+                for entity in drama.ensemble:
+                    if targets <= entity.types:
+                        entity.update(**event.payload)
 
     def turn(self, *args, **kwargs):
         for realm, name in self.stager.active.copy():
