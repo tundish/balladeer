@@ -143,8 +143,8 @@ class StoryTests(unittest.TestCase):
 
     def test_monitor_context(self):
         text = textwrap.dedent("""
-            label = "Repo of the Unknown part 1"
-            realm = "busker"
+            label = "Events test"
+            realm = "balladeer"
 
             [[puzzles]]
             name = "a"
@@ -155,12 +155,48 @@ class StoryTests(unittest.TestCase):
             [puzzles.state.spot]
             drive = ["Drive"]
             patio = ["Patio"]
+
+            [[puzzles.items]]
+            type = "Transit"
+            states = ["exit.drive", "into.patio", "Traffic.flowing"]
+
+            [[puzzles.items]]
+            names = ["Player", "me"]
+            type = "Focus"
+            states = ["spot.drive"]
+
+            [puzzles.chain.completion]
+            "b" = "Fruition.inception"
+
+            [[puzzles.events]]
+            trigger = "Fruition.discussion"
+            targets = ["Furniture"]
+            payload = {aspect = "a nice spot to rest"}
+            message = "Hint at use of deckchair"
+
+            [[puzzles]]
+            name = "b"
+
+            [[puzzles.items]]
+            names = ["Deckchair", "Chair"]
+            type = "Furniture"
+            states = ["spot.patio"]
+            sketch = "a striped deckchair, looks like {aspect}"
+            aspect = "it doesn't get much use"
+
         """)
         data = next(Stager.load(text))
         stage = Loader.Staging(text, data)
         assets = Grouping.typewise([stage])
         story = self.TestStory(assets=assets)
-        self.fail(story)
+        self.assertIn(("balladeer", "a"), story.drama)
+        self.assertIn(("balladeer", "b"), story.drama)
+        self.assertIsInstance(story.context, Resident)
+        deckchair = story.world.typewise["Furniture"][0]
+
+        self.assertEqual(deckchair.description, "a striped deckchair, looks like it doesn't get much use")
+        print(f"{deckchair=}")
+        self.fail(story.context.ensemble)
 
     def test_story_turn(self):
         assets = Grouping.typewise([
