@@ -26,6 +26,7 @@ import unittest
 import balladeer
 from balladeer import Compass
 from balladeer import discover_assets
+from balladeer import Detail
 from balladeer import Drama
 from balladeer import Entity
 from balladeer import Fruition
@@ -171,7 +172,7 @@ class StoryTests(unittest.TestCase):
             [[puzzles.events]]
             trigger = "Fruition.evaluation"
             targets = ["Furniture"]
-            payload = {aspect = "a nice spot to rest"}
+            payload = {aspect = "a nice spot to rest", state="detail.glow"}
             message = "Hint at use of deckchair"
 
             [[puzzles]]
@@ -180,7 +181,7 @@ class StoryTests(unittest.TestCase):
             [[puzzles.items]]
             names = ["Deckchair", "Chair"]
             type = "Furniture"
-            states = ["spot.patio"]
+            states = ["spot.patio", "detail.none"]
             sketch = "a striped deckchair, looks like {aspect}"
             aspect = "it doesn't get much use"
 
@@ -200,16 +201,19 @@ class StoryTests(unittest.TestCase):
         # First checks on initialization
         self.assertEqual(a.get_state(Fruition), Fruition.inception)
         self.assertEqual(b.get_state(Fruition), None)
+        self.assertEqual(c.get_state(Detail), Detail.none)
         self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
 
         story.monitor_context("test_monitor_context", "a", story.context)
         self.assertEqual(a.get_state(Fruition), Fruition.inception)
         self.assertEqual(b.get_state(Fruition), None)
+        self.assertEqual(c.get_state(Detail), Detail.none)
         self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
 
         story.monitor_context("test_monitor_context", "b", story.context)
         self.assertEqual(a.get_state(Fruition), Fruition.inception)
         self.assertEqual(b.get_state(Fruition), None)
+        self.assertEqual(c.get_state(Detail), Detail.none)
         self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
 
         # Progress puzzle a but no chain yet
@@ -218,11 +222,13 @@ class StoryTests(unittest.TestCase):
 
         self.assertEqual(a.get_state(Fruition), Fruition.elaboration)
         self.assertEqual(b.get_state(Fruition), None)
+        self.assertEqual(c.get_state(Detail), Detail.none)
         self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
 
         story.monitor_context("test_monitor_context", "b", story.context)
         self.assertEqual(a.get_state(Fruition), Fruition.elaboration)
         self.assertEqual(b.get_state(Fruition), None)
+        self.assertEqual(c.get_state(Detail), Detail.none)
         self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
 
         # Progress puzzle to activate chain
@@ -231,11 +237,13 @@ class StoryTests(unittest.TestCase):
 
         self.assertEqual(a.get_state(Fruition), Fruition.construction)
         self.assertEqual(b.get_state(Fruition), Fruition.inception)
+        self.assertEqual(c.get_state(Detail), Detail.none)
         self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
 
         story.monitor_context("test_monitor_context", "b", story.context)
         self.assertEqual(a.get_state(Fruition), Fruition.construction)
         self.assertEqual(b.get_state(Fruition), Fruition.inception)
+        self.assertEqual(c.get_state(Detail), Detail.none)
         self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
 
         # Progress puzzle to generate event
@@ -244,11 +252,13 @@ class StoryTests(unittest.TestCase):
 
         self.assertEqual(a.get_state(Fruition), Fruition.evaluation)
         self.assertEqual(b.get_state(Fruition), Fruition.inception)
+        self.assertEqual(c.get_state(Detail), Detail.glow)
         self.assertEqual(c.description, "a striped deckchair, looks like a nice spot to rest")
 
         story.monitor_context("test_monitor_context", "b", story.context)
         self.assertEqual(a.get_state(Fruition), Fruition.evaluation)
         self.assertEqual(b.get_state(Fruition), Fruition.inception)
+        self.assertEqual(c.get_state(Detail), Detail.glow)
         self.assertEqual(c.description, "a striped deckchair, looks like a nice spot to rest")
 
     def test_story_turn(self):

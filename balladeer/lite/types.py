@@ -158,6 +158,7 @@ class State:
 class Detail(State, enum.Enum):
     none = "Reset"
     hide = "Hidden"
+    glow = "Indicated"
     info = "Information requested"
     more = "Detail"
     goal = "Detail of story goals"
