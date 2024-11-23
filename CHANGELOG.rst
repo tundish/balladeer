@@ -17,6 +17,7 @@ Change Log
 * Fix trigger bug in Stager.monitor_context.
 * Add transition method to Fruition type.
 * Add update method to Entity.
+* Test and refactor `StoryStager.monit_context`.
 * TODO: Integrate Loader with busker.proofer
 
 0.57.0

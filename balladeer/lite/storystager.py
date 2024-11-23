@@ -191,9 +191,12 @@ class StoryStager(StoryBuilder):
                     else:
                         entity.set_state(payload)
                 elif isinstance(payload, dict):
-                    states = list(filter(None, payload.pop("states", []) + [payload.pop("state", "")]))
-                    print(f"{states=}")
-                    entity.update(**payload)
+                    states = [
+                        self.item_state(s, pool=pool)
+                        for s in payload.pop("states", []) + [payload.pop("state", "")]
+                        if s
+                    ]
+                    entity.update(states=states, **payload)
 
     def turn(self, *args, **kwargs):
         for realm, name in self.stager.active.copy():
