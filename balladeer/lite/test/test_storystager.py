@@ -144,7 +144,7 @@ class StoryTests(unittest.TestCase):
     def test_monitor_context(self):
         text = textwrap.dedent("""
             label = "Events test"
-            realm = "balladeer"
+            realm = "test_monitor_context"
 
             [[puzzles]]
             name = "a"
@@ -189,12 +189,12 @@ class StoryTests(unittest.TestCase):
         stage = Loader.Staging(text, data)
         assets = Grouping.typewise([stage])
         story = self.TestStory(assets=assets)
-        self.assertIn(("balladeer", "a"), story.drama)
-        self.assertIn(("balladeer", "b"), story.drama)
+        self.assertIn(("test_monitor_context", "a"), story.drama)
+        self.assertIn(("test_monitor_context", "b"), story.drama)
         self.assertIsInstance(story.context, Resident)
 
-        a = story.drama[("balladeer", "a")]
-        b = story.drama[("balladeer", "b")]
+        a = story.drama[("test_monitor_context", "a")]
+        b = story.drama[("test_monitor_context", "b")]
         c = story.world.typewise["Furniture"][0]
 
         # First checks on initialization
@@ -202,43 +202,54 @@ class StoryTests(unittest.TestCase):
         self.assertEqual(b.get_state(Fruition), None)
         self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
 
-        story.monitor_context("balladeer", "a", story.context)
+        story.monitor_context("test_monitor_context", "a", story.context)
         self.assertEqual(a.get_state(Fruition), Fruition.inception)
         self.assertEqual(b.get_state(Fruition), None)
         self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
 
-        story.monitor_context("balladeer", "b", story.context)
+        story.monitor_context("test_monitor_context", "b", story.context)
         self.assertEqual(a.get_state(Fruition), Fruition.inception)
         self.assertEqual(b.get_state(Fruition), None)
         self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
 
         # Progress puzzle a but no chain yet
         a.set_state(Fruition.elaboration)
-        story.monitor_context("balladeer", "a", story.context)
+        story.monitor_context("test_monitor_context", "a", story.context)
 
         self.assertEqual(a.get_state(Fruition), Fruition.elaboration)
         self.assertEqual(b.get_state(Fruition), None)
         self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
 
-        story.monitor_context("balladeer", "b", story.context)
+        story.monitor_context("test_monitor_context", "b", story.context)
         self.assertEqual(a.get_state(Fruition), Fruition.elaboration)
         self.assertEqual(b.get_state(Fruition), None)
         self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
 
         # Progress puzzle to activate chain
         a.set_state(Fruition.construction)
-        story.monitor_context("balladeer", "a", story.context)
+        story.monitor_context("test_monitor_context", "a", story.context)
 
         self.assertEqual(a.get_state(Fruition), Fruition.construction)
         self.assertEqual(b.get_state(Fruition), Fruition.inception)
         self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
 
-        story.monitor_context("balladeer", "b", story.context)
+        story.monitor_context("test_monitor_context", "b", story.context)
         self.assertEqual(a.get_state(Fruition), Fruition.construction)
         self.assertEqual(b.get_state(Fruition), Fruition.inception)
         self.assertEqual(c.description, "a striped deckchair, looks like it doesn't get much use")
 
-        print(f"{c=}")
+        # Progress puzzle to generate event
+        a.set_state(Fruition.evaluation)
+        story.monitor_context("test_monitor_context", "a", story.context)
+
+        self.assertEqual(a.get_state(Fruition), Fruition.evaluation)
+        self.assertEqual(b.get_state(Fruition), Fruition.inception)
+        self.assertEqual(c.description, "a striped deckchair, looks like a nice spot to rest")
+
+        story.monitor_context("test_monitor_context", "b", story.context)
+        self.assertEqual(a.get_state(Fruition), Fruition.evaluation)
+        self.assertEqual(b.get_state(Fruition), Fruition.inception)
+        self.assertEqual(c.description, "a striped deckchair, looks like a nice spot to rest")
 
     def test_story_turn(self):
         assets = Grouping.typewise([

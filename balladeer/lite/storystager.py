@@ -171,18 +171,27 @@ class StoryStager(StoryBuilder):
             if state != trigger:
                 continue
 
+            try:
+                # Target by puzzle name
+                entities = [self.drama[event.realm, event.targets]]
+            except KeyError:
+                entities = []
+            except TypeError:
+                # Target by entity type
+                entities = [entity for entity in drama.ensemble if set(event.targets) <= entity.types]
+
             payload = self.item_state(event.payload, pool=pool)
-            if isinstance(event.targets, str):
-                entity = self.drama[event.realm, event.targets]
-                fruition = entity.get_state(Fruition)
-                if fruition and isinstance(payload, Fruition) and not any(Fruition.transitions(fruition, payload)):
-                    continue
-                entity.set_state(payload)
-            else:
-                targets = set(event.targets)
-                for entity in drama.ensemble:
-                    if targets <= entity.types:
-                        entity.update(**event.payload)
+            for entity in entities:
+                if isinstance(payload, Fruition):
+                    fruition = entity.get_state(Fruition)
+                    if fruition and not any(Fruition.transitions(fruition, payload)):
+                        # Transition not valid
+                        continue
+                    else:
+                        entity.set_state(payload)
+                elif isinstance(payload, dict):
+                    # TODO: states
+                    entity.update(**payload)
 
     def turn(self, *args, **kwargs):
         for realm, name in self.stager.active.copy():
