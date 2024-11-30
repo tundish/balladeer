@@ -171,9 +171,15 @@ class StoryTests(unittest.TestCase):
 
             [[puzzles.events]]
             trigger = "Fruition.evaluation"
+            targets = ["Deckchair"]
+            payload = {state="detail.glow"}
+            message = "Hint at use of deckchair: target by name"
+
+            [[puzzles.events]]
+            trigger = "Fruition.evaluation"
             targets = ["Furniture"]
-            payload = {aspect = "a nice spot to rest", state="detail.glow"}
-            message = "Hint at use of deckchair"
+            payload = {aspect = "a nice spot to rest"}
+            message = "Hint at use of deckchair: target by type"
 
             [[puzzles]]
             name = "b"

@@ -179,6 +179,7 @@ class StoryStager(StoryBuilder):
                 entities = []
             except TypeError:
                 # Target by entity type
+                # TODO: and name
                 entities = [entity for entity in drama.ensemble if set(event.targets) <= entity.types]
 
             payload = self.item_state(event.payload, pool=pool)
