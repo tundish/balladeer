@@ -55,9 +55,10 @@ class Director:
                 return super().convert_field(value, conversion)
 
     @staticmethod
-    def express_error(e: Exception, **kwargs):
-        data = dict(exception=str(e), **kwargs)
-        return pprint.pformat(data, sort_dicts=False)
+    def express_frustration(e: Exception, **kwargs):
+        data = dict(exception=format(e), **kwargs)
+        msg = pprint.pformat(data, sort_dicts=False)
+        return '<pre class="ballad director">\n{0}\n</pre>'.format(html.escape(msg))
 
     @staticmethod
     def specify_role(spec: dict) -> tuple[set, set, dict, dict]:
@@ -255,7 +256,7 @@ class Director:
             try:
                 yield self.fmtr.format(html5, **self.cast)
             except Exception as e:
-                yield self.express_error(
+                yield self.express_frustration(
                     e,
                     speech=speech, roles=roles,
                     path=path, shot_id=shot_id,
