@@ -18,6 +18,7 @@ Change Log
 * Add transition method to Fruition type.
 * Add update method to Entity.
 * Test and refactor `StoryStager.monit_context`.
+* Add `Director.express_error` method.
 * TODO: Integrate Loader with busker.proofer
 
 0.57.0

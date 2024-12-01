@@ -36,7 +36,10 @@ class Performance:
     def unpack_annotation(name, annotation, ensemble, parent=None):
         if isinstance(annotation, str) and parent:
             f = string.Formatter()
-            annotation, _ = f.get_field(f"0.{annotation}", [parent], {})
+            try:
+                annotation, _ = f.get_field(f"0.{annotation}", [parent], {})
+            except (AttributeError, IndexError, KeyError):
+                return
 
         if not isinstance(annotation, list):
             terms = [annotation]
