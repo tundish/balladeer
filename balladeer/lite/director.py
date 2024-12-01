@@ -56,7 +56,13 @@ class Director:
 
     @staticmethod
     def express_frustration(e: Exception, **kwargs):
-        data = dict(exception=format(e), **kwargs)
+        data = dict(
+            exception=dict(
+                type=type(e).__name__,
+                reason=format(e),
+            ),
+            **kwargs
+        )
         msg = pprint.pformat(data, sort_dicts=False)
         return '<pre class="ballad director">\n{0}\n</pre>'.format(html.escape(msg))
 
@@ -353,7 +359,10 @@ class Director:
 
     def allows(self, conditions: dict, cast: dict[str, Entity] = {}) -> bool:
         for role, (roles, states, types, attributes) in conditions.items():
-            entity = cast[role]
+            try:
+                entity = cast[role]
+            except KeyError:
+                continue
             if (
                 types
                 and not types.issubset(entity.types)
