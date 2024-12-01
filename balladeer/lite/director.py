@@ -26,6 +26,7 @@ from collections import defaultdict
 import html
 import itertools
 import pathlib
+import pprint
 import re
 import string
 import sys
@@ -52,6 +53,11 @@ class Director:
                 return rv
             else:
                 return super().convert_field(value, conversion)
+
+    @staticmethod
+    def express_error(e: Exception, **kwargs):
+        data = dict(exception=str(e), **kwargs)
+        return pprint.pformat(data, sort_dicts=False)
 
     @staticmethod
     def specify_role(spec: dict) -> tuple[set, set, dict, dict]:
@@ -246,7 +252,16 @@ class Director:
 
             html5 = self.pp_matcher.sub(self.edit_para, html5)
 
-            yield self.fmtr.format(html5, **self.cast)
+            try:
+                yield self.fmtr.format(html5, **self.cast)
+            except Exception as e:
+                yield self.express_error(
+                    e,
+                    speech=speech, roles=roles,
+                    path=path, shot_id=shot_id,
+                    cue_offset=cue_offset, cue_index=cue_index,
+                    block=block
+                )
 
     def edit_cite(self, match: re.Match) -> str:
         key = list(self.notes)[-1]
