@@ -42,8 +42,11 @@ class Resident(Drama):
 
     @property
     def exits(self):
-        spot = self.focus.get_state("Spot")
-        return [self.Move(*option) for option in sorted(self.world.map.options(spot), key=str)]
+        try:
+            spot = self.focus.get_state("Spot")
+            return [self.Move(*option) for option in sorted(self.world.map.options(spot), key=str)]
+        except AttributeError:
+            return []
 
     def is_resident(self, *args: tuple[enum.Enum]):
         states = self.selector["states"]
