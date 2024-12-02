@@ -164,7 +164,10 @@ class StoryStager(StoryBuilder):
         pool=[Detail, Fruition]
     ):
         state = drama.get_state(Fruition)
-        events = self.stager.terminate(realm, name, state.name, done=(state in terminal))
+        if state is None:
+            events = []
+        else:
+            events = self.stager.terminate(realm, name, state.name, done=(state in terminal))
 
         pool = pool + [self.world.map.home, self.world.map.into, self.world.map.exit, self.world.map.spot]
         for event in events:

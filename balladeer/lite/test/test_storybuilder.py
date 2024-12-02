@@ -226,7 +226,8 @@ class ExampleTests(unittest.TestCase):
                         self.assertTrue(turn.blocks, notes)
                         self.assertEqual(2, len(roles), roles)
                         rewriter = story.director.rewrite(scene, roles)
-                        self.assertRaises(KeyError, list, rewriter)
+                        blocks = list(rewriter)  # This used to raise a KeyError but now soldiers on
+                        self.assertEqual(len(blocks), 3)
                     elif n == 2:
                         self.assertFalse(turn.blocks, notes)
 
