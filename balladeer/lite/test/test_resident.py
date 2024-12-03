@@ -97,6 +97,16 @@ class ResidentTests(unittest.TestCase):
         self.assertEqual(focus.get_state(), 3)
         self.assertIn("Focus", focus.types)
 
+    def test_focus_spot_no_selector(self):
+        world = self.TestWorld()
+        drama = self.TestResident(world=world).set_state(self.Spot.kitchen)
+        self.assertTrue(drama.is_resident())
+        self.assertTrue(drama.is_resident(None))
+
+        focus = drama.focus
+        self.assertEqual(focus.get_state(), 3)
+        self.assertIn("Focus", focus.types)
+
     def test_focus_with_selector(self):
         world = self.TestWorld()
         drama = self.TestResident(world=world, selector=dict(states=["spot.kitchen"]))

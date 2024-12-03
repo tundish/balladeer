@@ -50,7 +50,8 @@ class Resident(Drama):
 
     def is_resident(self, *args: tuple[enum.Enum]):
         states = self.selector["states"]
-        return all(str(i).lower() in states for i in args if i or states)
+        rv = all(str(i).lower() in states for i in args if i or states)
+        return rv
 
     def scripts(self, assets: list):
         return [
