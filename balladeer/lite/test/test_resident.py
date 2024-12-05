@@ -49,7 +49,7 @@ class ResidentTests(unittest.TestCase):
 
         def build(self, *args, **kwargs):
             yield Entity(type="Rukus").set_state(4)
-            yield Entity(type="Focus").set_state(1, ResidentTests.Spot.kitchen)
+            yield Entity(type="Focus").set_state(1, self.map.spot.kitchen)
             yield Entity(type="Focus").set_state(3)
             yield Entity(type="Focus").set_state(2)
 

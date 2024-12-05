@@ -37,17 +37,16 @@ class Resident(Drama):
 
     @property
     def focus(self):
-        # FIXME: Must always return an entity.
         selected = [
             i for i in self.world.typewise.get("Focus", [])
-            if self.is_resident(i.get_state(self.world.spot))
+            if self.is_resident(i.get_state(self.world.map.spot))
         ]
         return next(reversed(sorted(selected, key=operator.attrgetter("state"))), None)
 
     @property
     def exits(self):
         try:
-            spot = self.focus.get_state("Spot")
+            spot = self.focus.get_state(self.world.map.spot)
             return [self.Move(*option) for option in sorted(self.world.map.options(spot), key=str)]
         except AttributeError:
             return []
