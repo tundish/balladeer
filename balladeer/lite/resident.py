@@ -38,7 +38,10 @@ class Resident(Drama):
     @property
     def focus(self):
         # FIXME: Must always return an entity.
-        selected = [i for i in self.world.typewise.get("Focus", []) if self.is_resident(i.get_state("Spot"))]
+        selected = [
+            i for i in self.world.typewise.get("Focus", [])
+            if self.is_resident(i.get_state(self.world.spot))
+        ]
         return next(reversed(sorted(selected, key=operator.attrgetter("state"))), None)
 
     @property

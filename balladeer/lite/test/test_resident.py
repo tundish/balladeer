@@ -25,6 +25,7 @@ import balladeer
 from balladeer import discover_assets
 from balladeer import Entity
 from balladeer import Loader
+from balladeer import MapBuilder
 from balladeer import Resident
 from balladeer import WorldBuilder
 from busker.stager import Stager
@@ -32,9 +33,16 @@ from busker.stager import Stager
 
 class ResidentTests(unittest.TestCase):
 
-    Spot = enum.Enum("Spot", {"kitchen": ["kitchen"], "hall": ["hallway"], "cloaks": ["cloakroom", "toilet"]})
+    spots = {
+        "kitchen": ["kitchen"],
+        "hall": ["hallway"],
+        "cloaks": ["cloakroom", "toilet"]
+    }
 
     class TestResident(Resident):
+        pass
+
+    class TestMap(MapBuilder):
         pass
 
     class TestWorld(WorldBuilder):
@@ -44,6 +52,10 @@ class ResidentTests(unittest.TestCase):
             yield Entity(type="Focus").set_state(1, ResidentTests.Spot.kitchen)
             yield Entity(type="Focus").set_state(3)
             yield Entity(type="Focus").set_state(2)
+
+    def setUp(self):
+        m = self.TestMap(self.spots)
+        self.world = self.TestWorld(map=m)
 
     def test_is_resident(self):
         Colour = enum.Enum("Colour", ["red", "blue", "green", "yellow"])
@@ -56,14 +68,14 @@ class ResidentTests(unittest.TestCase):
             ]
         }
 
-        drama = self.TestResident(selector=selector)
+        drama = self.TestResident(selector=selector, world=self.world)
         self.assertIsInstance(drama.selector["states"], set)
 
         self.assertTrue(drama.is_resident(Colour.green))
         self.assertFalse(drama.is_resident(Colour.red))
 
-        self.assertFalse(drama.is_resident(Colour.red, self.Spot.kitchen))
-        self.assertTrue(drama.is_resident(Colour.green, self.Spot.kitchen))
+        self.assertFalse(drama.is_resident(Colour.red, self.world.map.spot.kitchen))
+        self.assertTrue(drama.is_resident(Colour.green, self.world.map.spot.kitchen))
 
     def test_scripts(self):
         selector = {
@@ -75,7 +87,7 @@ class ResidentTests(unittest.TestCase):
         assets = discover_assets(balladeer, "examples")
         scenes = assets.get(Loader.Scene, [])
 
-        drama = self.TestResident(selector=selector)
+        drama = self.TestResident(selector=selector, world=self.world)
         scripts = drama.scripts(scenes)
 
         witness = set(i.path.parts[-3:] for i in scripts)
@@ -90,16 +102,13 @@ class ResidentTests(unittest.TestCase):
         )
 
     def test_focus_no_selector(self):
-        world = self.TestWorld()
-        drama = self.TestResident(world=world)
-
+        drama = self.TestResident(world=self.world)
         focus = drama.focus
         self.assertEqual(focus.get_state(), 3)
         self.assertIn("Focus", focus.types)
 
     def test_focus_spot_no_selector(self):
-        world = self.TestWorld()
-        drama = self.TestResident(world=world).set_state(self.Spot.kitchen)
+        drama = self.TestResident(world=self.world).set_state(self.world.map.spot.kitchen)
         self.assertTrue(drama.is_resident())
         self.assertTrue(drama.is_resident(None))
 
@@ -108,8 +117,7 @@ class ResidentTests(unittest.TestCase):
         self.assertIn("Focus", focus.types)
 
     def test_focus_with_selector(self):
-        world = self.TestWorld()
-        drama = self.TestResident(world=world, selector=dict(states=["spot.kitchen"]))
+        drama = self.TestResident(selector=dict(states=["spot.kitchen"]), world=self.world)
 
         focus = drama.focus
         self.assertEqual(focus.get_state(), 1)
