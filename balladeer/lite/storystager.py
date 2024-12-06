@@ -53,10 +53,7 @@ class StoryStager(StoryBuilder):
 
     @classmethod
     def item_type(cls, name: str, default=Entity):
-        name = name or ""
-        return {
-            typ.__name__.lower(): typ for typ in cls.types
-        }.get(name.lower(), default)
+        return Resident.item_type(name, pool=cls.types, default=default)
 
     def __init__(
         self,

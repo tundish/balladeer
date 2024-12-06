@@ -54,10 +54,10 @@ class Resident(Drama):
                 return default
 
     @staticmethod
-    def item_type(name: str, default=Entity):
+    def item_type(name: str, pool: list[type] = [], default=Entity):
         name = name or ""
         return {
-            typ.__name__.lower(): typ for typ in cls.types
+            typ.__name__.lower(): typ for typ in pool
         }.get(name.lower(), default)
 
     def __init__(self, *args, selector: dict[str, list] = {}, **kwargs):
