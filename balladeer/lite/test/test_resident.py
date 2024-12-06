@@ -103,14 +103,24 @@ class ResidentTests(unittest.TestCase):
 
     def test_focus_no_selector(self):
         drama = self.TestResident(world=self.world)
+        self.assertFalse(drama.selector.get("states"))
         focus = drama.focus
         self.assertEqual(focus.get_state(), 3)
         self.assertIn("Focus", focus.types)
 
     def test_focus_spot_no_selector(self):
-        drama = self.TestResident(world=self.world).set_state(self.world.map.spot.kitchen)
+        drama = self.TestResident(world=self.world).set_state(self.world.map.spot.cloaks)
+        self.assertFalse(drama.selector.get("states"))
         self.assertTrue(drama.is_resident())
         self.assertTrue(drama.is_resident(None))
+        self.assertTrue(drama.is_resident(self.world.map.spot.cloaks))
+        self.assertTrue(drama.is_resident(self.world.map.spot.kitchen))
+        self.assertTrue(
+            drama.is_resident(
+                self.world.map.spot.cloaks,
+                self.world.map.spot.hall,
+            )
+        )
 
         focus = drama.focus
         self.assertEqual(focus.get_state(), 3)
@@ -118,6 +128,7 @@ class ResidentTests(unittest.TestCase):
 
     def test_focus_with_selector(self):
         drama = self.TestResident(selector=dict(states=["spot.kitchen"]), world=self.world)
+        self.assertTrue(drama.selector.get("states"))
 
         focus = drama.focus
         self.assertEqual(focus.get_state(), 1)

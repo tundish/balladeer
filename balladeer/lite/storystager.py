@@ -48,25 +48,8 @@ class StoryStager(StoryBuilder):
 
     @classmethod
     def item_state(cls, spec: str | int, pool: list[enum.Enum] = [], default=0):
-        try:
-            name, value = spec.lower().split(".")
-        except AttributeError:
-            return spec
-
-        lookup = {typ.__name__.lower(): typ for typ in pool + cls.states}
-
-        try:
-            cls = lookup[name]
-        except KeyError:
-            return default
-
-        try:
-            return cls[value]
-        except KeyError:
-            try:
-                return cls[value.upper()]
-            except KeyError:
-                return default
+        pool = pool + cls.states
+        return Resident.item_state(spec, pool=pool, default=default)
 
     @classmethod
     def item_type(cls, name: str, default=Entity):

@@ -22,13 +22,43 @@ from collections import namedtuple
 import enum
 import operator
 
-from balladeer import Drama
+from balladeer.lite.drama import Drama
+from balladeer.lite.entity import Entity
 from balladeer.lite.loader import Loader
 
 
 class Resident(Drama):
 
     Move = namedtuple("Move", ["heading", "spot", "via"])
+
+    @staticmethod
+    def item_state(spec: str | int, pool: list[enum.Enum] = [], default=0):
+        try:
+            name, value = spec.lower().split(".")
+        except AttributeError:
+            return spec
+
+        lookup = {typ.__name__.lower(): typ for typ in pool}
+
+        try:
+            cls = lookup[name]
+        except KeyError:
+            return default
+
+        try:
+            return cls[value]
+        except KeyError:
+            try:
+                return cls[value.upper()]
+            except KeyError:
+                return default
+
+    @staticmethod
+    def item_type(name: str, default=Entity):
+        name = name or ""
+        return {
+            typ.__name__.lower(): typ for typ in cls.types
+        }.get(name.lower(), default)
 
     def __init__(self, *args, selector: dict[str, list] = {}, **kwargs):
         self.selector = selector | {"states": set(selector.get("states", []))}
@@ -41,7 +71,9 @@ class Resident(Drama):
             i for i in self.world.typewise.get("Focus", [])
             if self.is_resident(i.get_state(self.world.map.spot))
         ]
-        return next(reversed(sorted(selected, key=operator.attrgetter("state"))), None)
+        ordered = sorted(selected, key=operator.attrgetter("state"), reverse=True)
+        print(f"{ordered=}")
+        return next(iter(ordered), None)
 
     @property
     def exits(self):
@@ -53,6 +85,7 @@ class Resident(Drama):
 
     def is_resident(self, *args: tuple[enum.Enum]):
         states = self.selector["states"]
+        return all(str(i).lower() in states for i in args if i is not None) or not states
         rv = all(str(i).lower() in states for i in args if i or states)
         return rv
 
