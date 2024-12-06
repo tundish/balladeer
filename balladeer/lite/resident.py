@@ -69,10 +69,9 @@ class Resident(Drama):
     def focus(self):
         selected = [
             i for i in self.world.typewise.get("Focus", [])
-            if self.is_resident(i.get_state(self.world.map.spot))
+            if any(self.is_resident(s) for s in i.states.values())
         ]
         ordered = sorted(selected, key=operator.attrgetter("state"), reverse=True)
-        print(f"{ordered=}")
         return next(iter(ordered), None)
 
     @property
@@ -84,10 +83,8 @@ class Resident(Drama):
             return []
 
     def is_resident(self, *args: tuple[enum.Enum]):
-        print(f"{args=}")
         states = {self.item_state(i, pool=[type(i) for i in args]) for i in self.selector.get("states", [])}
-        print(f"{states=}")
-        return states.issubset(set(filter(None, args)))
+        return not states or states.issuperset(set(filter(None, args)))
 
     def scripts(self, assets: list):
         return [
