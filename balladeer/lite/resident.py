@@ -84,10 +84,10 @@ class Resident(Drama):
             return []
 
     def is_resident(self, *args: tuple[enum.Enum]):
-        states = self.selector["states"]
-        return all(str(i).lower() in states for i in args if i is not None) or not states
-        rv = all(str(i).lower() in states for i in args if i or states)
-        return rv
+        print(f"{args=}")
+        states = {self.item_state(i, pool=[type(i) for i in args]) for i in self.selector.get("states", [])}
+        print(f"{states=}")
+        return states.issubset(set(filter(None, args)))
 
     def scripts(self, assets: list):
         return [
