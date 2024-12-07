@@ -131,6 +131,10 @@ class Home(HTTPEndpoint):
         return page
 
 
+class HomeHTML4(Home):
+    pass
+
+
 class Start(HTTPEndpoint):
     async def post(self, request):
         state = request.app.state
@@ -329,6 +333,10 @@ class Session(HTTPEndpoint):
         return page
 
 
+class SessionHTML4(Session):
+    pass
+
+
 class Command(HTTPEndpoint):
     async def post(self, request):
         session_id = request.path_params["session_id"]
@@ -368,13 +376,14 @@ async def app_factory(
     routes: list = None,
     static: pathlib.Path = None,
     loop=None,
+    html_syntax=5,
     **kwargs,
 ):
     endpoints = dict(
-        home=next(reversed(Home.__subclasses__()), Home),
+        home=next(reversed(Home.__subclasses__()), HomeHTML4 if html_syntax < 5 else Home),
         about=next(reversed(About.__subclasses__()), About),
         start=next(reversed(Start.__subclasses__()), Start),
-        session=next(reversed(Session.__subclasses__()), Session),
+        session=next(reversed(Session.__subclasses__()), SessionHTML4 if html_syntax < 5 else Session),
         assembly=next(reversed(Assembly.__subclasses__()), Assembly),
         command=next(reversed(Command.__subclasses__()), Command),
     )
