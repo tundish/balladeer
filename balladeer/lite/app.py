@@ -132,7 +132,12 @@ class Home(HTTPEndpoint):
 
 
 class HomeHTML4(Home):
-    pass
+    def compose(
+        self, request, page: Page, story: StoryBuilder = None, turn: Turn = None
+    ) -> Page:
+        page = super().compose(request, page, story, turn)
+        page.paste("<title>HTML4 mode</title>", zone=page.zone.title)
+        return page
 
 
 class Start(HTTPEndpoint):
@@ -379,11 +384,19 @@ async def app_factory(
     html_syntax=5,
     **kwargs,
 ):
+
+    if html_syntax < 5:
+        home_handler = HomeHTML4
+        session_handler = SessionHTML4
+    else:
+        home_handler = next(reversed([i for i in Home.__subclasses__() if i is not HomeHTML4]), Home)
+        session_handler = next(reversed([i for i in Session.__subclasses__() if i is not SessionHTML4]), Session)
+
     endpoints = dict(
-        home=next(reversed(Home.__subclasses__()), HomeHTML4 if html_syntax < 5 else Home),
+        home=home_handler,
         about=next(reversed(About.__subclasses__()), About),
         start=next(reversed(Start.__subclasses__()), Start),
-        session=next(reversed(Session.__subclasses__()), SessionHTML4 if html_syntax < 5 else Session),
+        session=session_handler,
         assembly=next(reversed(Assembly.__subclasses__()), Assembly),
         command=next(reversed(Command.__subclasses__()), Command),
     )
