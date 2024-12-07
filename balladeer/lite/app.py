@@ -339,7 +339,39 @@ class Session(HTTPEndpoint):
 
 
 class SessionHTML4(Session):
-    pass
+    def gen_options_for_command(self, request, story):
+        options = sorted(story.context.options(story.context.ensemble).keys())
+        yield ""
+        yield '<select name="ballad-command-form-input-value">'
+        yield from (f'<option value="{i}">{i}</option>' for i in options)
+        yield "</select>"
+
+    def render_options_for_command(self, request, story):
+        yield ""
+
+    def render_inputs_to_command(self, request, story):
+        options = story.context.options(story.context.ensemble)
+        url = request.url_for("command", session_id=story.uid)
+        selection = "\n".join(self.gen_options_for_command(request, story))
+        return textwrap.dedent(f"""
+            <form role="form" action="{url}" method="post" name="ballad-command-form">
+            <fieldset>
+            <label for="ballad-command-form-input-text" id="ballad-command-form-input-text-label">&gt;</label>
+
+            <input
+            name="ballad-command-form-input-text"
+            placeholder="{story.context.prompt}"
+            pattern="[\w ]+"
+            autofocus="autofocus"
+            type="text"
+            title="{story.context.tooltip}"
+            list="ballad-command-form-input-list"
+            />
+            {selection}
+            <button type="submit">Enter</button>
+            </fieldset>
+            </form>
+        """)
 
 
 class Command(HTTPEndpoint):
@@ -349,7 +381,8 @@ class Command(HTTPEndpoint):
         story = state.sessions[session_id]
 
         async with request.form() as form:
-            command = form["ballad-command-form-input-text"]
+            command = form.get("ballad-command-form-input-text", "")
+            command = command or form.get("ballad-command-form-input-value", "")
 
         story.action(command)
 
