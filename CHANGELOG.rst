@@ -19,7 +19,7 @@ Change Log
 * Add update method to Entity.
 * Test and refactor `StoryStager.monitor_context`.
 * Add `Director.express_frustration` method.
-* Finally fix `Resident.focus` after a long struggle.
+* Add option to render in HTML4 (supporting Dillo as a test tool).
 * TODO: Integrate Loader with busker.proofer
 
 0.57.0

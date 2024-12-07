@@ -339,6 +339,11 @@ class Session(HTTPEndpoint):
 
 
 class SessionHTML4(Session):
+
+    @staticmethod
+    def convert_code_into_action(match: re.Match, request=None, story=None, turn=None, page = None):
+        return match.group()
+
     def gen_options_for_command(self, request, story):
         options = sorted(story.context.options(story.context.ensemble).keys())
         yield ""
@@ -352,7 +357,7 @@ class SessionHTML4(Session):
     def render_inputs_to_command(self, request, story):
         options = story.context.options(story.context.ensemble)
         url = request.url_for("command", session_id=story.uid)
-        selection = "\n".join(self.gen_options_for_command(request, story))
+        selection = textwrap.indent("\n".join(self.gen_options_for_command(request, story)), prefix=" " * 12)
         return textwrap.dedent(f"""
             <form role="form" action="{url}" method="post" name="ballad-command-form">
             <fieldset>
@@ -371,7 +376,8 @@ class SessionHTML4(Session):
             <button type="submit">Enter</button>
             </fieldset>
             </form>
-        """)
+            """
+        )
 
 
 class Command(HTTPEndpoint):
