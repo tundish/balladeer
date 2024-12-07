@@ -1,6 +1,6 @@
 [project]
 name = "balladeer"
-version = "0.57.0"
+version = "0.58.0"
 description = "Web-enabled interactive fiction framework."
 readme = "README.rst"
 requires-python = ">=3.11"
@@ -18,7 +18,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
 ]
 dependencies = [
-    "busker >= 0.14.0",
+    "busker >= 0.15.0",
     "hypercorn",
     "python-multipart",
     "speechmark >= 0.10.0",

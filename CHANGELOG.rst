@@ -6,8 +6,8 @@
 Change Log
 ::::::::::
 
-0.58.0rc
-========
+0.58.0
+======
 
 * Rename some internal methods.
 * Doc fixes.
@@ -20,7 +20,7 @@ Change Log
 * Test and refactor `StoryStager.monitor_context`.
 * Add `Director.express_frustration` method.
 * Add option to render in HTML4 (supporting Dillo as a test tool).
-* TODO: Integrate Loader with busker.proofer
+* Re-pin to busker 0.15.0.
 
 0.57.0
 ======
