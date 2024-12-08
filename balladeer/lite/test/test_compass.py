@@ -67,6 +67,15 @@ class MapTests(unittest.TestCase):
         m = MapTests.Map(MapTests.Map.spots)
         self.assertEqual(3, len(m.options(m.spot.hall)))
 
+    def test_return_options(self):
+        m = MapTests.Map(MapTests.Map.spots)
+        options = {i[0]: i[1] for i in m.options(m.spot.hall)}
+        self.assertEqual(set(options.values()), {m.spot.bedroom, m.spot.kitchen, m.spot.stairs})
+        self.assertEqual(options[Compass.N], m.spot.stairs)
+
+        options = {i[0]: i[1] for i in m.options(m.spot.stairs)}
+        self.assertEqual(options[Compass.S], m.spot.hall)
+
     def test_simple_route(self):
         m = MapTests.Map(MapTests.Map.spots)
         r = m.route(m.spot.kitchen, m.spot.bedroom)
