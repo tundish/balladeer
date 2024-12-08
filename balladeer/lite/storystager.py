@@ -158,11 +158,10 @@ class StoryStager(StoryBuilder):
             try:
                 # Target by puzzle name
                 entities = [self.drama[event.realm, event.targets]]
-            except KeyError:
+            except KeyError as e:
                 entities = []
-            except TypeError:
-                # Target by entity type
-                # TODO: and name
+            except TypeError as e:
+                # Target by entity type and name
                 entities = [
                     entity
                     for entity in drama.ensemble

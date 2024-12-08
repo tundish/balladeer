@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.58.0rc
+========
+
+* TODO: Investigate `Move.heading` for errors.
+
 0.58.0
 ======
 
