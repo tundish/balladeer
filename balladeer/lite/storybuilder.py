@@ -20,6 +20,7 @@
 from collections import deque
 from collections import namedtuple
 from collections.abc import Callable
+from collections.abc import Generator
 import copy
 import operator
 import uuid
@@ -43,6 +44,17 @@ class StoryBuilder:
         for key in ("ink", ):
             rv[key] = dict([(k, v) for name in names for k, v in themes.get(name, {}).get(key, {}).items()])
         return rv
+
+    @staticmethod
+    def gather_speech(*args: tuple[deque|list]) -> Generator[Speech]:
+        for sequence in args:
+            try:
+                yield sequence.popleft()
+            except AttributeError:
+                yield from sequence
+                sequence.clear()
+            except IndexError:
+                pass
 
     def __init__(
         self,
@@ -109,6 +121,7 @@ class StoryBuilder:
         return self
 
     def __enter__(self):
+        # speech = list(self.gather_speech(*[i.speech for i in self.drama]))
         drama = self.context
 
         # Director selection
@@ -118,15 +131,7 @@ class StoryBuilder:
 
         # TODO: Entity aspects
 
-        # Collect waiting speech
-        try:
-            speech = [drama.speech.popleft()]
-        except AttributeError:
-            speech = drama.speech.copy()
-            drama.speech.clear()
-        except IndexError:
-            speech = []
-
+        speech = list(self.gather_speech(drama.speech))
         blocks = list(self.director.rewrite(scene, roles, speech))
 
         rv = Turn(scene, specs, roles, speech, blocks, self.director.notes.copy())
