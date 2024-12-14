@@ -121,7 +121,10 @@ class StoryBuilder:
         return self
 
     def __enter__(self):
-        speech = list(self.gather_speech(*[i.speech for i in self.drama]))
+        try:
+            speech = list(self.gather_speech(*[i.speech for i in self.drama.values()]))
+        except AttributeError:
+            speech = list(self.gather_speech(*[i.speech for i in self.drama]))
 
         # Director selection
         drama = self.context
