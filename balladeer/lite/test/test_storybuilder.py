@@ -46,6 +46,45 @@ class StoryTests(unittest.TestCase):
         for theme in themes:
             del Page.themes[theme]
 
+    def test_gather_speech(self):
+        drama = [
+            Drama(
+                Dialogue("<> Deeper into the cave..."),
+                name="travel"
+            ),
+            Drama(name="sights"),
+            Drama(
+                Dialogue("<> Echo"),
+                Dialogue("<> ..echo"),
+                Dialogue("<> ...echo"),
+                name="sounds"
+            ),
+        ]
+        drama[1].speech.extend([
+                Dialogue("<> A thin shaft of light"),
+                Dialogue("<> Slimy walls"),
+                Dialogue("<> Lots of bats"),
+        ])
+        self.assertIsInstance(drama[0].speech, deque)
+        self.assertIsInstance(drama[1].speech, list)
+        self.assertIsInstance(drama[2].speech, deque)
+
+        speech = list(StoryBuilder.gather_speech(*[i.speech for i in drama]))
+        self.assertEqual(
+            speech,
+            [
+                "<> Deeper into the cave...",
+                "<> A thin shaft of light",
+                "<> Slimy walls",
+                "<> Lots of bats",
+                "<> Echo",
+            ]
+        )
+
+        self.assertFalse(drama[0].speech)
+        self.assertFalse(drama[1].speech)
+        self.assertEqual(len(drama[2].speech), 2)
+
     def test_simple_turns(self):
         story = StoryBuilder(
             Dialogue("<> Knock, knock."),

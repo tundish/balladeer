@@ -9,7 +9,7 @@ Change Log
 0.58.0rc
 ========
 
-* TODO: Investigate `Move.heading` for errors.
+* Speech is now gathered from each drama object every turn.
 
 0.58.0
 ======

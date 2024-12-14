@@ -121,19 +121,15 @@ class StoryBuilder:
         return self
 
     def __enter__(self):
-        # speech = list(self.gather_speech(*[i.speech for i in self.drama]))
-        drama = self.context
+        speech = list(self.gather_speech(*[i.speech for i in self.drama]))
 
         # Director selection
+        drama = self.context
         scripts = drama.scripts(self.assets.get(Loader.Scene, []))
         scene, specs, roles = self.director.selection(scripts, drama.ensemble)
         assert isinstance(scene, Loader.Scene), f"{type(scene)} is not a Scene"
 
-        # TODO: Entity aspects
-
-        speech = list(self.gather_speech(drama.speech))
         blocks = list(self.director.rewrite(scene, roles, speech))
-
         rv = Turn(scene, specs, roles, speech, blocks, self.director.notes.copy())
 
         # Directive handlers
