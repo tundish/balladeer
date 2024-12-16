@@ -10,6 +10,7 @@ Change Log
 ========
 
 * Speech is now gathered from each drama object every turn.
+* Expand scope of event target selection to include all drama objects.
 
 0.58.0
 ======
