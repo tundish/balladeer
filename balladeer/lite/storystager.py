@@ -162,9 +162,10 @@ class StoryStager(StoryBuilder):
                 entities = []
             except TypeError as e:
                 # Target by entity type and name
+                scope = self.world.entities + list(self.drama.values())
                 entities = [
                     entity
-                    for entity in drama.ensemble
+                    for entity in scope
                     if set(event.targets).intersection(entity.types.union(set(entity.names)))
                 ]
 
