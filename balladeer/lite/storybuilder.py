@@ -125,7 +125,6 @@ class StoryBuilder:
             speech = list(self.gather_speech(*[i.speech for i in self.drama.values()]))
         except AttributeError:
             speech = list(self.gather_speech(*[i.speech for i in self.drama]))
-
         # Director selection
         drama = self.context
         scripts = drama.scripts(self.assets.get(Loader.Scene, []))

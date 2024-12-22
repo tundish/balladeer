@@ -87,13 +87,25 @@ class StoryStager(StoryBuilder):
         puzzle = self.stager.gather_puzzle(realm, name)
         drama_type = self.item_type(puzzle.get("type"), default=Resident)
         states = [self.item_state(f"{k}.{v}", pool=pool) for k, v in puzzle.get("init", {}).items()]
+        states.extend([self.item_state(i, pool=pool) for i in puzzle.get("states", {})])
+
+        try:
+            targets = [
+                target
+                for transition in puzzle.get("chain", {}).values()
+                for target in transition
+                if target != name
+            ]
+        except AttributeError:
+            targets = [target for target in puzzle.get("chain", []) if target != name]
+
         drama = drama_type(
             *self.speech,
             config=self.config,
             world=self.world,
             name=puzzle.get("name"),
             type=drama_type.__name__,
-            links=set(target for transition in puzzle.get("chain", {}).values() for target in transition),
+            links=set(targets),
             sketch=puzzle.get("sketch", ""),
             aspect=puzzle.get("aspect", ""),
             revert=puzzle.get("revert", ""),
@@ -147,7 +159,7 @@ class StoryStager(StoryBuilder):
         if state is None:
             events = []
         else:
-            events = self.stager.terminate(realm, name, state.name, done=(state in terminal))
+            events = list(self.stager.terminate(realm, name, state.name, done=(state in terminal)))
 
         pool = pool + [self.world.map.home, self.world.map.into, self.world.map.exit, self.world.map.spot]
         for event in events:
@@ -171,13 +183,8 @@ class StoryStager(StoryBuilder):
 
             payload = self.item_state(event.payload, pool=pool)
             for entity in entities:
-                if isinstance(payload, Fruition):
-                    fruition = entity.get_state(Fruition)
-                    if fruition and not any(Fruition.transitions(fruition, payload)):
-                        # Transition not valid
-                        continue
-                    else:
-                        entity.set_state(payload)
+                if isinstance(payload, enum.Enum):
+                    entity.set_state(payload)
                 elif isinstance(payload, dict):
                     states = [
                         self.item_state(s, pool=pool)
