@@ -142,7 +142,7 @@ class StoryTests(unittest.TestCase):
                 with self.subTest(a=a, b=b):
                     self.assertIsNot(a, b)
 
-    def test_monitor_context(self):
+    def test_monitor_context_events(self):
         text = textwrap.dedent("""
             label = "Events test"
             realm = "test_monitor_context"
@@ -187,7 +187,7 @@ class StoryTests(unittest.TestCase):
             [[puzzles.items]]
             names = ["Deckchair", "Chair"]
             type = "Furniture"
-            states = ["spot.patio", "detail.none"]
+            states = ["spot.patio", "detail.none", 0]
             sketch = "a striped deckchair, looks like {aspect}"
             aspect = "it doesn't get much use"
 
@@ -267,7 +267,7 @@ class StoryTests(unittest.TestCase):
         self.assertEqual(c.get_state(Detail), Detail.glow)
         self.assertEqual(c.description, "a striped deckchair, looks like a nice spot to rest")
 
-    def test_monitor_context_events(self):
+    def test_monitor_context_events_support(self):
         text = textwrap.dedent("""
             label = "Events test"
             realm = "test_monitor_context"
