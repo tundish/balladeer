@@ -39,6 +39,7 @@ from balladeer.lite.types import Fruition
 from balladeer.lite.types import Grouping
 from balladeer.lite.world import WorldBuilder
 from busker.stager import Stager
+from busker.types import Event
 
 
 class StoryStager(StoryBuilder):
@@ -54,6 +55,23 @@ class StoryStager(StoryBuilder):
     @classmethod
     def item_type(cls, name: str, default=Entity):
         return Resident.item_type(name, pool=cls.types, default=default)
+
+    @staticmethod
+    def state_supported(entity: Entity, state: enum.Enum, support=0, **kwargs):
+        try:
+            if entity.state < support:
+                return True
+        except TypeError:
+            return False
+
+        if support < entity.state:
+            return False
+
+        entity_state = entity.get_state(type(state))
+        try:
+            return any(state.transitions(entity_state, state))
+        except AttributeError:
+            return True
 
     def __init__(
         self,
@@ -183,13 +201,15 @@ class StoryStager(StoryBuilder):
 
             payload = self.item_state(event.payload, pool=pool)
             for entity in entities:
-                if isinstance(payload, enum.Enum):
+                if isinstance(payload, enum.Enum) and self.state_supported(entity, payload, **event._asdict()):
                     entity.set_state(payload)
                 elif isinstance(payload, dict):
                     states = [
-                        self.item_state(s, pool=pool)
+                        entity_state
                         for s in payload.pop("states", []) + [payload.pop("state", "")]
-                        if s
+                        if s and self.state_supported(
+                            entity, entity_state := self.item_state(s, pool=pool), **event._asdict()
+                        )
                     ]
                     entity.update(states=states, **payload)
 
