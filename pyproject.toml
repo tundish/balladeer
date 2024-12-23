@@ -18,11 +18,11 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
 ]
 dependencies = [
-    "busker >= 0.19.0",
+    "busker >= 0.20.0",
     "hypercorn",
     "python-multipart",
     "speechmark >= 0.10.0",
-    "starlette>=0.26.1",
+    "starlette>=0.42.0",
     "tomli >= 2.0.0; python_version < '3.11'"
 ]
 

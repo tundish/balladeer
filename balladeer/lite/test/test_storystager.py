@@ -267,6 +267,55 @@ class StoryTests(unittest.TestCase):
         self.assertEqual(c.get_state(Detail), Detail.glow)
         self.assertEqual(c.description, "a striped deckchair, looks like a nice spot to rest")
 
+    def test_monitor_context_events(self):
+        text = textwrap.dedent("""
+            label = "Events test"
+            realm = "test_monitor_context"
+
+            [[puzzles]]
+            name = "a"
+            init = {Fruition = "inception"}
+            chain = ["a"]
+
+            [[puzzles.events]]
+            trigger = "Fruition.inception"
+            targets = ["a"]
+            payload = {state="Fruition.elaboration"}
+            message = "Valid state transition"
+            support = 0
+
+            [[puzzles.events]]
+            trigger = "Fruition.withdrawn"
+            targets = ["a"]
+            payload = {state="Fruition.inception"}
+            message = "Invalid state transition"
+            support = 1
+        """)
+        data = next(Stager.load(text))
+        stage = Loader.Staging(text, data)
+        assets = Grouping.typewise([stage])
+        story = self.TestStory(assets=assets)
+        self.assertIn(("test_monitor_context", "a"), story.drama)
+        self.assertIsInstance(story.context, Resident)
+
+        a = story.drama[("test_monitor_context", "a")]
+
+        # Check valid transition at equal priority
+        self.assertEqual(a.get_state(Fruition), Fruition.inception)
+        story.monitor_context("test_monitor_context", "a", story.context)
+        self.assertEqual(a.get_state(Fruition), Fruition.elaboration)
+
+        # Check invalid transition at higher priority
+        a.set_state(Fruition.withdrawn)
+        story.monitor_context("test_monitor_context", "a", story.context)
+        self.assertEqual(a.get_state(Fruition), Fruition.inception)
+
+        # Check invalid transition at equal priority
+        a.set_state(1)
+        a.set_state(Fruition.withdrawn)
+        story.monitor_context("test_monitor_context", "a", story.context)
+        self.assertEqual(a.get_state(Fruition), Fruition.withdrawn)
+
     def test_story_turn(self):
         assets = Grouping.typewise([
             stage
