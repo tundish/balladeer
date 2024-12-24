@@ -11,7 +11,7 @@ Change Log
 
 * Speech is now gathered from each drama object every turn.
 * Expand scope of event target selection to include all drama objects.
-* Pin to busker 0.16.0 or newer.
+* Pin to busker 0.22.0 or newer.
 * Accommodate puzzle chain as a list.
 
 0.58.0
