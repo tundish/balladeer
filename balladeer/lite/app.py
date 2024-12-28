@@ -294,10 +294,14 @@ class Session(HTTPEndpoint):
 
     def render_options_for_command(self, request, story):
         context = story.context
-        options = sorted(context.options(context.ensemble).keys())
+        options = context.options(context.ensemble)
         yield ""
         yield '<datalist id="ballad-command-form-input-list">'
-        yield from (f'<option value="{i}"></option>' for i in options if not context.is_command_hidden(i))
+        yield from (
+            f'<option value="{i}"></option>'
+            for i in sorted(options.keys())
+            if not context.is_command_hidden(i, options)
+        )
         yield "</datalist>"
 
     def render_title(self, request, story, turn):

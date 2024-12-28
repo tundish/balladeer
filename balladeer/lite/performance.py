@@ -98,7 +98,7 @@ class Performance:
                     continue
 
     @staticmethod
-    def is_command_hidden(text: str) -> bool:
+    def is_command_hidden(text: str, options: Grouping = None) -> bool:
         return False
 
     def __call__(self, fn, *args, **kwargs):
