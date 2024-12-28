@@ -13,6 +13,7 @@ Change Log
 * Expand scope of event target selection to include all drama objects.
 * Pin to busker 0.22.0 or newer.
 * Accommodate puzzle chain as a list.
+* Add `is_command_hidden` method to Performance class.
 
 0.58.0
 ======

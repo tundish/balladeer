@@ -97,6 +97,10 @@ class Performance:
                 except (AttributeError, IndexError, KeyError) as e:
                     continue
 
+    @staticmethod
+    def is_command_hidden(text: str) -> bool:
+        return False
+
     def __call__(self, fn, *args, **kwargs):
         yield from fn(fn, *args, **kwargs)
 
