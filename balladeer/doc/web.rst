@@ -5,4 +5,4 @@ Web
 ===
 
 This page will have content very soon.
-Please look out for Balladeer version 0.59.0.
+Please look out for Balladeer version 0.60.0.
