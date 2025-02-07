@@ -78,6 +78,7 @@ class Performance:
 
         """
         doc = method.func.__doc__ if hasattr(method, "func") else method.__doc__ or ""
+        # TODO: Capture rank
         terms = list(
             filter(None, (i.strip() for line in doc.splitlines() for i in line.split("|")))
         )
