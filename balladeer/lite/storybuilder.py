@@ -105,7 +105,7 @@ class StoryBuilder:
             ensemble=drama.ensemble,
             prefix=drama.prefixes[0],
         )
-        fn, args, kwargs = drama.pick(actions)
+        rank, fn, args, kwargs = drama.pick(actions)
         if not fn:
             return None
 

@@ -247,13 +247,20 @@ class MatchingTests(unittest.TestCase):
         def func(obj: Entity):
             """
             pick up a {obj.aspect} {obj.names[0]}
+            get the {obj.aspect} {obj.names[0]}
             """
 
         rv = dict(Performance.expand_commands(func, ensemble=ensemble))
+
         self.assertIn("pick up blue thing", rv)
-        self.assertEqual("blue", rv["pick up blue thing"][1]["obj"].aspect)
+        rank, fn, kwargs = rv["pick up blue thing"]
+        self.assertEqual(rank, 0)
+        self.assertEqual(kwargs["obj"].aspect, "blue")
+
         self.assertIn("pick up red thing", rv)
-        self.assertEqual("red", rv["pick up red thing"][1]["obj"].aspect)
+        rank, fn, kwargs = rv["pick up red thing"]
+        self.assertEqual(rank, 0)
+        self.assertEqual(kwargs["obj"].aspect, "red")
 
 
 class PerformanceMatchTests(unittest.TestCase):
@@ -261,14 +268,14 @@ class PerformanceMatchTests(unittest.TestCase):
         self.performance = Trivial()
 
     def test_do_that(self):
-        fn, args, kwargs = next(self.performance.actions("that?"))
+        rank, fn, args, kwargs = next(self.performance.actions("that?"))
         self.assertEqual(self.performance.do_that, fn)
         self.assertEqual(["that?", None], args)
         self.assertFalse(kwargs)
 
     def test_mismatch(self):
         cmd = "release the frog"
-        fn, args, kwargs = next(self.performance.actions(cmd))
+        rank, fn, args, kwargs = next(self.performance.actions(cmd))
         self.assertIs(None, fn)
         self.assertEqual([cmd, None], args)
         self.assertFalse(kwargs)
@@ -279,7 +286,7 @@ class PerformanceTests(unittest.TestCase):
         self.performance = Trivial()
 
     def test_do_that(self):
-        fn, args, kwargs = next(self.performance.actions("that?"))
+        rank, fn, args, kwargs = next(self.performance.actions("that?"))
         self.assertEqual(self.performance.do_that, fn)
         self.assertEqual(["that?", None], args)
         self.assertFalse(kwargs)
@@ -289,21 +296,21 @@ class PerformanceTests(unittest.TestCase):
         self.assertEqual(["that?", None], args)
 
     def test_do_this(self):
-        fn, args, kwargs = self.performance.pick(self.performance.actions("That?"))
+        rank, fn, args, kwargs = self.performance.pick(self.performance.actions("That?"))
         data = self.performance(fn, *args, **kwargs)
 
-        fn, args, kwargs = self.performance.pick(self.performance.actions("This?"))
+        rank, fn, args, kwargs = self.performance.pick(self.performance.actions("This?"))
         data = self.performance(fn, *args, **kwargs)
         self.assertEqual("Yes, this.", "\n".join(data))
 
     def test_do_tother(self):
-        fn, args, kwargs = self.performance.pick(self.performance.actions("That?"))
+        rank, fn, args, kwargs = self.performance.pick(self.performance.actions("That?"))
         data = self.performance(fn, *args, **kwargs)
 
-        fn, args, kwargs = self.performance.pick(self.performance.actions("This?"))
+        rank, fn, args, kwargs = self.performance.pick(self.performance.actions("This?"))
         data = self.performance(fn, *args, **kwargs)
 
-        fn, args, kwargs = self.performance.pick(self.performance.actions("Or?"))
+        rank, fn, args, kwargs = self.performance.pick(self.performance.actions("Or?"))
         data = "\n".join(self.performance(fn, *args, **kwargs))
 
         self.assertEqual("Or,\nMaybe;\nTother.", data)

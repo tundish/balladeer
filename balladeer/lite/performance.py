@@ -80,7 +80,7 @@ class Performance:
         doc = method.func.__doc__ if hasattr(method, "func") else method.__doc__ or ""
         # TODO: Capture rank
         terms = list(
-            filter(None, (i.strip() for line in doc.splitlines() for i in line.split("|")))
+            filter(None, ((n, i.strip()) for n, line in enumerate(doc.strip().splitlines()) for i in line.split("|")))
         )
         params = list(
             itertools.chain(
@@ -90,11 +90,11 @@ class Performance:
             )
         )
         cartesian = [dict(i) for i in itertools.product(*params)]
-        for term in terms:
+        for rank, term in terms:
             tokens = Performance.parse_tokens(term, discard=Performance.discard)
             for prod in cartesian:
                 try:
-                    yield (" ".join(tokens).format(**prod).lower(), (method, prod))
+                    yield (" ".join(tokens).format(**prod).lower(), (rank, method, prod))
                 except (AttributeError, IndexError, KeyError) as e:
                     continue
 
@@ -124,7 +124,7 @@ class Performance:
         return rv
 
     def pick(self, options):
-        return next(iter(options), (None,) * 3)
+        return next(iter(options), (None,) * 4)
 
     def actions(self, text, context=None, ensemble=[], prefix="do_", cutoff=0.95):
         options = self.options(ensemble, prefix=prefix)
@@ -134,6 +134,6 @@ class Performance:
             " ".join(tokens), options, cutoff=cutoff
         ) or difflib.get_close_matches(text.strip(), options, cutoff=cutoff)
         try:
-            yield from ((fn, [text, context], kwargs) for fn, kwargs in options[matches[0]])
+            yield from ((rank, fn, [text, context], kwargs) for rank, fn, kwargs in options[matches[0]])
         except (IndexError, KeyError):
-            yield (None, [text, context], {})
+            yield (0, None, [text, context], {})

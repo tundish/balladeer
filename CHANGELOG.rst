@@ -6,6 +6,11 @@
 Change Log
 ::::::::::
 
+0.60.0rc
+========
+
+* Expose rank when expanding performance commands.
+
 0.59.0
 ======
 
