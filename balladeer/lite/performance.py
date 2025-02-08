@@ -24,6 +24,7 @@ import enum
 import inspect
 import itertools
 import string
+import sys
 
 from balladeer.lite.entity import Entity
 from balladeer.lite.types import Grouping
@@ -78,7 +79,6 @@ class Performance:
 
         """
         doc = method.func.__doc__ if hasattr(method, "func") else method.__doc__ or ""
-        # TODO: Capture rank
         terms = list(
             filter(None, ((n, i.strip()) for n, line in enumerate(doc.strip().splitlines()) for i in line.split("|")))
         )
@@ -99,15 +99,17 @@ class Performance:
                     continue
 
     @staticmethod
-    def is_command_hidden(text: str, options: Grouping = None) -> bool:
-        return False
+    def is_command_hidden(text: str, options: Grouping = None, threshold=sys.maxsize) -> bool:
+        "Hide valid commands from the UI according to rank"
+        rank, fn, kwargs = options[text]
+        return threshold <= rank
 
     def __call__(self, fn, *args, **kwargs):
         yield from fn(fn, *args, **kwargs)
 
     def options(
         self, ensemble: list[Entity], prefix="do_"
-    ) -> Grouping[str, list[tuple[Callable, dict[str, Entity]]]]:
+    ) -> Grouping[str, list[tuple[int, Callable, dict[str, Entity]]]]:
         if not hasattr(self, "active"):
             self.active = dict(
                 (i, set())
@@ -123,7 +125,8 @@ class Performance:
                 rv[k].append(v)
         return rv
 
-    def pick(self, options):
+    def pick(self, options) -> tuple[int, Callable, list, dict]:
+        "Override this method to pick from multiple actions matching the same command"
         return next(iter(options), (None,) * 4)
 
     def actions(self, text, context=None, ensemble=[], prefix="do_", cutoff=0.95):

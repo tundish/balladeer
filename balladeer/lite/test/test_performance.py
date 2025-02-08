@@ -256,6 +256,13 @@ class MatchingTests(unittest.TestCase):
         rank, fn, kwargs = rv["pick up blue thing"]
         self.assertEqual(rank, 0)
         self.assertEqual(kwargs["obj"].aspect, "blue")
+        self.assertFalse(Performance.is_command_hidden("pick up blue thing", rv, threshold=1))
+
+        self.assertIn("get blue thing", rv)
+        rank, fn, kwargs = rv["get blue thing"]
+        self.assertEqual(rank, 1)
+        self.assertEqual(kwargs["obj"].aspect, "blue")
+        self.assertTrue(Performance.is_command_hidden("get blue thing", rv, threshold=1))
 
         self.assertIn("pick up red thing", rv)
         rank, fn, kwargs = rv["pick up red thing"]
