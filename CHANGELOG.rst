@@ -6,10 +6,11 @@
 Change Log
 ::::::::::
 
-0.60.0rc
-========
+0.60.0
+======
 
 * Expose rank when expanding performance commands.
+* Allow UI to hide commands by rank.
 
 0.59.0
 ======
